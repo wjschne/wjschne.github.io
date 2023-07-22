@@ -1,0 +1,60 @@
+---
+title: "Presentations"
+---
+
+## Psychometrics from the Ground Up
+
+```{r setup}
+#| include: false
+library(tidyverse)
+d_pftgu <- read_csv("data/presentations.csv") |> 
+  mutate(youtublist = "PL7CF0E765FAF9FBFE")
+d_other_vids <- read_csv("data/othervids.csv")
+
+youtubelinker <- function(title, summary, id, youtublist = NULL) {
+  paste0("\n### ", 
+         title, 
+         ' {href="https://youtu.be/',
+         id,
+         ifelse(!is.null(youtublist), paste0("'&list=", youtublist), ""),
+         '" target="_blank"}\n\n',
+         summary,
+         "\n\n",
+         '<a href="https://youtu.be/',
+         id,
+         ifelse(!is.null(youtublist), paste0("'&list=", youtublist), ""),
+         '" target="_blank">\n',
+         '<p><img src="https://img.youtube.com/vi/',
+         id,
+         '/0.jpg" alt="" style="width:400px"></p></a>\n\n')
+}
+```
+
+
+
+```{r pftgu}
+#| output: asis
+#| echo: false
+
+d_pftgu |> 
+  pmap_chr(youtubelinker) |> 
+  cat()
+```
+
+## Other Assessment Videos
+
+```{r othervids}
+#| output: asis
+#| echo: false
+d_other_vids |> 
+  pmap_chr(youtubelinker) |> 
+  cat()
+```
+
+## Audio Presentations
+
+### The evolution of cognitive assessment {target="_blank" href="The evolution of cognitive assessment with Dr. W. Joel Schneider"}
+
+My appearance on the [Testing Psychologist Podcast](https://www.thetestingpsychologist.com/) on March 29, 2021
+
+<iframe src="https://www.thetestingpsychologist.com/?powerpress_embed=2349-podcast&amp;amp;powerpress_player=mediaelement-audio" frameborder="0" scrolling="no"></iframe>

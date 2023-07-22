@@ -1,0 +1,174 @@
+---
+title: Insert Text from One Markdown Document into Another
+author: W. Joel Schneider
+date: '2023-03-30'
+slug: insert-text-from-one-markdown-document-into-another
+categories:
+  - markdown
+tags:
+  - markdown
+draft: false
+description: A function for retrieving a div or span from another markdown document
+---
+
+
+
+
+While assembling a reply letter for a revise-and-resubmit document, I was documenting for reviewers how we addressed their concerns. The reply letter quoted numerous sentences and paragraphs that had been changed. Unfortunately, each time my co-authors and I edited the paper, I lost track of which sentences and paragraphs I had previously copied into the reply letter. I did not want to misquote my own paper.
+
+Copying-and-pasting with each edit was getting tedious, and it was an error-prone process. I decided to write a function that would retrieve a named div or span from the paper and print it as a quote in my reply letter. Here it is:
+
+```{r}
+get_quote <- function(id, file, blockquote = TRUE) {
+  blocktext <- ifelse(blockquote, "\n> ", "")
+
+  refreplace <- function(x) {
+    # List of sequence types
+    crossrefs <- c(`@fig-` = "Figure",
+                   `@fig-` = "Table",
+                   `@eq-` = "Equation",
+                   `@thm-` = "Lemma",
+                   `@lem-` = "Corollary",
+                   `@cor-` = "Proposition",
+                   `@prp-` = "Conjecture",
+                   `@cnj-` = "Definition",
+                   `@def-` = "Example",
+                   `@exm-` = "Example",
+                   `@exr-` = "Exercise",
+                   `apafg-` = "Figure",
+                   `apatb-` = "Figure"
+    )
+
+    # Find all crossreference types and number them
+    make_replacements <- function(x, reftype, prefix) {
+      regstring <- ifelse(stringr::str_starts(reftype, "\\@"),
+                          paste0("\\", reftype, "(.*?)(?=[\\.\\?\\!\\]\\}\\s,])"),
+                          paste0("\\{", reftype, "(.*?)\\}"))
+      patterns <- stringr::str_extract_all(string = x, pattern = regstring) |>
+        unlist() |>
+        unique() |>
+        stringr::str_replace("\\{", "\\\\{") |>
+        stringr::str_replace("\\}", "\\\\}")
+
+      if (all(is.na(patterns))) return(NULL)
+      replacements <- paste(prefix, seq_along(patterns))
+      names(replacements) <- patterns
+      replacements
+    }
+    allreplacements <- purrr::map2(
+      names(crossrefs),
+      crossrefs,
+      \(rt, pf) make_replacements(
+        x = x,
+        reftype = rt,
+        prefix = pf)) |>
+      unlist()
+
+
+    stringr::str_replace_all(x, allreplacements)
+
+  }
+
+  filetext <- readLines(file) |>
+    refreplace()
+
+  idcount <- sum(stringr::str_count(filetext, paste0("#", id)))
+  if (idcount > 1)
+    stop(paste0(
+      "The id (",
+      id ,
+      ") is not unique. There are ",
+      idcount,
+      " instances of id = ",
+      id,
+      "."
+    ))
+
+  s <- filetext |>
+    paste0(collapse = "\n") |>
+    stringr::str_match(pattern = paste0("(?<=\\[).+(?=\\]\\{\\#",
+                               id,
+                               "\\})"))  |>
+    getElement(1)
+
+  if (is.na(s)) {
+    s <- filetext |>
+      paste0(collapse = "|||") |>
+      stringr::str_match(pattern = paste0(":::\\{\\#",
+                                 id,
+                                 "\\}(.*?):::"))  |>
+      getElement(2) |>
+      stringr::str_replace_all("\\|\\|\\|", blocktext)
+  } else {
+    s <- paste0(blocktext, s)
+  }
+
+  if (is.na(s)) stop("Could not find a div or span with id = ", id)
+
+  s
+}
+
+```
+
+For your convenience and mine, I have added this function into the [WJSmisc package](https://wjschne.github.io/WJSmisc/reference/get_quote.html).
+
+# Using the `get_quote` function
+
+If the file has a span or div with a specified id, the `get_quote` function can find it. Suppose the file has a span with id of `id1` and a div with id of `id2`.
+
+```
+[Text in a span]{#id1}
+
+:::{#id2}
+Here are two pagagraphs in a fenced div.
+
+This is the second paragraph.
+:::
+
+cat(get_quote("id2", "index.qmd"))
+```
+
+You can pull text from the current file or another file. This file happened to be named `index.qmd`. The text inside the span with id `id1` can be extracted with inline chunks like so:
+
+```{verbatim}
+`r get_quote("id1", "index.qmd")`
+```
+
+`r get_quote("id1", "index.qmd")`
+
+Here we extract the two paragraphs in div id2
+
+```{verbatim}
+`r get_quote("id2", "index.qmd")`
+```
+
+`r get_quote("id2", "index.qmd")`
+
+## Remove blockquote formatting
+
+By default, the function adds a `> ` before each line in the quoted markdown so that it appears as a block quote. You can turn off the block quote formatting like so:
+
+```{verbatim}
+`r get_quote("id1", "index.qmd", blockquote = FALSE)`
+```
+
+`r get_quote("id1", "index.qmd", blockquote = FALSE)`
+
+## Curly braces with additional information
+
+What if you need to put additional information in the curly braces of the span or div (e.g., a css class)?
+
+```{verbatim}
+[Here is more text with extra stuff in the curly braces.]{#id3 .myclass}
+```
+
+You can trick the function into thinking that the extra stuff is part of the id like so:
+
+```{verbatim}
+`r get_quote("id3 .myclass", "index.qmd")`
+```
+
+
+`r get_quote("id3 .myclass", "index.qmd")`
+
+
