@@ -1,6 +1,5 @@
 ---
 title: Point labels perpendicular to a curve in ggplot2
-author: W. Joel Schneider
 date: '2021-07-27'
 slug: point-labels-perpendicular-to-a-curve-in-ggplot2
 categories: [ggplot2]
@@ -16,7 +15,7 @@ library(patchwork)
 knitr::opts_chunk$set(dev = "svg", fig.height = 7, fig.width = 7)
 ```
 
-I would like to label points on a sine function so that the labels are always legible. In a sine wave plot in which $\theta$ ranges from 0 to 2$\pi$, $\sin(\theta)$ ranges from &minus;1 to +1. Thus, the plot's xy ratio is 
+I would like to label points on a sine function so that the labels are always legible. In a sine wave plot in which &theta; ranges from 0 to 2&pi;, sin(&theta;) ranges from &minus;1 to +1. Thus, the plot's xy ratio is 
 
 $$\text{plot ratio}= \frac{2\pi-0}{1- (-1)}=\pi$$ 
 
@@ -25,7 +24,7 @@ The first derivative of the sine function is the cosine function. In my plot, th
 $$
 \text{tangent slope} = \text{plot ratio}\times \cos(\theta)
 $$
-The angle of the tangent line's slope is the arctan of the slope. I would like to place the label perpendicular to the tangent line so I will add 90 degrees (i.e., $\pi/2$ radians).
+The angle of the tangent line's slope is the arctan of the slope. I would like to place the label perpendicular to the tangent line so I will add 90 degrees (i.e., &pi;/2 radians).
 
 $$
 \text{text angle}=\tan^{-1}(\text{tangent slope})+\pi/2
@@ -60,7 +59,7 @@ tibble(theta = seq(0, 2 * pi, length.out = 13),
             tangent_slope = cos(theta) * plot_ratio,
             text_angle = atan(tangent_slope) + pi / 2) %>%
   ggplot(aes(theta, y)) +
-  geom_richtext(aes(label = round(y, 2),
+  geom_richtext(aes(label = formatC(y, digits = 2, format = "f"),
                     vjust = angle2vjust(text_angle),
                     hjust = angle2hjust(text_angle)),
                 label.color = NA,
@@ -69,13 +68,16 @@ tibble(theta = seq(0, 2 * pi, length.out = 13),
                 size = 4) +
   geom_point() +
   stat_function(fun = sin) +
-  scale_x_continuous(expression(theta),
-                     breaks = seq(0, 2 * pi, length.out = 13),
+  scale_x_continuous("&theta;",
+                     breaks = seq(0, 2 * pi, 
+                                  length.out = 13),
                      minor_breaks = NULL,
                      labels = function(x) round(x * 180 / pi)) +
-  scale_y_continuous(expression(sin(theta))) +
+  scale_y_continuous("sin(&theta;)") +
   coord_fixed(ratio = plot_ratio, clip = "off") +
-  theme_minimal(base_size = 16)
+  theme_minimal(base_size = 16) +
+  theme(axis.title.x = element_markdown(),
+        axis.title.y = element_markdown())
 
 
 ```
@@ -98,13 +100,16 @@ tibble(theta = seq(0, 2 * pi, length.out = 13),
                 size = 4) +
   geom_point() +
   stat_function(fun = sin) +
-  scale_x_continuous(expression(theta),
-                     breaks = seq(0, 2 * pi, length.out = 13),
+  scale_x_continuous("&theta;",
+                     breaks = seq(0, 2 * pi, 
+                                  length.out = 13),
                      minor_breaks = NULL,
                      labels = function(x) round(x * 180 / pi)) +
-  scale_y_continuous(expression(sin(theta))) +
+  scale_y_continuous("sin(&theta;)") +
   coord_fixed(ratio = plot_ratio, clip = "off") +
-  theme_minimal(base_size = 16)
+  theme_minimal(base_size = 16) +
+  theme(axis.title.x = element_markdown(),
+        axis.title.y = element_markdown())
 ```
 
 What if you do not know the function's first derivative? You can approximate the slope of the tangent line by comparing a function's output of each point with the output of a slightly deviated point. Here is a plot of the normal cumulative distribution function.
@@ -131,9 +136,11 @@ tibble(x = seq(-3,3,.5),
                 size = 4) +
   stat_function(fun = pnorm) + 
   theme_minimal(base_size = 16) + 
+  theme(axis.title.x = element_markdown(),
+        axis.title.y = element_markdown()) +
   coord_fixed(ratio = plot_ratio) + 
-  scale_x_continuous(expression(x), breaks = -3:3) +
-  scale_y_continuous(expression(Phi(x)))
+  scale_x_continuous("*x*", breaks = -3:3) +
+  scale_y_continuous("&Phi;(*x*)")
 ```
 
 

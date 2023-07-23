@@ -3,13 +3,13 @@ project:
   output-dir: docs
 execute: 
   freeze: true
-
+csl: apa.csl
 website:
   title: "W. Joel Schneider"
   description: "{{< meta description-meta >}}"
   favicon: "/images/favicon.png"
-  site-url: "https://wjschne.github.io/"
-  repo-url: "https://github.com/wjschne/schneiderweb"
+  site-url: "https://wjschne.github.io"
+  repo-url: "https://github.com/wjschne/schneiderwebquarto"
   open-graph: true
   navbar:
     pinned: true
@@ -81,6 +81,8 @@ website:
         href: /files/schneider-vita.pdf
         target: "_blank"
         rel: "noreferrer noopener"
+      - icon: rss
+        href: blog.xml
 format:
   html:
     theme: 
@@ -89,6 +91,7 @@ format:
     css: styles.css
     toc: true
     toc-location: left
+    html-math-method: katex
 
 # Metadata stuff
 pagetitle: "W. Joel Schneider"
