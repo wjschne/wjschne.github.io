@@ -346,7 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>            <span class="at">lineheight =</span> .<span class="dv">8</span>) <span class="sc">+</span></span>
 <span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> true_hat <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> see,</span>
 <span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ymax =</span> true_hat <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> see), </span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>                 <span class="at">size =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>                 <span class="at">linewidth =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
 <span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> true_hat <span class="sc">-</span> see,</span>
 <span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ymax =</span> true_hat <span class="sc">+</span> see), </span>
 <span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="fl">1.2</span>, </span>
@@ -398,10 +398,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"**Notes:** The white normal curves represent the expected </span></span>
 <span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a><span class="st">       true&lt;br&gt;score distributions for each observed score. The black lines&lt;br&gt;</span></span>
 <span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a><span class="st">       underneath span the 68% and 95% confidence intervals."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/display scores-1.svg" class="img-fluid" style="width:75.0%"></p>
 </div>
