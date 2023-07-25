@@ -1,0 +1,66 @@
+\documentclass[border={10pt 48pt -45pt 62pt}]{standalone}
+%\documentclass{article}
+\usepackage{annotate-equations}
+\usepackage{xcolor}
+\definecolor{myviolet}{HTML}{414487}
+\definecolor{myblue}{HTML}{2F6C8E}
+\definecolor{myblue2}{HTML}{21908C}
+\definecolor{mygreen}{HTML}{2FB47C}
+\definecolor{mygreen2}{HTML}{7AD151}
+\usepackage[sfdefault,condensed]{roboto}
+\begin{document}
+	
+\renewcommand{\eqnhighlightheight}{\mathstrut}
+	
+$\LARGE
+\eqnmarkbox[myviolet]{nodeP}{P\left(T \le \tau \right)} = 
+\eqnmarkbox[myblue]{phi}{\Phi}
+\left(\frac{
+	\eqnmarkbox[myblue2]{tau}{\tau}-
+	\eqnmarkbox[mygreen]{esttrue}{\hat{T}}}{
+	\eqnmarkbox[mygreen2]{sigma}{\sigma_{T - \hat{T}}}}
+\right)$
+
+
+\annotate[
+	yshift=1em, 
+	xshift=11mm, 
+	myviolet]
+	{above, left}
+	{nodeP}
+	{Probability true score $T$\\ is less than threshold $\tau$ }
+	
+\annotate[
+	yshift=-.6em,
+	myblue]
+	{below,left}
+	{phi}
+	{Standard Normal Cumulative\\ Distribution Function $\Phi()$}
+	
+\annotate[
+	yshift=1.4em, 
+	xshift=4mm, 
+	myblue2]
+	{above,left}
+	{tau}
+	{Threshold $\tau=85$}
+	
+\annotate[
+	yshift=3em, 
+	xshift=7mm, 
+	mygreen]
+    {above,left}
+    {esttrue}
+    {Estimated True Score $\hat{T}=r_{XX}(X-\mu)+\mu$\\ 
+    Observed Score $X\sim \mathcal{N}\left(\mu = 100, \sigma=15\right)$\\ 
+    Reliability Coefficient $r_{XX}=\{.80,.85,.90,.95,.98\}$}
+	
+\annotate[
+	yshift=-2em, 
+    mygreen2]
+    {below,left}
+    {sigma}
+    {Standard Error of the Estimate\\ 
+    $\sigma_{T-\hat{T}}=\sigma\sqrt{r_{XX}-r_{XX}^2}$}
+	
+\end{document}

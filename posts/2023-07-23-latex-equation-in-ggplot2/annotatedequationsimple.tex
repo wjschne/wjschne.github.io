@@ -1,0 +1,58 @@
+\documentclass[border={25pt 50pt -35pt 52pt}]{standalone}
+%\documentclass{article}
+\usepackage{annotate-equations}
+\usepackage{xcolor}
+\definecolor{myviolet}{HTML}{440154}
+\definecolor{myblue}{HTML}{3B528B}
+\definecolor{myindigo}{HTML}{21908C}
+\definecolor{mygreen}{HTML}{5DC863}
+\usepackage[sfdefault,condensed]{roboto}
+\begin{document}
+	
+\renewcommand{\eqnhighlightheight}{\mathstrut}
+	
+\huge$
+\eqnmark[myviolet]{z}{z} = 
+\frac{
+	\eqnmark[myblue]{x}{X}-
+	\eqnmark[myindigo]{mu}{\mu}}{
+	\eqnmark[mygreen]{sigma}{\sigma}}
+$
+
+
+\annotate[
+	yshift=1em, 
+	myviolet,
+	align=right]
+	{above, left}
+	{z}
+	{$z$-score}
+	
+\annotate[
+	yshift=1em, 
+	myblue, 
+	align=right]
+	{above,left}
+	{x}
+	{Observed\\ Score}
+	
+
+\annotate[
+	yshift=1em, 
+	myindigo]
+	{above,right}
+	{mu}
+	{Population\\ Mean\\ $\mu = 100$}
+	
+
+	
+\annotate[
+	yshift=-.4em, 
+    mygreen, 
+    align=right]
+    {below,left}
+    {sigma}
+    {Population\\ Standard\\ Deviation\\ $\sigma = 15$}
+	
+\end{document}
+
