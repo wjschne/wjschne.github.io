@@ -88,7 +88,7 @@ The default arrows in ggplot2 are perfectly serviceable. There is the open varie
 p + geom_segment(arrow = arrow())
 ```
 
-You can specifiy which ends of the segment have arrowheads, whether the arrows are open or closed, the length of the arrow, and how sharp the arrow's point is with the `angle` argument.
+You can specify which ends of the segment have arrowheads, whether the arrows are open or closed, the length of the arrow, and how sharp the arrow's point is with the `angle` argument.
 
 I happen to prefer a longer, sharper, closed arrow:
 
@@ -205,7 +205,7 @@ There is much, much more that can be done. See ggarrow's [arrow ornament vignett
 
 # Custom Arrowheads
 
-Not only does ggarrow offert great arrow geoms with excellent features like resection, one can create any custom arrowhead or feather that can be made with a single polygon.
+Not only does ggarrow offer great arrow geoms with excellent features like resection, one can create any custom arrowhead or feather that can be made with a single polygon.
 
 The polygon generally falls between -1 and 1 on x and y, though you can plot outside those limits. In most cases, the point is at (0,1), and the line ends at (0,0):
 
@@ -297,7 +297,7 @@ p +
 A candle flame:
 
 ```{r fig-candleflame}
-#| fig-cap: Wittgensteain's rod makes some nice shapes
+#| fig-cap: Wittgenstein's rod makes some nice shapes
 candleflame <- arrow_head_wittgenstein_rod(
   fixed_point = c(-2.75, 0),
   rod_length = 3.75,
