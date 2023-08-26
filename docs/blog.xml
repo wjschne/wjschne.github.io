@@ -10,7 +10,1270 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.4.236</generator>
-<lastBuildDate>Mon, 24 Jul 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 31 Jul 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Making a custom arrowhead for ggplot2 using ggarrow</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<details>
+<summary>Base plot for demonstrations</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install.packages("remotes")</span></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remotes::install_github("teunbrand/ggarrow")</span></span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggarrow)</span>
+<span id="cb1-5"></span>
+<span id="cb1-6">node_radius <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb1-7">resection_length <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">03</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9">d_node <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">node =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"B"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C"</span>),</span>
+<span id="cb1-10">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),</span>
+<span id="cb1-11">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sqrt</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>))</span>
+<span id="cb1-12"></span>
+<span id="cb1-13">d_edge <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_node <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-14">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theta_next =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">atan</span>((y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lag</span>(y)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lag</span>(x))),</span>
+<span id="cb1-15">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x_from =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lag</span>(x) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cos</span>(theta_next) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (node_radius <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> resection_length),</span>
+<span id="cb1-16">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_from =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lag</span>(y) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sin</span>(theta_next) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (node_radius <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> resection_length),</span>
+<span id="cb1-17">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x_to =</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cos</span>(theta_next <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> pi) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (node_radius <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> resection_length),</span>
+<span id="cb1-18">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_to =</span> y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sin</span>(theta_next <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> pi) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (node_radius <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> resection_length)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-19">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(x_from))</span>
+<span id="cb1-20"></span>
+<span id="cb1-21">p <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_edge <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-22">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> x_from, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> y_from, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xend =</span> x_to, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">yend =</span> y_to)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-23">  ggforce<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_circle</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(</span>
+<span id="cb1-24">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x0 =</span> x,</span>
+<span id="cb1-25">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y0 =</span> y,</span>
+<span id="cb1-26">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">r =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb1-27">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> node</span>
+<span id="cb1-28">  ),</span>
+<span id="cb1-29">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d_node,</span>
+<span id="cb1-30">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inherit.aes =</span> F) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-31">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> node, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> x, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> y), </span>
+<span id="cb1-32">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d_node, </span>
+<span id="cb1-33">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>,</span>
+<span id="cb1-34">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>,</span>
+<span id="cb1-35">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inherit.aes =</span> F) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-36">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_fixed</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-37">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_void</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-38">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-39">     <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_viridis_d</span>(</span>
+<span id="cb1-40">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">option =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"D"</span>,</span>
+<span id="cb1-41">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">begin =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb1-42">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">end =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>,</span>
+<span id="cb1-43">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span></span>
+<span id="cb1-44">     )</span>
+<span id="cb1-45"></span>
+<span id="cb1-46">p</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/baseplot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The default arrows in ggplot2 are perfectly serviceable. There is the open variety:</p>
+<div class="cell">
+<details>
+<summary>Open arrow code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow</span>())</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-open" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-open-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: The ggplot2 open arrow</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>You can specifiy which ends of the segment have arrowheads, whether the arrows are open or closed, the length of the arrow, and how sharp the arrow’s point is with the <code>angle</code> argument.</p>
+<p>I happen to prefer a longer, sharper, closed arrow:</p>
+<div class="cell">
+<details>
+<summary>Closed arrow code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_segment</span>(</span>
+<span id="cb3-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow</span>(</span>
+<span id="cb3-3">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>,</span>
+<span id="cb3-4">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mm"</span>),</span>
+<span id="cb3-5">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"closed"</span></span>
+<span id="cb3-6">))</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-closed" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-closed-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: The ggplot2 closed arrow</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Nevertheless, I miss the variety of <a href="https://tikz.dev/tikz-arrows">arrows in available in TikZ</a>. I particularly like the <code>latex'</code> arrow:</p>
+<div class="cell">
+<details>
+<summary>TikZ code with latex’ arrow</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode tikz code-with-copy"><code class="sourceCode latex"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">\usetikzlibrary</span>{arrows}</span>
+<span id="cb4-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">\begin</span>{<span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tikzpicture</span>}</span>
+<span id="cb4-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">\node</span>[fill=violet!50!white, circle] (A) at (0,0) {A};</span>
+<span id="cb4-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">\node</span>[fill=cyan!80!black, circle] (B) at (1,1.732) {B};</span>
+<span id="cb4-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">\node</span>[fill=green!40!black!40, circle] (C) at (2,0) {C};</span>
+<span id="cb4-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">\path</span>[-&gt;,</span>
+<span id="cb4-7">    draw,</span>
+<span id="cb4-8">    shorten &gt;=2pt,</span>
+<span id="cb4-9">    shorten &lt;=2pt,</span>
+<span id="cb4-10">    &gt;=latex',</span>
+<span id="cb4-11">    thick,</span>
+<span id="cb4-12">    color = black!40,</span>
+<span id="cb4-13">    text = black] (A) -&gt; (B);</span>
+<span id="cb4-14">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">\path</span>[-&gt;,</span>
+<span id="cb4-15">    draw,</span>
+<span id="cb4-16">    shorten &gt;=2pt,</span>
+<span id="cb4-17">    shorten &lt;=2pt,</span>
+<span id="cb4-18">    &gt;=latex',</span>
+<span id="cb4-19">    thick,</span>
+<span id="cb4-20">    color = black!40,</span>
+<span id="cb4-21">    text = black] (B) -&gt; (C);</span>
+<span id="cb4-22"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">\end</span>{<span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tikzpicture</span>}</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-tkz" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-tkz-1.svg" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: The TikZ latex’ arrow</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="the-ggarrow-package" class="level1">
+<h1>The ggarrow package</h1>
+<p>If you want more variety in drawing arrows in ggplot2, Teun van den Brand’s <a href="https://github.com/teunbrand/ggarrow">ggarrow</a> package expands your limits to whatever your imagination can provide.</p>
+<p>The default arrowhead is already a nice improvement:</p>
+<div class="cell">
+<details>
+<summary>Code for wings arrow (i.e, stealth arrow in TikZ)</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-stealth" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-stealth-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: The “wings” arrow</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>You can play around with the sharpness of the point (<code>offset</code>) and the sharpness of the barb (<code>inset</code>). You can also add feathers.</p>
+<div class="cell">
+<details>
+<summary>Code for sharp barbs and feathers</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>,</span>
+<span id="cb6-3">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_wings</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">offset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, </span>
+<span id="cb6-4">                                                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>), </span>
+<span id="cb6-5">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_fins =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_fins_feather</span>(), </span>
+<span id="cb6-6">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_fins =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">11</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-feathers" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-feathers-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5: Sharp barbs and feathers</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code for kite arrowhead</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>,</span>
+<span id="cb7-3">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_wings</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">offset =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">22.5</span>,</span>
+<span id="cb7-4">                                                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">115</span>),</span>
+<span id="cb7-5">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_fins =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_wings</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">offset =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">22.5</span>,</span>
+<span id="cb7-6">                                                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">115</span>),</span>
+<span id="cb7-7">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_fins =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-kite" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-kite-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6: Double-headed arrow with kite arrowhead</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code for reverse kite arrowhead</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>,</span>
+<span id="cb8-3">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_wings</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">offset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">45</span>,</span>
+<span id="cb8-4">                                                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">120</span>))</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-reversekite" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-reversekite-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;7: Reverse kite arrowhead</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If the arrow goes too far, you can pull it back with the <code>resect</code> arguments.</p>
+<div class="cell">
+<details>
+<summary>Code for resecting an arrowhead</summary>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>,</span>
+<span id="cb9-3">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_wings</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">offset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">120</span>,</span>
+<span id="cb9-4">                                                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inset =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">35</span>),</span>
+<span id="cb9-5">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">resect_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-resect" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-resect-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;8: Demonstration of resecting arrowheads</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>There is much, much more that can be done. See ggarrow’s <a href="https://teunbrand.github.io/ggarrow/articles/ornaments.html">arrow ornament vignette</a> for more options.</p>
+</section>
+<section id="custom-arrowheads" class="level1">
+<h1>Custom Arrowheads</h1>
+<p>Not only does ggarrow offert great arrow geoms with excellent features like resection, one can create any custom arrowhead or feather that can be made with a single polygon.</p>
+<p>The polygon generally falls between -1 and 1 on x and y, though you can plot outside those limits. In most cases, the point is at (0,1), and the line ends at (0,0):</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">par</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pty =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"s"</span>)</span>
+<span id="cb10-2">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb10-3">y <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span>
+<span id="cb10-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot</span>(x , y, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xlim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ylim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>))</span>
+<span id="cb10-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rect</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb10-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Line"</span>)</span>
+<span id="cb10-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Arrow Point"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">adj =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.2</span>)</span>
+<span id="cb10-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">polygon</span>(ggarrow<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_wings</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colnames&lt;-</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"b"</span>)))</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-polygonplot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-polygonplot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;9: Grid for custom arrowheads</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The polygon you create should be be a 2-column matrix with named columns (e.g., x and y). Here I make a elliptical arrowhead.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">make_ellipse <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">a =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">b =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>){</span>
+<span id="cb11-2">  t <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>pi, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length.out =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">361</span>)</span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cbind</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> a <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cos</span>(t), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> b <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sin</span>(t)) </span>
+<span id="cb11-4">}</span>
+<span id="cb11-5"></span>
+<span id="cb11-6">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb11-8">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">make_ellipse</span>())</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-ellipse" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-ellipse-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;10: Make ellipse</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-arrowheadr-package." class="level1">
+<h1>The arrowheadr package.</h1>
+<p>I made the <a href="https://wjschne.github.io/arrowheadr/">arrowheadr</a> package to make custom arrowheads quickly. Some of them are admittedly silly. However, it is now easy to make my favorite kind of arrow in ggplot2:</p>
+<div class="cell preview-image">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(arrowheadr)</span>
+<span id="cb12-2"></span>
+<span id="cb12-3">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb12-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb12-5">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_latex</span>())</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/figlatexprime-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Mimicking the latex prime arrowhead</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>More examples:</p>
+<p>A catenary:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">stlouis <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_catenary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_width =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">thickness =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>)</span>
+<span id="cb13-2"></span>
+<span id="cb13-3">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb13-5">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> stlouis)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-stlouis" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-stlouis-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;11: The Gateway Arch in St.&nbsp;Louis is shaped like a catenary, not a parabola.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The Cauchy function:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb14-3">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_function</span>(dt, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">df =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>))</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-cauchy" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-cauchy-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;12: Any function can make an arrowhead.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Razors:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">razors <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,</span>
+<span id="cb15-2">  <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb15-3">  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">35</span>,.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>,</span>
+<span id="cb15-4">  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">35</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">21</span>,</span>
+<span id="cb15-5">  <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">35</span>,</span>
+<span id="cb15-6">  .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">90</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb15-7">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb15-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">v2matrix</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb15-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">reflecter</span>() </span>
+<span id="cb15-10"></span>
+<span id="cb15-11">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb15-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb15-13">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> razors)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-razors" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-razors-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;13: The reflecter function takes a set of points and makes them symmetrical.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A candle flame:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">candleflame <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_wittgenstein_rod</span>(</span>
+<span id="cb16-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fixed_point =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.75</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>),</span>
+<span id="cb16-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rod_length =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3.75</span>,</span>
+<span id="cb16-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nudge =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>),</span>
+<span id="cb16-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rescale =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">95</span></span>
+<span id="cb16-6">)</span>
+<span id="cb16-7"></span>
+<span id="cb16-8">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb16-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>,</span>
+<span id="cb16-10">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> candleflame)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-candleflame" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-candleflame-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;14: Wittgensteain’s rod makes some nice shapes</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Using bezier curve control points:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">curved_arrowhead <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrow_head_bezier</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(</span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,  <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,</span>
+<span id="cb17-3">    .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb17-4">    .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>),</span>
+<span id="cb17-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb17-6">    .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb17-7">    <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>,</span>
+<span id="cb17-8">    <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>),</span>
+<span id="cb17-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>,</span>
+<span id="cb17-10">    <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,</span>
+<span id="cb17-11">    <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>),</span>
+<span id="cb17-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>,</span>
+<span id="cb17-13">    <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>,</span>
+<span id="cb17-14">    .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb17-15">    .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>),</span>
+<span id="cb17-16">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb17-17">    .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb17-18">    <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,  <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span>
+<span id="cb17-19">))</span>
+<span id="cb17-20"></span>
+<span id="cb17-21">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb17-22">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>,</span>
+<span id="cb17-23">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arrow_head =</span> curved_arrowhead)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-curved_arrowhead" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index_files/figure-html/fig-curved_arrowhead-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;15: Bezier curves can make almost anything.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{schneider2023,
+  author = {Schneider, W. Joel},
+  title = {Making a Custom Arrowhead for Ggplot2 Using Ggarrow},
+  date = {2023-07-31},
+  url = {https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2023, July 31). <em>Making a custom arrowhead for
+ggplot2 using ggarrow</em>. <a href="https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow">https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow</a>
+</div></div></section></div> ]]></description>
+  <guid>https://wjschne.github.io/posts/2023-07-31-making-a-custom-arrowhead-for-ggplot2-using-ggarrow/index.html</guid>
+  <pubDate>Mon, 31 Jul 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Annotated equations in ggplot2</title>
   <dc:creator>W. Joel Schneider</dc:creator>

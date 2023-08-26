@@ -1,0 +1,337 @@
+---
+title: "Making a custom arrowhead for ggplot2 using ggarrow"
+description: |
+  The ggarrow package allows any polygon to be an arrowhead.
+date: 2023-07-31
+format: 
+  html: 
+    code-fold: true
+
+---
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(ggarrow)
+library(WJSmisc)
+font_opts <- list(dvisvgm.opts = "--font-format=woff")
+
+ragg_png <- function(..., res = 150) {
+  ragg::agg_png(..., res = res, units = "in")
+}
+knitr::opts_chunk$set(dev = "ragg_png", cache = F)
+update_geom_defaults("arrow_segment", aes(color = "gray50"))
+update_geom_defaults("segment", aes(color = "gray50"))
+```
+
+```{r baseplot}
+#| code-summary: "Base plot for demonstrations"
+
+library(tidyverse)
+# install.packages("remotes")
+# remotes::install_github("teunbrand/ggarrow")
+library(ggarrow)
+
+node_radius <- .2
+resection_length <- .03
+
+d_node <- tibble(node = c("A", "B", "C"),
+       x = c(0, .5, 1),
+       y = c(0, sqrt(3) / 2, 0))
+
+d_edge <- d_node |> 
+  mutate(theta_next = atan((y - lag(y)) / (x - lag(x))),
+         x_from = lag(x) + cos(theta_next) * (node_radius + resection_length),
+         y_from = lag(y) + sin(theta_next) * (node_radius + resection_length),
+         x_to = x + cos(theta_next + pi) * (node_radius + resection_length),
+         y_to = y + sin(theta_next + pi) * (node_radius + resection_length)) |> 
+  filter(!is.na(x_from))
+
+p <- d_edge |>
+  ggplot(aes(x = x_from, y = y_from, xend = x_to, yend = y_to)) +
+  ggforce::geom_circle(aes(
+    x0 = x,
+    y0 = y,
+    r = .2,
+    fill = node
+  ),
+  data = d_node,
+  color = NA, inherit.aes = F) +
+  geom_text(aes(label = node, x = x, y = y), 
+            data = d_node, 
+            size = 20,
+            family = "Roboto Condensed",
+            inherit.aes = F) +
+  coord_fixed() +
+  theme_void() +
+  theme(legend.position = "none") +
+     scale_fill_viridis_d(
+       option = "D",
+       begin = .2,
+       end = .8,
+       alpha = .5
+     )
+
+p
+```
+
+
+The default arrows in ggplot2 are perfectly serviceable. There is the open variety: 
+
+```{r fig-open}
+#| fig-cap: "The ggplot2 open arrow"
+#| code-summary: "Open arrow code"
+p + geom_segment(arrow = arrow())
+```
+
+You can specifiy which ends of the segment have arrowheads, whether the arrows are open or closed, the length of the arrow, and how sharp the arrow's point is with the `angle` argument.
+
+I happen to prefer a longer, sharper, closed arrow:
+
+```{r fig-closed}
+#| fig-cap: "The ggplot2 closed arrow"
+#| code-summary: "Closed arrow code"
+
+p + geom_segment(
+  arrow = arrow(
+    angle = 15,
+    length = unit(8, "mm"),
+    type = "closed"
+))
+```
+
+
+
+
+Nevertheless, I miss the variety of [arrows in available in TikZ](https://tikz.dev/tikz-arrows). I particularly like the `latex'` arrow:
+
+
+```{tikz fig-tkz, engine.opts=font_opts}
+#| fig-ext: svg
+#| out-width: 70%
+#| code-summary: "TikZ code with latex' arrow"
+#| fig-cap: The TikZ latex' arrow
+
+\usetikzlibrary{arrows}
+\begin{tikzpicture}
+\node[fill=violet!50!white, circle] (A) at (0,0) {A};
+\node[fill=cyan!80!black, circle] (B) at (1,1.732) {B};
+\node[fill=green!40!black!40, circle] (C) at (2,0) {C};
+\path[->,
+	draw,
+	shorten >=2pt,
+	shorten <=2pt,
+	>=latex',
+	thick,
+	color = black!40,
+	text = black] (A) -> (B);
+	\path[->,
+	draw,
+	shorten >=2pt,
+	shorten <=2pt,
+	>=latex',
+	thick,
+	color = black!40,
+	text = black] (B) -> (C);
+\end{tikzpicture}
+```
+
+
+# The ggarrow package
+
+If you want more variety in drawing arrows in ggplot2, Teun van den Brand's [ggarrow](https://github.com/teunbrand/ggarrow) package expands your limits to whatever your imagination can provide.
+
+The default arrowhead is already a nice improvement:
+
+```{r fig-stealth}
+#| code-summary: "Code for wings arrow (i.e, stealth arrow in TikZ)"
+#| fig-cap: 'The "wings" arrow'
+p + geom_arrow_segment(length_head = 10)
+```
+
+You can play around with the sharpness of the point (`offset`) and the sharpness of the barb (`inset`). You can also add feathers.
+
+```{r fig-feathers}
+#| fig-cap: Sharp barbs and feathers
+#| code-summary: "Code for sharp barbs and feathers"
+p +
+  geom_arrow_segment(length_head = 4,
+                     arrow_head = arrow_head_wings(offset = 20, 
+                                                   inset = 10), 
+                     arrow_fins = arrow_fins_feather(), 
+                     length_fins = 11)
+```
+
+
+```{r fig-kite}
+#| fig-cap: Double-headed arrow with kite arrowhead
+#| code-summary: "Code for kite arrowhead"
+p +
+  geom_arrow_segment(length_head = 15,
+                     arrow_head = arrow_head_wings(offset = 22.5,
+                                                   inset = 115),
+                     arrow_fins = arrow_head_wings(offset = 22.5,
+                                                   inset = 115),
+                     length_fins = 15)
+```
+
+
+```{r fig-reversekite}
+#| fig-cap: Reverse kite arrowhead
+#| code-summary: "Code for reverse kite arrowhead"
+p +
+  geom_arrow_segment(length_head = 20,
+                     arrow_head = arrow_head_wings(offset = 45,
+                                                   inset = 120))
+```
+
+If the arrow goes too far, you can pull it back with the `resect` arguments.
+
+```{r fig-resect}
+#| fig-cap: Demonstration of resecting arrowheads
+#| code-summary: "Code for resecting an arrowhead"
+p +
+  geom_arrow_segment(length_head = 6,
+                     arrow_head = arrow_head_wings(offset = 120,
+                                                   inset = 35),
+                     resect_head = 2)
+```
+
+There is much, much more that can be done. See ggarrow's [arrow ornament vignette](https://teunbrand.github.io/ggarrow/articles/ornaments.html) for more options.
+
+# Custom Arrowheads
+
+Not only does ggarrow offert great arrow geoms with excellent features like resection, one can create any custom arrowhead or feather that can be made with a single polygon.
+
+The polygon generally falls between -1 and 1 on x and y, though you can plot outside those limits. In most cases, the point is at (0,1), and the line ends at (0,0):
+
+
+```{r fig-polygonplot}
+#| fig-cap: Grid for custom arrowheads
+par(pty = "s")
+x <- c(0,1)
+y <- c(0,0)
+plot(x , y, xlim = c(-1, 1), ylim = c(-1, 1))
+rect(-1,-.1,0,.1)
+text(-.5,0, labels = "Line")
+text(1,0, labels = "Arrow Point", adj = 1.2)
+polygon(ggarrow::arrow_head_wings() |> `colnames<-`(c("a", "b")))
+```
+
+
+The polygon you create should be be a 2-column matrix with named columns (e.g., x and y). Here I make a elliptical arrowhead.
+
+```{r fig-ellipse}
+#| fig-cap: Make ellipse
+make_ellipse <- function(a = 1, b = .5){
+  t <- seq(0,2*pi, length.out = 361)
+  cbind(x = a * cos(t), y = b * sin(t)) 
+}
+
+p +
+  geom_arrow_segment(length_head = 5,
+                     arrow_head = make_ellipse())
+```
+
+# The arrowheadr package.
+
+I made the [arrowheadr](https://wjschne.github.io/arrowheadr/) package to make custom arrowheads quickly. Some of them are admittedly silly. However, it is now easy to make my favorite kind of arrow in ggplot2:
+
+```{r figlatexprime}
+#| fig-cap: Mimicking the latex prime arrowhead
+#| classes: preview-image
+library(arrowheadr)
+
+p + 
+  geom_arrow_segment(length_head = 5,
+                     arrow_head = arrow_head_latex())
+```
+
+
+More examples:
+
+A catenary:
+
+```{r fig-stlouis}
+#| fig-cap: The Gateway Arch in St. Louis is shaped like a catenary, not a parabola.
+stlouis <- arrow_head_catenary(base_width = .25, thickness = .15)
+
+p + 
+  geom_arrow_segment(length_head = 5,
+                     arrow_head = stlouis)
+```
+
+The Cauchy function:
+
+```{r fig-cauchy}
+#| fig-cap: Any function can make an arrowhead.
+p + 
+  geom_arrow_segment(length_head = 5,
+                     arrow_head = arrow_head_function(dt, df = 1))
+```
+
+Razors:
+
+```{r fig-razors}
+#| fig-cap: The reflecter function takes a set of points and makes them symmetrical.
+razors <- c(1,0,
+  0,.5,
+  -.35,.25,
+  -.35, .21,
+  0,.35,
+  .90,0
+  ) |> 
+  v2matrix() |> 
+  reflecter() 
+
+p + 
+  geom_arrow_segment(length_head = 10,
+                     arrow_head = razors)
+
+```
+
+A candle flame:
+
+```{r fig-candleflame}
+#| fig-cap: Wittgensteain's rod makes some nice shapes
+candleflame <- arrow_head_wittgenstein_rod(
+  fixed_point = c(-2.75, 0),
+  rod_length = 3.75,
+  nudge = c(1, 0),
+  rescale = .95
+)
+
+p + 
+  geom_arrow_segment(length_head = 12,
+                     arrow_head = candleflame)
+```
+
+Using bezier curve control points:
+
+```{r fig-curved_arrowhead}
+#| fig-cap: Bezier curves can make almost anything.
+curved_arrowhead <- arrow_head_bezier(list(
+  c(1,  0,
+    .5, .5,
+    .2, .5),
+  c(.2, .5,
+    .2, .1,
+    -.1, .25,
+    -.3, .25),
+  c(-.3, .25,
+    0, 0,
+    -.3, -.25),
+  c(-.3, -.25,
+    -.1, -.25,
+    .2,  -.1,
+    .2, -.5),
+  c(.2, -.5,
+    .5, -.5,
+    1,  0)
+))
+
+p + 
+  geom_arrow_segment(length_head = 8,
+                     arrow_head = curved_arrowhead)
+```
+
