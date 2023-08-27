@@ -502,22 +502,28 @@ jsonlite::read_json("data/My Reports.json", simplifyVector = T) %>%
 ```{r software, results='asis'}
 
 
-jsonlite::read_json("data/My Software.json", simplifyVector = T) %>% 
-    as_tibble() %>% 
-  rename(year = issued) %>% 
-  mutate(year = flatten(year) %>% as.integer(),
-         author = make_authors(author),
-         pubid = str_remove(note, "pubid:"),
-         publisher = na2empty(publisher, paste0(publisher, ".")),
-         title = paste0(na2link(title, URL), ifelse(is.na(URL), ".", "")),
-         archive = na2link(archive, archive, "Retrieved from ", "")) %>% 
-  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>% 
-  mutate(citations = make_citation_button(cites, cid, year),
-         citation = glue::glue(
-    '<div class="csl-entry">{author} ({year}). <em>{title}</em>  &#091;Software&#093; {publisher} {archive} {citations}</div>')) %>% 
- arrange(-year, author) %>% 
-  pull(citation) %>% 
-  paste0(collapse = "\n") %>% 
+jsonlite::read_json("data/My Software.json", simplifyVector = T) %>%
+  as_tibble() %>%
+  rename(year = issued) %>%
+  mutate(id = row_number()) |>
+  mutate(
+    year = map2_dbl(year, id, \(x, i) unlist(x[i], recursive = FALSE)[[1]]) |> unname() |> as.integer(),
+    author = make_authors(author),
+    pubid = str_remove(note, "pubid:"),
+    publisher = na2empty(publisher, paste0(publisher, ".")),
+    title = paste0(na2link(title, URL), ifelse(is.na(URL), ".", "")),
+    archive = na2link(archive, archive, "Retrieved from ", "")
+  ) %>%
+  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>%
+  mutate(
+    citations = make_citation_button(cites, cid, year),
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({year}). <em>{title}</em>  &#091;Software&#093; {publisher} {archive} {citations}</div>'
+    )
+  ) %>%
+  arrange(-year, author) %>%
+  pull(citation) %>%
+  paste0(collapse = "\n") %>%
   cat
 ```
 
