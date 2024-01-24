@@ -1,0 +1,111 @@
+---
+title: "ANOVA in R"
+author: "W. Joel Schneider"
+format: 
+  html: 
+    df-print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(haven)
+library(sjstats)
+options(digits = 2)
+```
+
+# Load Packages
+
+```{r load}
+library(tidyverse)
+```
+
+# Import Data and Create Labelled Factors
+
+
+
+```{r import}
+# File location
+file <- "https://github.com/wjschne/EDUC5325/raw/master/Attachment.sav"
+
+
+# Import SPSS data file using haven
+# Also, change Attachment variable to a factor
+d <- haven::read_spss(file) %>%
+  mutate(Attachment = as_factor(Attachment))
+```
+
+# Descriptives
+
+Let's look at the means and standard deviations for anxiety of each attachment group.
+
+```{r summarize}
+d %>% 
+  summarize(Mean = mean(Anxiety_Questionnaire),
+            SD = sd(Anxiety_Questionnaire), 
+            .by = Attachment) 
+```
+
+# Plot
+
+
+
+```{r plot, message=FALSE}
+d |> 
+  ggplot(aes(x = Attachment,
+             y = Anxiety_Questionnaire)) +
+  geom_violin() +
+  stat_summary()
+```
+
+Just looking at the plot, we can see that the Ambivalent group has a higher mean anxiety than the other two groups. However, let's conduct a formal test of the difference of the group means.
+
+# Create One-Way ANOVA
+
+The `aov` (Analysis of Variance) function is what you want to use. The `anova` function is better used for comparing models. The dependent variable goes on the left, and any predictor variables are on the right hand side of the ~.
+
+```{r fit}
+fit <- aov(Anxiety_Questionnaire ~ Attachment, data = d)
+```
+
+## Summary
+
+The base R function `summary` gives us most of what we might want.
+
+```{r summary}
+summary(fit)
+```
+
+## Other Summary Functions
+
+If you want other summary functions, there are many options. Here are a few:
+
+```{r othersummary}
+broom::glance(fit)
+broom::tidy(fit)
+
+sjstats::anova_stats(fit)
+
+performance::performance(fit)
+parameters::parameters(fit)
+report::report(fit)
+```
+
+## Diagnostic Plots
+
+```{r assumptions}
+#| fig-height: 7
+performance::check_model(fit)
+```
+
+
+## Post-hoc Tests
+
+Tukey Honestly Significant Differences
+
+```{r tukey, fig.height=8}
+TukeyHSD(fit)
+plot(TukeyHSD(fit))
+```
+
+

@@ -9,19 +9,20 @@
 <link>https://wjschne.github.io/blog.html</link>
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.4.236</generator>
+<generator>quarto-1.4.533</generator>
 <lastBuildDate>Sat, 26 Aug 2023 04:00:00 GMT</lastBuildDate>
 <item>
   <title>Making a custom arrowhead for ggplot2 using ggarrow and arrowheadr</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index.html</link>
+  <link>https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/</link>
   <description><![CDATA[ 
 
 
 
 
+
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Base plot for demonstrations</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -305,12 +306,16 @@ font-style: inherit;">5</span></span>
 <span id="cb1-46">p</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/baseplot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/baseplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The default arrows in ggplot2 are perfectly serviceable. There is the open variety:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Open arrow code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -323,10 +328,14 @@ background-color: null;
 font-style: inherit;">arrow</span>())</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-open" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-open-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: The ggplot2 open arrow</figcaption>
+<div id="fig-open" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-open-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-open-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-open-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The ggplot2 open arrow
+</figcaption>
 </figure>
 </div>
 </div>
@@ -334,7 +343,7 @@ font-style: inherit;">arrow</span>())</span></code></pre></div>
 <p>You can specify which ends of the segment have arrowheads, whether the arrows are open or closed, the length of the arrow, and how sharp the arrow’s point is with the <code>angle</code> argument.</p>
 <p>I happen to prefer a longer, sharper, closed arrow:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Closed arrow code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -368,17 +377,21 @@ font-style: inherit;">"closed"</span></span>
 <span id="cb3-6">))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-closed" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-closed-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: The ggplot2 closed arrow</figcaption>
+<div id="fig-closed" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-closed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-closed-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-closed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The ggplot2 closed arrow
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Nevertheless, I miss the variety of <a href="https://tikz.dev/tikz-arrows">arrows in available in TikZ</a>. I particularly like the <code>latex'</code> arrow:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>TikZ code with latex’ arrow</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode tikz code-with-copy"><code class="sourceCode latex"><span id="cb4-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -424,10 +437,14 @@ background-color: null;
 font-style: inherit;">tikzpicture</span>}</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-tkz" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-tkz-1.svg" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3: The TikZ latex’ arrow</figcaption>
+<div id="fig-tkz" class="quarto-figure quarto-figure-center quarto-float anchored" width="70%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tkz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-tkz-1.svg" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tkz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The TikZ latex’ arrow
+</figcaption>
 </figure>
 </div>
 </div>
@@ -437,7 +454,7 @@ font-style: inherit;">tikzpicture</span>}</span></code></pre></div>
 <p>If you want more variety in drawing arrows in ggplot2, Teun van den Brand’s <a href="https://github.com/teunbrand/ggarrow">ggarrow</a> package expands your limits to whatever your imagination can provide.</p>
 <p>The default arrowhead is already a nice improvement:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code for wings arrow (i.e, stealth arrow in TikZ)</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -450,17 +467,21 @@ background-color: null;
 font-style: inherit;">10</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-stealth" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-stealth-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4: The “wings” arrow</figcaption>
+<div id="fig-stealth" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stealth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-stealth-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stealth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The “wings” arrow
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>You can play around with the sharpness of the point (<code>offset</code>) and the sharpness of the barb (<code>inset</code>). You can also add feathers.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code for sharp barbs and feathers</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -498,16 +519,20 @@ background-color: null;
 font-style: inherit;">11</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-feathers" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-feathers-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5: Sharp barbs and feathers</figcaption>
+<div id="fig-feathers" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-feathers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-feathers-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-feathers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Sharp barbs and feathers
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code for kite arrowhead</summary>
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -554,16 +579,20 @@ background-color: null;
 font-style: inherit;">15</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-kite" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-kite-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;6: Double-headed arrow with kite arrowhead</figcaption>
+<div id="fig-kite" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-kite-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-kite-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kite-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Double-headed arrow with kite arrowhead
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code for reverse kite arrowhead</summary>
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -591,17 +620,21 @@ background-color: null;
 font-style: inherit;">120</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-reversekite" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-reversekite-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;7: Reverse kite arrowhead</figcaption>
+<div id="fig-reversekite" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-reversekite-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-reversekite-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reversekite-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Reverse kite arrowhead
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>If the arrow goes too far, you can pull it back with the <code>resect</code> arguments.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code for resecting an arrowhead</summary>
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -634,10 +667,14 @@ background-color: null;
 font-style: inherit;">2</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-resect" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-resect-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;8: Demonstration of resecting arrowheads</figcaption>
+<div id="fig-resect" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-resect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-resect-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-resect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Demonstration of resecting arrowheads
+</figcaption>
 </figure>
 </div>
 </div>
@@ -649,7 +686,7 @@ font-style: inherit;">2</span>)</span></code></pre></div>
 <p>Not only does ggarrow offer great arrow geoms with excellent features like resection, one can create any custom arrowhead or feather that can be made with a single polygon.</p>
 <p>The polygon generally falls between -1 and 1 on x and y, though you can plot outside those limits. In most cases, the point is at (0,1), and the line ends at (0,0):</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -765,17 +802,21 @@ background-color: null;
 font-style: inherit;">"b"</span>)))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-polygonplot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-polygonplot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;9: Grid for custom arrowheads</figcaption>
+<div id="fig-polygonplot" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-polygonplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-polygonplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-polygonplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Grid for custom arrowheads
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>The polygon you create should be be a 2-column matrix with named columns (e.g., x and y). Here I make a elliptical arrowhead.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">make_ellipse <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -839,10 +880,14 @@ background-color: null;
 font-style: inherit;">make_ellipse</span>())</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-ellipse" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-ellipse-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;10: Make ellipse</figcaption>
+<div id="fig-ellipse" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-ellipse-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Make ellipse
+</figcaption>
 </figure>
 </div>
 </div>
@@ -852,7 +897,7 @@ font-style: inherit;">make_ellipse</span>())</span></code></pre></div>
 <h1>The arrowheadr package</h1>
 <p>I made the <a href="https://wjschne.github.io/arrowheadr/">arrowheadr</a> package to make custom arrowheads quickly. Some of them are admittedly silly. However, it is now easy to make my favorite kind of arrow in ggplot2:</p>
 <div class="cell preview-image">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -875,10 +920,10 @@ background-color: null;
 font-style: inherit;">arrow_head_latex</span>())</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div class="img-fluid quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/figlatexprime-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Mimicking the latex prime arrowhead</figcaption>
+<figcaption>Mimicking the latex prime arrowhead</figcaption>
 </figure>
 </div>
 </div>
@@ -886,7 +931,7 @@ font-style: inherit;">arrow_head_latex</span>())</span></code></pre></div>
 <p>More examples:</p>
 <p>A catenary:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">stlouis <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -917,17 +962,21 @@ background-color: null;
 font-style: inherit;">arrow_head =</span> stlouis)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-stlouis" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-stlouis-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;11: The Gateway Arch in St.&nbsp;Louis is shaped like a catenary, not a parabola.</figcaption>
+<div id="fig-stlouis" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stlouis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-stlouis-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stlouis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: The Gateway Arch in St.&nbsp;Louis is shaped like a catenary, not a parabola.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>The Cauchy function:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -950,17 +999,21 @@ background-color: null;
 font-style: inherit;">1</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-cauchy" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-cauchy-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;12: Any function can make an arrowhead.</figcaption>
+<div id="fig-cauchy" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cauchy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-cauchy-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cauchy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Any function can make an arrowhead.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Razors:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">razors <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -1027,17 +1080,21 @@ background-color: null;
 font-style: inherit;">arrow_head =</span> razors)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-razors" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-razors-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;13: The reflecter function takes a set of points and makes them symmetrical.</figcaption>
+<div id="fig-razors" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-razors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-razors-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-razors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: The reflecter function takes a set of points and makes them symmetrical.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>A candle flame:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">candleflame <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -1091,17 +1148,21 @@ background-color: null;
 font-style: inherit;">arrow_head =</span> candleflame)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-candleflame" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-candleflame-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;14: Wittgenstein’s rod makes some nice shapes</figcaption>
+<div id="fig-candleflame" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-candleflame-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-candleflame-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-candleflame-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Wittgenstein’s rod makes some nice shapes
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Using bezier curve control points:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">curved_arrowhead <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -1248,10 +1309,14 @@ background-color: null;
 font-style: inherit;">arrow_head =</span> curved_arrowhead)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-curved_arrowhead" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-curved_arrowhead-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;15: Bezier curves can make almost anything.</figcaption>
+<div id="fig-curved_arrowhead" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-curved_arrowhead-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index_files/figure-html/fig-curved_arrowhead-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-curved_arrowhead-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Bezier curves can make almost anything.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1260,7 +1325,7 @@ font-style: inherit;">arrow_head =</span> curved_arrowhead)</span></code></pre><
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
   author = {Schneider, W. Joel},
   title = {Making a Custom Arrowhead for Ggplot2 Using Ggarrow and
     Arrowheadr},
@@ -1270,18 +1335,18 @@ font-style: inherit;">arrow_head =</span> curved_arrowhead)</span></code></pre><
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2023, August 26). Making a custom arrowhead for
-ggplot2 using ggarrow and arrowheadr. <em>W. Joel Schneider’s Blog</em>.
-<a href="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr">https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr</a>
+ggplot2 using ggarrow and arrowheadr. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr">https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr</a>
 </div></div></section></div> ]]></description>
   <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/index.html</guid>
+  <guid>https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/</guid>
   <pubDate>Sat, 26 Aug 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Annotated equations in ggplot2</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index.html</link>
+  <link>https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -1305,7 +1370,7 @@ font-style: inherit;">"annotatedequationsimple"</span></span></code></pre></div>
 </div>
 <p>Here is the code for the annotated equation. It is saved in <code>annotatedequationsimple.tex</code>.</p>
 <div class="cell">
-<details open="">
+<details open="" class="code-fold">
 <summary>LaTeX code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
 background-color: null;
@@ -1568,17 +1633,21 @@ font-style: inherit;">ymax =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>) </span></code></pre></div>
 <div class="cell-output-display">
-<div id="fig-simpleplot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-simpleplot-1.svg" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: A simple plot with an annotated equation.</figcaption>
+<div id="fig-simpleplot" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-simpleplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-simpleplot-1.svg" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-simpleplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: A simple plot with an annotated equation.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>However, this is no better than just displaying the .svg directly. You probably want to embed the equation in a plot. For example:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">mu <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -1807,17 +1876,21 @@ font-style: inherit;">NULL</span></span>
 <span id="cb6-51">  ) </span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-svg" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-svg-1.svg" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Importing an .svg file via svgparser and <code>annotation_custom</code>.</figcaption>
+<div id="fig-svg" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-svg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-svg-1.svg" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-svg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Importing an .svg file via svgparser and <code>annotation_custom</code>.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>If you can live with just a little pixelation, the <a href="https://github.com/GuangchuangYu/ggimage">ggimage</a> package can import a .pdf directly with good results and less hassle, provided you render the plot with the <a href="https://ragg.r-lib.org/">ragg</a> package.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2027,10 +2100,14 @@ font-style: inherit;">NULL</span></span>
 <span id="cb7-50">  )</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-pdf" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-pdf-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3: Importing a .pdf file via <code>ggimage::geom_image</code>.</figcaption>
+<div id="fig-pdf" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-pdf-1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Importing a .pdf file via <code>ggimage::geom_image</code>.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -2040,9 +2117,9 @@ font-style: inherit;">NULL</span></span>
 <h1>A more complex example</h1>
 <p>In this example, I used the <code>\eqnmarkbox</code> function for greater clarity. The .tex file is saved in a file called <code>annotatedequation.tex</code>.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>LaTeX code</summary>
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode tikz code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><span class="bu" style="color: null;
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">\documentclass</span>[border={10pt 48pt -45pt 62pt}]{<span class="ex" style="color: null;
 background-color: null;
@@ -2233,7 +2310,7 @@ font-style: inherit;">$</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">\tau</span><span class="ss" style="color: #20794D;
 background-color: null;
-font-style: inherit;">=85$</span>}</span>
+font-style: inherit;">=70$</span>}</span>
 <span id="cb8-47">    </span>
 <span id="cb8-48"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2336,7 +2413,7 @@ font-style: inherit;">document</span>}</span></code></pre></div>
 </div>
 <p>Now convert .tex to .pdf:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">myfile <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -2360,7 +2437,7 @@ font-style: inherit;">shell</span>()</span></code></pre></div>
 </div>
 <p>And we are ready to plot. This plot shows the probability that an observed score will have a true score less than a specific threshold, given a reliability coefficient.</p>
 <div class="cell preview-image">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">viridis_start <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -3022,10 +3099,14 @@ background-color: null;
 font-style: inherit;">160</span>)) </span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-pthresholdequation" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-pthresholdequation-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;4: The probability that a true score is less than 70 depends on the observed score’s position and reliability coefficient.</figcaption>
+<div id="fig-pthresholdequation" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pthresholdequation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-pthresholdequation-1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pthresholdequation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The probability that a true score is less than 70 depends on the observed score’s position and reliability coefficient.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -3034,7 +3115,7 @@ font-style: inherit;">160</span>)) </span></code></pre></div>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
   author = {Schneider, W. Joel},
   title = {Annotated Equations in Ggplot2},
   date = {2023-07-24},
@@ -3042,18 +3123,19 @@ font-style: inherit;">160</span>)) </span></code></pre></div>
   langid = {en}
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
-Schneider, W. J. (2023, July 24). Annotated equations in ggplot2. <em>W.
-Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2">https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2</a>
+Schneider, W. J. (2023, July 24). Annotated equations in ggplot2.
+<em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2">https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2</a>
 </div></div></section></div> ]]></description>
   <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index.html</guid>
+  <guid>https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/</guid>
   <pubDate>Mon, 24 Jul 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Creating collapsible output with knitr chunk hooks</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/index.html</link>
+  <link>https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -3215,7 +3297,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
   author = {Schneider, W. Joel},
   title = {Creating Collapsible Output with Knitr Chunk Hooks},
   date = {2023-06-30},
@@ -3224,18 +3306,19 @@ font-style: inherit;">5</span></span></code></pre></div>
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2023, June 30). Creating collapsible output with knitr
-chunk hooks. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks">https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks</a>
+chunk hooks. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks">https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks</a>
 </div></div></section></div> ]]></description>
   <category>knitr</category>
   <category>markdown</category>
-  <guid>https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/index.html</guid>
+  <guid>https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/</guid>
   <pubDate>Fri, 30 Jun 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Splitting sentence texts into roughly equal segments</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index.html</link>
+  <link>https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -3539,7 +3622,11 @@ font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Y-axis labels with no text wrapping"</span>)</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index_files/figure-html/basicplot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index_files/figure-html/basicplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The questions are taking up a lot of space. We can fix this by using <code>stringr::str_wrap</code> to make the text lines no longer than a specified width:</p>
@@ -3566,7 +3653,11 @@ font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Splitting Y-axis labels with str_wrap"</span>)</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index_files/figure-html/wrapplot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index_files/figure-html/wrapplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>This is a definite improvement, but I wish the lines of text were wrapped more evenly. For example, I do not like the fact that “chocolate” and “bread” are by themselves on their own lines. I have spent a fair amount of time breaking lines up by hand and hoped to create a function to automate the process. To achieve a more balanced style of text splitting, I made the <code>str_wrap_equal</code> function.</p>
@@ -3592,7 +3683,11 @@ font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Splitting Y-axis labels with str_wrap_equal"</span>)</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index_files/figure-html/wrapequalplot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index_files/figure-html/wrapequalplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>To each their own, but this style of text wrapping feels better to me here. It is the sort of thing no one but the analyst will notice if it is right but will feel a bit off if not.</p>
@@ -3616,7 +3711,9 @@ font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(x, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">max_width =</span> 30L, <span class="at" style="color: #657422;
+font-style: inherit;">max_width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>L, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -3865,7 +3962,7 @@ font-style: inherit;">collapse =</span> sep)</span>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
   author = {Schneider, W. Joel},
   title = {Splitting Sentence Texts into Roughly Equal Segments},
   date = {2023-05-31},
@@ -3874,17 +3971,18 @@ font-style: inherit;">collapse =</span> sep)</span>
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2023, May 31). Splitting sentence texts into roughly
-equal segments. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments">https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments</a>
+equal segments. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments">https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments</a>
 </div></div></section></div> ]]></description>
   <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/index.html</guid>
+  <guid>https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/</guid>
   <pubDate>Wed, 31 May 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Insert Text from One Markdown Document into Another</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/index.html</link>
+  <link>https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -4522,7 +4620,7 @@ cat(get_quote("id2", "index.qmd"))</code></pre>
 </section>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
   author = {Schneider, W. Joel},
   title = {Insert {Text} from {One} {Markdown} {Document} into
     {Another}},
@@ -4532,17 +4630,18 @@ cat(get_quote("id2", "index.qmd"))</code></pre>
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2023, March 30). Insert Text from One Markdown
-Document into Another. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another">https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another</a>
+Document into Another. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another">https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another</a>
 </div></div></section></div> ]]></description>
   <category>markdown</category>
-  <guid>https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/index.html</guid>
+  <guid>https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/</guid>
   <pubDate>Thu, 30 Mar 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Making text labels the same size as axis labels in ggplot2</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/index.html</link>
+  <link>https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -4635,7 +4734,11 @@ background-color: null;
 font-style: inherit;">1</span></span>
 <span id="cb1-18">  )</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>If you do not mind a little trial and error, you can fiddle with the <code>size</code> parameter until you find a value that looks good to you. However, what if we want the axis text labels and the output of <code>geom_text</code> to be <em>exactly</em> the same size?</p>
@@ -4745,7 +4848,11 @@ background-color: null;
 font-style: inherit;">3</span></span>
 <span id="cb5-11">  )</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>For my own convenience (and possibly yours), I put the <code>ggtext_size</code> function in the <a href="https://wjschne.github.io/WJSmisc/">WJSmisc package</a>.</p>
@@ -4753,7 +4860,7 @@ font-style: inherit;">3</span></span>
 
 
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
   author = {Schneider, W. Joel},
   title = {Making Text Labels the Same Size as Axis Labels in Ggplot2},
   date = {2021-08-10},
@@ -4762,17 +4869,18 @@ font-style: inherit;">3</span></span>
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2021" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2021, August 10). Making text labels the same size as
-axis labels in ggplot2. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2">https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2</a>
+axis labels in ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2">https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2</a>
 </div></div></section></div> ]]></description>
   <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/index.html</guid>
+  <guid>https://wjschne.github.io/posts/making-text-labels-the-same-size-as-axis-labels-in-ggplot2/</guid>
   <pubDate>Tue, 10 Aug 2021 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Bar chart labels on smooth paths in ggplot2</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index.html</link>
+  <link>https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -5075,7 +5183,11 @@ background-color: null;
 font-style: inherit;">5</span>)</span>
 <span id="cb2-16">  )</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/unnamed-chunk-1-1.svg" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/unnamed-chunk-1-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Not bad, but it would look better if we sorted the groups. We have many sorting options. One is that we can convert the Likert scale to numeric and then sort by the group with the highest mean.</p>
@@ -5219,7 +5331,11 @@ background-color: null;
 font-style: inherit;">5</span>)</span>
 <span id="cb3-18">  )</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/datasorting-1.svg" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/datasorting-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>If I wanted to sort by the “Strongly Agree” category (or any other category):</p>
@@ -5372,7 +5488,11 @@ background-color: null;
 font-style: inherit;">5</span>)</span>
 <span id="cb4-21">  )</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/datasorting2-1.svg" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/datasorting2-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -5914,7 +6034,11 @@ font-style: inherit;">"mm"</span>)</span>
 <span id="cb5-84">             )</span>
 <span id="cb5-85">           ) </span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/finalplot-1.svg" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index_files/figure-html/finalplot-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>This feels right to me.</p>
@@ -5922,7 +6046,7 @@ font-style: inherit;">"mm"</span>)</span>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
   author = {Schneider, W. Joel},
   title = {Bar Chart Labels on Smooth Paths in Ggplot2},
   date = {2021-07-31},
@@ -5931,17 +6055,18 @@ font-style: inherit;">"mm"</span>)</span>
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2021" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2021, July 31). Bar chart labels on smooth paths in
-ggplot2. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2">https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2</a>
+ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2">https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2</a>
 </div></div></section></div> ]]></description>
   <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/index.html</guid>
+  <guid>https://wjschne.github.io/posts/bar-chart-labels-on-smooth-paths-in-ggplot2/</guid>
   <pubDate>Sat, 31 Jul 2021 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Point labels perpendicular to a curve in ggplot2</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index.html</link>
+  <link>https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -6263,7 +6388,11 @@ font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758
 background-color: null;
 font-style: inherit;">element_markdown</span>())</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index_files/figure-html/sine-perpendicular-1.svg" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index_files/figure-html/sine-perpendicular-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>If you do not mind turning your head to one side or the other, a somewhat easier method is to set the label’s <code>vjust</code> to a negative value and rotate the labels by the angle of the tangent line:</p>
@@ -6459,7 +6588,11 @@ font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758
 background-color: null;
 font-style: inherit;">element_markdown</span>())</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index_files/figure-html/sine-sloped-1.svg" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index_files/figure-html/sine-sloped-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>What if you do not know the function’s first derivative? You can approximate the slope of the tangent line by comparing a function’s output of each point with the output of a slightly deviated point. Here is a plot of the normal cumulative distribution function.</p>
@@ -6660,13 +6793,17 @@ font-style: inherit;">scale_y_continuous</span>(<span class="st" style="color: #
 background-color: null;
 font-style: inherit;">"&amp;Phi;(*x*)"</span>)</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index_files/figure-html/normalcdf-1.svg" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index_files/figure-html/normalcdf-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
+</div>
 
 
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
   author = {Schneider, W. Joel},
   title = {Point Labels Perpendicular to a Curve in Ggplot2},
   date = {2021-07-27},
@@ -6675,17 +6812,18 @@ font-style: inherit;">"&amp;Phi;(*x*)"</span>)</span></code></pre></div>
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2021" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2021, July 27). Point labels perpendicular to a curve
-in ggplot2. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2">https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2</a>
+in ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2">https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2</a>
 </div></div></section></div> ]]></description>
   <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/index.html</guid>
+  <guid>https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/</guid>
   <pubDate>Tue, 27 Jul 2021 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Caption on same line as axis title in ggplot2</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index.html</link>
+  <link>https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -6737,7 +6875,11 @@ font-style: inherit;">"Note: Mean = 0, SD = 1"</span>)</span>
 <span id="cb1-5"></span>
 <span id="cb1-6">p</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/default position-1.svg" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/default position-1.svg" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>However, I want the caption to be a little higher, on the same line as the x-axis title. To do so, set a a negative top margin:</p>
@@ -6766,7 +6908,11 @@ font-style: inherit;">unit =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"pt"</span>)))</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/on same line-1.svg" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/on same line-1.svg" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Here is a more finished example.</p>
@@ -7635,13 +7781,17 @@ font-style: inherit;">       true&lt;br&gt;score distributions for each observed
 background-color: null;
 font-style: inherit;">       underneath span the 68% and 95% confidence intervals."</span>)</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/display scores-1.svg" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/display scores-1.svg" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
 </div>
 </div>
+</div>
 
 
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
   author = {Schneider, W. Joel},
   title = {Caption on Same Line as Axis Title in Ggplot2},
   date = {2021-07-21},
@@ -7650,17 +7800,18 @@ font-style: inherit;">       underneath span the 68% and 95% confidence interval
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2021" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2021, July 21). Caption on same line as axis title in
-ggplot2. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2">https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2</a>
+ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2">https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2</a>
 </div></div></section></div> ]]></description>
   <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index.html</guid>
+  <guid>https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/</guid>
   <pubDate>Wed, 21 Jul 2021 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Concatenating vectors unless a vector is empty</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty/index.html</link>
+  <link>https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -7845,7 +7996,7 @@ font-style: inherit;">"{x}_1"</span>)</span></code></pre></div>
 
 
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
   author = {Schneider, W. Joel},
   title = {Concatenating Vectors Unless a Vector Is Empty},
   date = {2021-05-13},
@@ -7854,10 +8005,10 @@ font-style: inherit;">"{x}_1"</span>)</span></code></pre></div>
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2021" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2021, May 13). Concatenating vectors unless a vector
-is empty. <em>W. Joel Schneider’s Blog</em>. <a href="https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty">https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty</a>
+is empty. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty">https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty</a>
 </div></div></section></div> ]]></description>
   <category>R</category>
-  <guid>https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty/index.html</guid>
+  <guid>https://wjschne.github.io/posts/concatenating-vectors-unless-a-vector-is-empty/</guid>
   <pubDate>Thu, 13 May 2021 04:00:00 GMT</pubDate>
 </item>
 </channel>
