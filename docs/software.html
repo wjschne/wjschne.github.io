@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.533">
+<meta name="generator" content="quarto-1.4.548">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -248,7 +248,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>In the model below, the path coefficients are standardized. You would like to simulate the variables in the model, but you do not know the disturbance and residual variances. The simstandard package can help.</p>
-<div class="img-fluid quarto-figure quarto-figure-center">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ModelFigure.svg" class="img-fluid figure-img" width="600"></p>
 <figcaption>A standardized latent variable model</figcaption>
@@ -279,7 +279,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>I needed to show confidence intervals and conditional normal distributions with specific means and standard deviations. I wrote the ggnormalviolin package to make this happen.</p>
 <p>It makes plots like this:</p>
-<div class="img-fluid quarto-figure quarto-figure-center">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://wjschne.github.io/ggnormalviolin/reference/figures/README-example2-1.svg" class="img-fluid figure-img"></p>
 <figcaption>Example plot made with ggnormalviolin</figcaption>
@@ -296,7 +296,7 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="https://wjschne.github.iopsycheval/index.html" style="position:relative; bottom:65px"><img src="images/favicon.png" class="img-fluid" width="150"></a></p>
 </div>
 </div>
-<div class="img-fluid quarto-figure quarto-figure-center">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://wjschne.github.io/psycheval/reference/figures/README-unnamed-chunk-11-1.png" class="img-fluid figure-img"></p>
 <figcaption>Mulivariate Confindence Intervals</figcaption>
@@ -312,7 +312,7 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="https://wjschne.github.io/WJSmisc/index.html" style="position:relative; bottom:65px"><img src="images/favicon.png" class="img-fluid" width="150"></a></p>
 </div>
 </div>
-<div class="img-fluid quarto-figure quarto-figure-center">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://wjschne.github.io/WJSmisc/reference/figures/README-unnamed-chunk-13-1.png" class="img-fluid figure-img"></p>
 <figcaption>Whoa! How did you place those labels so perfectly?</figcaption>
@@ -525,7 +525,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
