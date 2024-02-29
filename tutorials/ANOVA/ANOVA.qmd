@@ -9,6 +9,7 @@ format:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(easystats)
 library(haven)
 library(sjstats)
 options(digits = 2)
@@ -18,6 +19,7 @@ options(digits = 2)
 
 ```{r load}
 library(tidyverse)
+library(easystats)
 ```
 
 # Import Data and Create Labelled Factors
@@ -68,44 +70,69 @@ The `aov` (Analysis of Variance) function is what you want to use. The `anova` f
 fit <- aov(Anxiety_Questionnaire ~ Attachment, data = d)
 ```
 
+## Diagnostic Plots
+
+```{r assumptions}
+#| fig-height: 9
+check_model(fit)
+```
+
+None of the diagnostic checks raise any alarms. Specifically, the residuals are reasonably normal and have consistent variance acrross groups (i.e., the homogeneeity of variance assumption is reasonable).
+
 ## Summary
 
-The base R function `summary` gives us most of what we might want.
+The base R function `summary` gives us most of what we might want to know.
 
 ```{r summary}
 summary(fit)
 ```
 
-## Other Summary Functions
+We can see that overall model is significant, meaning that at least two groups have reliably different means. At this point we do not know which means differ, but from the plot we have a good guess that the Ambivalent group scores higher on the Anxiety Questionnaire than the other two groups.
 
-If you want other summary functions, there are many options. Here are a few:
+A similar, but tidier display can be found with the `parameters` function:
 
-```{r othersummary}
-broom::glance(fit)
-broom::tidy(fit)
-
-sjstats::anova_stats(fit)
-
-performance::performance(fit)
-parameters::parameters(fit)
-report::report(fit)
+```{r}
+parameters(fit)
 ```
 
-## Diagnostic Plots
 
-```{r assumptions}
-#| fig-height: 7
-performance::check_model(fit)
+## Other Summary Functions
+
+The overall "fit" or "performance" of the model:
+
+```{r}
+performance(fit)
+```
+
+* `AIC`: [Akaike's Information Criterion](https://en.wikipedia.org/wiki/Akaike_information_criterion)
+* `AICc`: AIC with a correction for small sample sizes
+* `BIC`: [Bayesian Information Criterion](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
+* `R2`: R-squared: [Coefficient of Determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)
+* `R2_adj`: [Adjusted r-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2)
+* `RMSE`: Root mean squared error $=\sqrt{\frac{\sum_{i = 1}^{n}{e_i}}{n}}$
+* `SIGMA`: Residual standard deviation (The SD of the residuals $=\sqrt{\frac{\sum_{i = 1}^{n}{e_i}}{n-k-1}}$) 
+
+
+## Automated Interpretation
+
+```{r}
+report(fit)
+
 ```
 
 
 ## Post-hoc Tests
 
-Tukey Honestly Significant Differences
+We would like to compare all means but control for family-wise error.
 
-```{r tukey, fig.height=8}
-TukeyHSD(fit)
-plot(TukeyHSD(fit))
+```{r contrasts, fig.height=8}
+estimate_contrasts(fit)
+estimate_contrasts(fit) |> 
+  report()
 ```
+
+
+
+
 
 

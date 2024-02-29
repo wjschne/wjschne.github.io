@@ -9,8 +9,8 @@
 <link>https://wjschne.github.io/tutorials.html</link>
 <atom:link href="https://wjschne.github.io/tutorials.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.4.548</generator>
-<lastBuildDate>Wed, 24 Jan 2024 03:19:31 GMT</lastBuildDate>
+<generator>quarto-1.5.9</generator>
+<lastBuildDate>Thu, 29 Feb 2024 18:24:37 GMT</lastBuildDate>
 <item>
   <title>ANOVA in R</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -25,7 +25,10 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(easystats)</span></code></pre></div>
 </div>
 </section>
 <section id="import-data-and-create-labelled-factors" class="level1">
@@ -169,11 +172,27 @@ font-style: inherit;">~</span> Attachment, <span class="at" style="color: #65742
 background-color: null;
 font-style: inherit;">data =</span> d)</span></code></pre></div>
 </div>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>The base R function <code>summary</code> gives us most of what we might want.</p>
+<section id="diagnostic-plots" class="level2">
+<h2 class="anchored" data-anchor-id="diagnostic-plots">Diagnostic Plots</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">check_model</span>(fit)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/tutorials/ANOVA/ANOVA_files/figure-html/assumptions-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>None of the diagnostic checks raise any alarms. Specifically, the residuals are reasonably normal and have consistent variance acrross groups (i.e., the homogeneeity of variance assumption is reasonable).</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>The base R function <code>summary</code> gives us most of what we might want to know.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(fit)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -184,196 +203,10 @@ Residuals   297  32517     109
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-</section>
-<section id="other-summary-functions" class="level2">
-<h2 class="anchored" data-anchor-id="other-summary-functions">Other Summary Functions</h2>
-<p>If you want other summary functions, there are many options. Here are a few:</p>
+<p>We can see that overall model is significant, meaning that at least two groups have reliably different means. At this point we do not know which means differ, but from the plot we have a good guess that the Ambivalent group scores higher on the Anxiety Questionnaire than the other two groups.</p>
+<p>A similar, but tidier display can be found with the <code>parameters</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">broom<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glance</span>(fit)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">logLik</th>
-<th style="text-align: right;">AIC</th>
-<th style="text-align: right;">BIC</th>
-<th style="text-align: right;">deviance</th>
-<th style="text-align: right;">nobs</th>
-<th style="text-align: right;">r.squared</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">-1129</td>
-<td style="text-align: right;">2265</td>
-<td style="text-align: right;">2280</td>
-<td style="text-align: right;">32517</td>
-<td style="text-align: right;">300</td>
-<td style="text-align: right;">0.39</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">broom<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tidy</span>(fit)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">df</th>
-<th style="text-align: right;">sumsq</th>
-<th style="text-align: right;">meansq</th>
-<th style="text-align: right;">statistic</th>
-<th style="text-align: right;">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Attachment</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">20359</td>
-<td style="text-align: right;">10179</td>
-<td style="text-align: right;">93</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Residuals</td>
-<td style="text-align: right;">297</td>
-<td style="text-align: right;">32517</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">sjstats<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">anova_stats</span>(fit)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<colgroup>
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 3%">
-<col style="width: 4%">
-<col style="width: 5%">
-<col style="width: 7%">
-<col style="width: 6%">
-<col style="width: 4%">
-<col style="width: 11%">
-<col style="width: 6%">
-<col style="width: 12%">
-<col style="width: 7%">
-<col style="width: 7%">
-<col style="width: 4%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">df</th>
-<th style="text-align: right;">sumsq</th>
-<th style="text-align: right;">meansq</th>
-<th style="text-align: right;">statistic</th>
-<th style="text-align: right;">p.value</th>
-<th style="text-align: right;">etasq</th>
-<th style="text-align: right;">partial.etasq</th>
-<th style="text-align: right;">omegasq</th>
-<th style="text-align: right;">partial.omegasq</th>
-<th style="text-align: right;">epsilonsq</th>
-<th style="text-align: right;">cohens.f</th>
-<th style="text-align: right;">power</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Attachment</td>
-<td style="text-align: left;">Attachment</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">20359</td>
-<td style="text-align: right;">10179</td>
-<td style="text-align: right;">93</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.79</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">…2</td>
-<td style="text-align: left;">Residuals</td>
-<td style="text-align: right;">297</td>
-<td style="text-align: right;">32517</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">performance<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">performance</span>(fit)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">AIC</th>
-<th style="text-align: right;">AICc</th>
-<th style="text-align: right;">BIC</th>
-<th style="text-align: right;">R2</th>
-<th style="text-align: right;">R2_adjusted</th>
-<th style="text-align: right;">RMSE</th>
-<th style="text-align: right;">Sigma</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">2265</td>
-<td style="text-align: right;">2265</td>
-<td style="text-align: right;">2280</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">10</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">parameters<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(fit)</span></code></pre></div>
 <div class="cell-output-display">
@@ -410,9 +243,58 @@ font-style: inherit;">parameters</span>(fit)</span></code></pre></div>
 </table>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">report<span class="sc" style="color: #5E5E5E;
+</div>
+</section>
+<section id="other-summary-functions" class="level2">
+<h2 class="anchored" data-anchor-id="other-summary-functions">Other Summary Functions</h2>
+<p>The overall “fit” or “performance” of the model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">performance</span>(fit)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">R2</th>
+<th style="text-align: right;">R2_adjusted</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">Sigma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2265</td>
+<td style="text-align: right;">2265</td>
+<td style="text-align: right;">2280</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li><code>AIC</code>: <a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike’s Information Criterion</a></li>
+<li><code>AICc</code>: AIC with a correction for small sample sizes</li>
+<li><code>BIC</code>: <a href="https://en.wikipedia.org/wiki/Bayesian_information_criterion">Bayesian Information Criterion</a></li>
+<li><code>R2</code>: R-squared: <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">Coefficient of Determination</a></li>
+<li><code>R2_adj</code>: <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2">Adjusted r-squared</a></li>
+<li><code>RMSE</code>: Root mean squared error <img src="https://latex.codecogs.com/png.latex?=%5Csqrt%7B%5Cfrac%7B%5Csum_%7Bi%20=%201%7D%5E%7Bn%7D%7Be_i%7D%7D%7Bn%7D%7D"></li>
+<li><code>SIGMA</code>: Residual standard deviation (The SD of the residuals <img src="https://latex.codecogs.com/png.latex?=%5Csqrt%7B%5Cfrac%7B%5Csum_%7Bi%20=%201%7D%5E%7Bn%7D%7Be_i%7D%7D%7Bn-k-1%7D%7D">)</li>
+</ul>
+</section>
+<section id="automated-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="automated-interpretation">Automated Interpretation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">report</span>(fit)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -425,53 +307,101 @@ Effect sizes were labelled following Field's (2013) recommendations.</code></pre
 </div>
 </div>
 </section>
-<section id="diagnostic-plots" class="level2">
-<h2 class="anchored" data-anchor-id="diagnostic-plots">Diagnostic Plots</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">performance<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">check_model</span>(fit)</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/ANOVA/ANOVA_files/figure-html/assumptions-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
 <section id="post-hoc-tests" class="level2">
 <h2 class="anchored" data-anchor-id="post-hoc-tests">Post-hoc Tests</h2>
-<p>Tukey Honestly Significant Differences</p>
+<p>We would like to compare all means but control for family-wise error.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">TukeyHSD</span>(fit)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Tukey multiple comparisons of means
-    95% family-wise confidence level
-
-Fit: aov(formula = Anxiety_Questionnaire ~ Attachment, data = d)
-
-$Attachment
-                    diff  lwr  upr p adj
-Avoidant-Secure     -2.3 -5.8  1.3  0.29
-Ambivalent-Secure   16.2 12.8 19.5  0.00
-Ambivalent-Avoidant 18.4 14.8 22.0  0.00</code></pre>
+font-style: inherit;">estimate_contrasts</span>(fit)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">plot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">TukeyHSD</span>(fit))</span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/ANOVA/ANOVA_files/figure-html/tukey-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level1</th>
+<th style="text-align: left;">Level2</th>
+<th style="text-align: right;">Difference</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: right;">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">-18.4</td>
+<td style="text-align: right;">-22.1</td>
+<td style="text-align: right;">-14.8</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">297</td>
+<td style="text-align: right;">-12.1</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">-16.2</td>
+<td style="text-align: right;">-19.6</td>
+<td style="text-align: right;">-12.7</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">297</td>
+<td style="text-align: right;">-11.3</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+<td style="text-align: left;">Avoidant</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">297</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+</tbody>
+</table>
 </div>
+</div>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">estimate_contrasts</span>(fit) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb15-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The marginal contrasts analysis suggests the following. The difference between
+Avoidant and Ambivalent is negative and statistically significant (difference =
+-18.44, 95% CI [-22.12, -14.77], t(297) = -12.08, p &lt; .001). The difference
+between Secure and Ambivalent is negative and statistically significant
+(difference = -16.18, 95% CI [-19.62, -12.74], t(297) = -11.33, p &lt; .001). The
+difference between Secure and Avoidant is positive and statistically
+non-significant (difference = 2.27, 95% CI [ -1.37, 5.90], t(297) = 1.50, p =
+0.135)</code></pre>
 </div>
 </div>
 
@@ -481,7 +411,2030 @@ font-style: inherit;">TukeyHSD</span>(fit))</span></code></pre></div>
 
  ]]></description>
   <guid>https://wjschne.github.io/tutorials/ANOVA/ANOVA.html</guid>
-  <pubDate>Wed, 24 Jan 2024 03:19:31 GMT</pubDate>
+  <pubDate>Thu, 29 Feb 2024 18:24:37 GMT</pubDate>
+</item>
+<item>
+  <title>Regression in R</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/tutorials/Regression/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Here we are going to use a small data set to predict people’s height using the height of their parents.</p>
+<section id="loading-packages" class="level1 page-columns page-full">
+<h1>Loading packages</h1>
+
+<div class="no-row-height column-margin column-container"><div class="callout callout-style-default callout-note callout-titled" title="R Package">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+R Package
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A <strong>R package</strong> is software that extends the capabilities of R. To use a package, you must first install it on your machine. You only need to install it once. By default, the package tab is in the lower right pane in RStudio. It has two buttons, one for installing new packages and one for updating packages you have previously installed.</p>
+<div id="fig-packages" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-packages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/Regression/updatepackages.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-packages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: RStudio’s “Install” and “Update” buttons in the “Package” tab in the lower right pane
+</figcaption>
+</figure>
+</div>
+</div>
+</div></div><p>First we load packages to enhance R’s abilities. Some packages are designed to work with several other packages as a system. The <a href="https://www.tidyverse.org/">tidyverse package</a> is a “meta-package” that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. If you do not have a recent version of tidyverse already installed, you can install it with this code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>)</span></code></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You only have to install the tidyverse once. Thereafter, from time to time, you can let RStudio’s “Update” button in the “Packages” pane help you keep your packages current.</p>
+</div>
+</div>
+<p>When you “load” the tidyvert</p>
+<p>The <code>tidyverse</code> allows us to do many things, including plotting with <code>ggplot2</code>. The <code>haven</code> package imports SPSS data. The <code>broom</code> package tidies up our regression results with the <code>tidy</code>, <code>glance</code>, and <code>augment</code> functions.</p>
+<p>If any of these packages are not installed, click the <strong>Packages</strong> tab, click the <strong>Install</strong> button, enter the names of the packages separated by commas, and click <strong>Install</strong>.</p>
+<p>To load the packages, run this code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Loads primary packages for data wrangling and plotting</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(haven) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Imports data saved in SPSS, SAS, or Stata format</span></span>
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(broom) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Displays model information</span></span>
+<span id="cb2-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(performance) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Displays model information </span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(parameters) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Displays model parameter information</span></span>
+<span id="cb2-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(report) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Automated interpretations</span></span></code></pre></div>
+</div>
+</section>
+<section id="import-data" class="level1 page-columns page-full">
+<h1>Import data</h1>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>If I use only one data set in an analysis, I call it <code>d</code>. If I need multiple data sets, I use a <code>d_</code> prefix to differentiate them. For example, if I have separate data sets for juniors and seniors, I might call them, <code>d_juniors</code> and <code>d_seniors</code>, respectively. This kind of consistency seems like extra work, but it pays off in making it easy for <em>future-you</em> to read and understand your own code.</p>
+</div></div><p>You can import the <code>height.sav</code> data set directly from my github repository for this course. There is no need to save the data anywhere. This code loads the data into variable <code>d</code> using the <a href="https://haven.tidyverse.org/reference/read_spss.html"><code>read_spss</code></a> function from the <a href="https://haven.tidyverse.org/">haven package</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb3-1">d <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_spss</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/wjschne/EDUC5325/raw/master/height.sav"</span>)</span></code></pre></div>
+</div>
+</section>
+<section id="make-a-plot" class="level1">
+<h1>Make a plot</h1>
+<p>Use the <a href="https://ggplot2.tidyverse.org/reference/ggplot.html"><code>ggplot</code></a> function from the <a href="https://ggplot2.tidyverse.org/">ggplot2</a> package to make a scatterplot with points and a regression line:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(d, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(avgphgt,height)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lm"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/tutorials/Regression/index_files/figure-html/unnamed-chunk-3-1.svg" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Annotated, here is what the code does:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://wjschne.github.io/tutorials/Regression/ggplotcode.svg" class="img-fluid figure-img"></p>
+<figcaption>Annotated ggplot2 code</figcaption>
+</figure>
+</div>
+</section>
+<section id="save-the-plot" class="level1">
+<h1>Save the plot!</h1>
+<p>You can save to your hard drive a high-quality plot with the <a href="https://ggplot2.tidyverse.org/reference/ggsave.html"><code>ggsave</code></a> function. It will save whatever the last plot you created with <a href="https://ggplot2.tidyverse.org/reference/ggplot.html"><code>ggplot</code></a>. It will guess the file format from the file extension.</p>
+<p>Here I save a .pdf file of the plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"my_plot.pdf"</span>)</span></code></pre></div>
+</div>
+<section id="vector-based-images" class="level2">
+<h2 class="anchored" data-anchor-id="vector-based-images">Vector-based Images</h2>
+<p>The .pdf format gives the best image quality but can only be viewed in a .pdf reader. The .svg format is almost as good and can be incorporated into webpages and Office documents. One downside of their near-perfect image quality is that .pdf and .svg image file sizes can become quite large.</p>
+</section>
+<section id="raster-images" class="level2">
+<h2 class="anchored" data-anchor-id="raster-images">Raster Images</h2>
+<p>The .png format gives good image quality and renders small file sizes.</p>
+<p>The primary use of the .gif format is to create animated plots. Otherwise stick with .png.</p>
+<p>Although the .jpg format is good for photos, it is terrible for plots—it often renders text and sharp corners with pixelated smudges.</p>
+</section>
+</section>
+<section id="creating-the-model" class="level1">
+<h1>Creating the model</h1>
+<p>To run regression models, use the <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm"><code>lm</code></a> function. The <code>lm</code> stands for “linear model.” The general pattern is <code>lm(Y~X, data = d)</code>, which means “<code>Y</code> is predicted by <code>X</code>, using the data set <code>d</code>.”</p>
+<p>Here we predict height from Average of Parent Height (<code>avgphgt</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb6-1">m1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(height<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>avgphgt, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span></code></pre></div>
+</div>
+<p>Notice that we did not get any results. Instead, we created the model fit object <code>m1</code>, which contains information about the model. There are a variety of functions we can use to extract information from <code>m1</code>.</p>
+</section>
+<section id="checking-assumptions" class="level1">
+<h1>Checking Assumptions</h1>
+<p>Regression assumes that the observations should independent, and the residuals should be normal and homoscedastic. The <a href="https://easystats.github.io/performance/index.html">performance package</a> has a great function for checking model assumptions: <a href="https://easystats.github.io/performance/reference/check_model.html"><code>check_model</code></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">check_model</span>(m1)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/tutorials/Regression/index_files/figure-html/unnamed-chunk-5-1.svg" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here we see that none of the assumptions have been severely violated.</p>
+</section>
+<section id="summarising-results" class="level1">
+<h1>Summarising Results</h1>
+<p>Base R gives you most of what you would want to know about the regression results with the <code>summary</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(m1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = height ~ avgphgt, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-5.241 -1.649 -0.539  1.224  6.163 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -12.878      9.779   -1.32      0.2    
+avgphgt        1.193      0.145    8.23  5.7e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.68 on 38 degrees of freedom
+Multiple R-squared:  0.641, Adjusted R-squared:  0.631 
+F-statistic: 67.7 on 1 and 38 DF,  p-value: 5.7e-10</code></pre>
+</div>
+</div>
+<p>This output is not pretty, nor was it intended to be. It is designed for you, the analyst. The <code>summary</code> function’s print method is optimized for reading results in the console, not in a document. Presentation-worthy results need a lot more care and attention.</p>
+<p>An automated report from the <a href="https://easystats.github.io/report/articles/report.html">report</a> package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb10-1">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(m1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>We fitted a linear model (estimated using OLS) to predict height with avgphgt
+(formula: height ~ avgphgt). The model explains a statistically significant and
+substantial proportion of variance (R2 = 0.64, F(1, 38) = 67.73, p &lt; .001, adj.
+R2 = 0.63). The model's intercept, corresponding to avgphgt = 0, is at -12.88
+(95% CI [-32.67, 6.92], t(38) = -1.32, p = 0.196). Within this model:
+
+  - The effect of avgphgt is statistically significant and positive (beta = 1.19,
+95% CI [0.90, 1.49], t(38) = 8.23, p &lt; .001; Std. beta = 0.80, 95% CI [0.60,
+1.00])
+
+Standardized parameters were obtained by fitting the model on a standardized
+version of the dataset. 95% Confidence Intervals (CIs) and p-values were
+computed using a Wald t-distribution approximation.</code></pre>
+</div>
+</div>
+<p>The <code>glance</code>, <code>tidy</code>, and <code>augment</code> functions from the <a href="https://broom.tidymodels.org/">broom</a> package make the output more amenable for further analysis or for presentation.</p>
+<section id="model-level-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="model-level-statistics">Model-Level Statistics</h2>
+<p>Some statistics like the <em>coefficient of determination</em> (<em>R</em><sup>2</sup>) or the <em>standard error of the estimate</em> (<em>σ<sub>e</sub></em>) describe the model as a whole.</p>
+<p>The model-level statistics can be extracted with broom’s <a href="https://broom.tidymodels.org/reference/data.frame_tidiers.html"><code>glance</code></a> function or the performance package’s <a href="https://easystats.github.io/performance/reference/model_performance.lm.html"><code>model_performance</code></a> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Using broom package</span></span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glance</span>(m1)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">r.squared</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">adj.r.squared</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sigma</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">logLik</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">deviance</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df.residual</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">nobs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">2.68</td>
+<td style="text-align: right;">67.7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-95.2</td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">273</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">40</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_parameters</span>(m1)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-12.88</td>
+<td style="text-align: right;">9.78</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-32.7</td>
+<td style="text-align: right;">6.92</td>
+<td style="text-align: right;">-1.32</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">1.49</td>
+<td style="text-align: right;">8.23</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parameters</span>(m1)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-12.88</td>
+<td style="text-align: right;">9.78</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-32.7</td>
+<td style="text-align: right;">6.92</td>
+<td style="text-align: right;">-1.32</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">1.49</td>
+<td style="text-align: right;">8.23</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">standardise_parameters</span>(m1)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std_Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-0.19</td>
+<td style="text-align: right;">0.19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">performance</span>(m1)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AICc</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">R2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">R2_adjusted</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RMSE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sigma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">197</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">2.61</td>
+<td style="text-align: right;">2.68</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p><em>R</em><sup>2</sup> is in the <code>glance</code> function’s <code>r.squared</code> column, and the <em>standard error of the estimate</em> is in the <code>sigma</code> column. If all you wanted was the <em>R</em><sup>2</sup>, you could do this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glance</span>(m1)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>r.squared</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.641</code></pre>
+</div>
+</div>
+<p>Or using the performance package’s <a href="https://easystats.github.io/performance/reference/r2.html"><code>r2</code></a> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">r2</span>(m1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># R2 for Linear Regression
+       R2: 0.641
+  adj. R2: 0.631</code></pre>
+</div>
+</div>
+<p>For the <em>standard error of the estimate</em>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glance</span>(m1)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>sigma</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.68</code></pre>
+</div>
+</div>
+<p>Why would you want just one number instead of reading it from a table? In reproducible research, we intermingle text and code so that it is clear where every number came from. Thus, “hard-coding” your results like this is considered poor practice:</p>
+<pre><code>The model explains 64% of the variance.</code></pre>
+<p>Using rmarkdown, instead of typing the numeric results, we type pull the results using an <a href="https://rmarkdown.rstudio.com/lesson-4.html">inline code chunk</a>:</p>
+<div class="sourceCode" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode default fold-show code-with-copy"><code class="sourceCode default"><span id="cb24-1">The model explains `r round(100 * glance(m1)$r.squared, 0)`% of the variance.</span></code></pre></div>
+<p>Which, when rendered, produces the correct output:</p>
+<blockquote class="blockquote">
+<p>The model explains 64% of the variance.</p>
+</blockquote>
+<p>That seems like a lot of extra work, right? Yes, it is—unless there is a possibility that your underlying data might change or that you might copy your numbers incorrectly. If you are imperfect, the extra time and effort is worth it. It makes it easy for other scholars to see exactly where each number came from. Hard-coded results are harder to trust.</p>
+<p>Automated report of the model’s performance:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report_performance</span>(m1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The model explains a statistically significant and substantial proportion of
+variance (R2 = 0.64, F(1, 38) = 67.73, p &lt; .001, adj. R2 = 0.63)</code></pre>
+</div>
+</div>
+</section>
+<section id="coefficient-level-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="coefficient-level-statistics">Coefficient-level statistics</h2>
+<p>The regression coefficients—the intercept (<em>b</em><sub>0</sub>) and the slope (<em>b</em><sub>1</sub>)—have a number of statistics associated with them, which we will discuss later in the course.</p>
+<p>If you just wanted the intercept and the slope coefficients, use the <code>coef</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coef</span>(m1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)     avgphgt 
+     -12.88        1.19 </code></pre>
+</div>
+</div>
+<p>Thus, the intercept is -12.88 and the slope is 1.19.</p>
+<p>To get the coefficients (intercept and slope) along with their p-values and other statistical information, use the <a href="https://broom.tidymodels.org/reference/tidy.lm.html"><code>tidy</code></a> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tidy</span>(m1)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">std.error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-12.88</td>
+<td style="text-align: right;">9.78</td>
+<td style="text-align: right;">-1.32</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">8.23</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>The parameters package has a slightly more print-friendly version of <code>tidy</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_parameters</span>(m1) </span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-12.88</td>
+<td style="text-align: right;">9.78</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-32.7</td>
+<td style="text-align: right;">6.92</td>
+<td style="text-align: right;">-1.32</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">1.49</td>
+<td style="text-align: right;">8.23</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>If you want standardized parameters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_parameters</span>(m1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">standardize =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"refit"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-0.19</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">8.23</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>Automated report of the parameters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report_parameters</span>(m1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  - The intercept is statistically non-significant and negative (beta = -12.88, 95% CI [-32.67, 6.92], t(38) = -1.32, p = 0.196; Std. beta = 2.65e-16, 95% CI [-0.19, 0.19])
+  - The effect of avgphgt is statistically significant and positive (beta = 1.19, 95% CI [0.90, 1.49], t(38) = 8.23, p &lt; .001; Std. beta = 0.80, 95% CI [0.60, 1.00])</code></pre>
+</div>
+</div>
+</section>
+<section id="observation-level-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="observation-level-statistics">Observation-Level Statistics</h2>
+<p>We sometimes want the individual-level data like the predictions (<img src="https://latex.codecogs.com/png.latex?%5Chat%7BY%7D">) and the errors (technically called <em>residuals</em>).</p>
+<p>To get observation-level statistics, use broom’s <a href="https://broom.tidymodels.org/reference/augment.lm.html"><code>augment</code></a> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">augment</span>(m1) </span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">height</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">avgphgt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.fitted</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.resid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.hat</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.sigma</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.cooksd</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.std.resid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">67.5</td>
+<td style="text-align: right;">67.6</td>
+<td style="text-align: right;">-1.64</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.62</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">70.0</td>
+<td style="text-align: right;">70.6</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">72.5</td>
+<td style="text-align: right;">73.6</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">2.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">66.5</td>
+<td style="text-align: right;">66.5</td>
+<td style="text-align: right;">2.55</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.68</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.96</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">65.0</td>
+<td style="text-align: right;">64.7</td>
+<td style="text-align: right;">5.34</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.56</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">2.03</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">72.0</td>
+<td style="text-align: right;">73.0</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">71.0</td>
+<td style="text-align: right;">71.8</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.45</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">70.0</td>
+<td style="text-align: right;">70.6</td>
+<td style="text-align: right;">-1.63</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.62</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">71.0</td>
+<td style="text-align: right;">71.8</td>
+<td style="text-align: right;">-2.82</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">2.67</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">-1.09</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">69.5</td>
+<td style="text-align: right;">70.0</td>
+<td style="text-align: right;">4.97</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.59</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">1.89</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">69.0</td>
+<td style="text-align: right;">69.4</td>
+<td style="text-align: right;">-0.43</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.16</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">67.5</td>
+<td style="text-align: right;">67.6</td>
+<td style="text-align: right;">-0.64</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">71.5</td>
+<td style="text-align: right;">72.4</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">2.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">70.0</td>
+<td style="text-align: right;">70.6</td>
+<td style="text-align: right;">3.37</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.66</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">1.29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">61.5</td>
+<td style="text-align: right;">60.5</td>
+<td style="text-align: right;">2.51</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">2.68</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">68.0</td>
+<td style="text-align: right;">68.2</td>
+<td style="text-align: right;">-1.24</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">62.5</td>
+<td style="text-align: right;">61.7</td>
+<td style="text-align: right;">2.32</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">2.69</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">63.0</td>
+<td style="text-align: right;">62.3</td>
+<td style="text-align: right;">-1.28</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">65.5</td>
+<td style="text-align: right;">65.3</td>
+<td style="text-align: right;">4.74</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.60</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">1.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">68.0</td>
+<td style="text-align: right;">68.2</td>
+<td style="text-align: right;">-2.24</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.69</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">72.0</td>
+<td style="text-align: right;">73.0</td>
+<td style="text-align: right;">-3.01</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">2.67</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">-1.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">65.0</td>
+<td style="text-align: right;">64.7</td>
+<td style="text-align: right;">-4.66</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.60</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">-1.78</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">68.5</td>
+<td style="text-align: right;">68.8</td>
+<td style="text-align: right;">6.16</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.52</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">2.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">69.0</td>
+<td style="text-align: right;">69.4</td>
+<td style="text-align: right;">3.57</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.65</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">1.35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">68.0</td>
+<td style="text-align: right;">68.2</td>
+<td style="text-align: right;">-5.24</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.57</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">-1.98</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">65.0</td>
+<td style="text-align: right;">64.7</td>
+<td style="text-align: right;">-1.66</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">67.5</td>
+<td style="text-align: right;">67.6</td>
+<td style="text-align: right;">1.36</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.51</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">64.5</td>
+<td style="text-align: right;">64.1</td>
+<td style="text-align: right;">0.93</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">66.0</td>
+<td style="text-align: right;">65.8</td>
+<td style="text-align: right;">-1.85</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.70</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">70.0</td>
+<td style="text-align: right;">70.6</td>
+<td style="text-align: right;">-1.63</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.62</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">68.0</td>
+<td style="text-align: right;">68.2</td>
+<td style="text-align: right;">-3.24</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.66</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">-1.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">65.0</td>
+<td style="text-align: right;">64.7</td>
+<td style="text-align: right;">-1.66</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">67.5</td>
+<td style="text-align: right;">67.6</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">64.5</td>
+<td style="text-align: right;">64.1</td>
+<td style="text-align: right;">-1.07</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.41</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">64.0</td>
+<td style="text-align: right;">63.5</td>
+<td style="text-align: right;">-1.47</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.56</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">63.5</td>
+<td style="text-align: right;">62.9</td>
+<td style="text-align: right;">-1.87</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">-0.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">67.0</td>
+<td style="text-align: right;">67.0</td>
+<td style="text-align: right;">-0.05</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">2.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">64.5</td>
+<td style="text-align: right;">64.1</td>
+<td style="text-align: right;">-1.07</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.41</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">63.5</td>
+<td style="text-align: right;">62.9</td>
+<td style="text-align: right;">-0.87</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.34</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">71.5</td>
+<td style="text-align: right;">72.4</td>
+<td style="text-align: right;">-0.42</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">2.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.16</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>The predicted values <img src="https://latex.codecogs.com/png.latex?%5Chat%7BY%7D"> are in the <code>.fitted</code> column, and the errors (residuals) are in the <code>.resid</code> column.</p>
+<p>If you wanted to predict a value not in the data, you use the <code>newdata</code> argument. For example, if I wanted to predict the height of a person whose parents had a height of 65:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">augment</span>(m1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">newdata =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">avgphgt =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">65</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">avgphgt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.fitted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">64.7</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="multiple-regression" class="level1">
+<h1>Multiple Regression</h1>
+<p>In this data set, all participants identified as either male or female. We assume that males are, on average, taller than females. The codes are male = 1 and female = 2, thus our predicted effect is negative.</p>
+<p>We run the regression model with 2 predictors like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb36-1">m2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(height <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> avgphgt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> gender, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span></code></pre></div>
+</div>
+<section id="checking-assumptions-1" class="level2">
+<h2 class="anchored" data-anchor-id="checking-assumptions-1">Checking assumptions</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">check_model</span>(m2)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/tutorials/Regression/index_files/figure-html/unnamed-chunk-21-1.svg" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>All looks well.</p>
+</section>
+<section id="summarizing-results" class="level2">
+<h2 class="anchored" data-anchor-id="summarizing-results">Summarizing Results</h2>
+<p>To summarize the results, use the <code>summary</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(m2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = height ~ avgphgt + gender, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-3.826 -1.094 -0.347  1.656  4.503 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   29.035     11.600    2.50  0.01686 *  
+avgphgt        0.671      0.157    4.26  0.00013 ***
+gender        -4.468      0.920   -4.85  2.2e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.12 on 37 degrees of freedom
+Multiple R-squared:  0.78,  Adjusted R-squared:  0.769 
+F-statistic: 65.7 on 2 and 37 DF,  p-value: 6.6e-13</code></pre>
+</div>
+</div>
+<p>An automated report:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb40-1">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(m2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>We fitted a linear model (estimated using OLS) to predict height with avgphgt
+and gender (formula: height ~ avgphgt + gender). The model explains a
+statistically significant and substantial proportion of variance (R2 = 0.78,
+F(2, 37) = 65.75, p &lt; .001, adj. R2 = 0.77). The model's intercept,
+corresponding to avgphgt = 0 and gender = 0, is at 29.03 (95% CI [5.53, 52.54],
+t(37) = 2.50, p = 0.017). Within this model:
+
+  - The effect of avgphgt is statistically significant and positive (beta = 0.67,
+95% CI [0.35, 0.99], t(37) = 4.26, p &lt; .001; Std. beta = 0.45, 95% CI [0.24,
+0.66])
+  - The effect of gender is statistically significant and negative (beta = -4.47,
+95% CI [-6.33, -2.60], t(37) = -4.85, p &lt; .001; Std. beta = -0.51, 95% CI
+[-0.73, -0.30])
+
+Standardized parameters were obtained by fitting the model on a standardized
+version of the dataset. 95% Confidence Intervals (CIs) and p-values were
+computed using a Wald t-distribution approximation.</code></pre>
+</div>
+</div>
+<p>Standardized coefficients:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb42-1">parameters<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_parameters</span>(m2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">standardize =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"refit"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-0.15</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">4.26</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gender</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-0.73</td>
+<td style="text-align: right;">-0.30</td>
+<td style="text-align: right;">-4.85</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>The oddly-named <code>anova</code> function compares 2 models:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(m1, m2)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Res.Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RSS</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sum of Sq</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">273</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">167</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">106</td>
+<td style="text-align: right;">23.6</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>The p-value is significant, meaning that <code>m2</code> explains more variance than <code>m1</code>.</p>
+<p>I like the more full-featured set of model comparison functions from the performance package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb44-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">compare_performance</span>(m1, m2) </span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC_wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AICc</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AICc_wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BIC_wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">R2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">R2_adjusted</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RMSE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sigma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">m1</td>
+<td style="text-align: left;">lm</td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">197</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">2.61</td>
+<td style="text-align: right;">2.68</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2</td>
+<td style="text-align: left;">lm</td>
+<td style="text-align: right;">179</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">185</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">2.04</td>
+<td style="text-align: right;">2.12</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>This is equivalent to the <code>anova</code> function but in a more readable format:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">test_wald</span>(m1, m2)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_diff</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">m1</td>
+<td style="text-align: left;">lm</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2</td>
+<td style="text-align: left;">lm</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">23.6</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>This uses Bayes Factor instead of a p-value:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb46-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">test_bf</span>(m1, m2)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">log_BF</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt + gender</td>
+<td style="text-align: right;">8.01</td>
+<td style="text-align: right;">3010</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<p>A BF &gt; 1 means that <code>m2</code> is more strongly supported than <code>m1</code>. A BF &lt; 1 means that <code>m1</code> is more strongly supported than <code>m2</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb47-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">test_bf</span>(m1, m2))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes factors were computed using the BIC approximation, by which BF10 =
+exp((BIC0 - BIC1)/2). Compared to the avgphgt model, we found extreme evidence
+(BF = 3.01e+03) in favour of the avgphgt + gender model (the least supported
+model).</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="all-the-code-in-one-place" class="level1">
+<h1>All the code in one place:</h1>
+<p>The preceding analyses might seem like a lot, but it is not really so much when you see it all in just a few lines of code. Here are all the main analyses:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Load packages</span></span>
+<span id="cb49-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb49-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(haven)</span>
+<span id="cb49-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(broom)</span>
+<span id="cb49-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(performance)</span>
+<span id="cb49-6"></span>
+<span id="cb49-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Import data</span></span>
+<span id="cb49-8">d <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_spss</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/wjschne/EDUC5325/raw/master/height.sav"</span>)</span>
+<span id="cb49-9"></span>
+<span id="cb49-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Plot data</span></span>
+<span id="cb49-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(d, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(weight,height)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb49-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb49-13">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lm"</span>)</span>
+<span id="cb49-14"></span>
+<span id="cb49-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Save plot</span></span>
+<span id="cb49-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"my_plot.pdf"</span>)</span>
+<span id="cb49-17"></span>
+<span id="cb49-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create regression model</span></span>
+<span id="cb49-19">m1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(height<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>avgphgt, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb49-20"></span>
+<span id="cb49-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display results</span></span>
+<span id="cb49-22"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glance</span>(m1)</span>
+<span id="cb49-23"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tidy</span>(m1)</span>
+<span id="cb49-24"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">augment</span>(m1)</span>
+<span id="cb49-25"></span>
+<span id="cb49-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Multiple regression</span></span>
+<span id="cb49-27">m2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(height <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> avgphgt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> gender, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb49-28"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(m2)</span>
+<span id="cb49-29">parameters<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_parameters</span>(m2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">standardize =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"refit"</span>)</span>
+<span id="cb49-30"></span>
+<span id="cb49-31"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Compare model m1 and model m2</span></span>
+<span id="cb49-32"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(m1, m2)</span>
+<span id="cb49-33"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">compare_performance</span>(m1, m2)</span></code></pre></div>
+</div>
+</section>
+<section id="canvas-questions" class="level1">
+<h1>Canvas Questions</h1>
+<p>Use the Transfer of Learning data set. A set of 38 inmates participated in a study that tested the Transfer of Learning Hypothesis. Some people believe that studying Latin is particularly beneficial for progress in other academic disciplines. Each inmate was given a reading test and a math test before the study began. Some inmates were randomly assigned to participate in a 48-week Latin course. The control group studied the lives of famous athletes for the same time period. Each inmate took the reading and math test again to see if studying Latin improved their academic skills. Personal information was also collected about each inmate including their annual income before going to prison, whether or not the inmate had a documented learning disorder, and whether or not the inmate had been convicted of a violent offense. Here are the variable names:</p>
+<ul>
+<li><code>read_1</code> = Reading before study</li>
+<li><code>read_2</code> = Reading after study</li>
+<li><code>math_1</code> = Math before study</li>
+<li><code>math_2</code> = Math after study</li>
+<li><code>latin</code> = 1 (Studied Latin), 0 (Studied sports history)</li>
+<li><code>violent</code> = 1 (convicted of a violent offense), 0 (convicted of a non-violent offense)</li>
+<li><code>learning</code> = 1 (Learning disabled), 0 (Not learning disabled)</li>
+<li><code>income</code> = Annual income before incarceration</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb50-1">d_learn <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/wjschne/EDUC5529/raw/master/transfer_of_learning.csv"</span>) </span></code></pre></div>
+</div>
+<p><span class="instruction">Assume α = 0.05 for all hypothesis tests.</span></p>
+<p><span class="instruction">Create a regression model in which you predict reading at time 2 (<code>read_2</code>) using reading at time 1 (<code>read_1</code>). Call the model fit object <code>m_read</code>.</span></p>
+<section id="canvas-question-1" class="level2 tabset tabset-fade tabset-pills">
+<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-1">Canvas Question 1</h2>
+<p><span class="question"><strong>Question</strong>: Is <code>read_1</code> a significant predictor of <code>read_2</code>?</span></p>
+<section id="hide-hints" class="level3">
+<h3 class="anchored" data-anchor-id="hide-hints">Hide Hints</h3>
+</section>
+<section id="hint-1" class="level3">
+<h3 class="anchored" data-anchor-id="hint-1">Hint 1</h3>
+<p>Make model fit object called <code>m_read</code> using the <code>lm</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb51-1">m_read <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(read_2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> read_1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d_learn)</span></code></pre></div>
+</div>
+</section>
+<section id="hint-2" class="level3">
+<h3 class="anchored" data-anchor-id="hint-2">Hint 2</h3>
+<p>View coefficent-level statistics with broom’s <code>tidy</code> function.</p>
+<p>You could also use Base R’s <code>summary</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb52-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tidy</span>(m_read)</span>
+<span id="cb52-2"></span>
+<span id="cb52-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># or</span></span>
+<span id="cb52-4"></span>
+<span id="cb52-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(m_read)</span></code></pre></div>
+</div>
+</section>
+<section id="hint-3" class="level3">
+<h3 class="anchored" data-anchor-id="hint-3">Hint 3</h3>
+<p>In the read_1 row, is the p.value column less than 0.05?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb53-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tidy</span>(m_read)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">83.591</td>
+<td style="text-align: right;">10.922</td>
+<td style="text-align: right;">7.65</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">read_1</td>
+<td style="text-align: right;">0.251</td>
+<td style="text-align: right;">0.104</td>
+<td style="text-align: right;">2.41</td>
+<td style="text-align: right;">0.021</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="canvas-question-2" class="level2 tabset tabset-fade tabset-pills">
+<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-2">Canvas Question 2</h2>
+<p><span class="question"><strong>Question</strong>: What is the <em>R</em><sup>2</sup> for the <code>m_read</code> model?</span></p>
+<section id="hide-hint" class="level3">
+<h3 class="anchored" data-anchor-id="hide-hint">Hide Hint</h3>
+</section>
+<section id="hint" class="level3">
+<h3 class="anchored" data-anchor-id="hint">Hint</h3>
+<p>View model-level statistics with broom’s <code>glance</code> function.</p>
+<p>You could also use Base R’s <code>summary</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glance</span>(m_read)</span>
+<span id="cb54-2"></span>
+<span id="cb54-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># or</span></span>
+<span id="cb54-4"></span>
+<span id="cb54-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(m_read)</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="canvas-question-3" class="level2 tabset tabset-fade tabset-pills">
+<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-3">Canvas Question 3</h2>
+<p><span class="question"><strong>Question</strong>: What does the scatter plot look like when <code>read_1</code> is on the <em>x</em>-axis and <code>read_2</code> is on the <em>y</em>-axis? Also plot the regression line. Save your plot using the <code>ggsave</code> function and upload it to Canvas.</span></p>
+<section id="hide-hints-1" class="level3">
+<h3 class="anchored" data-anchor-id="hide-hints-1">Hide Hints</h3>
+</section>
+<section id="hint-1-1" class="level3">
+<h3 class="anchored" data-anchor-id="hint-1-1">Hint 1</h3>
+<p>This will get you started</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb55-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(read_1, read_2))</span></code></pre></div>
+</div>
+</section>
+<section id="points-hint" class="level3">
+<h3 class="anchored" data-anchor-id="points-hint">Points Hint</h3>
+<p>Here is how you add points.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb56-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(read_1, read_2)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb56-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() </span></code></pre></div>
+</div>
+</section>
+<section id="line-hint" class="level3">
+<h3 class="anchored" data-anchor-id="line-hint">Line Hint</h3>
+<p>Here is how you add a regression line.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb57-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(read_1, read_2)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb57-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb57-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lm"</span>) </span></code></pre></div>
+</div>
+</section>
+<section id="plot-polishing" class="level3">
+<h3 class="anchored" data-anchor-id="plot-polishing">Plot Polishing</h3>
+<p>This is overkill for now. But soon you will want to fine tune your plots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb58-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># I want to put the equation at x = 130</span></span>
+<span id="cb58-2">equation_x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">130</span></span>
+<span id="cb58-3">equation_y <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predict</span>(m_read, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">newdata =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">read_1 =</span> equation_x))</span>
+<span id="cb58-4"></span>
+<span id="cb58-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Extracting the coefficients</span></span>
+<span id="cb58-6">b_read <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coef</span>(m_read),<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb58-7"></span>
+<span id="cb58-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The angle of the regression line is the inverse tangent of the slope (converted to degrees)</span></span>
+<span id="cb58-9">eq_angle <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">atan</span>(b_read[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">180</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> pi</span>
+<span id="cb58-10"></span>
+<span id="cb58-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Equation</span></span>
+<span id="cb58-12">eq_read <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"italic(Y) == "</span>, </span>
+<span id="cb58-13">                  b_read[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>], </span>
+<span id="cb58-14">                  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" + "</span>, </span>
+<span id="cb58-15">                  b_read[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>], </span>
+<span id="cb58-16">                  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" *  italic(X) + italic(e)"</span>)</span>
+<span id="cb58-17"></span>
+<span id="cb58-18"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(read_1, read_2)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb58-19">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb58-20">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lm"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb58-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Reading at Time 1"</span>,</span>
+<span id="cb58-22">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Reading at Time 2"</span>,</span>
+<span id="cb58-23">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Using Reading at Time 1 to Predict Reading at Time 2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb58-24">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_fixed</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb58-25">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">annotate</span>(</span>
+<span id="cb58-26">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"text"</span>,</span>
+<span id="cb58-27">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> equation_x,</span>
+<span id="cb58-28">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> equation_y,</span>
+<span id="cb58-29">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> eq_angle,</span>
+<span id="cb58-30">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> eq_read,</span>
+<span id="cb58-31">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">parse =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>,</span>
+<span id="cb58-32">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="canvas-question-4" class="level2 tabset tabset-fade tabset-pills">
+<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-4">Canvas Question 4</h2>
+<p><span class="instruction">Create a regression model in which you predict math at time 2 (<code>math_2</code>) using reading at time 1 (<code>math_1</code>). Call the model fit object <code>m_math1</code>.</span></p>
+<p><span class="question"><strong>Question</strong>: Does <code>math_1</code> predict <code>math_2</code>?.</span></p>
+<p><span class="question"><strong>Question</strong>: Does <code>math_1</code> still predict <code>math_2</code> after controlling for <code>read_1</code>?</span></p>
+<section id="hide-hint-1" class="level3">
+<h3 class="anchored" data-anchor-id="hide-hint-1">Hide Hint</h3>
+</section>
+<section id="hint-4" class="level3">
+<h3 class="anchored" data-anchor-id="hint-4">Hint</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb59-1">m_math <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(math_2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> math_1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> read_1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d_learn)</span>
+<span id="cb59-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(m_math)</span></code></pre></div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://wjschne.github.io/tutorials/Regression/</guid>
+  <pubDate>Thu, 29 Feb 2024 18:24:37 GMT</pubDate>
 </item>
 </channel>
 </rss>

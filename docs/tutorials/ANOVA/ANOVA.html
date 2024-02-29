@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.548">
+<meta name="generator" content="quarto-1.5.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -105,6 +105,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="W. Joel Schneider">
@@ -233,9 +276,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">Plot</a></li>
   <li><a href="#create-one-way-anova" id="toc-create-one-way-anova" class="nav-link" data-scroll-target="#create-one-way-anova">Create One-Way ANOVA</a>
   <ul class="collapse">
+  <li><a href="#diagnostic-plots" id="toc-diagnostic-plots" class="nav-link" data-scroll-target="#diagnostic-plots">Diagnostic Plots</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   <li><a href="#other-summary-functions" id="toc-other-summary-functions" class="nav-link" data-scroll-target="#other-summary-functions">Other Summary Functions</a></li>
-  <li><a href="#diagnostic-plots" id="toc-diagnostic-plots" class="nav-link" data-scroll-target="#diagnostic-plots">Diagnostic Plots</a></li>
+  <li><a href="#automated-interpretation" id="toc-automated-interpretation" class="nav-link" data-scroll-target="#automated-interpretation">Automated Interpretation</a></li>
   <li><a href="#post-hoc-tests" id="toc-post-hoc-tests" class="nav-link" data-scroll-target="#post-hoc-tests">Post-hoc Tests</a></li>
   </ul></li>
   </ul>
@@ -243,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -276,7 +320,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="load-packages" class="level1">
 <h1>Load Packages</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="import-data-and-create-labelled-factors" class="level1">
@@ -356,11 +401,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">aov</span>(Anxiety_Questionnaire <span class="sc">~</span> Attachment, <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="diagnostic-plots" class="level2">
+<h2 class="anchored" data-anchor-id="diagnostic-plots">Diagnostic Plots</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ANOVA_files/figure-html/assumptions-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>None of the diagnostic checks raise any alarms. Specifically, the residuals are reasonably normal and have consistent variance acrross groups (i.e., the homogeneeity of variance assumption is reasonable).</p>
+</section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>The base R function <code>summary</code> gives us most of what we might want.</p>
+<p>The base R function <code>summary</code> gives us most of what we might want to know.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Attachment    2  20359   10179      93 &lt;2e-16 ***
@@ -369,178 +428,10 @@ Residuals   297  32517     109
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-</section>
-<section id="other-summary-functions" class="level2">
-<h2 class="anchored" data-anchor-id="other-summary-functions">Other Summary Functions</h2>
-<p>If you want other summary functions, there are many options. Here are a few:</p>
+<p>We can see that overall model is significant, meaning that at least two groups have reliably different means. At this point we do not know which means differ, but from the plot we have a good guess that the Ambivalent group scores higher on the Anxiety Questionnaire than the other two groups.</p>
+<p>A similar, but tidier display can be found with the <code>parameters</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">glance</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">logLik</th>
-<th style="text-align: right;">AIC</th>
-<th style="text-align: right;">BIC</th>
-<th style="text-align: right;">deviance</th>
-<th style="text-align: right;">nobs</th>
-<th style="text-align: right;">r.squared</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">-1129</td>
-<td style="text-align: right;">2265</td>
-<td style="text-align: right;">2280</td>
-<td style="text-align: right;">32517</td>
-<td style="text-align: right;">300</td>
-<td style="text-align: right;">0.39</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">df</th>
-<th style="text-align: right;">sumsq</th>
-<th style="text-align: right;">meansq</th>
-<th style="text-align: right;">statistic</th>
-<th style="text-align: right;">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Attachment</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">20359</td>
-<td style="text-align: right;">10179</td>
-<td style="text-align: right;">93</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Residuals</td>
-<td style="text-align: right;">297</td>
-<td style="text-align: right;">32517</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sjstats<span class="sc">::</span><span class="fu">anova_stats</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<colgroup>
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 3%">
-<col style="width: 4%">
-<col style="width: 5%">
-<col style="width: 7%">
-<col style="width: 6%">
-<col style="width: 4%">
-<col style="width: 11%">
-<col style="width: 6%">
-<col style="width: 12%">
-<col style="width: 7%">
-<col style="width: 7%">
-<col style="width: 4%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">df</th>
-<th style="text-align: right;">sumsq</th>
-<th style="text-align: right;">meansq</th>
-<th style="text-align: right;">statistic</th>
-<th style="text-align: right;">p.value</th>
-<th style="text-align: right;">etasq</th>
-<th style="text-align: right;">partial.etasq</th>
-<th style="text-align: right;">omegasq</th>
-<th style="text-align: right;">partial.omegasq</th>
-<th style="text-align: right;">epsilonsq</th>
-<th style="text-align: right;">cohens.f</th>
-<th style="text-align: right;">power</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Attachment</td>
-<td style="text-align: left;">Attachment</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">20359</td>
-<td style="text-align: right;">10179</td>
-<td style="text-align: right;">93</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.79</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">…2</td>
-<td style="text-align: left;">Residuals</td>
-<td style="text-align: right;">297</td>
-<td style="text-align: right;">32517</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">performance</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">AIC</th>
-<th style="text-align: right;">AICc</th>
-<th style="text-align: right;">BIC</th>
-<th style="text-align: right;">R2</th>
-<th style="text-align: right;">R2_adjusted</th>
-<th style="text-align: right;">RMSE</th>
-<th style="text-align: right;">Sigma</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">2265</td>
-<td style="text-align: right;">2265</td>
-<td style="text-align: right;">2280</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">10</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="table table-sm table-striped small">
@@ -575,7 +466,56 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </table>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>report<span class="sc">::</span><span class="fu">report</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="other-summary-functions" class="level2">
+<h2 class="anchored" data-anchor-id="other-summary-functions">Other Summary Functions</h2>
+<p>The overall “fit” or “performance” of the model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">R2</th>
+<th style="text-align: right;">R2_adjusted</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">Sigma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2265</td>
+<td style="text-align: right;">2265</td>
+<td style="text-align: right;">2280</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li><code>AIC</code>: <a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike’s Information Criterion</a></li>
+<li><code>AICc</code>: AIC with a correction for small sample sizes</li>
+<li><code>BIC</code>: <a href="https://en.wikipedia.org/wiki/Bayesian_information_criterion">Bayesian Information Criterion</a></li>
+<li><code>R2</code>: R-squared: <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">Coefficient of Determination</a></li>
+<li><code>R2_adj</code>: <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2">Adjusted r-squared</a></li>
+<li><code>RMSE</code>: Root mean squared error <span class="math inline">=\sqrt{\frac{\sum_{i = 1}^{n}{e_i}}{n}}</span></li>
+<li><code>SIGMA</code>: Residual standard deviation (The SD of the residuals <span class="math inline">=\sqrt{\frac{\sum_{i = 1}^{n}{e_i}}{n-k-1}}</span>)</li>
+</ul>
+</section>
+<section id="automated-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="automated-interpretation">Automated Interpretation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The ANOVA (formula: Anxiety_Questionnaire ~ Attachment) suggests that:
 
@@ -586,43 +526,93 @@ Effect sizes were labelled following Field's (2013) recommendations.</code></pre
 </div>
 </div>
 </section>
-<section id="diagnostic-plots" class="level2">
-<h2 class="anchored" data-anchor-id="diagnostic-plots">Diagnostic Plots</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="ANOVA_files/figure-html/assumptions-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
 <section id="post-hoc-tests" class="level2">
 <h2 class="anchored" data-anchor-id="post-hoc-tests">Post-hoc Tests</h2>
-<p>Tukey Honestly Significant Differences</p>
+<p>We would like to compare all means but control for family-wise error.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Tukey multiple comparisons of means
-    95% family-wise confidence level
-
-Fit: aov(formula = Anxiety_Questionnaire ~ Attachment, data = d)
-
-$Attachment
-                    diff  lwr  upr p adj
-Avoidant-Secure     -2.3 -5.8  1.3  0.29
-Ambivalent-Secure   16.2 12.8 19.5  0.00
-Ambivalent-Avoidant 18.4 14.8 22.0  0.00</code></pre>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">TukeyHSD</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="ANOVA_files/figure-html/tukey-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level1</th>
+<th style="text-align: left;">Level2</th>
+<th style="text-align: right;">Difference</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: right;">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">-18.4</td>
+<td style="text-align: right;">-22.1</td>
+<td style="text-align: right;">-14.8</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">297</td>
+<td style="text-align: right;">-12.1</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">-16.2</td>
+<td style="text-align: right;">-19.6</td>
+<td style="text-align: right;">-12.7</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">297</td>
+<td style="text-align: right;">-11.3</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+<td style="text-align: left;">Avoidant</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">297</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+</tbody>
+</table>
 </div>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit) <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The marginal contrasts analysis suggests the following. The difference between
+Avoidant and Ambivalent is negative and statistically significant (difference =
+-18.44, 95% CI [-22.12, -14.77], t(297) = -12.08, p &lt; .001). The difference
+between Secure and Ambivalent is negative and statistically significant
+(difference = -16.18, 95% CI [-19.62, -12.74], t(297) = -11.33, p &lt; .001). The
+difference between Secure and Avoidant is positive and statistically
+non-significant (difference = 2.27, 95% CI [ -1.37, 5.90], t(297) = 1.50, p =
+0.135)</code></pre>
 </div>
 </div>
 
