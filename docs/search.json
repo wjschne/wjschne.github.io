@@ -154,39 +154,53 @@
     "text": "Here we are going to use a small data set to predict people’s height using the height of their parents."
   },
   {
+    "objectID": "tutorials/Regression/index.html#install-tidyverse",
+    "href": "tutorials/Regression/index.html#install-tidyverse",
+    "title": "Regression in R",
+    "section": "Install tidyverse",
+    "text": "Install tidyverse\nSome packages are designed to work with several other packages as a system. The tidyverse package is a “meta-package” that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. It also installs the haven package, which we will use to import some data. If you do not have a recent version of tidyverse already installed, you can install it with this code:\n\ninstall.packages(\"tidyverse\")"
+  },
+  {
+    "objectID": "tutorials/Regression/index.html#install-easystats",
+    "href": "tutorials/Regression/index.html#install-easystats",
+    "title": "Regression in R",
+    "section": "Install easystats",
+    "text": "Install easystats\nThe easystats package is another “meta-package” that installs a set of packages designed to work together to make data analysis easier.\nIf you do not have a recent version of easystats already installed, you can install it with this code:\n\ninstall.packages(\"easystats\")"
+  },
+  {
+    "objectID": "tutorials/Regression/index.html#save-the-plot",
+    "href": "tutorials/Regression/index.html#save-the-plot",
+    "title": "Regression in R",
+    "section": "Save the plot!",
+    "text": "Save the plot!\nYou can save to your hard drive a high-quality plot with the ggsave function. It will save whatever the last plot you created with ggplot. It will guess the file format from the file extension.\nHere I save a .pdf file of the plot to the working directory:\n\nggsave(\"my_plot.pdf\")\n\nWhat is the working directory? Is the folder on your machine that R thinks it should look first if it needs to find files or save files. If you are every curious about which directory is the working directory, you can use the getwd function:\n\ngetwd()\n\nIf you saved the plot above as \"my_plot.pdf\", you will find the file in the working directory returned by getwd."
+  },
+  {
     "objectID": "tutorials/Regression/index.html#vector-based-images",
     "href": "tutorials/Regression/index.html#vector-based-images",
     "title": "Regression in R",
-    "section": "Vector-based Images",
-    "text": "Vector-based Images\nThe .pdf format gives the best image quality but can only be viewed in a .pdf reader. The .svg format is almost as good and can be incorporated into webpages and Office documents. One downside of their near-perfect image quality is that .pdf and .svg image file sizes can become quite large."
+    "section": "Vector-based images",
+    "text": "Vector-based images\nThe .pdf format gives the best image quality but can only be viewed in a .pdf reader. The .svg format is almost as good and can be incorporated into webpages and Office documents. One downside of their near-perfect image quality is that .pdf and .svg image file sizes can become quite large."
   },
   {
     "objectID": "tutorials/Regression/index.html#raster-images",
     "href": "tutorials/Regression/index.html#raster-images",
     "title": "Regression in R",
-    "section": "Raster Images",
-    "text": "Raster Images\nThe .png format gives good image quality and renders small file sizes.\nThe primary use of the .gif format is to create animated plots. Otherwise stick with .png.\nAlthough the .jpg format is good for photos, it is terrible for plots—it often renders text and sharp corners with pixelated smudges."
+    "section": "Raster images",
+    "text": "Raster images\nThe .png format gives good image quality and renders small file sizes.\nThe primary use of the .gif format is to create animated plots. Otherwise stick with .png.\nAlthough the .jpg format is good for photos, it is terrible for plots—it often renders text and sharp corners with pixelated smudges."
   },
   {
     "objectID": "tutorials/Regression/index.html#model-level-statistics",
     "href": "tutorials/Regression/index.html#model-level-statistics",
     "title": "Regression in R",
-    "section": "Model-Level Statistics",
-    "text": "Model-Level Statistics\nSome statistics like the coefficient of determination (R2) or the standard error of the estimate (σe) describe the model as a whole.\nThe model-level statistics can be extracted with broom’s glance function or the performance package’s model_performance function.\n\n# Using broom package\nglance(m1)\n\n\n\n\n\nr.squared\nadj.r.squared\nsigma\nstatistic\np.value\ndf\nlogLik\nAIC\nBIC\ndeviance\ndf.residual\nnobs\n\n\n\n\n0.64\n0.63\n2.68\n67.7\n0\n1\n-95.2\n196\n201\n273\n38\n40\n\n\n\n\n\n\n\nmodel_parameters(m1)\n\n\n\n\n\nParameter\nCoefficient\nSE\nCI\nCI_low\nCI_high\nt\ndf_error\np\n\n\n\n\n(Intercept)\n-12.88\n9.78\n0.95\n-32.7\n6.92\n-1.32\n38\n0.2\n\n\navgphgt\n1.19\n0.14\n0.95\n0.9\n1.49\n8.23\n38\n0.0\n\n\n\n\n\n\n\nparameters(m1)\n\n\n\n\n\nParameter\nCoefficient\nSE\nCI\nCI_low\nCI_high\nt\ndf_error\np\n\n\n\n\n(Intercept)\n-12.88\n9.78\n0.95\n-32.7\n6.92\n-1.32\n38\n0.2\n\n\navgphgt\n1.19\n0.14\n0.95\n0.9\n1.49\n8.23\n38\n0.0\n\n\n\n\n\n\n\nstandardise_parameters(m1)\n\n\n\n\n\nParameter\nStd_Coefficient\nCI\nCI_low\nCI_high\n\n\n\n\n(Intercept)\n0.0\n0.95\n-0.19\n0.19\n\n\navgphgt\n0.8\n0.95\n0.60\n1.00\n\n\n\n\n\n\n\nperformance(m1)\n\n\n\n\n\nAIC\nAICc\nBIC\nR2\nR2_adjusted\nRMSE\nSigma\n\n\n\n\n196\n197\n201\n0.64\n0.63\n2.61\n2.68\n\n\n\n\n\n\n\n\nR2 is in the glance function’s r.squared column, and the standard error of the estimate is in the sigma column. If all you wanted was the R2, you could do this:\n\nglance(m1)$r.squared\n\n[1] 0.641\n\n\nOr using the performance package’s r2 function:\n\nr2(m1)\n\n# R2 for Linear Regression\n       R2: 0.641\n  adj. R2: 0.631\n\n\nFor the standard error of the estimate:\n\nglance(m1)$sigma\n\n[1] 2.68\n\n\nWhy would you want just one number instead of reading it from a table? In reproducible research, we intermingle text and code so that it is clear where every number came from. Thus, “hard-coding” your results like this is considered poor practice:\nThe model explains 64% of the variance.\nUsing rmarkdown, instead of typing the numeric results, we type pull the results using an inline code chunk:\nThe model explains `r round(100 * glance(m1)$r.squared, 0)`% of the variance.\nWhich, when rendered, produces the correct output:\n\nThe model explains 64% of the variance.\n\nThat seems like a lot of extra work, right? Yes, it is—unless there is a possibility that your underlying data might change or that you might copy your numbers incorrectly. If you are imperfect, the extra time and effort is worth it. It makes it easy for other scholars to see exactly where each number came from. Hard-coded results are harder to trust.\nAutomated report of the model’s performance:\n\nreport_performance(m1)\n\nThe model explains a statistically significant and substantial proportion of\nvariance (R2 = 0.64, F(1, 38) = 67.73, p &lt; .001, adj. R2 = 0.63)"
+    "section": "Model-level statistics",
+    "text": "Model-level statistics\nSome statistics like the coefficient of determination (R2) or the standard error of the estimate (σe) describe the model as a whole.\nThe model-level statistics can be extracted with the performance package’s model_performance function.\n\nperformance(m1)\n\n\n\n\n\nAIC\nAICc\nBIC\nR2\nR2_adjusted\nRMSE\nSigma\n\n\n\n\n196\n197\n201\n0.641\n0.631\n2.61\n2.68\n\n\n\n\n\n\nR2 is in the glance function’s r.squared column, and the standard error of the estimate is in the sigma column. If all you wanted was the R2, you could do this:\n\nr2(m1)\n\n# R2 for Linear Regression\n       R2: 0.641\n  adj. R2: 0.631\n\n\nFor the standard error of the estimate:\n\nsigma(m1)\n\n[1] 2.68\n\n\nWhy would you want just one number instead of reading it from a table? In reproducible research, we intermingle text and code so that it is clear where every number came from. Thus, “hard-coding” your results like this is considered poor practice:\nThe model explains 64% of the variance.\nUsing rmarkdown, instead of typing the numeric results, we type pull the results using an inline code chunk:\nThe model explains 64% of the variance.\nWhich, when rendered, produces the correct output:\n\nThe model explains 64% of the variance.\n\nThat seems like a lot of extra work, right? Yes, it is—unless there is a possibility that your underlying data might change or that you might copy your numbers incorrectly. If you are imperfect, the extra time and effort is worth it. It makes it easy for other scholars to see exactly where each number came from. Hard-coded results are harder to trust."
   },
   {
     "objectID": "tutorials/Regression/index.html#coefficient-level-statistics",
     "href": "tutorials/Regression/index.html#coefficient-level-statistics",
     "title": "Regression in R",
     "section": "Coefficient-level statistics",
-    "text": "Coefficient-level statistics\nThe regression coefficients—the intercept (b0) and the slope (b1)—have a number of statistics associated with them, which we will discuss later in the course.\nIf you just wanted the intercept and the slope coefficients, use the coef function:\n\ncoef(m1)\n\n(Intercept)     avgphgt \n     -12.88        1.19 \n\n\nThus, the intercept is -12.88 and the slope is 1.19.\nTo get the coefficients (intercept and slope) along with their p-values and other statistical information, use the tidy function:\n\ntidy(m1)\n\n\n\n\n\nterm\nestimate\nstd.error\nstatistic\np.value\n\n\n\n\n(Intercept)\n-12.88\n9.78\n-1.32\n0.2\n\n\navgphgt\n1.19\n0.14\n8.23\n0.0\n\n\n\n\n\n\n\n\nThe parameters package has a slightly more print-friendly version of tidy:\n\nmodel_parameters(m1) \n\n\n\n\n\nParameter\nCoefficient\nSE\nCI\nCI_low\nCI_high\nt\ndf_error\np\n\n\n\n\n(Intercept)\n-12.88\n9.78\n0.95\n-32.7\n6.92\n-1.32\n38\n0.2\n\n\navgphgt\n1.19\n0.14\n0.95\n0.9\n1.49\n8.23\n38\n0.0\n\n\n\n\n\n\n\n\nIf you want standardized parameters:\n\nmodel_parameters(m1, standardize = \"refit\")\n\n\n\n\n\nParameter\nCoefficient\nSE\nCI\nCI_low\nCI_high\nt\ndf_error\np\n\n\n\n\n(Intercept)\n0.0\n0.1\n0.95\n-0.19\n0.19\n0.00\n38\n1\n\n\navgphgt\n0.8\n0.1\n0.95\n0.60\n1.00\n8.23\n38\n0\n\n\n\n\n\n\n\n\nAutomated report of the parameters:\n\nreport_parameters(m1)\n\n  - The intercept is statistically non-significant and negative (beta = -12.88, 95% CI [-32.67, 6.92], t(38) = -1.32, p = 0.196; Std. beta = 2.65e-16, 95% CI [-0.19, 0.19])\n  - The effect of avgphgt is statistically significant and positive (beta = 1.19, 95% CI [0.90, 1.49], t(38) = 8.23, p &lt; .001; Std. beta = 0.80, 95% CI [0.60, 1.00])"
-  },
-  {
-    "objectID": "tutorials/Regression/index.html#observation-level-statistics",
-    "href": "tutorials/Regression/index.html#observation-level-statistics",
-    "title": "Regression in R",
-    "section": "Observation-Level Statistics",
-    "text": "Observation-Level Statistics\nWe sometimes want the individual-level data like the predictions (\\hat{Y}) and the errors (technically called residuals).\nTo get observation-level statistics, use broom’s augment function:\n\naugment(m1) \n\n\n\n\n\nheight\navgphgt\n.fitted\n.resid\n.hat\n.sigma\n.cooksd\n.std.resid\n\n\n\n\n66\n67.5\n67.6\n-1.64\n0.03\n2.70\n0.00\n-0.62\n\n\n71\n70.0\n70.6\n0.37\n0.04\n2.72\n0.00\n0.14\n\n\n74\n72.5\n73.6\n0.39\n0.10\n2.72\n0.00\n0.15\n\n\n69\n66.5\n66.5\n2.55\n0.03\n2.68\n0.01\n0.96\n\n\n70\n65.0\n64.7\n5.34\n0.04\n2.56\n0.09\n2.03\n\n\n74\n72.0\n73.0\n0.99\n0.09\n2.71\n0.01\n0.39\n\n\n73\n71.0\n71.8\n1.18\n0.06\n2.71\n0.01\n0.45\n\n\n69\n70.0\n70.6\n-1.63\n0.04\n2.70\n0.01\n-0.62\n\n\n69\n71.0\n71.8\n-2.82\n0.06\n2.67\n0.04\n-1.09\n\n\n75\n69.5\n70.0\n4.97\n0.04\n2.59\n0.07\n1.89\n\n\n69\n69.0\n69.4\n-0.43\n0.03\n2.72\n0.00\n-0.16\n\n\n67\n67.5\n67.6\n-0.64\n0.03\n2.71\n0.00\n-0.24\n\n\n73\n71.5\n72.4\n0.58\n0.07\n2.72\n0.00\n0.23\n\n\n74\n70.0\n70.6\n3.37\n0.04\n2.66\n0.04\n1.29\n\n\n63\n61.5\n60.5\n2.51\n0.13\n2.68\n0.07\n1.00\n\n\n67\n68.0\n68.2\n-1.24\n0.03\n2.71\n0.00\n-0.47\n\n\n64\n62.5\n61.7\n2.32\n0.10\n2.69\n0.04\n0.91\n\n\n61\n63.0\n62.3\n-1.28\n0.08\n2.71\n0.01\n-0.50\n\n\n70\n65.5\n65.3\n4.74\n0.04\n2.60\n0.06\n1.80\n\n\n66\n68.0\n68.2\n-2.24\n0.03\n2.69\n0.01\n-0.85\n\n\n70\n72.0\n73.0\n-3.01\n0.09\n2.67\n0.07\n-1.18\n\n\n60\n65.0\n64.7\n-4.66\n0.04\n2.60\n0.07\n-1.78\n\n\n75\n68.5\n68.8\n6.16\n0.03\n2.52\n0.08\n2.33\n\n\n73\n69.0\n69.4\n3.57\n0.03\n2.65\n0.03\n1.35\n\n\n63\n68.0\n68.2\n-5.24\n0.03\n2.57\n0.05\n-1.98\n\n\n63\n65.0\n64.7\n-1.66\n0.04\n2.70\n0.01\n-0.63\n\n\n69\n67.5\n67.6\n1.36\n0.03\n2.71\n0.00\n0.51\n\n\n65\n64.5\n64.1\n0.93\n0.05\n2.71\n0.00\n0.36\n\n\n64\n66.0\n65.8\n-1.85\n0.03\n2.70\n0.01\n-0.70\n\n\n69\n70.0\n70.6\n-1.63\n0.04\n2.70\n0.01\n-0.62\n\n\n65\n68.0\n68.2\n-3.24\n0.03\n2.66\n0.02\n-1.22\n\n\n63\n65.0\n64.7\n-1.66\n0.04\n2.70\n0.01\n-0.63\n\n\n68\n67.5\n67.6\n0.36\n0.03\n2.72\n0.00\n0.13\n\n\n63\n64.5\n64.1\n-1.07\n0.05\n2.71\n0.00\n-0.41\n\n\n62\n64.0\n63.5\n-1.47\n0.06\n2.71\n0.01\n-0.56\n\n\n61\n63.5\n62.9\n-1.87\n0.07\n2.70\n0.02\n-0.72\n\n\n67\n67.0\n67.0\n-0.05\n0.03\n2.72\n0.00\n-0.02\n\n\n63\n64.5\n64.1\n-1.07\n0.05\n2.71\n0.00\n-0.41\n\n\n62\n63.5\n62.9\n-0.87\n0.07\n2.71\n0.00\n-0.34\n\n\n72\n71.5\n72.4\n-0.42\n0.07\n2.72\n0.00\n-0.16\n\n\n\n\n\n\n\n\nThe predicted values \\hat{Y} are in the .fitted column, and the errors (residuals) are in the .resid column.\nIf you wanted to predict a value not in the data, you use the newdata argument. For example, if I wanted to predict the height of a person whose parents had a height of 65:\n\naugment(m1, newdata = tibble(avgphgt = 65))\n\n\n\n\n\navgphgt\n.fitted\n\n\n\n\n65\n64.7"
+    "text": "Coefficient-level statistics\nThe regression coefficients—the intercept (b0) and the slope (b1)—have a number of statistics associated with them, which we will discuss later in the course.\nIf you just wanted the intercept and the slope coefficients, use the coef function:\n\ncoef(m1)\n\n(Intercept)     avgphgt \n     -12.88        1.19 \n\n\nThus, the intercept is -12.88 and the slope is 1.19.\nTo get the model parameters (intercept and slope coefficients) along with their p-values and other statistical information\n\nparameters(m1) \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nParameter\nCoefficient\nSE\nCI\nCI_low\nCI_high\nt\ndf_error\np\n\n\n\n\n(Intercept)\n-12.88\n9.779\n0.95\n-32.675\n6.92\n-1.32\n38\n0.196\n\n\navgphgt\n1.19\n0.145\n0.95\n0.899\n1.49\n8.23\n38\n0.000\n\n\n\n\n\n\nIf you want standardized parameters:\n\nstandardise_parameters(m1)\n\n\n\n\n\nParameter\nStd_Coefficient\nCI\nCI_low\nCI_high\n\n\n\n\n(Intercept)\n0.0\n0.95\n-0.194\n0.194\n\n\navgphgt\n0.8\n0.95\n0.603\n0.997"
   },
   {
     "objectID": "tutorials/Regression/index.html#checking-assumptions-1",
@@ -199,36 +213,43 @@
     "objectID": "tutorials/Regression/index.html#summarizing-results",
     "href": "tutorials/Regression/index.html#summarizing-results",
     "title": "Regression in R",
-    "section": "Summarizing Results",
-    "text": "Summarizing Results\nTo summarize the results, use the summary function:\n\nsummary(m2)\n\n\nCall:\nlm(formula = height ~ avgphgt + gender, data = d)\n\nResiduals:\n   Min     1Q Median     3Q    Max \n-3.826 -1.094 -0.347  1.656  4.503 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)   29.035     11.600    2.50  0.01686 *  \navgphgt        0.671      0.157    4.26  0.00013 ***\ngender        -4.468      0.920   -4.85  2.2e-05 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 2.12 on 37 degrees of freedom\nMultiple R-squared:  0.78,  Adjusted R-squared:  0.769 \nF-statistic: 65.7 on 2 and 37 DF,  p-value: 6.6e-13\n\n\nAn automated report:\n\nreport::report(m2)\n\nWe fitted a linear model (estimated using OLS) to predict height with avgphgt\nand gender (formula: height ~ avgphgt + gender). The model explains a\nstatistically significant and substantial proportion of variance (R2 = 0.78,\nF(2, 37) = 65.75, p &lt; .001, adj. R2 = 0.77). The model's intercept,\ncorresponding to avgphgt = 0 and gender = 0, is at 29.03 (95% CI [5.53, 52.54],\nt(37) = 2.50, p = 0.017). Within this model:\n\n  - The effect of avgphgt is statistically significant and positive (beta = 0.67,\n95% CI [0.35, 0.99], t(37) = 4.26, p &lt; .001; Std. beta = 0.45, 95% CI [0.24,\n0.66])\n  - The effect of gender is statistically significant and negative (beta = -4.47,\n95% CI [-6.33, -2.60], t(37) = -4.85, p &lt; .001; Std. beta = -0.51, 95% CI\n[-0.73, -0.30])\n\nStandardized parameters were obtained by fitting the model on a standardized\nversion of the dataset. 95% Confidence Intervals (CIs) and p-values were\ncomputed using a Wald t-distribution approximation.\n\n\nStandardized coefficients:\n\nparameters::model_parameters(m2, standardize = \"refit\")\n\n\n\n\n\nParameter\nCoefficient\nSE\nCI\nCI_low\nCI_high\nt\ndf_error\np\n\n\n\n\n(Intercept)\n0.00\n0.08\n0.95\n-0.15\n0.15\n0.00\n37\n1\n\n\navgphgt\n0.45\n0.11\n0.95\n0.24\n0.66\n4.26\n37\n0\n\n\ngender\n-0.51\n0.11\n0.95\n-0.73\n-0.30\n-4.85\n37\n0\n\n\n\n\n\n\n\n\nThe oddly-named anova function compares 2 models:\n\nanova(m1, m2)\n\n\n\n\n\nRes.Df\nRSS\nDf\nSum of Sq\nF\nPr(&gt;F)\n\n\n\n\n38\n273\n\n\n\n\n\n\n37\n167\n1\n106\n23.6\n0\n\n\n\n\n\n\n\n\nThe p-value is significant, meaning that m2 explains more variance than m1.\nI like the more full-featured set of model comparison functions from the performance package:\n\ncompare_performance(m1, m2) \n\n\n\n\n\nName\nModel\nAIC\nAIC_wt\nAICc\nAICc_wt\nBIC\nBIC_wt\nR2\nR2_adjusted\nRMSE\nSigma\n\n\n\n\nm1\nlm\n196\n0\n197\n0\n201\n0\n0.64\n0.63\n2.61\n2.68\n\n\nm2\nlm\n179\n1\n180\n1\n185\n1\n0.78\n0.77\n2.04\n2.12\n\n\n\n\n\n\n\n\nThis is equivalent to the anova function but in a more readable format:\n\ntest_wald(m1, m2)\n\n\n\n\n\nName\nModel\ndf\ndf_diff\nF\np\n\n\n\n\nm1\nlm\n38\n\n\n\n\n\nm2\nlm\n37\n1\n23.6\n0\n\n\n\n\n\n\n\n\nThis uses Bayes Factor instead of a p-value:\n\ntest_bf(m1, m2)\n\n\n\n\n\nModel\nlog_BF\nBF\n\n\n\n\navgphgt\n\n\n\n\navgphgt + gender\n8.01\n3010\n\n\n\n\n\n\n\n\nA BF &gt; 1 means that m2 is more strongly supported than m1. A BF &lt; 1 means that m1 is more strongly supported than m2.\n\nreport(test_bf(m1, m2))\n\nBayes factors were computed using the BIC approximation, by which BF10 =\nexp((BIC0 - BIC1)/2). Compared to the avgphgt model, we found extreme evidence\n(BF = 3.01e+03) in favour of the avgphgt + gender model (the least supported\nmodel)."
+    "section": "Summarizing results",
+    "text": "Summarizing results\nTo summarize the results, use the summary function:\n\nsummary(m2)\n\n\nCall:\nlm(formula = height ~ avgphgt + gender, data = d)\n\nResiduals:\n   Min     1Q Median     3Q    Max \n-3.826 -1.094 -0.347  1.656  4.503 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)   29.035     11.600    2.50  0.01686 *  \navgphgt        0.671      0.157    4.26  0.00013 ***\ngender        -4.468      0.920   -4.85  2.2e-05 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 2.12 on 37 degrees of freedom\nMultiple R-squared:  0.78,  Adjusted R-squared:  0.769 \nF-statistic: 65.7 on 2 and 37 DF,  p-value: 6.6e-13\n\n\nStandardized coefficients:\n\nstandardise_parameters(m2)\n\n\n\n\n\nParameter\nStd_Coefficient\nCI\nCI_low\nCI_high\n\n\n\n\n(Intercept)\n0.000\n0.95\n-0.154\n0.154\n\n\navgphgt\n0.450\n0.95\n0.236\n0.664\n\n\ngender\n-0.513\n0.95\n-0.726\n-0.299\n\n\n\n\n\n\nAn automated report:\n\nreport(m2)\n\nWe fitted a linear model (estimated using OLS) to predict height with avgphgt\nand gender (formula: height ~ avgphgt + gender). The model explains a\nstatistically significant and substantial proportion of variance (R2 = 0.78,\nF(2, 37) = 65.75, p &lt; .001, adj. R2 = 0.77). The model's intercept,\ncorresponding to avgphgt = 0 and gender = 0, is at 29.03 (95% CI [5.53, 52.54],\nt(37) = 2.50, p = 0.017). Within this model:\n\n  - The effect of avgphgt is statistically significant and positive (beta = 0.67,\n95% CI [0.35, 0.99], t(37) = 4.26, p &lt; .001; Std. beta = 0.45, 95% CI [0.24,\n0.66])\n  - The effect of gender is statistically significant and negative (beta = -4.47,\n95% CI [-6.33, -2.60], t(37) = -4.85, p &lt; .001; Std. beta = -0.51, 95% CI\n[-0.73, -0.30])\n\nStandardized parameters were obtained by fitting the model on a standardized\nversion of the dataset. 95% Confidence Intervals (CIs) and p-values were\ncomputed using a Wald t-distribution approximation."
   },
   {
-    "objectID": "tutorials/Regression/index.html#canvas-question-1",
-    "href": "tutorials/Regression/index.html#canvas-question-1",
+    "objectID": "tutorials/Regression/index.html#comparing-models",
+    "href": "tutorials/Regression/index.html#comparing-models",
     "title": "Regression in R",
-    "section": "Canvas Question 1",
-    "text": "Canvas Question 1\nQuestion: Is read_1 a significant predictor of read_2?\n\nHide Hints\n\n\nHint 1\nMake model fit object called m_read using the lm function.\n\nm_read &lt;- lm(read_2 ~ read_1, data = d_learn)\n\n\n\nHint 2\nView coefficent-level statistics with broom’s tidy function.\nYou could also use Base R’s summary function.\n\ntidy(m_read)\n\n# or\n\nsummary(m_read)\n\n\n\nHint 3\nIn the read_1 row, is the p.value column less than 0.05?\n\ntidy(m_read)\n\n\n\n\n\n\nterm\nestimate\nstd.error\nstatistic\np.value\n\n\n\n\n(Intercept)\n83.591\n10.922\n7.65\n0.000\n\n\nread_1\n0.251\n0.104\n2.41\n0.021"
+    "section": "Comparing models",
+    "text": "Comparing models\nTo compare two regression models:\n\ntest_wald(m1, m2)\n\n\n\n\n\nName\nModel\ndf\ndf_diff\nF\np\n\n\n\n\nm1\nlm\n38\n\n\n\n\n\nm2\nlm\n37\n1\n23.6\n0\n\n\n\n\n\n\nThe p-value is significant, meaning that m2 explains more variance than m1.\nThis uses Bayes Factor instead of a p-value:\n\ntest_bf(m1, m2)\n\n\n\n\n\nModel\nlog_BF\nBF\n\n\n\n\navgphgt\n\n\n\n\navgphgt + gender\n8.01\n3010\n\n\n\n\n\n\nA BF &gt; 1 means that m2 is more strongly supported than m1. A BF &lt; 1 means that m1 is more strongly supported than m2. If you are not sure how to interpret the output of test_bf, you can get an automated interpretation:\n\ntest_bf(m1, m2) %&gt;% \n  report()\n\nBayes factors were computed using the BIC approximation, by which BF10 =\nexp((BIC0 - BIC1)/2). Compared to the avgphgt model, we found extreme evidence\n(BF = 3.01e+03) in favour of the avgphgt + gender model (the least supported\nmodel).\n\n\nTo compare many performance statistics at once:\n\ncompare_performance(m1, m2) \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nName\nModel\nAIC\nAIC_wt\nAICc\nAICc_wt\nBIC\nBIC_wt\nR2\nR2_adjusted\nRMSE\nSigma\n\n\n\n\nm1\nlm\n196\n0\n197\n0\n201\n0\n0.641\n0.631\n2.61\n2.68\n\n\nm2\nlm\n179\n1\n180\n1\n185\n1\n0.780\n0.769\n2.04\n2.12"
   },
   {
-    "objectID": "tutorials/Regression/index.html#canvas-question-2",
-    "href": "tutorials/Regression/index.html#canvas-question-2",
+    "objectID": "tutorials/Regression/index.html#question-1",
+    "href": "tutorials/Regression/index.html#question-1",
     "title": "Regression in R",
-    "section": "Canvas Question 2",
-    "text": "Canvas Question 2\nQuestion: What is the R2 for the m_read model?\n\nHide Hint\n\n\nHint\nView model-level statistics with broom’s glance function.\nYou could also use Base R’s summary function.\n\nglance(m_read)\n\n# or\n\nsummary(m_read)"
+    "section": "Question 1",
+    "text": "Question 1\nIs read_1 a significant predictor of read_2?\n\n\nHint 1\n\nMake model fit object called m_read using the lm function.\n\nm_read &lt;- lm(read_2 ~ read_1, data = d_learn)\n\n\n\n\nHint 2\n\nView coefficient-level statistics with the parameters function.\nYou could also use Base R’s summary function.\n\nparameters(m_read)\n\n# or\n\nsummary(m_read)\n\n\n\n\nHint 3\n\nIn the read_1 row, is the p.value column less than 0.05?\n\nparameters(m_read)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nParameter\nCoefficient\nSE\nCI\nCI_low\nCI_high\nt\ndf_error\np\n\n\n\n\n(Intercept)\n83.591\n10.922\n0.95\n61.44\n105.741\n7.65\n36\n0.000\n\n\nread_1\n0.251\n0.104\n0.95\n0.04\n0.463\n2.41\n36\n0.021"
   },
   {
-    "objectID": "tutorials/Regression/index.html#canvas-question-3",
-    "href": "tutorials/Regression/index.html#canvas-question-3",
+    "objectID": "tutorials/Regression/index.html#question-2",
+    "href": "tutorials/Regression/index.html#question-2",
     "title": "Regression in R",
-    "section": "Canvas Question 3",
-    "text": "Canvas Question 3\nQuestion: What does the scatter plot look like when read_1 is on the x-axis and read_2 is on the y-axis? Also plot the regression line. Save your plot using the ggsave function and upload it to Canvas.\n\nHide Hints\n\n\nHint 1\nThis will get you started\n\nggplot(d_learn, aes(read_1, read_2))\n\n\n\nPoints Hint\nHere is how you add points.\n\nggplot(d_learn, aes(read_1, read_2)) +\n  geom_point() \n\n\n\nLine Hint\nHere is how you add a regression line.\n\nggplot(d_learn, aes(read_1, read_2)) +\n  geom_point() + \n  geom_smooth(method = \"lm\") \n\n\n\nPlot Polishing\nThis is overkill for now. But soon you will want to fine tune your plots.\n\n# I want to put the equation at x = 130\nequation_x &lt;- 130\nequation_y &lt;- predict(m_read, newdata = tibble(read_1 = equation_x))\n\n# Extracting the coefficients\nb_read &lt;- round(coef(m_read),2)\n\n# The angle of the regression line is the inverse tangent of the slope (converted to degrees)\neq_angle &lt;- atan(b_read[2]) * 180 / pi\n\n# Equation\neq_read &lt;- paste0(\"italic(Y) == \", \n                  b_read[1], \n                  \" + \", \n                  b_read[2], \n                  \" *  italic(X) + italic(e)\")\n\nggplot(d_learn, aes(read_1, read_2)) +\n  geom_point() +\n  geom_smooth(method = \"lm\") +\n  labs(x = \"Reading at Time 1\",\n       y = \"Reading at Time 2\",\n       title = \"Using Reading at Time 1 to Predict Reading at Time 2\") +\n  coord_fixed() +\n  annotate(\n    geom = \"text\",\n    x = equation_x,\n    y = equation_y,\n    angle = eq_angle,\n    label = eq_read,\n    parse = TRUE,\n    vjust = -0.5)"
+    "section": "Question 2",
+    "text": "Question 2\nWhat is the R2 for the m_read model?\n\n\nHint\n\nView model-level statistics with the performance function.\nYou could also use Base R’s summary function.\n\nperformance(m_read)\n\n# or\n\nsummary(m_read)"
   },
   {
-    "objectID": "tutorials/Regression/index.html#canvas-question-4",
-    "href": "tutorials/Regression/index.html#canvas-question-4",
+    "objectID": "tutorials/Regression/index.html#question-3",
+    "href": "tutorials/Regression/index.html#question-3",
     "title": "Regression in R",
-    "section": "Canvas Question 4",
-    "text": "Canvas Question 4\nCreate a regression model in which you predict math at time 2 (math_2) using reading at time 1 (math_1). Call the model fit object m_math1.\nQuestion: Does math_1 predict math_2?.\nQuestion: Does math_1 still predict math_2 after controlling for read_1?\n\nHide Hint\n\n\nHint\n\nm_math &lt;- lm(math_2 ~ math_1 + read_1, data = d_learn)\nsummary(m_math)"
+    "section": "Question 3",
+    "text": "Question 3\nWhat does the scatter plot look like when read_1 is on the x-axis and read_2 is on the y-axis? Also plot the regression line. Save your plot using the ggsave function.\n\n\nHint Model\n\nThis will get you started\n\nggplot(d_learn, aes(read_1, read_2))\n\n\n\n\nHint for Adding Points\n\nHere is how you add points.\n\nggplot(d_learn, aes(read_1, read_2)) +\n  geom_point() \n\n\n\n\nHint for Adding Line\n\nHere is how you add a regression line.\n\nggplot(d_learn, aes(read_1, read_2)) +\n  geom_point() + \n  geom_smooth(method = \"lm\") \n\n\n\n\nPlot Polishing\n\nThis is overkill for now. But someday you might want to be able to make your plots as polished as possible.\n\n# I want to put the equation at x = 130\nequation_x &lt;- 130\nequation_y &lt;- predict(m_read, newdata = tibble(read_1 = equation_x))\n\n# Extracting the coefficients\nb_read &lt;- round(coef(m_read),2)\n\n# The angle of the regression line is the inverse tangent of the slope (converted to degrees)\neq_angle &lt;- atan(b_read[2]) * 180 / pi\n\n# Equation\neq_read &lt;- paste0(\"italic(Y) == \", \n                  b_read[1], \n                  \" + \", \n                  b_read[2], \n                  \" *  italic(X) + italic(e)\")\n\nggplot(d_learn, aes(read_1, read_2)) +\n  geom_point() +\n  geom_smooth(method = \"lm\") +\n  labs(x = \"Reading at Time 1\",\n       y = \"Reading at Time 2\",\n       title = \"Using Reading at Time 1 to Predict Reading at Time 2\") +\n  coord_fixed() +\n  theme_minimal() +\n  annotate(\n    geom = \"text\",\n    x = equation_x,\n    y = equation_y,\n    angle = eq_angle,\n    label = eq_read,\n    parse = TRUE,\n    vjust = -0.5)"
+  },
+  {
+    "objectID": "tutorials/Regression/index.html#question-4",
+    "href": "tutorials/Regression/index.html#question-4",
+    "title": "Regression in R",
+    "section": "Question 4",
+    "text": "Question 4\nCreate a regression model in which you predict math at time 2 (math_2) using reading at time 1 (math_1). Call the model fit object m_math1.\nDoes math_1 predict math_2?.\nDoes math_1 still predict math_2 after controlling for read_1?\n\n\nHint\n\n\nm_math &lt;- lm(math_2 ~ math_1 + read_1, data = d_learn)\nsummary(m_math)"
   },
   {
     "objectID": "software.html",
@@ -623,6 +644,13 @@
     "text": "library(tidyverse)\nlibrary(easystats)"
   },
   {
+    "objectID": "tutorials/ANOVA/ANOVA.html#diagnostic-plots",
+    "href": "tutorials/ANOVA/ANOVA.html#diagnostic-plots",
+    "title": "ANOVA in R",
+    "section": "Diagnostic Plots",
+    "text": "Diagnostic Plots\n\ncheck_model(fit)\n\n\n\n\n\n\n\n\nNone of the diagnostic checks raise any alarms. Specifically, the residuals are reasonably normal and have consistent variance acrross groups (i.e., the homogeneeity of variance assumption is reasonable)."
+  },
+  {
     "objectID": "tutorials/ANOVA/ANOVA.html#summary",
     "href": "tutorials/ANOVA/ANOVA.html#summary",
     "title": "ANOVA in R",
@@ -637,11 +665,11 @@
     "text": "Other Summary Functions\nThe overall “fit” or “performance” of the model:\n\nperformance(fit)\n\n\n\n\n\nAIC\nAICc\nBIC\nR2\nR2_adjusted\nRMSE\nSigma\n\n\n\n\n2265\n2265\n2280\n0.39\n0.38\n10\n10\n\n\n\n\n\n\n\nAIC: Akaike’s Information Criterion\nAICc: AIC with a correction for small sample sizes\nBIC: Bayesian Information Criterion\nR2: R-squared: Coefficient of Determination\nR2_adj: Adjusted r-squared\nRMSE: Root mean squared error =\\sqrt{\\frac{\\sum_{i = 1}^{n}{e_i}}{n}}\nSIGMA: Residual standard deviation (The SD of the residuals =\\sqrt{\\frac{\\sum_{i = 1}^{n}{e_i}}{n-k-1}})"
   },
   {
-    "objectID": "tutorials/ANOVA/ANOVA.html#diagnostic-plots",
-    "href": "tutorials/ANOVA/ANOVA.html#diagnostic-plots",
+    "objectID": "tutorials/ANOVA/ANOVA.html#automated-interpretation",
+    "href": "tutorials/ANOVA/ANOVA.html#automated-interpretation",
     "title": "ANOVA in R",
-    "section": "Diagnostic Plots",
-    "text": "Diagnostic Plots\n\ncheck_model(fit)\n\n\n\n\n\n\n\n\nNone of the diagnostic checks raise any alarms. Specifically, the residuals are reasonably normal and have consistent variance acrross groups (i.e., the homogeneeity of variance assumption is reasonable)."
+    "section": "Automated Interpretation",
+    "text": "Automated Interpretation\n\nreport(fit)\n\nThe ANOVA (formula: Anxiety_Questionnaire ~ Attachment) suggests that:\n\n  - The main effect of Attachment is statistically significant and large (F(2,\n297) = 92.98, p &lt; .001; Eta2 = 0.39, 95% CI [0.32, 1.00])\n\nEffect sizes were labelled following Field's (2013) recommendations."
   },
   {
     "objectID": "tutorials/ANOVA/ANOVA.html#post-hoc-tests",
@@ -656,19 +684,5 @@
     "title": "Tutorials",
     "section": "",
     "text": "ANOVA in R\n\n\n\n\n\n\n\n\n\n\n\nW. Joel Schneider\n\n\n\n\n\n\n\n\n\n\n\n\nRegression in R\n\n\n\n\n\n\n\n\n\n\n\nW. Joel Schneider\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "tutorials/ANOVA/ANOVA.html#model-paramters",
-    "href": "tutorials/ANOVA/ANOVA.html#model-paramters",
-    "title": "ANOVA in R",
-    "section": "Model Paramters",
-    "text": "Model Paramters\n\nreport_table(fit)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nParameter\nSum_Squares\ndf\nMean_Square\nF\np\nEta2\nEta2_CI_low\nEta2_CI_high\n\n\n\n\nAttachment\n20359\n2\n10179\n93\n0\n0.39\n0.32\n1\n\n\nResiduals\n32517\n297\n109\nNA\nNA\nNA\nNA\nNA"
-  },
-  {
-    "objectID": "tutorials/ANOVA/ANOVA.html#automated-interpretation",
-    "href": "tutorials/ANOVA/ANOVA.html#automated-interpretation",
-    "title": "ANOVA in R",
-    "section": "Automated Interpretation",
-    "text": "Automated Interpretation\n\nreport(fit)\n\nThe ANOVA (formula: Anxiety_Questionnaire ~ Attachment) suggests that:\n\n  - The main effect of Attachment is statistically significant and large (F(2,\n297) = 92.98, p &lt; .001; Eta2 = 0.39, 95% CI [0.32, 1.00])\n\nEffect sizes were labelled following Field's (2013) recommendations."
   }
 ]

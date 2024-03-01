@@ -4,6 +4,12 @@ author: "W. Joel Schneider"
 format: 
   html: 
     df-print: kable
+knitr:
+  opts_chunk: 
+    out-width: 100%
+    fig-height: 7
+    fig-width: 7
+    dev: "ragg_png"
 ---
 
 ```{r}
@@ -11,113 +17,53 @@ format:
 #| include: false
 #| cache: false
 
-knitr::opts_chunk$set(
-  warning = F,
-  message = F,
-  dev = "svg",
-  class.source = 'fold-show',
-  echo = TRUE,
-  dev = "svg",
-  cache = F,
-  out.width = '100%',
-  out.height = '100%'
-)
-
-
-
-
-library(extrafont)
-extrafont::loadfonts(device = "win")
 library(tidyverse)
-library(lubridate)
-library(performance)
-library(haven)
-library(broom)
-library(parameters)
-library(knitr)
-library(report)
+library(easystats)
+
 
 options(digits = 3, knitr.kable.NA = '', knitr.kable.digits = 2)
-
-# library(magick)
-
-# dutchmasters::dutchmasters
-options(digits = 3)
-bg_color <- "#ECE5D3"
-fore_color <- "#2D2718"
-line_color <- "#7C4728"
-area_color <- "#624E3E"
-bsize = 16
-tsize = 0.8 * bsize / 2.845276
-myfont <- "Roboto Condensed"
-
-CurrentQuestion <- 0
-
-inc_num <- function() {
-  CurrentQuestion <<- CurrentQuestion + 1
-  CurrentQuestion
-}
-
-CurrentFigure <- 0
-
-inc_fig <- function() {
-  CurrentFigure <<- CurrentFigure + 1
-  CurrentFigure
-  }
-
-show_answer <- FALSE
-
-library(kableExtra)
-library(knitr)
-
-registerS3method("knit_print", "data.frame", function(x, ...) {
-  knitr::knit_print(knitr::kable(x, digits = 2) |> kableExtra::kable_paper(full_width = T, html_font = NULL), ...)
-})
 
 ```
 
 Here we are going to use a small data set to predict people's height using the height of their parents.
 
-# Loading packages
+# Install packages
 
-:::{.callout-note .column-margin title="R Package"}
-A **R package** is software that extends the capabilities of R. To use a package, you must first install it on your machine. You only need to install it once. By default, the package tab is in the lower right pane in RStudio. It has two buttons, one for installing new packages and one for updating packages you have previously installed.
+An **R package** is software that extends the capabilities of R. To use a package, you must first install it on your machine. You only need to install it once.
 
-![RStudio's "Install" and "Update" buttons in the "Package" tab in the lower right pane](updatepackages.png){#fig-packages}
+## Install tidyverse 
 
-:::
-
-First we load packages to enhance R's abilities. Some packages are designed to work with several other packages as a system. The [tidyverse package](https://www.tidyverse.org/) is a "meta-package" that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. If you do not have a recent version of tidyverse already installed, you can install it with this code:
+Some packages are designed to work with several other packages as a system. The [tidyverse package](https://www.tidyverse.org/) is a "meta-package" that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. It also installs the [haven](https://haven.tidyverse.org/) package, which we will use to import some data. If you do not have a recent version of tidyverse already installed, you can install it with this code:
 
 ```{r installtidyverse}
 #| eval: false
-
 install.packages("tidyverse")
 ```
 
-:::{.callout-tip}
-
-You only have to install the tidyverse once. Thereafter, from time to time, you can let RStudio's "Update" button in the "Packages" pane help you keep your packages current.
 
 
-:::
-When you "load" the tidyvert
+## Install easystats
+
+The [easystats](https://easystats.github.io/easystats/) package is another "meta-package" that installs a set of packages designed to work together to make data analysis easier.
 
 
-The `tidyverse` allows us to do many things, including plotting with `ggplot2`. The `haven` package imports SPSS data. The `broom` package tidies up our regression results with the `tidy`, `glance`, and `augment` functions.
+If you do not have a recent version of easystats already installed, you can install it with this code:
 
-If any of these packages are not installed, click the **Packages** tab, click the **Install** button, enter the names of the packages separated by commas, and click **Install**.
+```{r installeasystats}
+#| eval: false
+install.packages("easystats")
+```
 
-To load the packages, run this code:
+
+# Load packages
+
+A package that is installed on your machine has additional functions that you can use. Each session, you can "load" a package with the `library` function:
 
 ```{r loadpacakges}
 library(tidyverse) # Loads primary packages for data wrangling and plotting
-library(haven) # Imports data saved in SPSS, SAS, or Stata format
-library(broom) # Displays model information
-library(performance) # Displays model information 
-library(parameters) # Displays model parameter information
-library(report) # Automated interpretations
+library(easystats) # Loads packages that make extracting data from model fit objects easier
 ```
+
 
 # Import data
 
@@ -127,15 +73,20 @@ If I use only one data set in an analysis, I call it `d`. If I need multiple dat
 
 You can import the `height.sav` data set directly from my github repository for this course. There is no need to save the data anywhere. This code loads the data into variable `d` using the [`read_spss`](https://haven.tidyverse.org/reference/read_spss.html) function from the [haven package](https://haven.tidyverse.org/).
 
-```{r}
-d <- read_spss("https://github.com/wjschne/EDUC5325/raw/master/height.sav")
+We could load haven using `library(haven)`, but we only need to use one function one time. So instead of loading the whole package, we can use a function without loading the package by using the package name as prefix followed by two colons like so:
+
+```{r import}
+d <- haven::read_spss("https://github.com/wjschne/EDUC5325/raw/master/height.sav")
 ```
+
+This code reaches across the web to the file in quotes, "reads" it into our session, and holds the data in a new variable we called `d`. Every time we need the data, we will get it from the `d` variable.
 
 # Make a plot
 
 Use the [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html) function from the [ggplot2](https://ggplot2.tidyverse.org/) package to make a scatterplot with points and a regression line:
 
-```{r}
+```{r regressionplot}
+#| classes: preview-image
 ggplot(d, aes(avgphgt,height)) +
   geom_point() +
   geom_smooth(method = "lm")
@@ -145,23 +96,32 @@ Annotated, here is what the code does:
 
 ![Annotated ggplot2 code](ggplotcode.svg)
 
-# Save the plot!
+## Save the plot!
 
 You can save to your hard drive a high-quality plot with the [`ggsave`](https://ggplot2.tidyverse.org/reference/ggsave.html) function. It will save whatever the last plot you created with [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html). It will guess the file format from the file extension. 
 
-Here I save a .pdf file of the plot:
+Here I save a .pdf file of the plot to the working directory:
 
 ```{r saveplot}
 #| eval: false
 ggsave("my_plot.pdf")
 ```
 
+What is the working directory? Is the folder on your machine that R thinks it should look first if it needs to find files or save files. If you are every curious about which directory is the working directory, you can use the `getwd` function:
 
-## Vector-based Images
+```{r workingdirectory}
+#| eval: false
+getwd()
+```
+
+If you saved the plot above as `"my_plot.pdf"`, you will find the file in the working directory returned by `getwd`.
+
+
+## Vector-based images
 
 The .pdf format gives the best image quality but can only be viewed in a .pdf reader. The .svg format is almost as good and can be incorporated into webpages and Office documents. One downside of their near-perfect image quality is that .pdf and .svg image file sizes can become quite large. 
 
-## Raster Images
+## Raster images
 
 The .png format gives good image quality and renders small file sizes. 
 
@@ -169,33 +129,34 @@ The primary use of the .gif format is to create animated plots. Otherwise stick 
 
 Although the .jpg format is good for photos, it is terrible for plots---it often renders text and sharp corners with pixelated smudges. 
 
-# Creating the model
+# Creating the regression model
 
 To run regression models, use the [`lm`](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm) function. The `lm` stands for "linear model." The general pattern is `lm(Y~X, data = d)`, which means "`Y` is predicted by `X`, using the data set `d`."
 
 Here we predict height from Average of Parent Height (`avgphgt`):
 
-```{r}
+```{r m1}
 m1 <- lm(height~avgphgt, data = d)
 ```
 
 Notice that we did not get any results. Instead, we created the model fit object `m1`, which contains information about the model. There are a variety of functions we can use to extract information from `m1`.
 
-# Checking Assumptions
+# Checking assumptions
 
 Regression assumes that the observations should independent, and the residuals should be normal and homoscedastic. The [performance package](https://easystats.github.io/performance/index.html) has a great function for checking model assumptions: [`check_model`](https://easystats.github.io/performance/reference/check_model.html)
 
-```{r}
+```{r checkmodel}
+#| fig-height: 8
 check_model(m1)
 ```
 
 Here we see that none of the assumptions have been severely violated.
 
-# Summarising Results
+# Summarising results
 
 Base R gives you most of what you would want to know about the regression results with the `summary` function:
 
-```{r}
+```{r summarym1}
 summary(m1)
 ```
 
@@ -210,20 +171,13 @@ report::report(m1)
 
 
 
-The `glance`, `tidy`, and `augment` functions from the [broom](https://broom.tidymodels.org/) package make the output more amenable for further analysis or for presentation.
-
-## Model-Level Statistics
+## Model-level statistics
 
 Some statistics like the *coefficient of determination* (*R*^2^) or the *standard error of the estimate* (*&sigma;~e~*) describe the model as a whole.
 
-The model-level statistics can be extracted with broom's [`glance`](https://broom.tidymodels.org/reference/data.frame_tidiers.html) function or the performance package's [`model_performance`](https://easystats.github.io/performance/reference/model_performance.lm.html) function.
+The model-level statistics can be extracted with the performance package's [`model_performance`](https://easystats.github.io/performance/reference/model_performance.lm.html) function.
 
-```{r}
-# Using broom package
-glance(m1)
-model_parameters(m1)
-parameters(m1)
-standardise_parameters(m1)
+```{r performancem1}
 performance(m1)
 ```
 
@@ -231,21 +185,15 @@ performance(m1)
 *R*^2^ is in the `glance` function's `r.squared` column, and the *standard error of the estimate* is in the `sigma` column.
 If all you wanted was the *R*^2^, you could do this:
 
-```{r}
-glance(m1)$r.squared
-```
-
-Or using the performance package's [`r2`](https://easystats.github.io/performance/reference/r2.html) function:
-
-```{r}
+```{r r2m1}
 r2(m1)
 ```
 
 
 For the *standard error of the estimate*:
 
-```{r}
-glance(m1)$sigma
+```{r sigmam1}
+sigma(m1)
 ```
 
 
@@ -258,25 +206,15 @@ The model explains 64% of the variance.
 Using rmarkdown, instead of typing the numeric results, we type pull the results using an [inline code chunk](https://rmarkdown.rstudio.com/lesson-4.html):
 
 
-````{verbatim}
-The model explains `r round(100 * glance(m1)$r.squared, 0)`% of the variance.
-````
+``` md
+The model explains `r round(100 * r2(m1)$R2, 0)`% of the variance.
+```
 
 Which, when rendered, produces the correct output:
 
-> The model explains `r round(100 * glance(m1)$r.squared, 0)`% of the variance.
+> The model explains `r round(100 * r2(m1)$R2, 0)`% of the variance.
 
 That seems like a lot of extra work, right? Yes, it is---unless there is a possibility that your underlying data might change or that you might copy your numbers incorrectly. If you are imperfect, the extra time and effort is worth it. It makes it easy for other scholars to see exactly where each number came from. Hard-coded results are harder to trust.
-
-Automated report of the model's performance:
-
-```{r}
-#| warning: false
-report_performance(m1)
-
-
-```
-
 
 ## Coefficient-level statistics
 
@@ -284,133 +222,98 @@ The regression coefficients---the intercept (*b*~0~) and the slope (*b*~1~)---ha
 
 If you just wanted the intercept and the slope coefficients, use the `coef` function:
 
-```{r}
+```{r coefm1}
 coef(m1)
 ```
 
 Thus, the intercept is `r round(coef(m1)[1],2)` and the slope is `r round(coef(m1)[2],2)`.
 
-To get the coefficients (intercept and slope) along with their p-values and other statistical information, use the [`tidy`](https://broom.tidymodels.org/reference/tidy.lm.html) function:
-
-```{r}
-tidy(m1)
-```
-
-The parameters package has a slightly more print-friendly version of `tidy`:
-
-```{r}
-model_parameters(m1) 
+To get the model parameters (intercept and slope coefficients) along with their p-values and other statistical information
+```{r parametersm1}
+parameters(m1) 
 ```
 
 If you want standardized parameters:
 
-```{r}
-model_parameters(m1, standardize = "refit")
-```
-
-Automated report of the parameters:
-
-```{r}
-#| warning: false
-report_parameters(m1)
+```{r standardparm1}
+standardise_parameters(m1)
 ```
 
 
-## Observation-Level Statistics
-
-We sometimes want the individual-level data like the predictions ($\hat{Y}$) and the errors (technically called *residuals*).
-
-To get observation-level statistics, use broom's [`augment`](https://broom.tidymodels.org/reference/augment.lm.html) function:
-
-```{r}
-augment(m1) 
-```
-
-The predicted values $\hat{Y}$ are in the `.fitted` column, and the errors (residuals) are in the `.resid` column.
-
-If you wanted to predict a value not in the data, you use the `newdata` argument. For example, if I wanted to predict the height of a person whose parents had a height of 65:
-
-```{r}
-augment(m1, newdata = tibble(avgphgt = 65))
-```
-
-
-# Multiple Regression
+# Multiple regression
 
 In this data set, all participants identified as either male or female. We assume that males are, on average, taller than females. The codes are male = 1 and female = 2, thus our predicted effect is negative.
 
 We run the regression model with 2 predictors like so:
 
-```{r}
+```{r m2}
 m2 <- lm(height ~ avgphgt + gender, data = d)
 ```
 
 ## Checking assumptions
 
-```{r}
+```{r checkmodelm2}
+#| fig-height: 8
 check_model(m2)
-
 
 ```
 
 All looks well.
 
-## Summarizing Results
+## Summarizing results
 
 To summarize the results, use the `summary` function:
 
-```{r}
+```{r summarym2}
 summary(m2)
 ```
 
-An automated report:
-
-```{r}
-#| warning: false
-report::report(m2)
-```
-
-
-
 Standardized coefficients:
 
-```{r}
-parameters::model_parameters(m2, standardize = "refit")
+```{r standardizedm2}
+standardise_parameters(m2)
 ```
 
-The oddly-named `anova` function compares 2 models:
 
-```{r}
-anova(m1, m2)
+An automated report:
+
+```{r reportm2}
+#| warning: false
+report(m2)
+```
+
+
+## Comparing models
+
+To compare two regression models:
+
+```{r comparem1m2}
+test_wald(m1, m2)
 ```
 
 The p-value is significant, meaning that `m2` explains more variance than `m1`.
 
+This uses Bayes Factor instead of a p-value:
 
-I like the more full-featured set of model comparison functions from the performance package: 
+```{r bayesm1m2}
+test_bf(m1, m2)
+```
+
+A BF > 1 means that `m2` is more strongly supported than `m1`. A BF < 1 means that `m1` is more strongly supported than `m2`. If you are not sure how to interpret the output of `test_bf`, you can get an automated interpretation:
+
+```{r reportbayes}
+test_bf(m1, m2) %>% 
+  report()
+```
+
+To compare many performance statistics at once: 
 
 ```{r}
 compare_performance(m1, m2) 
 ```
 
-This is equivalent to the `anova` function but in a more readable format:
-
-```{r}
-test_wald(m1, m2)
-```
 
 
-This uses Bayes Factor instead of a p-value:
-
-```{r}
-test_bf(m1, m2)
-```
-
-A BF > 1 means that `m2` is more strongly supported than `m1`. A BF < 1 means that `m1` is more strongly supported than `m2`.
-
-```{r}
-report(test_bf(m1, m2))
-```
 
 
 # All the code in one place:
@@ -418,15 +321,13 @@ report(test_bf(m1, m2))
 The preceding analyses might seem like a lot, but it is not really so much when you see it all in just a few lines of code. Here are all the main analyses:
 
 ```{r}
-#| eval: !expr F
+#| eval: false
 # Load packages
 library(tidyverse)
-library(haven)
-library(broom)
-library(performance)
+library(easystats)
 
 # Import data
-d <- read_spss("https://github.com/wjschne/EDUC5325/raw/master/height.sav")
+d <- haven::read_spss("https://github.com/wjschne/EDUC5325/raw/master/height.sav")
 
 # Plot data
 ggplot(d, aes(weight,height)) +
@@ -439,22 +340,28 @@ ggsave("my_plot.pdf")
 # Create regression model
 m1 <- lm(height~avgphgt, data = d)
 
+# Check model assumptions
+check_model(m1)
+
 # Display results
-glance(m1)
-tidy(m1)
-augment(m1)
+summary(m1)
+# Model fit
+performance(m1)
+# Model parameters
+parameters(m1)
 
 # Multiple regression
 m2 <- lm(height ~ avgphgt + gender, data = d)
 summary(m2)
-parameters::model_parameters(m2, standardize = "refit")
+parameters(m2, standardize = "refit")
 
 # Compare model m1 and model m2
-anova(m1, m2)
+test_wald(m1, m2)
+test_bf(m1, m2)
 compare_performance(m1, m2)
 ```
 
-# Canvas Questions
+# Questions
 
 Use the Transfer of Learning data set. A set of 38 inmates participated in a study that tested the Transfer of Learning Hypothesis. Some people believe that studying Latin is particularly beneficial for progress in other academic disciplines. Each inmate was given a reading test and a math test before the study began. Some inmates were randomly assigned to participate in a 48-week Latin course. The control group studied the lives of famous athletes for the same time period. Each inmate took the reading and math test again to see if studying Latin improved their academic skills. Personal information was also collected about each inmate including their annual income before going to prison, whether or not the inmate had a documented learning disorder, and whether or not the inmate had been convicted of a violent offense. Here are the variable names:
 
@@ -468,124 +375,139 @@ Use the Transfer of Learning data set. A set of 38 inmates participated in a stu
 * `income` = Annual income before incarceration
 
 ```{r}
-#| message: !expr F
+#| message: false
 d_learn <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/transfer_of_learning.csv") 
 ```
 
-<span class="instruction">Assume &alpha; = 0.05 for all hypothesis tests.</span>
+Assume &alpha; = 0.05 for all hypothesis tests.
 
-<span class="instruction">Create a regression model in which you predict reading at time 2 (`read_2`) using reading at time 1 (`read_1`). Call the model fit object `m_read`.</span>
+Create a regression model in which you predict reading at time 2 (`read_2`) using reading at time 1 (`read_1`). Call the model fit object `m_read`.
 
-## Canvas Question `r inc_num()` {.tabset .tabset-fade .tabset-pills}
+## Question 1
 
-<span class = "question">**Question**: Is `read_1` a significant predictor of `read_2`?</span>
+Is `read_1` a significant predictor of `read_2`?
 
-### Hide Hints
-
-
-### Hint 1
+<details><summary>Hint 1</summary>
 
 Make model fit object called `m_read` using the `lm` function.
 
 ```{r}
+#| include: false
+
 m_read <- lm(read_2 ~ read_1, data = d_learn)
 ```
 
+```{r}
+#| eval: false
 
-### Hint 2
+m_read <- lm(read_2 ~ read_1, data = d_learn)
+```
 
-View coefficent-level statistics with broom's `tidy` function.
+</details>
+
+
+<details><summary>Hint 2</summary>
+
+View coefficient-level statistics with the `parameters` function.
 
 You could also use Base R's `summary` function.
 
 ```{r}
-#| eval: !expr show_answer
-tidy(m_read)
+#| eval: false
+parameters(m_read)
 
 # or
 
 summary(m_read)
 ```
 
-### Hint 3
+</details>
+
+
+<details><summary>Hint 3</summary>
 
 In the read_1 row, is the p.value column less than 0.05?
 
 ```{r}
-#| eval: !expr F
-tidy(m_read)
+parameters(m_read)
 ```
 
-```{r}
-#| echo: !expr F
-tidy(m_read) %>% knitr::kable(digit = 3)
-```
 
-## Canvas Question `r inc_num()` {.tabset .tabset-fade .tabset-pills}
+</details>
 
-<span class = "question">**Question**: What is the *R*^2^ for the `m_read` model?</span>
+## Question  2
 
-### Hide Hint
+What is the *R*^2^ for the `m_read` model?
 
+<details><summary>Hint</summary>
 
-### Hint
-
-View model-level statistics with broom's `glance` function.
+View model-level statistics with the `performance` function.
 
 You could also use Base R's `summary` function.
 
 ```{r}
-#| eval: !expr show_answer
-glance(m_read)
+#| eval: false
+
+performance(m_read)
 
 # or
 
 summary(m_read)
 ```
 
+</details>
 
-## Canvas Question `r inc_num()` {.tabset .tabset-fade .tabset-pills}
+## Question 3
 
-<span class = "question">**Question**: What does the scatter plot look like when `read_1` is on the *x*-axis and `read_2` is on the *y*-axis? Also plot the regression line. Save your plot using the `ggsave` function and upload it to Canvas.</span>
+What does the scatter plot look like when `read_1` is on the *x*-axis and `read_2` is on the *y*-axis? Also plot the regression line. Save your plot using the `ggsave` function.
 
-### Hide Hints
-
-### Hint 1
+<details><summary>Hint Model</summary>
 
 This will get you started
 
 ```{r}
-#| eval: !expr show_answer
+#| eval: false
+
 ggplot(d_learn, aes(read_1, read_2))
 ```
 
-### Points Hint
+</details>
+
+<details><summary>Hint for Adding Points</summary>
 
 Here is how you add points.
 
 ```{r}
-#| eval: !expr show_answer
+#| eval: false
+
 ggplot(d_learn, aes(read_1, read_2)) +
   geom_point() 
 ```
 
-### Line Hint
+</details>
+
+<details><summary>Hint for Adding Line</summary>
 
 Here is how you add a regression line.
 
 ```{r}
-#| eval: !expr show_answer
+#| eval: false
+
 ggplot(d_learn, aes(read_1, read_2)) +
   geom_point() + 
   geom_smooth(method = "lm") 
 ```
 
-### Plot Polishing
+</details>
 
-This is overkill for now. But soon you will want to fine tune your plots.
+<details><summary>Plot Polishing</summary>
+
+This is overkill for now. But someday you might want to be able to make your plots as polished as possible.
 
 ```{r}
-#| eval: !expr show_answer
+#| fig-width: 6
+#| fig-height: 7
+#| message: false
 # I want to put the equation at x = 130
 equation_x <- 130
 equation_y <- predict(m_read, newdata = tibble(read_1 = equation_x))
@@ -610,6 +532,7 @@ ggplot(d_learn, aes(read_1, read_2)) +
        y = "Reading at Time 2",
        title = "Using Reading at Time 1 to Predict Reading at Time 2") +
   coord_fixed() +
+  theme_minimal() +
   annotate(
     geom = "text",
     x = equation_x,
@@ -620,23 +543,26 @@ ggplot(d_learn, aes(read_1, read_2)) +
     vjust = -0.5)
 ```
 
-## Canvas Question `r inc_num()` {.tabset .tabset-fade .tabset-pills}
+</details>
 
-<span class="instruction">Create a regression model in which you predict math at time 2 (`math_2`) using reading at time 1 (`math_1`). Call the model fit object `m_math1`.</span>
+## Question 4
 
-<span class = "question">**Question**: Does `math_1`  predict `math_2`?.</span>
+Create a regression model in which you predict math at time 2 (`math_2`) using reading at time 1 (`math_1`). Call the model fit object `m_math1`.
+
+Does `math_1`  predict `math_2`?.
 
 
-<span class = "question">**Question**: Does `math_1` still predict `math_2` after controlling for `read_1`?</span>
+Does `math_1` still predict `math_2` after controlling for `read_1`?
 
-### Hide Hint
-
-### Hint
-
+<details><summary>Hint</summary>
 
 ```{r}
-#| eval: !expr show_answer
+#| eval: false
 m_math <- lm(math_2 ~ math_1 + read_1, data = d_learn)
 summary(m_math)
 ```
+
+</details>
+
+
 

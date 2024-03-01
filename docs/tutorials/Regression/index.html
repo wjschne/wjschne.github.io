@@ -104,57 +104,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
-  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
- var mathElements = document.getElementsByClassName("math");
- var macros = [];
- for (var i = 0; i < mathElements.length; i++) {
-  var texText = mathElements[i].firstChild;
-  if (mathElements[i].tagName == "SPAN") {
-   katex.render(texText.data, mathElements[i], {
-    displayMode: mathElements[i].classList.contains('display'),
-    throwOnError: false,
-    macros: macros,
-    fleqn: false
-   });
-}}});
-  </script>
-  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="W. Joel Schneider">
 <meta property="og:description" content="W. Joel Schneider is a professor at Temple University.">
+<meta property="og:image" content="https://wjschne.github.io/tutorials/Regression/index_files/figure-html/regressionplot-1.png">
 <meta property="og:site_name" content="W. Joel Schneider">
+<meta property="og:image:height" content="1344">
+<meta property="og:image:width" content="1344">
 </head>
 
 <body class="floating nav-fixed slimcontent">
@@ -272,55 +230,39 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loading-packages" id="toc-loading-packages" class="nav-link active" data-scroll-target="#loading-packages">Loading packages</a></li>
+  <li><a href="#install-packages" id="toc-install-packages" class="nav-link active" data-scroll-target="#install-packages">Install packages</a>
+  <ul class="collapse">
+  <li><a href="#install-tidyverse" id="toc-install-tidyverse" class="nav-link" data-scroll-target="#install-tidyverse">Install tidyverse</a></li>
+  <li><a href="#install-easystats" id="toc-install-easystats" class="nav-link" data-scroll-target="#install-easystats">Install easystats</a></li>
+  </ul></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages">Load packages</a></li>
   <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">Import data</a></li>
-  <li><a href="#make-a-plot" id="toc-make-a-plot" class="nav-link" data-scroll-target="#make-a-plot">Make a plot</a></li>
-  <li><a href="#save-the-plot" id="toc-save-the-plot" class="nav-link" data-scroll-target="#save-the-plot">Save the plot!</a>
+  <li><a href="#make-a-plot" id="toc-make-a-plot" class="nav-link" data-scroll-target="#make-a-plot">Make a plot</a>
   <ul class="collapse">
-  <li><a href="#vector-based-images" id="toc-vector-based-images" class="nav-link" data-scroll-target="#vector-based-images">Vector-based Images</a></li>
-  <li><a href="#raster-images" id="toc-raster-images" class="nav-link" data-scroll-target="#raster-images">Raster Images</a></li>
+  <li><a href="#save-the-plot" id="toc-save-the-plot" class="nav-link" data-scroll-target="#save-the-plot">Save the plot!</a></li>
+  <li><a href="#vector-based-images" id="toc-vector-based-images" class="nav-link" data-scroll-target="#vector-based-images">Vector-based images</a></li>
+  <li><a href="#raster-images" id="toc-raster-images" class="nav-link" data-scroll-target="#raster-images">Raster images</a></li>
   </ul></li>
-  <li><a href="#creating-the-model" id="toc-creating-the-model" class="nav-link" data-scroll-target="#creating-the-model">Creating the model</a></li>
-  <li><a href="#checking-assumptions" id="toc-checking-assumptions" class="nav-link" data-scroll-target="#checking-assumptions">Checking Assumptions</a></li>
-  <li><a href="#summarising-results" id="toc-summarising-results" class="nav-link" data-scroll-target="#summarising-results">Summarising Results</a>
+  <li><a href="#creating-the-regression-model" id="toc-creating-the-regression-model" class="nav-link" data-scroll-target="#creating-the-regression-model">Creating the regression model</a></li>
+  <li><a href="#checking-assumptions" id="toc-checking-assumptions" class="nav-link" data-scroll-target="#checking-assumptions">Checking assumptions</a></li>
+  <li><a href="#summarising-results" id="toc-summarising-results" class="nav-link" data-scroll-target="#summarising-results">Summarising results</a>
   <ul class="collapse">
-  <li><a href="#model-level-statistics" id="toc-model-level-statistics" class="nav-link" data-scroll-target="#model-level-statistics">Model-Level Statistics</a></li>
+  <li><a href="#model-level-statistics" id="toc-model-level-statistics" class="nav-link" data-scroll-target="#model-level-statistics">Model-level statistics</a></li>
   <li><a href="#coefficient-level-statistics" id="toc-coefficient-level-statistics" class="nav-link" data-scroll-target="#coefficient-level-statistics">Coefficient-level statistics</a></li>
-  <li><a href="#observation-level-statistics" id="toc-observation-level-statistics" class="nav-link" data-scroll-target="#observation-level-statistics">Observation-Level Statistics</a></li>
   </ul></li>
-  <li><a href="#multiple-regression" id="toc-multiple-regression" class="nav-link" data-scroll-target="#multiple-regression">Multiple Regression</a>
+  <li><a href="#multiple-regression" id="toc-multiple-regression" class="nav-link" data-scroll-target="#multiple-regression">Multiple regression</a>
   <ul class="collapse">
   <li><a href="#checking-assumptions-1" id="toc-checking-assumptions-1" class="nav-link" data-scroll-target="#checking-assumptions-1">Checking assumptions</a></li>
-  <li><a href="#summarizing-results" id="toc-summarizing-results" class="nav-link" data-scroll-target="#summarizing-results">Summarizing Results</a></li>
+  <li><a href="#summarizing-results" id="toc-summarizing-results" class="nav-link" data-scroll-target="#summarizing-results">Summarizing results</a></li>
+  <li><a href="#comparing-models" id="toc-comparing-models" class="nav-link" data-scroll-target="#comparing-models">Comparing models</a></li>
   </ul></li>
   <li><a href="#all-the-code-in-one-place" id="toc-all-the-code-in-one-place" class="nav-link" data-scroll-target="#all-the-code-in-one-place">All the code in one place:</a></li>
-  <li><a href="#canvas-questions" id="toc-canvas-questions" class="nav-link" data-scroll-target="#canvas-questions">Canvas Questions</a>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions</a>
   <ul class="collapse">
-  <li><a href="#canvas-question-1" id="toc-canvas-question-1" class="nav-link" data-scroll-target="#canvas-question-1">Canvas Question 1</a>
-  <ul class="collapse">
-  <li><a href="#hide-hints" id="toc-hide-hints" class="nav-link" data-scroll-target="#hide-hints">Hide Hints</a></li>
-  <li><a href="#hint-1" id="toc-hint-1" class="nav-link" data-scroll-target="#hint-1">Hint 1</a></li>
-  <li><a href="#hint-2" id="toc-hint-2" class="nav-link" data-scroll-target="#hint-2">Hint 2</a></li>
-  <li><a href="#hint-3" id="toc-hint-3" class="nav-link" data-scroll-target="#hint-3">Hint 3</a></li>
-  </ul></li>
-  <li><a href="#canvas-question-2" id="toc-canvas-question-2" class="nav-link" data-scroll-target="#canvas-question-2">Canvas Question 2</a>
-  <ul class="collapse">
-  <li><a href="#hide-hint" id="toc-hide-hint" class="nav-link" data-scroll-target="#hide-hint">Hide Hint</a></li>
-  <li><a href="#hint" id="toc-hint" class="nav-link" data-scroll-target="#hint">Hint</a></li>
-  </ul></li>
-  <li><a href="#canvas-question-3" id="toc-canvas-question-3" class="nav-link" data-scroll-target="#canvas-question-3">Canvas Question 3</a>
-  <ul class="collapse">
-  <li><a href="#hide-hints-1" id="toc-hide-hints-1" class="nav-link" data-scroll-target="#hide-hints-1">Hide Hints</a></li>
-  <li><a href="#hint-1-1" id="toc-hint-1-1" class="nav-link" data-scroll-target="#hint-1-1">Hint 1</a></li>
-  <li><a href="#points-hint" id="toc-points-hint" class="nav-link" data-scroll-target="#points-hint">Points Hint</a></li>
-  <li><a href="#line-hint" id="toc-line-hint" class="nav-link" data-scroll-target="#line-hint">Line Hint</a></li>
-  <li><a href="#plot-polishing" id="toc-plot-polishing" class="nav-link" data-scroll-target="#plot-polishing">Plot Polishing</a></li>
-  </ul></li>
-  <li><a href="#canvas-question-4" id="toc-canvas-question-4" class="nav-link" data-scroll-target="#canvas-question-4">Canvas Question 4</a>
-  <ul class="collapse">
-  <li><a href="#hide-hint-1" id="toc-hide-hint-1" class="nav-link" data-scroll-target="#hide-hint-1">Hide Hint</a></li>
-  <li><a href="#hint-4" id="toc-hint-4" class="nav-link" data-scroll-target="#hint-4">Hint</a></li>
-  </ul></li>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1">Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2">Question 2</a></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3">Question 3</a></li>
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4">Question 4</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -358,59 +300,31 @@ window.Quarto = {
 
 
 <p>Here we are going to use a small data set to predict people’s height using the height of their parents.</p>
-<section id="loading-packages" class="level1 page-columns page-full">
-<h1>Loading packages</h1>
-
-<div class="no-row-height column-margin column-container"><div class="callout callout-style-default callout-note callout-titled" title="R Package">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-R Package
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>A <strong>R package</strong> is software that extends the capabilities of R. To use a package, you must first install it on your machine. You only need to install it once. By default, the package tab is in the lower right pane in RStudio. It has two buttons, one for installing new packages and one for updating packages you have previously installed.</p>
-<div id="fig-packages" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-packages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="updatepackages.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-packages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: RStudio’s “Install” and “Update” buttons in the “Package” tab in the lower right pane
-</figcaption>
-</figure>
-</div>
-</div>
-</div></div><p>First we load packages to enhance R’s abilities. Some packages are designed to work with several other packages as a system. The <a href="https://www.tidyverse.org/">tidyverse package</a> is a “meta-package” that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. If you do not have a recent version of tidyverse already installed, you can install it with this code:</p>
+<section id="install-packages" class="level1">
+<h1>Install packages</h1>
+<p>An <strong>R package</strong> is software that extends the capabilities of R. To use a package, you must first install it on your machine. You only need to install it once.</p>
+<section id="install-tidyverse" class="level2">
+<h2 class="anchored" data-anchor-id="install-tidyverse">Install tidyverse</h2>
+<p>Some packages are designed to work with several other packages as a system. The <a href="https://www.tidyverse.org/">tidyverse package</a> is a “meta-package” that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. It also installs the <a href="https://haven.tidyverse.org/">haven</a> package, which we will use to import some data. If you do not have a recent version of tidyverse already installed, you can install it with this code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>You only have to install the tidyverse once. Thereafter, from time to time, you can let RStudio’s “Update” button in the “Packages” pane help you keep your packages current.</p>
-</div>
-</div>
-<p>When you “load” the tidyvert</p>
-<p>The <code>tidyverse</code> allows us to do many things, including plotting with <code>ggplot2</code>. The <code>haven</code> package imports SPSS data. The <code>broom</code> package tidies up our regression results with the <code>tidy</code>, <code>glance</code>, and <code>augment</code> functions.</p>
-<p>If any of these packages are not installed, click the <strong>Packages</strong> tab, click the <strong>Install</strong> button, enter the names of the packages separated by commas, and click <strong>Install</strong>.</p>
-<p>To load the packages, run this code:</p>
+</section>
+<section id="install-easystats" class="level2">
+<h2 class="anchored" data-anchor-id="install-easystats">Install easystats</h2>
+<p>The <a href="https://easystats.github.io/easystats/">easystats</a> package is another “meta-package” that installs a set of packages designed to work together to make data analysis easier.</p>
+<p>If you do not have a recent version of easystats already installed, you can install it with this code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Loads primary packages for data wrangling and plotting</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven) <span class="co"># Imports data saved in SPSS, SAS, or Stata format</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># Displays model information</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance) <span class="co"># Displays model information </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parameters) <span class="co"># Displays model parameter information</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(report) <span class="co"># Automated interpretations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"easystats"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="load-packages" class="level1">
+<h1>Load packages</h1>
+<p>A package that is installed on your machine has additional functions that you can use. Each session, you can “load” a package with the <code>library</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Loads primary packages for data wrangling and plotting</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats) <span class="co"># Loads packages that make extracting data from model fit objects easier</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="import-data" class="level1 page-columns page-full">
@@ -419,21 +333,26 @@ Tip
 <div class="no-row-height column-margin column-container"><div class="">
 <p>If I use only one data set in an analysis, I call it <code>d</code>. If I need multiple data sets, I use a <code>d_</code> prefix to differentiate them. For example, if I have separate data sets for juniors and seniors, I might call them, <code>d_juniors</code> and <code>d_seniors</code>, respectively. This kind of consistency seems like extra work, but it pays off in making it easy for <em>future-you</em> to read and understand your own code.</p>
 </div></div><p>You can import the <code>height.sav</code> data set directly from my github repository for this course. There is no need to save the data anywhere. This code loads the data into variable <code>d</code> using the <a href="https://haven.tidyverse.org/reference/read_spss.html"><code>read_spss</code></a> function from the <a href="https://haven.tidyverse.org/">haven package</a>.</p>
+<p>We could load haven using <code>library(haven)</code>, but we only need to use one function one time. So instead of loading the whole package, we can use a function without loading the package by using the package name as prefix followed by two colons like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read_spss</span>(<span class="st">"https://github.com/wjschne/EDUC5325/raw/master/height.sav"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(<span class="st">"https://github.com/wjschne/EDUC5325/raw/master/height.sav"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>This code reaches across the web to the file in quotes, “reads” it into our session, and holds the data in a new variable we called <code>d</code>. Every time we need the data, we will get it from the <code>d</code> variable.</p>
 </section>
 <section id="make-a-plot" class="level1">
 <h1>Make a plot</h1>
 <p>Use the <a href="https://ggplot2.tidyverse.org/reference/ggplot.html"><code>ggplot</code></a> function from the <a href="https://ggplot2.tidyverse.org/">ggplot2</a> package to make a scatterplot with points and a regression line:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(avgphgt,height)) <span class="sc">+</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell preview-image">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(avgphgt,height)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.svg" style="width:100.0%;height:100.0%" class="figure-img"></p>
+<p><img src="index_files/figure-html/regressionplot-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -445,43 +364,48 @@ Tip
 <figcaption>Annotated ggplot2 code</figcaption>
 </figure>
 </div>
-</section>
-<section id="save-the-plot" class="level1">
-<h1>Save the plot!</h1>
+<section id="save-the-plot" class="level2">
+<h2 class="anchored" data-anchor-id="save-the-plot">Save the plot!</h2>
 <p>You can save to your hard drive a high-quality plot with the <a href="https://ggplot2.tidyverse.org/reference/ggsave.html"><code>ggsave</code></a> function. It will save whatever the last plot you created with <a href="https://ggplot2.tidyverse.org/reference/ggplot.html"><code>ggplot</code></a>. It will guess the file format from the file extension.</p>
-<p>Here I save a .pdf file of the plot:</p>
+<p>Here I save a .pdf file of the plot to the working directory:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"my_plot.pdf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"my_plot.pdf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>What is the working directory? Is the folder on your machine that R thinks it should look first if it needs to find files or save files. If you are every curious about which directory is the working directory, you can use the <code>getwd</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you saved the plot above as <code>"my_plot.pdf"</code>, you will find the file in the working directory returned by <code>getwd</code>.</p>
+</section>
 <section id="vector-based-images" class="level2">
-<h2 class="anchored" data-anchor-id="vector-based-images">Vector-based Images</h2>
+<h2 class="anchored" data-anchor-id="vector-based-images">Vector-based images</h2>
 <p>The .pdf format gives the best image quality but can only be viewed in a .pdf reader. The .svg format is almost as good and can be incorporated into webpages and Office documents. One downside of their near-perfect image quality is that .pdf and .svg image file sizes can become quite large.</p>
 </section>
 <section id="raster-images" class="level2">
-<h2 class="anchored" data-anchor-id="raster-images">Raster Images</h2>
+<h2 class="anchored" data-anchor-id="raster-images">Raster images</h2>
 <p>The .png format gives good image quality and renders small file sizes.</p>
 <p>The primary use of the .gif format is to create animated plots. Otherwise stick with .png.</p>
 <p>Although the .jpg format is good for photos, it is terrible for plots—it often renders text and sharp corners with pixelated smudges.</p>
 </section>
 </section>
-<section id="creating-the-model" class="level1">
-<h1>Creating the model</h1>
+<section id="creating-the-regression-model" class="level1">
+<h1>Creating the regression model</h1>
 <p>To run regression models, use the <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm"><code>lm</code></a> function. The <code>lm</code> stands for “linear model.” The general pattern is <code>lm(Y~X, data = d)</code>, which means “<code>Y</code> is predicted by <code>X</code>, using the data set <code>d</code>.”</p>
 <p>Here we predict height from Average of Parent Height (<code>avgphgt</code>):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height<span class="sc">~</span>avgphgt, <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height<span class="sc">~</span>avgphgt, <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice that we did not get any results. Instead, we created the model fit object <code>m1</code>, which contains information about the model. There are a variety of functions we can use to extract information from <code>m1</code>.</p>
 </section>
 <section id="checking-assumptions" class="level1">
-<h1>Checking Assumptions</h1>
+<h1>Checking assumptions</h1>
 <p>Regression assumes that the observations should independent, and the residuals should be normal and homoscedastic. The <a href="https://easystats.github.io/performance/index.html">performance package</a> has a great function for checking model assumptions: <a href="https://easystats.github.io/performance/reference/check_model.html"><code>check_model</code></a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.svg" style="width:100.0%;height:100.0%" class="figure-img"></p>
+<p><img src="index_files/figure-html/checkmodel-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -489,10 +413,10 @@ Tip
 <p>Here we see that none of the assumptions have been severely violated.</p>
 </section>
 <section id="summarising-results" class="level1">
-<h1>Summarising Results</h1>
+<h1>Summarising results</h1>
 <p>Base R gives you most of what you would want to know about the regression results with the <code>summary</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -517,7 +441,7 @@ F-statistic: 67.7 on 1 and 38 DF,  p-value: 5.7e-10</code></pre>
 <p>This output is not pretty, nor was it intended to be. It is designed for you, the analyst. The <code>summary</code> function’s print method is optimized for reading results in the console, not in a document. Presentation-worthy results need a lot more care and attention.</p>
 <p>An automated report from the <a href="https://easystats.github.io/report/articles/report.html">report</a> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>report<span class="sc">::</span><span class="fu">report</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>report<span class="sc">::</span><span class="fu">report</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>We fitted a linear model (estimated using OLS) to predict height with avgphgt
 (formula: height ~ avgphgt). The model explains a statistically significant and
@@ -534,193 +458,24 @@ version of the dataset. 95% Confidence Intervals (CIs) and p-values were
 computed using a Wald t-distribution approximation.</code></pre>
 </div>
 </div>
-<p>The <code>glance</code>, <code>tidy</code>, and <code>augment</code> functions from the <a href="https://broom.tidymodels.org/">broom</a> package make the output more amenable for further analysis or for presentation.</p>
 <section id="model-level-statistics" class="level2">
-<h2 class="anchored" data-anchor-id="model-level-statistics">Model-Level Statistics</h2>
+<h2 class="anchored" data-anchor-id="model-level-statistics">Model-level statistics</h2>
 <p>Some statistics like the <em>coefficient of determination</em> (<em>R</em><sup>2</sup>) or the <em>standard error of the estimate</em> (<em>σ<sub>e</sub></em>) describe the model as a whole.</p>
-<p>The model-level statistics can be extracted with broom’s <a href="https://broom.tidymodels.org/reference/data.frame_tidiers.html"><code>glance</code></a> function or the performance package’s <a href="https://easystats.github.io/performance/reference/model_performance.lm.html"><code>model_performance</code></a> function.</p>
+<p>The model-level statistics can be extracted with the performance package’s <a href="https://easystats.github.io/performance/reference/model_performance.lm.html"><code>model_performance</code></a> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using broom package</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">r.squared</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">adj.r.squared</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">sigma</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">logLik</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">AIC</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">BIC</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">deviance</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df.residual</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">nobs</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">0.63</td>
-<td style="text-align: right;">2.68</td>
-<td style="text-align: right;">67.7</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">-95.2</td>
-<td style="text-align: right;">196</td>
-<td style="text-align: right;">201</td>
-<td style="text-align: right;">273</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">40</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model_parameters</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-12.88</td>
-<td style="text-align: right;">9.78</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-32.7</td>
-<td style="text-align: right;">6.92</td>
-<td style="text-align: right;">-1.32</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">0.2</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">avgphgt</td>
-<td style="text-align: right;">1.19</td>
-<td style="text-align: right;">0.14</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.9</td>
-<td style="text-align: right;">1.49</td>
-<td style="text-align: right;">8.23</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">0.0</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-12.88</td>
-<td style="text-align: right;">9.78</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-32.7</td>
-<td style="text-align: right;">6.92</td>
-<td style="text-align: right;">-1.32</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">0.2</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">avgphgt</td>
-<td style="text-align: right;">1.19</td>
-<td style="text-align: right;">0.14</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.9</td>
-<td style="text-align: right;">1.49</td>
-<td style="text-align: right;">8.23</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">0.0</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardise_parameters</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Std_Coefficient</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">0.0</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.19</td>
-<td style="text-align: right;">0.19</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">avgphgt</td>
-<td style="text-align: right;">0.8</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.60</td>
-<td style="text-align: right;">1.00</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">AIC</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">AICc</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">BIC</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">R2</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">R2_adjusted</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">RMSE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Sigma</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">R2</th>
+<th style="text-align: right;">R2_adjusted</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">Sigma</th>
 </tr>
 </thead>
 <tbody>
@@ -728,28 +483,19 @@ computed using a Wald t-distribution approximation.</code></pre>
 <td style="text-align: right;">196</td>
 <td style="text-align: right;">197</td>
 <td style="text-align: right;">201</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.641</td>
+<td style="text-align: right;">0.631</td>
 <td style="text-align: right;">2.61</td>
 <td style="text-align: right;">2.68</td>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 </div>
 <p><em>R</em><sup>2</sup> is in the <code>glance</code> function’s <code>r.squared</code> column, and the <em>standard error of the estimate</em> is in the <code>sigma</code> column. If all you wanted was the <em>R</em><sup>2</sup>, you could do this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(m1)<span class="sc">$</span>r.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.641</code></pre>
-</div>
-</div>
-<p>Or using the performance package’s <a href="https://easystats.github.io/performance/reference/r2.html"><code>r2</code></a> function:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># R2 for Linear Regression
        R2: 0.641
@@ -758,7 +504,7 @@ computed using a Wald t-distribution approximation.</code></pre>
 </div>
 <p>For the <em>standard error of the estimate</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(m1)<span class="sc">$</span>sigma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sigma</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.68</code></pre>
 </div>
@@ -766,648 +512,135 @@ computed using a Wald t-distribution approximation.</code></pre>
 <p>Why would you want just one number instead of reading it from a table? In reproducible research, we intermingle text and code so that it is clear where every number came from. Thus, “hard-coding” your results like this is considered poor practice:</p>
 <pre><code>The model explains 64% of the variance.</code></pre>
 <p>Using rmarkdown, instead of typing the numeric results, we type pull the results using an <a href="https://rmarkdown.rstudio.com/lesson-4.html">inline code chunk</a>:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode default fold-show code-with-copy"><code class="sourceCode default"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>The model explains `r round(100 * glance(m1)$r.squared, 0)`% of the variance.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>The model explains 64% of the variance.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Which, when rendered, produces the correct output:</p>
 <blockquote class="blockquote">
 <p>The model explains 64% of the variance.</p>
 </blockquote>
 <p>That seems like a lot of extra work, right? Yes, it is—unless there is a possibility that your underlying data might change or that you might copy your numbers incorrectly. If you are imperfect, the extra time and effort is worth it. It makes it easy for other scholars to see exactly where each number came from. Hard-coded results are harder to trust.</p>
-<p>Automated report of the model’s performance:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_performance</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>The model explains a statistically significant and substantial proportion of
-variance (R2 = 0.64, F(1, 38) = 67.73, p &lt; .001, adj. R2 = 0.63)</code></pre>
-</div>
-</div>
 </section>
 <section id="coefficient-level-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="coefficient-level-statistics">Coefficient-level statistics</h2>
 <p>The regression coefficients—the intercept (<em>b</em><sub>0</sub>) and the slope (<em>b</em><sub>1</sub>)—have a number of statistics associated with them, which we will discuss later in the course.</p>
 <p>If you just wanted the intercept and the slope coefficients, use the <code>coef</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)     avgphgt 
      -12.88        1.19 </code></pre>
 </div>
 </div>
 <p>Thus, the intercept is -12.88 and the slope is 1.19.</p>
-<p>To get the coefficients (intercept and slope) along with their p-values and other statistical information, use the <a href="https://broom.tidymodels.org/reference/tidy.lm.html"><code>tidy</code></a> function:</p>
+<p>To get the model parameters (intercept and slope coefficients) along with their p-values and other statistical information</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m1) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 8%">
+</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">std.error</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: right;">Coefficient</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">CI</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: right;">df_error</th>
+<th style="text-align: right;">p</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">-12.88</td>
-<td style="text-align: right;">9.78</td>
-<td style="text-align: right;">-1.32</td>
-<td style="text-align: right;">0.2</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">avgphgt</td>
-<td style="text-align: right;">1.19</td>
-<td style="text-align: right;">0.14</td>
-<td style="text-align: right;">8.23</td>
-<td style="text-align: right;">0.0</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</div>
-<p>The parameters package has a slightly more print-friendly version of <code>tidy</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model_parameters</span>(m1) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-12.88</td>
-<td style="text-align: right;">9.78</td>
+<td style="text-align: right;">9.779</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-32.7</td>
+<td style="text-align: right;">-32.675</td>
 <td style="text-align: right;">6.92</td>
 <td style="text-align: right;">-1.32</td>
 <td style="text-align: right;">38</td>
-<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.196</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">avgphgt</td>
 <td style="text-align: right;">1.19</td>
-<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.145</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">0.899</td>
 <td style="text-align: right;">1.49</td>
 <td style="text-align: right;">8.23</td>
 <td style="text-align: right;">38</td>
-<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.000</td>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 </div>
 <p>If you want standardized parameters:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model_parameters</span>(m1, <span class="at">standardize =</span> <span class="st">"refit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardise_parameters</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: right;">Std_Coefficient</th>
+<th style="text-align: right;">CI</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">0.0</td>
-<td style="text-align: right;">0.1</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.19</td>
-<td style="text-align: right;">0.19</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.194</td>
+<td style="text-align: right;">0.194</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">avgphgt</td>
 <td style="text-align: right;">0.8</td>
-<td style="text-align: right;">0.1</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.60</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">8.23</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.603</td>
+<td style="text-align: right;">0.997</td>
 </tr>
 </tbody>
 </table>
-
-
-</div>
-</div>
-</div>
-<p>Automated report of the parameters:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_parameters</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  - The intercept is statistically non-significant and negative (beta = -12.88, 95% CI [-32.67, 6.92], t(38) = -1.32, p = 0.196; Std. beta = 2.65e-16, 95% CI [-0.19, 0.19])
-  - The effect of avgphgt is statistically significant and positive (beta = 1.19, 95% CI [0.90, 1.49], t(38) = 8.23, p &lt; .001; Std. beta = 0.80, 95% CI [0.60, 1.00])</code></pre>
-</div>
-</div>
-</section>
-<section id="observation-level-statistics" class="level2">
-<h2 class="anchored" data-anchor-id="observation-level-statistics">Observation-Level Statistics</h2>
-<p>We sometimes want the individual-level data like the predictions (<span class="math inline">\hat{Y}</span>) and the errors (technically called <em>residuals</em>).</p>
-<p>To get observation-level statistics, use broom’s <a href="https://broom.tidymodels.org/reference/augment.lm.html"><code>augment</code></a> function:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(m1) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">height</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">avgphgt</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.fitted</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.resid</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.hat</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.sigma</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.cooksd</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.std.resid</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">66</td>
-<td style="text-align: right;">67.5</td>
-<td style="text-align: right;">67.6</td>
-<td style="text-align: right;">-1.64</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.62</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">71</td>
-<td style="text-align: right;">70.0</td>
-<td style="text-align: right;">70.6</td>
-<td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.72</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.14</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">74</td>
-<td style="text-align: right;">72.5</td>
-<td style="text-align: right;">73.6</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">2.72</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.15</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">69</td>
-<td style="text-align: right;">66.5</td>
-<td style="text-align: right;">66.5</td>
-<td style="text-align: right;">2.55</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.68</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.96</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">65.0</td>
-<td style="text-align: right;">64.7</td>
-<td style="text-align: right;">5.34</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.56</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">2.03</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">74</td>
-<td style="text-align: right;">72.0</td>
-<td style="text-align: right;">73.0</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.39</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">73</td>
-<td style="text-align: right;">71.0</td>
-<td style="text-align: right;">71.8</td>
-<td style="text-align: right;">1.18</td>
-<td style="text-align: right;">0.06</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.45</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">69</td>
-<td style="text-align: right;">70.0</td>
-<td style="text-align: right;">70.6</td>
-<td style="text-align: right;">-1.63</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.62</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">69</td>
-<td style="text-align: right;">71.0</td>
-<td style="text-align: right;">71.8</td>
-<td style="text-align: right;">-2.82</td>
-<td style="text-align: right;">0.06</td>
-<td style="text-align: right;">2.67</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">-1.09</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">75</td>
-<td style="text-align: right;">69.5</td>
-<td style="text-align: right;">70.0</td>
-<td style="text-align: right;">4.97</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.59</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">1.89</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">69</td>
-<td style="text-align: right;">69.0</td>
-<td style="text-align: right;">69.4</td>
-<td style="text-align: right;">-0.43</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.72</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.16</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">67</td>
-<td style="text-align: right;">67.5</td>
-<td style="text-align: right;">67.6</td>
-<td style="text-align: right;">-0.64</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.24</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">73</td>
-<td style="text-align: right;">71.5</td>
-<td style="text-align: right;">72.4</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">2.72</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.23</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">74</td>
-<td style="text-align: right;">70.0</td>
-<td style="text-align: right;">70.6</td>
-<td style="text-align: right;">3.37</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.66</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">1.29</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">61.5</td>
-<td style="text-align: right;">60.5</td>
-<td style="text-align: right;">2.51</td>
-<td style="text-align: right;">0.13</td>
-<td style="text-align: right;">2.68</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">1.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">67</td>
-<td style="text-align: right;">68.0</td>
-<td style="text-align: right;">68.2</td>
-<td style="text-align: right;">-1.24</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.47</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">64</td>
-<td style="text-align: right;">62.5</td>
-<td style="text-align: right;">61.7</td>
-<td style="text-align: right;">2.32</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">2.69</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.91</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">61</td>
-<td style="text-align: right;">63.0</td>
-<td style="text-align: right;">62.3</td>
-<td style="text-align: right;">-1.28</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.50</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">65.5</td>
-<td style="text-align: right;">65.3</td>
-<td style="text-align: right;">4.74</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.60</td>
-<td style="text-align: right;">0.06</td>
-<td style="text-align: right;">1.80</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">66</td>
-<td style="text-align: right;">68.0</td>
-<td style="text-align: right;">68.2</td>
-<td style="text-align: right;">-2.24</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.69</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.85</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">72.0</td>
-<td style="text-align: right;">73.0</td>
-<td style="text-align: right;">-3.01</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">2.67</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">-1.18</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">60</td>
-<td style="text-align: right;">65.0</td>
-<td style="text-align: right;">64.7</td>
-<td style="text-align: right;">-4.66</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.60</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">-1.78</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">75</td>
-<td style="text-align: right;">68.5</td>
-<td style="text-align: right;">68.8</td>
-<td style="text-align: right;">6.16</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.52</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">2.33</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">73</td>
-<td style="text-align: right;">69.0</td>
-<td style="text-align: right;">69.4</td>
-<td style="text-align: right;">3.57</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.65</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">1.35</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">68.0</td>
-<td style="text-align: right;">68.2</td>
-<td style="text-align: right;">-5.24</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.57</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">-1.98</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">65.0</td>
-<td style="text-align: right;">64.7</td>
-<td style="text-align: right;">-1.66</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.63</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">69</td>
-<td style="text-align: right;">67.5</td>
-<td style="text-align: right;">67.6</td>
-<td style="text-align: right;">1.36</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.51</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">65</td>
-<td style="text-align: right;">64.5</td>
-<td style="text-align: right;">64.1</td>
-<td style="text-align: right;">0.93</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.36</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">64</td>
-<td style="text-align: right;">66.0</td>
-<td style="text-align: right;">65.8</td>
-<td style="text-align: right;">-1.85</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.70</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">69</td>
-<td style="text-align: right;">70.0</td>
-<td style="text-align: right;">70.6</td>
-<td style="text-align: right;">-1.63</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.62</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">65</td>
-<td style="text-align: right;">68.0</td>
-<td style="text-align: right;">68.2</td>
-<td style="text-align: right;">-3.24</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.66</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">-1.22</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">65.0</td>
-<td style="text-align: right;">64.7</td>
-<td style="text-align: right;">-1.66</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.63</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">68</td>
-<td style="text-align: right;">67.5</td>
-<td style="text-align: right;">67.6</td>
-<td style="text-align: right;">0.36</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.72</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.13</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">64.5</td>
-<td style="text-align: right;">64.1</td>
-<td style="text-align: right;">-1.07</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.41</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">62</td>
-<td style="text-align: right;">64.0</td>
-<td style="text-align: right;">63.5</td>
-<td style="text-align: right;">-1.47</td>
-<td style="text-align: right;">0.06</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-0.56</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">61</td>
-<td style="text-align: right;">63.5</td>
-<td style="text-align: right;">62.9</td>
-<td style="text-align: right;">-1.87</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">-0.72</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">67</td>
-<td style="text-align: right;">67.0</td>
-<td style="text-align: right;">67.0</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">2.72</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.02</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">64.5</td>
-<td style="text-align: right;">64.1</td>
-<td style="text-align: right;">-1.07</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.41</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">62</td>
-<td style="text-align: right;">63.5</td>
-<td style="text-align: right;">62.9</td>
-<td style="text-align: right;">-0.87</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">2.71</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.34</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">72</td>
-<td style="text-align: right;">71.5</td>
-<td style="text-align: right;">72.4</td>
-<td style="text-align: right;">-0.42</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">2.72</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-0.16</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</div>
-<p>The predicted values <span class="math inline">\hat{Y}</span> are in the <code>.fitted</code> column, and the errors (residuals) are in the <code>.resid</code> column.</p>
-<p>If you wanted to predict a value not in the data, you use the <code>newdata</code> argument. For example, if I wanted to predict the height of a person whose parents had a height of 65:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(m1, <span class="at">newdata =</span> <span class="fu">tibble</span>(<span class="at">avgphgt =</span> <span class="dv">65</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">avgphgt</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.fitted</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">65</td>
-<td style="text-align: right;">64.7</td>
-</tr>
-</tbody>
-</table>
-
-
 </div>
 </div>
 </div>
 </section>
 </section>
 <section id="multiple-regression" class="level1">
-<h1>Multiple Regression</h1>
+<h1>Multiple regression</h1>
 <p>In this data set, all participants identified as either male or female. We assume that males are, on average, taller than females. The codes are male = 1 and female = 2, thus our predicted effect is negative.</p>
 <p>We run the regression model with 2 predictors like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height <span class="sc">~</span> avgphgt <span class="sc">+</span> gender, <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height <span class="sc">~</span> avgphgt <span class="sc">+</span> gender, <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="checking-assumptions-1" class="level2">
 <h2 class="anchored" data-anchor-id="checking-assumptions-1">Checking assumptions</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-21-1.svg" style="width:100.0%;height:100.0%" class="figure-img"></p>
+<p><img src="index_files/figure-html/checkmodelm2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1415,10 +648,10 @@ variance (R2 = 0.64, F(1, 38) = 67.73, p &lt; .001, adj. R2 = 0.63)</code></pre>
 <p>All looks well.</p>
 </section>
 <section id="summarizing-results" class="level2">
-<h2 class="anchored" data-anchor-id="summarizing-results">Summarizing Results</h2>
+<h2 class="anchored" data-anchor-id="summarizing-results">Summarizing results</h2>
 <p>To summarize the results, use the <code>summary</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1441,9 +674,51 @@ Multiple R-squared:  0.78,  Adjusted R-squared:  0.769
 F-statistic: 65.7 on 2 and 37 DF,  p-value: 6.6e-13</code></pre>
 </div>
 </div>
+<p>Standardized coefficients:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardise_parameters</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: right;">Std_Coefficient</th>
+<th style="text-align: right;">CI</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-0.154</td>
+<td style="text-align: right;">0.154</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">avgphgt</td>
+<td style="text-align: right;">0.450</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.236</td>
+<td style="text-align: right;">0.664</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gender</td>
+<td style="text-align: right;">-0.513</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-0.726</td>
+<td style="text-align: right;">-0.299</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <p>An automated report:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>report<span class="sc">::</span><span class="fu">report</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>We fitted a linear model (estimated using OLS) to predict height with avgphgt
 and gender (formula: height ~ avgphgt + gender). The model explains a
@@ -1464,216 +739,59 @@ version of the dataset. 95% Confidence Intervals (CIs) and p-values were
 computed using a Wald t-distribution approximation.</code></pre>
 </div>
 </div>
-<p>Standardized coefficients:</p>
+</section>
+<section id="comparing-models" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-models">Comparing models</h2>
+<p>To compare two regression models:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">model_parameters</span>(m2, <span class="at">standardize =</span> <span class="st">"refit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_wald</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_low</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">CI_high</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df_error</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">df_diff</th>
+<th style="text-align: right;">F</th>
+<th style="text-align: right;">p</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.15</td>
-<td style="text-align: right;">0.15</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">37</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">avgphgt</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.11</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.66</td>
-<td style="text-align: right;">4.26</td>
-<td style="text-align: right;">37</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">gender</td>
-<td style="text-align: right;">-0.51</td>
-<td style="text-align: right;">0.11</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.73</td>
-<td style="text-align: right;">-0.30</td>
-<td style="text-align: right;">-4.85</td>
-<td style="text-align: right;">37</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</div>
-<p>The oddly-named <code>anova</code> function compares 2 models:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">Res.Df</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">RSS</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Df</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Sum of Sq</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;F)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
+<td style="text-align: left;">m1</td>
+<td style="text-align: left;">lm</td>
 <td style="text-align: right;">38</td>
-<td style="text-align: right;">273</td>
-<td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">m2</td>
+<td style="text-align: left;">lm</td>
 <td style="text-align: right;">37</td>
-<td style="text-align: right;">167</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">106</td>
 <td style="text-align: right;">23.6</td>
 <td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 </div>
 <p>The p-value is significant, meaning that <code>m2</code> explains more variance than <code>m1</code>.</p>
-<p>I like the more full-featured set of model comparison functions from the performance package:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(m1, m2) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">AIC</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">AIC_wt</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">AICc</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">AICc_wt</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">BIC</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">BIC_wt</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">R2</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">R2_adjusted</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">RMSE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Sigma</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">m1</td>
-<td style="text-align: left;">lm</td>
-<td style="text-align: right;">196</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">197</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">201</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">0.63</td>
-<td style="text-align: right;">2.61</td>
-<td style="text-align: right;">2.68</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">m2</td>
-<td style="text-align: left;">lm</td>
-<td style="text-align: right;">179</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">180</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">185</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.78</td>
-<td style="text-align: right;">0.77</td>
-<td style="text-align: right;">2.04</td>
-<td style="text-align: right;">2.12</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</div>
-<p>This is equivalent to the <code>anova</code> function but in a more readable format:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_wald</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df_diff</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">m1</td>
-<td style="text-align: left;">lm</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">m2</td>
-<td style="text-align: left;">lm</td>
-<td style="text-align: right;">37</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">23.6</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</div>
 <p>This uses Bayes Factor instead of a p-value:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_bf</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_bf</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<table class="lightable-paper table table-sm table-striped small" data-quarto-postprocess="true">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">log_BF</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">BF</th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">log_BF</th>
+<th style="text-align: right;">BF</th>
 </tr>
 </thead>
 <tbody>
@@ -1689,19 +807,88 @@ computed using a Wald t-distribution approximation.</code></pre>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 </div>
-<p>A BF &gt; 1 means that <code>m2</code> is more strongly supported than <code>m1</code>. A BF &lt; 1 means that <code>m1</code> is more strongly supported than <code>m2</code>.</p>
+<p>A BF &gt; 1 means that <code>m2</code> is more strongly supported than <code>m1</code>. A BF &lt; 1 means that <code>m1</code> is more strongly supported than <code>m2</code>. If you are not sure how to interpret the output of <code>test_bf</code>, you can get an automated interpretation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(<span class="fu">test_bf</span>(m1, m2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_bf</span>(m1, m2) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factors were computed using the BIC approximation, by which BF10 =
 exp((BIC0 - BIC1)/2). Compared to the avgphgt model, we found extreme evidence
 (BF = 3.01e+03) in favour of the avgphgt + gender model (the least supported
 model).</code></pre>
+</div>
+</div>
+<p>To compare many performance statistics at once:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(m1, m2) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 5%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 16%">
+<col style="width: 6%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AIC_wt</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">AICc_wt</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">BIC_wt</th>
+<th style="text-align: right;">R2</th>
+<th style="text-align: right;">R2_adjusted</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">Sigma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">m1</td>
+<td style="text-align: left;">lm</td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">197</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.641</td>
+<td style="text-align: right;">0.631</td>
+<td style="text-align: right;">2.61</td>
+<td style="text-align: right;">2.68</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2</td>
+<td style="text-align: left;">lm</td>
+<td style="text-align: right;">179</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">185</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.780</td>
+<td style="text-align: right;">0.769</td>
+<td style="text-align: right;">2.04</td>
+<td style="text-align: right;">2.12</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </section>
@@ -1710,43 +897,47 @@ model).</code></pre>
 <h1>All the code in one place:</h1>
 <p>The preceding analyses might seem like a lot, but it is not really so much when you see it all in just a few lines of code. Here are all the main analyses:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read_spss</span>(<span class="st">"https://github.com/wjschne/EDUC5325/raw/master/height.sav"</span>)</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot data</span></span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(weight,height)) <span class="sc">+</span></span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Save plot</span></span>
-<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"my_plot.pdf"</span>)</span>
-<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create regression model</span></span>
-<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height<span class="sc">~</span>avgphgt, <span class="at">data =</span> d)</span>
-<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
-<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(m1)</span>
-<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(m1)</span>
-<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(m1)</span>
-<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiple regression</span></span>
-<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height <span class="sc">~</span> avgphgt <span class="sc">+</span> gender, <span class="at">data =</span> d)</span>
-<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span>
-<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">model_parameters</span>(m2, <span class="at">standardize =</span> <span class="st">"refit"</span>)</span>
-<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare model m1 and model m2</span></span>
-<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1, m2)</span>
-<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(<span class="st">"https://github.com/wjschne/EDUC5325/raw/master/height.sav"</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot data</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(weight,height)) <span class="sc">+</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Save plot</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"my_plot.pdf"</span>)</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create regression model</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height<span class="sc">~</span>avgphgt, <span class="at">data =</span> d)</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Check model assumptions</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(m1)</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Model fit</span></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(m1)</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Model parameters</span></span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m1)</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiple regression</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(height <span class="sc">~</span> avgphgt <span class="sc">+</span> gender, <span class="at">data =</span> d)</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m2, <span class="at">standardize =</span> <span class="st">"refit"</span>)</span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare model m1 and model m2</span></span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a><span class="fu">test_wald</span>(m1, m2)</span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a><span class="fu">test_bf</span>(m1, m2)</span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="canvas-questions" class="level1">
-<h1>Canvas Questions</h1>
+<section id="questions" class="level1">
+<h1>Questions</h1>
 <p>Use the Transfer of Learning data set. A set of 38 inmates participated in a study that tested the Transfer of Learning Hypothesis. Some people believe that studying Latin is particularly beneficial for progress in other academic disciplines. Each inmate was given a reading test and a math test before the study began. Some inmates were randomly assigned to participate in a 48-week Latin course. The control group studied the lives of famous athletes for the same time period. Each inmate took the reading and math test again to see if studying Latin improved their academic skills. Personal information was also collected about each inmate including their annual income before going to prison, whether or not the inmate had a documented learning disorder, and whether or not the inmate had been convicted of a violent offense. Here are the variable names:</p>
 <ul>
 <li><code>read_1</code> = Reading before study</li>
@@ -1759,51 +950,68 @@ model).</code></pre>
 <li><code>income</code> = Annual income before incarceration</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>d_learn <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/wjschne/EDUC5529/raw/master/transfer_of_learning.csv"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>d_learn <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/wjschne/EDUC5529/raw/master/transfer_of_learning.csv"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><span class="instruction">Assume α = 0.05 for all hypothesis tests.</span></p>
-<p><span class="instruction">Create a regression model in which you predict reading at time 2 (<code>read_2</code>) using reading at time 1 (<code>read_1</code>). Call the model fit object <code>m_read</code>.</span></p>
-<section id="canvas-question-1" class="level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-1">Canvas Question 1</h2>
-<p><span class="question"><strong>Question</strong>: Is <code>read_1</code> a significant predictor of <code>read_2</code>?</span></p>
-<section id="hide-hints" class="level3">
-<h3 class="anchored" data-anchor-id="hide-hints">Hide Hints</h3>
-</section>
-<section id="hint-1" class="level3">
-<h3 class="anchored" data-anchor-id="hint-1">Hint 1</h3>
+<p>Assume α = 0.05 for all hypothesis tests.</p>
+<p>Create a regression model in which you predict reading at time 2 (<code>read_2</code>) using reading at time 1 (<code>read_1</code>). Call the model fit object <code>m_read</code>.</p>
+<section id="question-1" class="level2">
+<h2 class="anchored" data-anchor-id="question-1">Question 1</h2>
+<p>Is <code>read_1</code> a significant predictor of <code>read_2</code>?</p>
+<details>
+<summary>
+Hint 1
+</summary>
 <p>Make model fit object called <code>m_read</code> using the <code>lm</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>m_read <span class="ot">&lt;-</span> <span class="fu">lm</span>(read_2 <span class="sc">~</span> read_1, <span class="at">data =</span> d_learn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>m_read <span class="ot">&lt;-</span> <span class="fu">lm</span>(read_2 <span class="sc">~</span> read_1, <span class="at">data =</span> d_learn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="hint-2" class="level3">
-<h3 class="anchored" data-anchor-id="hint-2">Hint 2</h3>
-<p>View coefficent-level statistics with broom’s <code>tidy</code> function.</p>
+</details>
+<details>
+<summary>
+Hint 2
+</summary>
+<p>View coefficient-level statistics with the <code>parameters</code> function.</p>
 <p>You could also use Base R’s <code>summary</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(m_read)</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m_read)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="hint-3" class="level3">
-<h3 class="anchored" data-anchor-id="hint-3">Hint 3</h3>
+</details>
+<details>
+<summary>
+Hint 3
+</summary>
 <p>In the read_1 row, is the p.value column less than 0.05?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(m_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
+<div class="kable-table">
 <table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 12%">
+<col style="width: 8%">
+</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">estimate</th>
-<th style="text-align: right;">std.error</th>
-<th style="text-align: right;">statistic</th>
-<th style="text-align: right;">p.value</th>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: right;">Coefficient</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">CI</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: right;">df_error</th>
+<th style="text-align: right;">p</th>
 </tr>
 </thead>
 <tbody>
@@ -1811,127 +1019,147 @@ model).</code></pre>
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">83.591</td>
 <td style="text-align: right;">10.922</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">61.44</td>
+<td style="text-align: right;">105.741</td>
 <td style="text-align: right;">7.65</td>
+<td style="text-align: right;">36</td>
 <td style="text-align: right;">0.000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">read_1</td>
 <td style="text-align: right;">0.251</td>
 <td style="text-align: right;">0.104</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.463</td>
 <td style="text-align: right;">2.41</td>
+<td style="text-align: right;">36</td>
 <td style="text-align: right;">0.021</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+</div>
+</details>
 </section>
-</section>
-<section id="canvas-question-2" class="level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-2">Canvas Question 2</h2>
-<p><span class="question"><strong>Question</strong>: What is the <em>R</em><sup>2</sup> for the <code>m_read</code> model?</span></p>
-<section id="hide-hint" class="level3">
-<h3 class="anchored" data-anchor-id="hide-hint">Hide Hint</h3>
-</section>
-<section id="hint" class="level3">
-<h3 class="anchored" data-anchor-id="hint">Hint</h3>
-<p>View model-level statistics with broom’s <code>glance</code> function.</p>
+<section id="question-2" class="level2">
+<h2 class="anchored" data-anchor-id="question-2">Question 2</h2>
+<p>What is the <em>R</em><sup>2</sup> for the <code>m_read</code> model?</p>
+<details>
+<summary>
+Hint
+</summary>
+<p>View model-level statistics with the <code>performance</code> function.</p>
 <p>You could also use Base R’s <code>summary</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(m_read)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(m_read)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</details>
 </section>
-</section>
-<section id="canvas-question-3" class="level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-3">Canvas Question 3</h2>
-<p><span class="question"><strong>Question</strong>: What does the scatter plot look like when <code>read_1</code> is on the <em>x</em>-axis and <code>read_2</code> is on the <em>y</em>-axis? Also plot the regression line. Save your plot using the <code>ggsave</code> function and upload it to Canvas.</span></p>
-<section id="hide-hints-1" class="level3">
-<h3 class="anchored" data-anchor-id="hide-hints-1">Hide Hints</h3>
-</section>
-<section id="hint-1-1" class="level3">
-<h3 class="anchored" data-anchor-id="hint-1-1">Hint 1</h3>
+<section id="question-3" class="level2">
+<h2 class="anchored" data-anchor-id="question-3">Question 3</h2>
+<p>What does the scatter plot look like when <code>read_1</code> is on the <em>x</em>-axis and <code>read_2</code> is on the <em>y</em>-axis? Also plot the regression line. Save your plot using the <code>ggsave</code> function.</p>
+<details>
+<summary>
+Hint Model
+</summary>
 <p>This will get you started</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="points-hint" class="level3">
-<h3 class="anchored" data-anchor-id="points-hint">Points Hint</h3>
+</details>
+<details>
+<summary>
+Hint for Adding Points
+</summary>
 <p>Here is how you add points.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2)) <span class="sc">+</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2)) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="line-hint" class="level3">
-<h3 class="anchored" data-anchor-id="line-hint">Line Hint</h3>
+</details>
+<details>
+<summary>
+Hint for Adding Line
+</summary>
 <p>Here is how you add a regression line.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2)) <span class="sc">+</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2)) <span class="sc">+</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="plot-polishing" class="level3">
-<h3 class="anchored" data-anchor-id="plot-polishing">Plot Polishing</h3>
-<p>This is overkill for now. But soon you will want to fine tune your plots.</p>
+</details>
+<details>
+<summary>
+Plot Polishing
+</summary>
+<p>This is overkill for now. But someday you might want to be able to make your plots as polished as possible.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I want to put the equation at x = 130</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>equation_x <span class="ot">&lt;-</span> <span class="dv">130</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>equation_y <span class="ot">&lt;-</span> <span class="fu">predict</span>(m_read, <span class="at">newdata =</span> <span class="fu">tibble</span>(<span class="at">read_1 =</span> equation_x))</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting the coefficients</span></span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>b_read <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">coef</span>(m_read),<span class="dv">2</span>)</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The angle of the regression line is the inverse tangent of the slope (converted to degrees)</span></span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>eq_angle <span class="ot">&lt;-</span> <span class="fu">atan</span>(b_read[<span class="dv">2</span>]) <span class="sc">*</span> <span class="dv">180</span> <span class="sc">/</span> pi</span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation</span></span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>eq_read <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"italic(Y) == "</span>, </span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>                  b_read[<span class="dv">1</span>], </span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>                  <span class="st">" + "</span>, </span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>                  b_read[<span class="dv">2</span>], </span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>                  <span class="st">" *  italic(X) + italic(e)"</span>)</span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2)) <span class="sc">+</span></span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Reading at Time 1"</span>,</span>
-<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Reading at Time 2"</span>,</span>
-<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Using Reading at Time 1 to Predict Reading at Time 2"</span>) <span class="sc">+</span></span>
-<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"text"</span>,</span>
-<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> equation_x,</span>
-<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> equation_y,</span>
-<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">angle =</span> eq_angle,</span>
-<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> eq_read,</span>
-<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">parse =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I want to put the equation at x = 130</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>equation_x <span class="ot">&lt;-</span> <span class="dv">130</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>equation_y <span class="ot">&lt;-</span> <span class="fu">predict</span>(m_read, <span class="at">newdata =</span> <span class="fu">tibble</span>(<span class="at">read_1 =</span> equation_x))</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting the coefficients</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>b_read <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">coef</span>(m_read),<span class="dv">2</span>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The angle of the regression line is the inverse tangent of the slope (converted to degrees)</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>eq_angle <span class="ot">&lt;-</span> <span class="fu">atan</span>(b_read[<span class="dv">2</span>]) <span class="sc">*</span> <span class="dv">180</span> <span class="sc">/</span> pi</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Equation</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>eq_read <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"italic(Y) == "</span>, </span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>                  b_read[<span class="dv">1</span>], </span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>                  <span class="st">" + "</span>, </span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>                  b_read[<span class="dv">2</span>], </span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>                  <span class="st">" *  italic(X) + italic(e)"</span>)</span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_learn, <span class="fu">aes</span>(read_1, read_2)) <span class="sc">+</span></span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Reading at Time 1"</span>,</span>
+<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Reading at Time 2"</span>,</span>
+<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Using Reading at Time 1 to Predict Reading at Time 2"</span>) <span class="sc">+</span></span>
+<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> equation_x,</span>
+<span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> equation_y,</span>
+<span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">angle =</span> eq_angle,</span>
+<span id="cb47-31"><a href="#cb47-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> eq_read,</span>
+<span id="cb47-32"><a href="#cb47-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">parse =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb47-33"><a href="#cb47-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
 </div>
+</div>
+</div>
+</details>
 </section>
-</section>
-<section id="canvas-question-4" class="level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="canvas-question-4">Canvas Question 4</h2>
-<p><span class="instruction">Create a regression model in which you predict math at time 2 (<code>math_2</code>) using reading at time 1 (<code>math_1</code>). Call the model fit object <code>m_math1</code>.</span></p>
-<p><span class="question"><strong>Question</strong>: Does <code>math_1</code> predict <code>math_2</code>?.</span></p>
-<p><span class="question"><strong>Question</strong>: Does <code>math_1</code> still predict <code>math_2</code> after controlling for <code>read_1</code>?</span></p>
-<section id="hide-hint-1" class="level3">
-<h3 class="anchored" data-anchor-id="hide-hint-1">Hide Hint</h3>
-</section>
-<section id="hint-4" class="level3">
-<h3 class="anchored" data-anchor-id="hint-4">Hint</h3>
+<section id="question-4" class="level2">
+<h2 class="anchored" data-anchor-id="question-4">Question 4</h2>
+<p>Create a regression model in which you predict math at time 2 (<code>math_2</code>) using reading at time 1 (<code>math_1</code>). Call the model fit object <code>m_math1</code>.</p>
+<p>Does <code>math_1</code> predict <code>math_2</code>?.</p>
+<p>Does <code>math_1</code> still predict <code>math_2</code> after controlling for <code>read_1</code>?</p>
+<details>
+<summary>
+Hint
+</summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>m_math <span class="ot">&lt;-</span> <span class="fu">lm</span>(math_2 <span class="sc">~</span> math_1 <span class="sc">+</span> read_1, <span class="at">data =</span> d_learn)</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_math)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>m_math <span class="ot">&lt;-</span> <span class="fu">lm</span>(math_2 <span class="sc">~</span> math_1 <span class="sc">+</span> read_1, <span class="at">data =</span> d_learn)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_math)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</details>
 
 
-</section>
 </section>
 </section>
 
