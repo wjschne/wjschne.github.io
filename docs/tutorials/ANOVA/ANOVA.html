@@ -2,11 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.9">
+<meta name="generator" content="quarto-1.5.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="W. Joel Schneider">
+<meta name="dcterms.date" content="2024-03-03">
 <meta name="description" content="W. Joel Schneider is a professor at Temple University.">
 
 <title>W. Joel Schneider</title>
@@ -155,7 +156,7 @@ window.Quarto = {
 <meta property="og:site_name" content="W. Joel Schneider">
 </head>
 
-<body class="floating nav-fixed">
+<body class="floating nav-fixed slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -212,40 +213,6 @@ window.Quarto = {
 </i> 
 <span class="menu-text">GitHub</span></a>
   </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://fosstodon.org/@wjoelschneider" rel="noreferrer noopener" target="_blank"> <i class="bi bi-mastodon" role="img" aria-label="Mastodon">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://www.researchgate.net/profile/W-Schneider-3" target="_blank"> 
-<span class="menu-text"><i class="ai  ai-researchgate"></i></span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://scholar.google.com/citations?hl=en&amp;pli=1&amp;user=aojOxP4AAAAJ" rel="noreferrer noopener" target="_blank"> 
-<span class="menu-text"><i class="ai  ai-google-scholar"></i></span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://orcid.org/0000-0002-8393-5316" rel="noreferrer noopener" target="_blank"> 
-<span class="menu-text"><i class="ai  ai-orcid"></i></span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://osf.io/whabf/" rel="noreferrer noopener"> 
-<span class="menu-text"><i class="ai  ai-osf"></i></span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://www.zotero.org/wjschne" rel="noreferrer noopener" target="_blank"> 
-<span class="menu-text"><i class="ai  ai-zotero"></i></span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://stackoverflow.com/users/4513316/joel-schneider" rel="noreferrer noopener" target="_blank"> 
-<span class="menu-text"><i class="ai  ai-stackoverflow"></i></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://www.youtube.com/channel/UCFTUraTjxq743KfH-5gWrWg" rel="noreferrer noopener" target="_blank"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../files/schneider-vita.pdf" rel="noreferrer noopener" target="_blank"> 
 <span class="menu-text"><i class="ai  ai-cv"></i></span></a>
@@ -257,7 +224,7 @@ window.Quarto = {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -273,6 +240,10 @@ window.Quarto = {
   <li><a href="#load-packages" id="toc-load-packages" class="nav-link active" data-scroll-target="#load-packages">Load Packages</a></li>
   <li><a href="#import-data-and-create-labelled-factors" id="toc-import-data-and-create-labelled-factors" class="nav-link" data-scroll-target="#import-data-and-create-labelled-factors">Import Data and Create Labelled Factors</a></li>
   <li><a href="#descriptives" id="toc-descriptives" class="nav-link" data-scroll-target="#descriptives">Descriptives</a></li>
+  <li><a href="#selecting-specific-variables" id="toc-selecting-specific-variables" class="nav-link" data-scroll-target="#selecting-specific-variables">Selecting specific variables</a>
+  <ul class="collapse">
+  <li><a href="#basic-descriptives" id="toc-basic-descriptives" class="nav-link" data-scroll-target="#basic-descriptives">Basic descriptives</a></li>
+  </ul></li>
   <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">Plot</a></li>
   <li><a href="#create-one-way-anova" id="toc-create-one-way-anova" class="nav-link" data-scroll-target="#create-one-way-anova">Create One-Way ANOVA</a>
   <ul class="collapse">
@@ -290,7 +261,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -308,6 +279,12 @@ window.Quarto = {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 3, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -324,27 +301,3269 @@ window.Quarto = {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="import-data-and-create-labelled-factors" class="level1">
+<section id="import-data-and-create-labelled-factors" class="level1 page-columns page-full">
 <h1>Import Data and Create Labelled Factors</h1>
-<div class="cell">
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The haven package will import data as a “tibble.” A tibble is a container for tabular data. It is an enhancement of the base R’s data.frame.</p>
+<p>Hadley Wickham, the programmer who started the tidyverse, enjoys naming things precisely but with a touch of humor. “Tibble” is what people in the U.S. sometimes hear when New Zealanders like Hadley say the word “table.”</p>
+</div></div><div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># File location</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>file <span class="ot">&lt;-</span> <span class="st">"https://github.com/wjschne/EDUC5325/raw/master/Attachment.sav"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Import SPSS data file using haven</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Also, change Attachment variable to a factor</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Also, change the Attachment variable to a factor</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(file) <span class="sc">%&gt;%</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Attachment =</span> <span class="fu">as_factor</span>(Attachment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="descriptives" class="level1">
 <h1>Descriptives</h1>
+<p>The variables in <code>d</code> are:</p>
+<ul>
+<li><code>Attachment</code>: Classifies each person’s attachment type: Secure, Avoidant, or Ambivalent</li>
+<li><code>Anxiety_Questionnaire</code>: A summary score from a questionnaire measure of anxiety</li>
+<li><code>Anxiety_Physiological</code>: A summary score from various physiological measures of anxiety</li>
+</ul>
+<p>There are 300 rows (cases) and 3 columns (variables).</p>
+<p>Let’s get a sense of what is in the data frame.</p>
+<p>We can look at the first 6 rows of the data using the <code>head</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attachment</th>
+<th style="text-align: right;">Anxiety_Physiological</th>
+<th style="text-align: right;">Anxiety_Questionnaire</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">51</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>A nice summary of what the variables are:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data_codebook</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 18%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Missings</th>
+<th style="text-align: left;">Values</th>
+<th style="text-align: left;">N</th>
+<th style="text-align: left;">Prop</th>
+<th style="text-align: right;">.row_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Attachment</td>
+<td style="text-align: left;">categorical</td>
+<td style="text-align: left;">0 (0.0%)</td>
+<td style="text-align: left;">Secure</td>
+<td style="text-align: left;">110</td>
+<td style="text-align: left;">36.7%</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Avoidant</td>
+<td style="text-align: left;">85</td>
+<td style="text-align: left;">28.3%</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: left;">105</td>
+<td style="text-align: left;">35.0%</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Anxiety_Physiological</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">0 (0.0%)</td>
+<td style="text-align: left;">[22.78, 93.88]</td>
+<td style="text-align: left;">300</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Anxiety_Questionnaire</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">0 (0.0%)</td>
+<td style="text-align: left;">[21.79, 92.38]</td>
+<td style="text-align: left;">300</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="selecting-specific-variables" class="level1 page-columns page-full">
+<h1>Selecting specific variables</h1>
+<p>Data sets in tutorials like this one are often unrealistically small. If there are only three variables, we are happy to describe all the variables in a single table.</p>
+<p>Real data sets can have dozens, hundreds, or even thousands of variables. Describing hundreds of variables in a single table is usually impractical. We need a way to select from the data just the variables we want.</p>
+<p>There are many ways to select variables in R, but I am going to keep things simple and consistent. I will use the <code>select</code> function from the tidyverse any time I select a variable. The <code>select</code> function is rarely used by itself. We use it as a preliminary step before doing something else (i.e., to specify which variables to describe, analyze, or plot). For this reason, it is often used in the middle sequence of commands linked with the “pipe” operator: <code>%&gt;%</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Anxiety_Questionnaire, Anxiety_Physiological) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      Anxiety_Questionnaire Anxiety_Physiological
+Anxiety_Questionnaire                  1.00                  0.75
+Anxiety_Physiological                  0.75                  1.00</code></pre>
+</div>
+</div>
+<p>The pipe operator inserts the output of the previous command into the next function. You can think of it as meaning “and then…”</p>
+<p>The code above can be interpreted as a series of steps: 1. Start with the data in <code>d</code>AND THEN 2. Select the variables <code>Anxiety_Questionnaire</code> and <code>Anxiety_Physiological</code> AND THEN 3. Create a correlation matrix.</p>
+<p>It makes it convenient to link a series of commands in a readable format.</p>
+<p>You can select as many variables as you wish, separated by commas. You do not need to put variable names in quotes.</p>
+<p>The <code>select</code> function</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>R’s delightful flexibility makes for a bewildering array of options! Here just a few of the many ways we could select the <code>Attachment</code> variable from data.frame <code>d</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># By name</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>d[, <span class="st">"Attachment"</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attachment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># By position</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>d[, <span class="dv">1</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attachment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting always returns a data.frame or tibble</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(d, Attachment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attachment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ambivalent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avoidant</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting a vector from the data</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>Attachment</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] Secure     Ambivalent Avoidant   Secure     Ambivalent Ambivalent
+  [7] Secure     Ambivalent Avoidant   Avoidant   Avoidant   Secure    
+ [13] Ambivalent Secure     Avoidant   Ambivalent Ambivalent Secure    
+ [19] Avoidant   Secure     Avoidant   Avoidant   Ambivalent Secure    
+ [25] Avoidant   Avoidant   Secure     Avoidant   Ambivalent Secure    
+ [31] Secure     Secure     Ambivalent Ambivalent Avoidant   Avoidant  
+ [37] Ambivalent Secure     Ambivalent Secure     Ambivalent Secure    
+ [43] Secure     Secure     Ambivalent Ambivalent Ambivalent Avoidant  
+ [49] Avoidant   Ambivalent Secure     Secure     Ambivalent Ambivalent
+ [55] Secure     Ambivalent Ambivalent Ambivalent Avoidant   Ambivalent
+ [61] Ambivalent Ambivalent Avoidant   Secure     Ambivalent Avoidant  
+ [67] Avoidant   Avoidant   Secure     Secure     Secure     Secure    
+ [73] Secure     Secure     Secure     Ambivalent Secure     Ambivalent
+ [79] Avoidant   Avoidant   Avoidant   Ambivalent Secure     Avoidant  
+ [85] Secure     Ambivalent Ambivalent Secure     Ambivalent Avoidant  
+ [91] Ambivalent Avoidant   Avoidant   Avoidant   Avoidant   Secure    
+ [97] Avoidant   Secure     Secure     Avoidant   Secure     Avoidant  
+[103] Ambivalent Ambivalent Secure     Avoidant   Ambivalent Avoidant  
+[109] Secure     Secure     Secure     Ambivalent Avoidant   Avoidant  
+[115] Ambivalent Ambivalent Ambivalent Secure     Ambivalent Avoidant  
+[121] Secure     Secure     Ambivalent Ambivalent Secure     Ambivalent
+[127] Avoidant   Secure     Ambivalent Avoidant   Secure     Ambivalent
+[133] Secure     Ambivalent Secure     Avoidant   Avoidant   Ambivalent
+[139] Secure     Avoidant   Secure     Secure     Avoidant   Secure    
+[145] Avoidant   Ambivalent Ambivalent Secure     Avoidant   Secure    
+[151] Secure     Avoidant   Ambivalent Avoidant   Ambivalent Secure    
+[157] Ambivalent Secure     Secure     Secure     Ambivalent Ambivalent
+[163] Secure     Ambivalent Secure     Avoidant   Secure     Ambivalent
+[169] Secure     Avoidant   Ambivalent Secure     Secure     Ambivalent
+[175] Avoidant   Ambivalent Avoidant   Secure     Avoidant   Avoidant  
+[181] Ambivalent Avoidant   Ambivalent Ambivalent Secure     Ambivalent
+[187] Secure     Ambivalent Secure     Secure     Secure     Avoidant  
+[193] Ambivalent Secure     Avoidant   Secure     Secure     Secure    
+[199] Secure     Secure     Ambivalent Avoidant   Avoidant   Ambivalent
+[205] Avoidant   Ambivalent Secure     Secure     Secure     Secure    
+[211] Ambivalent Avoidant   Ambivalent Ambivalent Ambivalent Secure    
+[217] Avoidant   Secure     Avoidant   Secure     Secure     Ambivalent
+[223] Avoidant   Avoidant   Ambivalent Ambivalent Ambivalent Avoidant  
+[229] Ambivalent Ambivalent Ambivalent Avoidant   Ambivalent Avoidant  
+[235] Ambivalent Secure     Avoidant   Secure     Secure     Avoidant  
+[241] Ambivalent Secure     Avoidant   Ambivalent Ambivalent Ambivalent
+[247] Avoidant   Avoidant   Secure     Avoidant   Ambivalent Secure    
+[253] Secure     Secure     Ambivalent Secure     Secure     Secure    
+[259] Secure     Avoidant   Ambivalent Secure     Avoidant   Avoidant  
+[265] Ambivalent Ambivalent Secure     Ambivalent Ambivalent Avoidant  
+[271] Ambivalent Ambivalent Ambivalent Secure     Ambivalent Avoidant  
+[277] Ambivalent Secure     Secure     Secure     Secure     Ambivalent
+[283] Avoidant   Ambivalent Secure     Ambivalent Avoidant   Avoidant  
+[289] Ambivalent Avoidant   Secure     Secure     Ambivalent Avoidant  
+[295] Ambivalent Avoidant   Secure     Secure     Secure     Avoidant  
+Levels: Secure Avoidant Ambivalent</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pulling a vector frome the data (a pipe-friendly version of `$`)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pull</span>(d, Attachment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] Secure     Ambivalent Avoidant   Secure     Ambivalent Ambivalent
+  [7] Secure     Ambivalent Avoidant   Avoidant   Avoidant   Secure    
+ [13] Ambivalent Secure     Avoidant   Ambivalent Ambivalent Secure    
+ [19] Avoidant   Secure     Avoidant   Avoidant   Ambivalent Secure    
+ [25] Avoidant   Avoidant   Secure     Avoidant   Ambivalent Secure    
+ [31] Secure     Secure     Ambivalent Ambivalent Avoidant   Avoidant  
+ [37] Ambivalent Secure     Ambivalent Secure     Ambivalent Secure    
+ [43] Secure     Secure     Ambivalent Ambivalent Ambivalent Avoidant  
+ [49] Avoidant   Ambivalent Secure     Secure     Ambivalent Ambivalent
+ [55] Secure     Ambivalent Ambivalent Ambivalent Avoidant   Ambivalent
+ [61] Ambivalent Ambivalent Avoidant   Secure     Ambivalent Avoidant  
+ [67] Avoidant   Avoidant   Secure     Secure     Secure     Secure    
+ [73] Secure     Secure     Secure     Ambivalent Secure     Ambivalent
+ [79] Avoidant   Avoidant   Avoidant   Ambivalent Secure     Avoidant  
+ [85] Secure     Ambivalent Ambivalent Secure     Ambivalent Avoidant  
+ [91] Ambivalent Avoidant   Avoidant   Avoidant   Avoidant   Secure    
+ [97] Avoidant   Secure     Secure     Avoidant   Secure     Avoidant  
+[103] Ambivalent Ambivalent Secure     Avoidant   Ambivalent Avoidant  
+[109] Secure     Secure     Secure     Ambivalent Avoidant   Avoidant  
+[115] Ambivalent Ambivalent Ambivalent Secure     Ambivalent Avoidant  
+[121] Secure     Secure     Ambivalent Ambivalent Secure     Ambivalent
+[127] Avoidant   Secure     Ambivalent Avoidant   Secure     Ambivalent
+[133] Secure     Ambivalent Secure     Avoidant   Avoidant   Ambivalent
+[139] Secure     Avoidant   Secure     Secure     Avoidant   Secure    
+[145] Avoidant   Ambivalent Ambivalent Secure     Avoidant   Secure    
+[151] Secure     Avoidant   Ambivalent Avoidant   Ambivalent Secure    
+[157] Ambivalent Secure     Secure     Secure     Ambivalent Ambivalent
+[163] Secure     Ambivalent Secure     Avoidant   Secure     Ambivalent
+[169] Secure     Avoidant   Ambivalent Secure     Secure     Ambivalent
+[175] Avoidant   Ambivalent Avoidant   Secure     Avoidant   Avoidant  
+[181] Ambivalent Avoidant   Ambivalent Ambivalent Secure     Ambivalent
+[187] Secure     Ambivalent Secure     Secure     Secure     Avoidant  
+[193] Ambivalent Secure     Avoidant   Secure     Secure     Secure    
+[199] Secure     Secure     Ambivalent Avoidant   Avoidant   Ambivalent
+[205] Avoidant   Ambivalent Secure     Secure     Secure     Secure    
+[211] Ambivalent Avoidant   Ambivalent Ambivalent Ambivalent Secure    
+[217] Avoidant   Secure     Avoidant   Secure     Secure     Ambivalent
+[223] Avoidant   Avoidant   Ambivalent Ambivalent Ambivalent Avoidant  
+[229] Ambivalent Ambivalent Ambivalent Avoidant   Ambivalent Avoidant  
+[235] Ambivalent Secure     Avoidant   Secure     Secure     Avoidant  
+[241] Ambivalent Secure     Avoidant   Ambivalent Ambivalent Ambivalent
+[247] Avoidant   Avoidant   Secure     Avoidant   Ambivalent Secure    
+[253] Secure     Secure     Ambivalent Secure     Secure     Secure    
+[259] Secure     Avoidant   Ambivalent Secure     Avoidant   Avoidant  
+[265] Ambivalent Ambivalent Secure     Ambivalent Ambivalent Avoidant  
+[271] Ambivalent Ambivalent Ambivalent Secure     Ambivalent Avoidant  
+[277] Ambivalent Secure     Secure     Secure     Secure     Ambivalent
+[283] Avoidant   Ambivalent Secure     Ambivalent Avoidant   Avoidant  
+[289] Ambivalent Avoidant   Secure     Secure     Ambivalent Avoidant  
+[295] Ambivalent Avoidant   Secure     Secure     Secure     Avoidant  
+Levels: Secure Avoidant Ambivalent</code></pre>
+</div>
+</div>
+<p>In this case, there is no strong reason to prefer one method over the other. As you gain experience with R, you might find reasons to use different methods of selection. For now, we will stick to <code>select</code></p>
+</div></div><section id="basic-descriptives" class="level2">
+<h2 class="anchored" data-anchor-id="basic-descriptives">Basic descriptives</h2>
+<p>Numeric variables can be described in terms of means, standard deviations (SD), interquartile ranges (IQR), skewness, and kurtosis:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe_distribution</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 5%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: right;">Mean</th>
+<th style="text-align: right;">SD</th>
+<th style="text-align: right;">IQR</th>
+<th style="text-align: right;">Min</th>
+<th style="text-align: right;">Max</th>
+<th style="text-align: right;">Skewness</th>
+<th style="text-align: right;">Kurtosis</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">n_Missing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Anxiety_Physiological</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anxiety_Questionnaire</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">-0.16</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Categorical variables are often described in terms of frequencies tables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Attachment) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_tabulate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Attachment (Attachment) &lt;categorical&gt;
+# total N=300 valid N=300
+
+Value      |   N | Raw % | Valid % | Cumulative %
+-----------+-----+-------+---------+-------------
+Secure     | 110 | 36.67 |   36.67 |        36.67
+Avoidant   |  85 | 28.33 |   28.33 |        65.00
+Ambivalent | 105 | 35.00 |   35.00 |       100.00
+&lt;NA&gt;       |   0 |  0.00 |    &lt;NA&gt; |         &lt;NA&gt;</code></pre>
+</div>
+</div>
+<p>We can get descriptives of our numeric variables separated by group.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describeBy</span>(d, <span class="st">"Attachment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+Attachment: 1
+                      vars   n mean sd median trimmed mad min max range  skew
+Attachment               1 110    1  0      1       1   0   1   1     0   NaN
+Anxiety_Physiological    2 110   50 11     51      51  12  23  70    48 -0.44
+Anxiety_Questionnaire    3 110   50 11     51      51  12  23  70    46 -0.36
+                      kurtosis se
+Attachment                 NaN  0
+Anxiety_Physiological    -0.41  1
+Anxiety_Questionnaire    -0.61  1
+------------------------------------------------------------ 
+Attachment: 2
+                      vars  n mean   sd median trimmed mad min max range skew
+Attachment               1 85    2  0.0      2       2 0.0   2   2     0  NaN
+Anxiety_Physiological    2 85   67  9.8     67      67 9.5  46  94    48 0.27
+Anxiety_Questionnaire    3 85   48 10.6     48      48 9.9  22  74    52 0.11
+                      kurtosis  se
+Attachment                 NaN 0.0
+Anxiety_Physiological    -0.13 1.1
+Anxiety_Questionnaire    -0.10 1.1
+------------------------------------------------------------ 
+Attachment: 3
+                      vars   n mean  sd median trimmed mad min max range skew
+Attachment               1 105    3 0.0      3       3 0.0   3   3     0  NaN
+Anxiety_Physiological    2 105   66 9.3     65      66 7.8  45  94    48 0.19
+Anxiety_Questionnaire    3 105   66 9.9     66      66 9.3  44  92    48 0.31
+                      kurtosis   se
+Attachment                 NaN 0.00
+Anxiety_Physiological     0.08 0.91
+Anxiety_Questionnaire    -0.10 0.97</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Attachment) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">describeBy</span>(d<span class="sc">$</span>Attachment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+group: Secure
+                      vars   n mean sd median trimmed mad min max range  skew
+Anxiety_Physiological    1 110   50 11     51      51  12  23  70    48 -0.44
+Anxiety_Questionnaire    2 110   50 11     51      51  12  23  70    46 -0.36
+                      kurtosis se
+Anxiety_Physiological    -0.41  1
+Anxiety_Questionnaire    -0.61  1
+------------------------------------------------------------ 
+group: Avoidant
+                      vars  n mean   sd median trimmed mad min max range skew
+Anxiety_Physiological    1 85   67  9.8     67      67 9.5  46  94    48 0.27
+Anxiety_Questionnaire    2 85   48 10.6     48      48 9.9  22  74    52 0.11
+                      kurtosis  se
+Anxiety_Physiological    -0.13 1.1
+Anxiety_Questionnaire    -0.10 1.1
+------------------------------------------------------------ 
+group: Ambivalent
+                      vars   n mean  sd median trimmed mad min max range skew
+Anxiety_Physiological    1 105   66 9.3     65      66 7.8  45  94    48 0.19
+Anxiety_Questionnaire    2 105   66 9.9     66      66 9.3  44  92    48 0.31
+                      kurtosis   se
+Anxiety_Physiological     0.08 0.91
+Anxiety_Questionnaire    -0.10 0.97</code></pre>
+</div>
+</div>
+<p>A more complete set of descriptives for each group:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describeBy</span>(d, d<span class="sc">$</span>Attachment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+group: Secure
+                      vars   n mean sd median trimmed mad min max range  skew
+Attachment               1 110    1  0      1       1   0   1   1     0   NaN
+Anxiety_Physiological    2 110   50 11     51      51  12  23  70    48 -0.44
+Anxiety_Questionnaire    3 110   50 11     51      51  12  23  70    46 -0.36
+                      kurtosis se
+Attachment                 NaN  0
+Anxiety_Physiological    -0.41  1
+Anxiety_Questionnaire    -0.61  1
+------------------------------------------------------------ 
+group: Avoidant
+                      vars  n mean   sd median trimmed mad min max range skew
+Attachment               1 85    2  0.0      2       2 0.0   2   2     0  NaN
+Anxiety_Physiological    2 85   67  9.8     67      67 9.5  46  94    48 0.27
+Anxiety_Questionnaire    3 85   48 10.6     48      48 9.9  22  74    52 0.11
+                      kurtosis  se
+Attachment                 NaN 0.0
+Anxiety_Physiological    -0.13 1.1
+Anxiety_Questionnaire    -0.10 1.1
+------------------------------------------------------------ 
+group: Ambivalent
+                      vars   n mean  sd median trimmed mad min max range skew
+Attachment               1 105    3 0.0      3       3 0.0   3   3     0  NaN
+Anxiety_Physiological    2 105   66 9.3     65      66 7.8  45  94    48 0.19
+Anxiety_Questionnaire    3 105   66 9.9     66      66 9.3  44  92    48 0.31
+                      kurtosis   se
+Attachment                 NaN 0.00
+Anxiety_Physiological     0.08 0.91
+Anxiety_Questionnaire    -0.10 0.97</code></pre>
+</div>
+</div>
 <p>Let’s look at the means and standard deviations for anxiety of each attachment group.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(Anxiety_Questionnaire),</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD =</span> <span class="fu">sd</span>(Anxiety_Questionnaire), </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> Attachment) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(Anxiety_Questionnaire),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD =</span> <span class="fu">sd</span>(Anxiety_Questionnaire), </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> Attachment) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="table table-sm table-striped small">
@@ -375,16 +3594,292 @@ window.Quarto = {
 </table>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describeBy</span>(d, <span class="st">"Attachment"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+Attachment: 1
+                      vars   n mean sd median trimmed mad min max range  skew
+Attachment               1 110    1  0      1       1   0   1   1     0   NaN
+Anxiety_Physiological    2 110   50 11     51      51  12  23  70    48 -0.44
+Anxiety_Questionnaire    3 110   50 11     51      51  12  23  70    46 -0.36
+                      kurtosis se
+Attachment                 NaN  0
+Anxiety_Physiological    -0.41  1
+Anxiety_Questionnaire    -0.61  1
+------------------------------------------------------------ 
+Attachment: 2
+                      vars  n mean   sd median trimmed mad min max range skew
+Attachment               1 85    2  0.0      2       2 0.0   2   2     0  NaN
+Anxiety_Physiological    2 85   67  9.8     67      67 9.5  46  94    48 0.27
+Anxiety_Questionnaire    3 85   48 10.6     48      48 9.9  22  74    52 0.11
+                      kurtosis  se
+Attachment                 NaN 0.0
+Anxiety_Physiological    -0.13 1.1
+Anxiety_Questionnaire    -0.10 1.1
+------------------------------------------------------------ 
+Attachment: 3
+                      vars   n mean  sd median trimmed mad min max range skew
+Attachment               1 105    3 0.0      3       3 0.0   3   3     0  NaN
+Anxiety_Physiological    2 105   66 9.3     65      66 7.8  45  94    48 0.19
+Anxiety_Questionnaire    3 105   66 9.9     66      66 9.3  44  92    48 0.31
+                      kurtosis   se
+Attachment                 NaN 0.00
+Anxiety_Physiological     0.08 0.91
+Anxiety_Questionnaire    -0.10 0.97</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe_distribution</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 5%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: right;">Mean</th>
+<th style="text-align: right;">SD</th>
+<th style="text-align: right;">IQR</th>
+<th style="text-align: right;">Min</th>
+<th style="text-align: right;">Max</th>
+<th style="text-align: right;">Skewness</th>
+<th style="text-align: right;">Kurtosis</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">n_Missing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Anxiety_Physiological</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anxiety_Questionnaire</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">-0.16</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe_distribution</span>(d, <span class="at">include_factors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 5%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 4%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: right;">Mean</th>
+<th style="text-align: right;">SD</th>
+<th style="text-align: right;">IQR</th>
+<th style="text-align: left;">Min</th>
+<th style="text-align: left;">Max</th>
+<th style="text-align: right;">Skewness</th>
+<th style="text-align: right;">Kurtosis</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">n_Missing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Attachment</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">Secure</td>
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">-1.61</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anxiety_Physiological</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">22.7818383540053</td>
+<td style="text-align: left;">93.8841825453315</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anxiety_Questionnaire</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">21.7903658236616</td>
+<td style="text-align: left;">92.3787567926238</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">-0.16</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data_codebook</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 18%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Missings</th>
+<th style="text-align: left;">Values</th>
+<th style="text-align: left;">N</th>
+<th style="text-align: left;">Prop</th>
+<th style="text-align: right;">.row_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Attachment</td>
+<td style="text-align: left;">categorical</td>
+<td style="text-align: left;">0 (0.0%)</td>
+<td style="text-align: left;">Secure</td>
+<td style="text-align: left;">110</td>
+<td style="text-align: left;">36.7%</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Avoidant</td>
+<td style="text-align: left;">85</td>
+<td style="text-align: left;">28.3%</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Ambivalent</td>
+<td style="text-align: left;">105</td>
+<td style="text-align: left;">35.0%</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Anxiety_Physiological</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">0 (0.0%)</td>
+<td style="text-align: left;">[22.78, 93.88]</td>
+<td style="text-align: left;">300</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Anxiety_Questionnaire</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">0 (0.0%)</td>
+<td style="text-align: left;">[21.79, 92.38]</td>
+<td style="text-align: left;">300</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="plot" class="level1">
 <h1>Plot</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Attachment,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> Anxiety_Questionnaire)) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Attachment,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> Anxiety_Questionnaire)) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -399,12 +3894,12 @@ window.Quarto = {
 <h1>Create One-Way ANOVA</h1>
 <p>The <code>aov</code> (Analysis of Variance) function is what you want to use. The <code>anova</code> function is better used for comparing models. The dependent variable goes on the left, and any predictor variables are on the right hand side of the ~.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">aov</span>(Anxiety_Questionnaire <span class="sc">~</span> Attachment, <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">aov</span>(Anxiety_Questionnaire <span class="sc">~</span> Attachment, <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="diagnostic-plots" class="level2">
 <h2 class="anchored" data-anchor-id="diagnostic-plots">Diagnostic Plots</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -419,7 +3914,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>The base R function <code>summary</code> gives us most of what we might want to know.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Attachment    2  20359   10179      93 &lt;2e-16 ***
@@ -431,7 +3926,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>We can see that overall model is significant, meaning that at least two groups have reliably different means. At this point we do not know which means differ, but from the plot we have a good guess that the Ambivalent group scores higher on the Anxiety Questionnaire than the other two groups.</p>
 <p>A similar, but tidier display can be found with the <code>parameters</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="table table-sm table-striped small">
@@ -472,7 +3967,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h2 class="anchored" data-anchor-id="other-summary-functions">Other Summary Functions</h2>
 <p>The overall “fit” or “performance” of the model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="table table-sm table-striped small">
@@ -515,7 +4010,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="automated-interpretation" class="level2">
 <h2 class="anchored" data-anchor-id="automated-interpretation">Automated Interpretation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The ANOVA (formula: Anxiety_Questionnaire ~ Attachment) suggests that:
 
@@ -530,7 +4025,7 @@ Effect sizes were labelled following Field's (2013) recommendations.</code></pre
 <h2 class="anchored" data-anchor-id="post-hoc-tests">Post-hoc Tests</h2>
 <p>We would like to compare all means but control for family-wise error.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
 </div>
@@ -599,8 +4094,8 @@ Effect sizes were labelled following Field's (2013) recommendations.</code></pre
 </table>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit) <span class="sc">|&gt;</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit) <span class="sc">|&gt;</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
 </div>
@@ -700,6 +4195,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/wjschne\.github\.io");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -734,7 +4247,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');

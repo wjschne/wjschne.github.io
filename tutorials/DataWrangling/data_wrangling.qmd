@@ -1,0 +1,733 @@
+---
+title: "Data Wrangling"
+author: "W. Joel Schneider"
+date: 2024-03-01
+format: 
+  html: 
+    fig-height: 8
+    fig-width: 8
+    highlight-style: arrow
+    toc: true
+    toc-location: left
+    lightbox: true
+    df-print: kable
+---
+
+```{r}
+#| label: setup
+#| include: false
+options(digits = 3)
+
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  dev = "ragg_png", 
+  dpi = 300,
+  warning = F, 
+  message = F, 
+  out.width = '100%')
+library(tidyverse)
+library(lubridate)
+library(ggtext)
+
+# library(magick)
+
+# dutchmasters::dutchmasters
+options(digits = 4)
+bg_color <- "gray85"
+fore_color <- "royalblue4"
+line_color <- "royalblue4"
+area_color <- "royalblue1"
+my_font <- hrbrthemes::font_rc
+font_size = 16
+bar_color <- fore_color
+strip_color <- "gray30"
+```
+
+
+```{r}
+#| label = "makedata",
+#| eval = F,
+#| echo = F
+set.seed(46)
+b_intervention <- 2
+sigma_e <- 2
+intercept <- 10
+
+n <- 8
+k <- 60
+d_student <-
+  tibble(
+    id = factor(1:n),
+    baseline_sessions_n = sample(5:35, n, replace = T),
+    intervention_sessions_n = sample(18:20, n, replace = T)
+  )
+d_time <- crossing(id = factor(1:n), Time = 1:k) %>%
+  left_join(d_student, by = "id") %>%
+  mutate(
+    id = fct_reorder(id, baseline_sessions_n),
+    Phase = factor(
+      1 + as.numeric(Time > baseline_sessions_n) + as.numeric(Time > baseline_sessions_n + intervention_sessions_n),
+      labels = c("Pre-Intervention", "Intervention", "Post-Intervention")),
+    intervention = (Phase == "Intervention") * 1) %>% 
+  group_by(id) %>% 
+  mutate(intervention_time = cumsum(intervention)) %>% 
+  ungroup() %>% 
+  mutate(`Time on Task` = abs(b_intervention * intervention_time + intercept + rnorm(n * k, 0, sigma_e))) 
+
+ggplot(d_time, aes(Time, `Time on Task`)) +
+  geom_step(aes(color = Phase, group = id)) +
+  geom_vline(data = d_student, aes(xintercept = baseline_sessions_n + 1)) +   
+  geom_vline(data = d_student, aes(xintercept = intervention_sessions_n + baseline_sessions_n + 1)) +
+  facet_grid(rows = vars(id)) + 
+  theme_light(base_size = 16) + 
+  theme(legend.position = "top")
+
+
+d_wide <- d_time %>% 
+  select(id, Time, baseline_sessions_n, intervention_sessions_n, `Time on Task`) %>% 
+  rename(on_task = `Time on Task`) %>% 
+  pivot_wider(names_from = Time, values_from = on_task, names_prefix = "time_")
+
+write_csv(d_wide, "on_task_multiple_baseline.csv")
+```
+
+# Getting Used to Working with Data in R
+
+In programs like SPSS, the data seem to live in a spreadsheet that is always open and available to you. In R, you can see the data whenever you want, but usually it sits unseen inside a variable. It can be disconcerting at first, but think of your data as living in a file somewhere on your hard drive (or online!), and then the data just come for a short visit in R. 
+
+The major benefit of working with data in R is that all of the changes, transformations, and restructuring happens in code---which can be recreated at any time. There is usually no need to "save" the data after you have transformed it. The next time you work with the data, you just run your code and all the calculations will transform the data exactly the same way as before.
+
+Why does this matter? If you feel the need to save your data all the time, you end of having multiple copies of it: `data.sav`, `data_restructured.sav`, `data_new.sav`, `data_new_final.sav`, `fixed_data_new_final.sav`, `restructued_final_with_missing_cases_removed.sav`, and so forth and so on. It can be hard to figure out where to start the next time you work with your data. You might not remember which version has errors and which version has what you need.
+
+In general, start with a completely raw data file (one that is exactly the way you started). Resist the temptation to make any changes to it directly. If you must, save a pristine copy somewhere and only then change it. Import your data and make all changes to it with code. One benefit of doing so is that the code documents any changes you would otherwise need to record in your lab notebook.
+
+# All the code in one place:
+
+I am going to walk through these steps. You can run this all at once to make sure it works. Then I will explain it step by step.
+
+:::{.callout-note collapse=true}
+
+## View All the Code
+
+```{r allthecode}
+#| eval: false
+
+
+# Load packages
+library(tidyverse)
+
+# Import data
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/on_task_multiple_baseline.csv")
+
+# View data
+d
+glimpse(d)
+View(d)
+
+# Filtering
+
+## Cases with fewer than 8 baseline sessions
+d %>% 
+  filter(baseline_sessions_n < 8)  %>% 
+  arrange(-baseline_sessions_n)
+
+
+## Students with `id` equal to 7
+d %>% 
+  filter(id == 7)
+
+## Students with scores above 10 on `time_1` AND `time_2`:
+d %>% 
+  filter(time_1 > 10 & time_2 > 10)
+
+## Students with scores above 10 on `time_1` OR `time_2`:
+d %>% 
+  filter(time_1 > 10 | time_2 > 10)
+
+# Selecting columns
+## Select the id and time_1 variables
+d %>% 
+  select(id, time_1)
+
+## Select 5 adjacent variables: time_1 throught time_5
+d %>% 
+  select(time_1:time_5)
+
+## Remove the id variable
+d %>% 
+  select(-id)
+
+## Select all variables that start with "time" 
+d %>% 
+  select(starts_with("time"))
+
+# Select all variables end with 0:
+
+d %>% 
+  select(ends_with("0"))
+
+# Select all variables that contain "_2"
+d %>% 
+  select(contains("_2"))
+
+# Renaming variables
+## Rename id to become student_id, rename baseline_sessions_n to baseline
+d_new <- d %>% 
+  rename(student_id = id, 
+         baseline = baseline_sessions_n) 
+
+## Rename rename all variables that start with "time_" 
+## so that they start with "T_" instead
+d %>% 
+  rename_with(str_replace, pattern = "time_", replace = "T_")
+
+# Make small data
+# Select variables from id to time_3 and filter rows so that 
+# id is less than 3 (not inclusive)
+d_small <- d %>% 
+  select(id:time_3) %>% 
+  filter(id < 3)
+
+d_small
+
+# Restructuring from wide to long format:
+d_small_longer <- d_small %>%
+  pivot_longer(cols = time_1:time_3,
+               names_to = "time",
+               values_to = "on_task",
+               names_prefix = "time_", 
+               names_transform = list(time = as.integer)) 
+
+# Restructing from long to wide format:
+d_small_longer %>% 
+  pivot_wider(names_from = time, 
+              values_from = on_task, 
+              names_prefix = "time_")
+
+
+# Restructure whole data from wide to long and create new variables
+d_longer <- d %>%
+  pivot_longer(cols = time_1:time_60,
+               names_to = "time",
+               values_to = "on_task",
+               names_prefix = "time_", 
+               names_transform = list(time = as.integer)) %>% 
+    mutate(phase = case_when(
+    time <= baseline_sessions_n ~ "Pre-Intervention",
+    time <= baseline_sessions_n + intervention_sessions_n ~ "Intervention",
+    time > baseline_sessions_n + intervention_sessions_n ~ "Post-Intervention" 
+  )) %>% 
+  mutate(phase = fct_inorder(phase))
+
+# Plot
+d_longer %>% 
+  mutate(id = factor(id) %>% fct_reorder(baseline_sessions_n)) %>% 
+  ggplot(aes(time, on_task)) +
+  geom_line(aes(group = id, color = phase)) + 
+  facet_grid(rows = vars(id))
+
+
+
+```
+
+:::
+
+# Importing Data from a file
+
+For this task we will use a file that lives here on the web:
+
+[on_task_multiple_baseline.csv](https://github.com/wjschne/EDUC5529/raw/master/on_task_multiple_baseline.csv)
+
+You can download it if you want, but you do not need to. You can import it over the web right into R.
+
+We have a .csv file, so we will use the tidyverse function `read_csv`, from the readr package, which can be loaded with the tidyverse package:
+
+```{r importdata}
+library(tidyverse)
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/on_task_multiple_baseline.csv")
+```
+
+Note that we have to assign the data to a variable---`d` in this case. Otherwise, the data will spill into the console, but R will not remember the data.
+
+# Inspecting Data
+
+The `read_csv` function imports a special data structure called a `tibble` which is a variation on the traditional `data.frame` structure. It has some useful defaults that make working with it more predictable and practical.
+
+If the data is too big to print in your console, the tibble will just show the first few rows, the first few columns, and then the remaining column names. It all says what kind of data is in each column and how many rows and columns are in the data.
+
+:::{.column-margin}
+Whoa! That dataset has a lot of variables! When the there are more variables than rows, we say that the data is "wide."
+
+An alternate way to view the data is to use the `glimpse` function:
+
+```{r}
+#| eval: false
+glimpse(d)
+```
+
+If you really need to see all the data, use the `View` function:
+
+```{r}
+#| eval: false
+View(d)
+```
+
+:::
+
+```{r}
+#| paged-print: false
+d
+```
+
+
+
+
+
+
+# Study Design
+
+This dataset has 8 children, one in each row. Each child was given an intervention designed to increase "time on task" in the classroom so that the child will stay focused and complete his or her work. The study has a [multiple baseline design](https://www.wikiwand.com/en/Multiple_baseline_design). That is, each child was observed for a "baseline" period for a number days before the intervention was implemented. Each child's baseline lasted a different length of time. Some children were observed for a short time before the intervention, and some were observed much longer. After the intervention ended, each child was observed for a number of days to see if the intervention's effect diminished.
+
+The `id` column is just a number to identify each child. The `baseline_sessions_n` variable indicates how many days the child was observed before the intervention began. The `intervention_sessions_n` variable indications the number days the intervention lasted. The remainding variables `time_1`--`time_60` are the number of minutes the child stayed on task during the observation period each day for 60 days.
+
+# Tidy Data
+
+You might think that the data is ready to be analyzed, but it isn't. The data might be perfectly structured for data entry, but it is not quite "tidy" yet.
+
+The phrase [*tidy data*](https://r4ds.had.co.nz/tidy-data.html#tidy-data-1) was popularized by Hadley Wickham, but it mostly refers to something a little less catchy called [*database normalization*](https://www.wikiwand.com/en/Database_normalization). In data analysis, we want:
+
+
+
+> 1. Each variable must have its own column.
+> 2. Each observation must have its own row.
+> 3. Each value must have its own cell.
+
+---From [Wickham & Grolemund (2017)](https://r4ds.had.co.nz/tidy-data.html#tidy-data-1):
+
+This is how R likes its data. Whenever you find yourself fighting with confusing or tedious tasks in R, there is a good chance your data has violated one of these rules. Converting your data to this "tidy" format will likely simplify your task.
+
+In the current data, there are two primary sources of untidiness.
+
+* We need a single variable to indicate *"*time on task.*"* Unfortunately, the `time on task` variable we would like to have is currently spread across 60 variables, `time_1`--`time_60`. 
+* We also would like a variable called "time" to indicate which day the observation took place. Right now, the time variable is lurking in the column names `time_1`--`time_60`
+
+Later we need to identify which treatment phase the observation was conducted in, "pre-intervention," "intervention," or "post-intervention." That information is sitting in an unusual form right right now in the `baseline_sessions_n` and `intervention_session_n` variables.
+
+
+# Data Filtering
+
+The `filter` function selects rows that meet certain conditions. For example, suppose we want to see rows with `baseline_sessions_n` less than 8:
+
+:::{.column-margin}
+The `%>%` is the "pipe" function. It means "and then." It inserts the output of the previous function into the next function. If we did not use the pipe, we would type `filter(d, baseline_sessions_n < 8)` instead.
+:::
+
+```{r}
+d %>% 
+  filter(baseline_sessions_n < 8)
+```
+
+
+In this example, there is little advantage to using the pipe because there is only one step. However, when many steps are strung together, the pipe makes the code much easier to understand.
+
+
+The double equal sign `==` performs a test to see if two things are the same. Forgetting that you need two equal signs is a really common error. 
+
+Students with `id` equal to 7:
+
+```{r}
+d %>% 
+  filter(id == 7)
+```
+
+You can filter for more than one condition. 
+
+Students with scores above 10 on `time_1` AND `time_2`:
+
+```{r}
+d %>% 
+  filter(time_1 > 10 & time_2 > 10)
+```
+
+
+Students with scores above 10 on `time_1` OR `time_2`:
+
+```{r}
+d %>% 
+  filter(time_1 > 10 | time_2 > 10)
+```
+
+
+# Column selection
+
+We can select columns by naming just the columns we want:
+
+```{r selectcolumns}
+d %>% 
+  select(id, time_1)
+```
+
+If the columns we want are adjacent, we can use the `:` operator to select a sequence:
+
+```{r selectrange}
+d %>% 
+  select(time_1:time_5)
+```
+
+
+If want everything but a particular column (or columns), use the `-` operator:
+
+```{r exclude}
+d %>% 
+  select(-id)
+```
+
+If columns have similar names, we can use the `starts_with`, `ends_width`, or `contains` functions.
+
+Select all variables that start with the phrase `time`:
+
+```{r startwith}
+d %>% 
+  select(starts_with("time"))
+```
+
+Select all variables end with `0`:
+
+```{r endswith}
+d %>% 
+  select(ends_with("0"))
+```
+
+Select all variables that contain the phrase "_2"
+
+```{r contains}
+d %>% 
+  select(contains("_2"))
+```
+
+The `-` operator works with these selection functions to exclude variables:
+
+```{r excludecontains}
+d %>% 
+  select(-contains("time_"))
+```
+
+
+
+# Renaming variables
+
+```{r}
+d %>% 
+  rename(student_id = id, 
+         baseline = baseline_sessions_n)
+```
+
+We can rename many columns at once with a function. The `str_replace` function usually works like this:
+
+```{r}
+x <- "time_1"
+str_replace(x, pattern = "time_", replace = "Time ")
+```
+
+The `rename_with` is a function that applies a function to all variable names at once. It can take that function's arguments, too. For example,
+
+
+```{r}
+d %>% rename_with(str_replace, pattern = "time_", replace = "Time ")
+```
+
+
+If you have a vector with names in it you can rename many variables at once:
+
+```{r}
+v_names <- c(ID = "id", 
+             Baseline = "baseline_sessions_n",
+             Intervention = "intervention_sessions_n")
+
+d %>% 
+  rename(any_of(v_names))
+```
+
+In this example, there is no advantage over just applying the transformations directly in `rename`:
+
+```{r}
+d %>% 
+  rename(ID = "id", 
+         Baseline = "baseline_sessions_n",
+         Intervention = "intervention_sessions_n")
+```
+
+The reason one might use the named-vector method is that one already has the named vector handy, and retyping it would be an error-prone waste of time.
+
+# Data Restructuring
+
+We need to make our wide data long. To make the illustration simple to see, let's make a smaller version of the data. We will select just times 1--3 for the first 2 children:
+
+```{r}
+d_small <- d %>% 
+  select(id:time_3) %>% 
+  filter(id < 3)
+```
+
+Breaking down each step, the code above does these three things:
+
+1. Create a new tibble called `d_small` starting with the tibble `d` "and then" (i..e, `%>%`)...
+2. `select` variables `id` through `time_3` "and then"...
+3. `filter` the rows to find only the cases in which id is less than 3.
+
+Let's display `d_small`:
+
+```{r}
+#| eval: false
+d_small
+```
+
+
+```{r}
+#| echo: false
+knitr::kable(d_small) %>% 
+  kableExtra::kable_styling(., bootstrap_options = "striped")
+```
+
+What we need is:
+
+```{r}
+#| echo: false
+d_small %>%
+  pivot_longer(cols = time_1:time_3,
+               names_to = "time",
+               values_to = "on_task",
+               names_prefix = "time_") %>% 
+  mutate(time = as.integer(time)) %>% 
+  knitr::kable(.) %>% 
+  kableExtra::kable_styling(., bootstrap_options = "striped")
+```
+
+## Restructuring from wide to long format with `pivot_longer`
+
+Use the `pivot_longer` function to pivot the three time variables to long format:
+
+```{r}
+d_small %>% 
+  pivot_longer(cols = time_1:time_3)
+```
+
+To avoid the hassle of renaming our columns, we can specify what the `name` and `value` columns should be called:
+
+```{r}
+d_small %>%
+  pivot_longer(cols = time_1:time_3,
+               names_to = "time",
+               values_to = "on_task")
+```
+
+Notice that the `time` variable is text, not a number, like we want. There are many ways to get rid of the prefix. The simplest is to tell `pivot_longer` to strip away the prefix "time_".
+
+```{r}
+d_small %>%
+  pivot_longer(cols = time_1:time_3,
+               names_to = "time",
+               values_to = "on_task",
+               names_prefix = "time_")
+```
+
+Unfortunately, R thinks that `time` is a text variable. We want it to be an integer, so we transform it using the `as.integer` function:
+
+```{r}
+d_small %>%
+  pivot_longer(cols = time_1:time_3,
+               names_to = "time",
+               values_to = "on_task",
+               names_prefix = "time_", 
+               names_transform = list(time = as.integer)) 
+```
+
+
+Alternatively, we can do all these transformations after pivoting:
+
+```{r}
+d_small %>%
+  pivot_longer(cols = time_1:time_3,
+               names_to = "time",
+               values_to = "on_task") %>% 
+  mutate(time = str_remove(time, "time_") %>% 
+           as.integer())
+```
+
+
+## Restructuring from long to wide format with `pivot_wider`
+
+Let's pivot the data from long format to wide. First let's assign the restructured `d_small` data as `d_small_longer`:
+
+```{r}
+d_small_longer <- d_small %>%
+  pivot_longer(cols = time_1:time_3,
+               names_to = "time",
+               values_to = "on_task",
+               names_prefix = "time_",
+               names_transform = list(time = as.integer))
+```
+
+Now let's move it back to where it was with `pivot_wider`:
+
+```{r}
+d_small_longer %>% 
+  pivot_wider(names_from = time, 
+              values_from = on_task, 
+              names_prefix = "time_")
+```
+
+Perfect! Now lets move back to the the original large tibble `d`.
+
+
+# Create new variables with `mutate` and `case_when`
+
+First, let's pivot the entire data and assign it to `d_longer`. We need to select `time_1`--`time_60`:
+
+```{r}
+d_longer <- d %>%
+  pivot_longer(cols = time_1:time_60,
+               names_to = "time",
+               values_to = "on_task",
+               names_prefix = "time_",
+               names_transform = list(time = as.integer))
+```
+
+
+To create a new variable in `d_longer`, we "mutate" the tibble. For example, if we want to add 1 to `on_task`,
+
+```{r}
+d_longer %>% 
+  mutate(ontask_plus_1 = on_task + 1)
+```
+
+Notice that the variable is not saved anywhere because we did not assign the output to a variable:
+
+```{r}
+d_longer
+```
+
+We need to identify which rows are part of the pre-intervention phase, which are in the intervention phase, and which are in the post-intervention phase. Let's use the `case_when` function, which is like a series of "if-then" statements followed by the desired result.
+
+```{r}
+d_longer <- d_longer %>% 
+  mutate(phase = case_when(
+    time <= baseline_sessions_n ~ "Pre-Intervention",
+    time <= baseline_sessions_n + intervention_sessions_n ~ "Intervention",
+    time > baseline_sessions_n + intervention_sessions_n ~ "Post-Intervention" 
+  ))
+
+d_longer
+```
+
+# Plot the results:
+
+Plotting is rarely done all at once. We usually build it step-by-step and layer-by-layer. Here is the first attempt:
+
+```{r}
+#| fig-height: 6
+d_longer %>% 
+  ggplot(aes(time, on_task)) +
+  geom_line(aes(group = id, color = phase))
+```
+
+That was not so great! Let's make a separate plot for each person:
+
+```{r}
+d_longer %>% 
+  ggplot(aes(time, on_task)) +
+  geom_line(aes(group = id, color = phase)) + 
+  facet_grid(rows = vars(id))
+```
+
+Better! Let's reorder the cases by the order in which the intervention is first implemented:
+
+
+```{r}
+d_longer %>% 
+  mutate(id = fct_reorder(factor(id), baseline_sessions_n)) %>% 
+  ggplot(aes(time, on_task)) +
+  geom_line(aes(group = id, color = phase)) + 
+  facet_grid(rows = vars(id))
+```
+
+Looks even better!
+
+If I wanted a more polished plot for publication, I might create something like @fig-polished.
+
+```{r}
+#| label: fig-polished
+#| fig-cap: "Effect on Intervention on Time on Task for Eight Children"
+#| fig-cap-location: margin
+#| fig-height: 12
+#| code-fold: true
+
+# Some pre-processing for easier plotting
+d_longer_processed <- d_longer %>% 
+    mutate(id = factor(id) %>% fct_reorder(baseline_sessions_n),
+         phase = fct_inorder(phase)) %>% 
+  arrange(phase) %>% 
+  mutate(id = factor(id, labels = LETTERS[1:8]))
+
+# data for phase rectangles
+d_phases <- d_longer_processed %>% 
+  summarise(.by = c(id, phase),
+            begin = min(time),
+            end = max(time)) %>% 
+  mutate(begin = ifelse(begin == 1, 0, begin),
+         end = end + 1)
+
+d_longer_processed %>%
+  ggplot(aes(time, on_task)) +
+    geom_vline(xintercept = rep(1:4, 12) + rep(seq(0,55,5), each = 4), linewidth = unit(.1, "mm"), color = "gray80") +
+  ggtext::geom_richtext(
+    data = . %>% filter(id == "E", time %in% c(10, 30, 50)),
+    aes(label = phase, color = phase),
+    label.color = NA,
+    fill = scales::alpha("white", .5),
+    label.padding = unit(0, "mm"),
+    label.margin = unit(2, "mm"),
+    vjust = c(0, 0, 1),
+    angle = c(0, 21, 0),
+    size = 5.5,
+    family = "Roboto Condensed"
+  ) +
+  geom_rect(
+    data = d_phases,
+    aes(
+      xmin = begin,
+      xmax = end,
+      ymin = 0,
+      ymax = 60,
+      fill = phase
+    ),
+    inherit.aes = FALSE
+  ) +
+  geom_line(aes(group = id, color = phase), linewidth = 1) +
+  facet_grid(rows = vars(id)) +
+  theme(strip.text.y = element_text(angle = 0),
+        legend.position = "none") +
+  labs(x = "Day", y = "Time on Task")  +
+  theme_light(base_family = "Roboto Condensed", base_size = 18) +
+  theme(legend.position = "none",
+        panel.border = element_blank(),
+        strip.text.y = element_text(angle = 0), 
+        axis.text.y = element_text(vjust = c(0))) +
+  scale_color_viridis_d(alpha = .9, begin = .1, end = .7) +
+  scale_fill_viridis_d(alpha = .15, begin = .1, end = .7) +
+  scale_y_continuous(
+    limits = c(0, 60),
+    breaks = seq(0, 50, 10),
+    expand = expansion(0)
+  ) +
+  scale_x_continuous(limits = c(0, 61), breaks = seq(0, 60, 10), minor_breaks = seq(0,60, 5), expand = expansion(0)) +
+   guides(
+    x = guide_axis(minor.ticks = TRUE)
+    # y = guide_axis(minor.ticks = TRUE)
+  ) + 
+  coord_cartesian(clip = "off")
+
+
+```
+
+
