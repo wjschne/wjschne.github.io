@@ -20,6 +20,7 @@
 
 
 
+
 <section id="load-packages" class="level1">
 <h1>Load Packages</h1>
 <p>The following code will install the tidyverse, GPArotation, and psych packages if they are not installed already.</p>
@@ -65,7 +66,21 @@ font-style: inherit;">"psych"</span>)) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"psych"</span>)</span></code></pre></div>
+font-style: inherit;">"psych"</span>)</span>
+<span id="cb1-4"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> (<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">require</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"psych"</span>)) <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"easystats"</span>)</span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
@@ -92,7 +107,7 @@ font-style: inherit;">library</span>(easystats)</span></code></pre></div>
 Goldberg, L. R. (1999). A broad-bandwidth, public domain, personality inventory measuring the lower-level facets of several five-factor models. <em>Personality Psychology in Europe</em>, <em>7</em>(1), 7–28.
 </div><div id="ref-revellePsychProceduresPsychological2015" class="csl-entry">
 Revelle, W. (2015). <em>Psych: <span>Procedures</span> for psychological, psychometric, and personality research</em>. Northwestern University. <a href="http://CRAN.R-project.org/package=psych">http://CRAN.R-project.org/package=psych</a>
-</div></div><div class="cell">
+</div></div><div class="cell" data-messsage="false">
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">d_bfi <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
@@ -102,11 +117,10 @@ background-color: null;
 font-style: inherit;">"https://github.com/wjschne/EDUC5529/raw/master/HW4_BFI.csv"</span>)</span></code></pre></div>
 </div>
 <p>Here are the personality items:</p>
-<div class="cell">
+<div id="tbl-bfi" class="cell anchored" data-tab-cap="Big Five Inventory Personality Items">
 <div class="cell-output-display">
 <div>
 <table class="table table-striped table-sm small" data-quarto-postprocess="true">
-<caption>Table 1. Personality Items</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Items</th>
@@ -203,7 +217,7 @@ font-style: inherit;">fa.parallel</span>(d_bfi)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/showparallel-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -213,15 +227,25 @@ font-style: inherit;">fa.parallel</span>(d_bfi)</span></code></pre></div>
 </div>
 <ul>
 <li>There are 6 eigenvalues above 1 (from the PC series with the Xs), so the Kaiser-Guttman rule says that we should select 6 factors.</li>
-<li>There are 6 eigenvalues above the scree in the PC series. So the scree plot rule says to extract 6 facotrs.</li>
+<li>There are 6 eigenvalues above the scree in the PC series. So the scree plot rule says to extract 6 factors.</li>
 <li>The principal components version of parallel analysis says to extract 5 factors. This method works best if the factors have weak correlations. Thus, if the factors are weakly correlated (&lt; 0.3 or so), we should extract 5 factors.</li>
 <li>The factor analysis version of parallel analysis says to extract 6 factors (the FA series with the triangles). If the factors are strongly correlated (&gt; 0.3 or so), we should extract 6 factors.</li>
 </ul>
+<p>Here is the same plot, but rendered to be more easily interpreted:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/polishedparallel-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="conducting-exploratory-factor-analysis" class="level1">
 <h1>Conducting Exploratory Factor Analysis</h1>
 <p>There are many variants of factor analysis and each has its advantages and disadvantages. Remember, EFA is called “exploratory” for a reason. With EFA, there are no firm answers that we can stand behind forever and always and in every situation.</p>
-<p>Let’s extract 5 factors and then 6 factors. We are going to use the most traditional method of EFA by seting the factor method <code>fm</code> to “pa” (principal-axis factor analysis). By default, the most common method of rotation is used: oblimin rotation.</p>
+<p>Let’s extract 5 factors and then 6 factors. We are going to use the most traditional method of EFA by setting the factor method <code>fm</code> to “pa” (principal-axis factor analysis). By default, the most common method of rotation is used: oblimin rotation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -236,53 +260,43 @@ background-color: null;
 font-style: inherit;">"pa"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb6-2">  <span class="co" style="color: #5E5E5E;
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;"># WJSmisc::plot_loading()</span></span>
-<span id="cb6-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">parameters</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sort =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb6-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">select</span>(PA1, PA2, PA3, PA4, PA5)</span></code></pre></div>
+font-style: inherit;">parameters</span>() </span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># Loadings from Factor Analysis (no rotation)
+<pre><code># Rotated loadings from Factor Analysis (oblimin-rotation)
 
-PA1   |    PA2    |    PA3    |    PA4    |    PA5   
------------------------------------------------------
--0.11 |   0.83    | 6.26e-03  |   -0.05   |   -0.09  
--0.04 |   0.78    |   0.01    |   0.02    |   -0.09  
-0.10  |   0.71    |   -0.04   |   0.02    |   0.08   
-0.20  |   0.49    |   -0.01   |   -0.13   |   0.21   
-0.39  |   0.46    |   -0.14   |   0.08    |   0.08   
-0.67  |   0.09    |   -0.02   |   -0.07   |   -0.07  
--0.57 |   0.03    |   0.02    |   -0.03   |   0.30   
-0.55  |   -0.07   |   0.10    |   -0.11   |   -0.10  
--0.40 |   0.13    |   0.27    |   0.25    |   0.04   
--0.38 |   0.06    | -4.09e-03 |   0.34    |   0.23   
-0.10  |   0.13    |   0.66    |   0.07    |   0.07   
-0.01  |   0.16    |   -0.61   | -1.44e-03 |   0.02   
-0.06  |   0.04    |   0.56    |   -0.06   |   0.09   
-0.16  |   0.17    |   -0.55   |   0.12    | -8.28e-03
-0.04  |   0.05    |   0.55    |   0.17    |   -0.04  
--0.10 |   -0.01   |   0.02    |   0.03    |   0.67   
-0.01  | -7.83e-03 |   0.07    |   0.03    |   0.65   
--0.21 |   -0.11   | -1.65e-03 |   0.07    |   0.53   
--0.07 |   -0.03   |   0.19    |   -0.15   |   0.45   
--0.16 |   0.19    |   0.07    | -9.00e-03 |   -0.43  
--0.10 |   -0.03   |   0.02    |   0.64    |   0.04   
--0.06 |   -0.04   |   0.08    |   0.55    |   -0.03  
--0.11 |   0.16    |   -0.04   |   -0.47   |   0.06   
-0.36  |   0.08    |   -0.02   |   0.40    |   0.13   </code></pre>
+Variable                                  |    PA2    |  PA1  |    PA3    |    PA5    |    PA4    | Complexity | Uniqueness
+---------------------------------------------------------------------------------------------------------------------------
+Am indifferent to the feelings of others. |   0.19    | -0.16 |   0.07    |   -0.43   | -9.00e-03 |    1.78    |    0.81   
+Inquire about others' well-being.         | -7.83e-03 | 0.01  |   0.07    |   0.65    |   0.03    |    1.03    |    0.55   
+Know how to comfort others.               |   -0.01   | -0.10 |   0.02    |   0.67    |   0.03    |    1.05    |    0.47   
+Love children.                            |   -0.03   | -0.07 |   0.19    |   0.45    |   -0.15   |    1.63    |    0.72   
+Make people feel at ease.                 |   -0.11   | -0.21 | -1.65e-03 |   0.53    |   0.07    |    1.45    |    0.54   
+Am exacting in my work.                   |   0.05    | 0.04  |   0.55    |   -0.04   |   0.17    |    1.24    |    0.66   
+Continue until everything is perfect.     |   0.13    | 0.10  |   0.66    |   0.07    |   0.07    |    1.17    |    0.55   
+Do things according to a plan.            |   0.04    | 0.06  |   0.56    |   0.09    |   -0.06   |    1.11    |    0.68   
+Do things in a half-way manner.           |   0.16    | 0.01  |   -0.61   |   0.02    | -1.44e-03 |    1.14    |    0.56   
+Waste my time.                            |   0.17    | 0.16  |   -0.55   | -8.28e-03 |   0.12    |    1.46    |    0.57   
+Don't talk a lot.                         |   -0.07   | 0.55  |   0.10    |   -0.10   |   -0.11   |    1.26    |    0.65   
+Find it difficult to approach others.     |   0.09    | 0.67  |   -0.02   |   -0.07   |   -0.07   |    1.08    |    0.45   
+Know how to captivate people.             |   0.06    | -0.38 | -4.09e-03 |   0.23    |   0.34    |    2.68    |    0.55   
+Make friends easily.                      |   0.03    | -0.57 |   0.02    |   0.30    |   -0.03   |    1.54    |    0.48   
+Take charge.                              |   0.13    | -0.40 |   0.27    |   0.04    |   0.25    |    2.85    |    0.59   
+Get angry easily.                         |   0.83    | -0.11 | 6.26e-03  |   -0.09   |   -0.05   |    1.07    |    0.33   
+Get irritated easily.                     |   0.78    | -0.04 |   0.01    |   -0.09   |   0.02    |    1.03    |    0.40   
+Have frequent mood swings.                |   0.71    | 0.10  |   -0.04   |   0.08    |   0.02    |    1.08    |    0.45   
+Often feel blue.                          |   0.46    | 0.39  |   -0.14   |   0.08    |   0.08    |    2.28    |    0.51   
+Panic easily.                             |   0.49    | 0.20  |   -0.01   |   0.21    |   -0.13   |    1.87    |    0.66   
+Am full of ideas.                         |   -0.04   | -0.06 |   0.08    |   -0.03   |   0.55    |    1.08    |    0.66   
+Carry the conversation to a higher level. |   -0.03   | -0.10 |   0.02    |   0.04    |   0.64    |    1.06    |    0.53   
+Spend time reflecting on things.          |   0.08    | 0.36  |   -0.02   |   0.13    |   0.40    |    2.29    |    0.73   
+Will not probe deeply into a subject.     |   0.16    | -0.11 |   -0.04   |   0.06    |   -0.47   |    1.39    |    0.77   
+
+The 5 latent factors (oblimin rotation) accounted for 42.19% of the total variance of the original data (PA2 = 10.50%, PA1 = 8.76%, PA3 = 8.38%, PA5 = 8.32%, PA4 = 6.22%).</code></pre>
 </div>
 </div>
-<p>The amount of output can be overwhelming. Let’s simplify it by sorting the output by the strongest loadings in each factor. Also, we can see the patterns more easily in the data if we color table so that small loadings have faint colors. Note that sometimes the psych package displays the factors somewhat out of order.</p>
+<p>The amount of output can be overwhelming. Let’s simplify it by sorting the output by the strongest loadings in each factor and removing all loadings smaller than .2.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -297,134 +311,58 @@ background-color: null;
 font-style: inherit;">"pa"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb8-2">  <span class="fu" style="color: #4758AB;
+<span id="cb8-2">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># WJSmisc::plot_loading()</span></span>
+<span id="cb8-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">sort =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
-font-style: inherit;">TRUE</span>) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">TRUE</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb8-3">  <span class="fu" style="color: #4758AB;
+font-style: inherit;">threshold =</span> .<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Variable =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fct_inorder</span>(Variable) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fct_rev</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb8-4">  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># as_tibble() %&gt;% </span></span>
-<span id="cb8-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>Complexity, <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>Uniqueness) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb8-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pivot_longer</span>(<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>Variable) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb8-7">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">name =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fct_inorder</span>(name)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb8-8">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(name, Variable)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-9">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_tile</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> value)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb8-10">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> WJSmisc<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">prob_label</span>(value)), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">nudge_x =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">06</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-11">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-12">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_gradient2</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Loadings"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb8-13">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
+font-style: inherit;">2</span>) </span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Rotated loadings from Factor Analysis (oblimin-rotation)
+
+Variable                                  | PA2  |  PA1  |  PA3  |  PA5  |  PA4  | Complexity | Uniqueness
+----------------------------------------------------------------------------------------------------------
+Get angry easily.                         | 0.83 |       |       |       |       |    1.07    |    0.33   
+Get irritated easily.                     | 0.78 |       |       |       |       |    1.03    |    0.40   
+Have frequent mood swings.                | 0.71 |       |       |       |       |    1.08    |    0.45   
+Panic easily.                             | 0.49 |       |       | 0.21  |       |    1.87    |    0.66   
+Often feel blue.                          | 0.46 | 0.39  |       |       |       |    2.28    |    0.51   
+Find it difficult to approach others.     |      | 0.67  |       |       |       |    1.08    |    0.45   
+Make friends easily.                      |      | -0.57 |       | 0.30  |       |    1.54    |    0.48   
+Don't talk a lot.                         |      | 0.55  |       |       |       |    1.26    |    0.65   
+Take charge.                              |      | -0.40 | 0.27  |       | 0.25  |    2.85    |    0.59   
+Know how to captivate people.             |      | -0.38 |       | 0.23  | 0.34  |    2.68    |    0.55   
+Continue until everything is perfect.     |      |       | 0.66  |       |       |    1.17    |    0.55   
+Do things in a half-way manner.           |      |       | -0.61 |       |       |    1.14    |    0.56   
+Do things according to a plan.            |      |       | 0.56  |       |       |    1.11    |    0.68   
+Waste my time.                            |      |       | -0.55 |       |       |    1.46    |    0.57   
+Am exacting in my work.                   |      |       | 0.55  |       |       |    1.24    |    0.66   
+Know how to comfort others.               |      |       |       | 0.67  |       |    1.05    |    0.47   
+Inquire about others' well-being.         |      |       |       | 0.65  |       |    1.03    |    0.55   
+Make people feel at ease.                 |      | -0.21 |       | 0.53  |       |    1.45    |    0.54   
+Love children.                            |      |       |       | 0.45  |       |    1.63    |    0.72   
+Am indifferent to the feelings of others. |      |       |       | -0.43 |       |    1.78    |    0.81   
+Carry the conversation to a higher level. |      |       |       |       | 0.64  |    1.06    |    0.53   
+Am full of ideas.                         |      |       |       |       | 0.55  |    1.08    |    0.66   
+Will not probe deeply into a subject.     |      |       |       |       | -0.47 |    1.39    |    0.77   
+Spend time reflecting on things.          |      | 0.36  |       |       | 0.40  |    2.29    |    0.73   
+
+The 5 latent factors (oblimin rotation) accounted for 42.19% of the total variance of the original data (PA2 = 10.50%, PA1 = 8.76%, PA3 = 8.38%, PA5 = 8.32%, PA4 = 6.22%).</code></pre>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+<p>Also, we can see the patterns more easily in the data if we color table so that small loadings have faint colors.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">fa</span>(d_bfi, <span class="at" style="color: #657422;
 background-color: null;
@@ -436,254 +374,229 @@ font-style: inherit;">fm =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"pa"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parameters</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sort =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Variable =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_inorder</span>(Variable) <span class="sc" style="color: #5E5E5E;
+background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb9-2">  WJSmisc<span class="sc" style="color: #5E5E5E;
+<span id="cb10-4">           <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_rev</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Complexity, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Uniqueness) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_longer</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Variable) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">maxrow =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">max</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">abs</span>(value)), </span>
+<span id="cb10-8">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> Variable) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sortfactor =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">if_else</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">abs</span>(value) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> maxrow, </span>
+<span id="cb10-10">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">true =</span> name, </span>
+<span id="cb10-11">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">false =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(sortfactor, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(maxrow)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-13">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Variable =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_inorder</span>(Variable) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb10-14">           <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_rev</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb10-15">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(name, Variable)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-16">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_tile</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> value)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> WJSmisc<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">plot_loading</span>()</span></code></pre></div>
+font-style: inherit;">prob_label</span>(value)),</span>
+<span id="cb10-18">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb10-19">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nudge_x =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">06</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-20">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>, </span>
+<span id="cb10-21">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-22">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.key.width =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cm"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-23">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_gradient2</span>(<span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>,</span>
+<span id="cb10-24">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),</span>
+<span id="cb10-25">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> WJSmisc<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>prob_label) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-26">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_discrete</span>(<span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expansion</span>(), </span>
+<span id="cb10-27">                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"top"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-28">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_discrete</span>(<span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expansion</span>())</span></code></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/displayloadings-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
-</div>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">d_bfi <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb10-2">  WJSmisc<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">parallel_analysis</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">factor_based =</span> F)</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Let’s look at just the first part of the output, the pattern matrix.</p>
-<div class="cell">
-<div class="cell-output-display">
-<table class="table table-sm table-striped small">
-<colgroup>
-<col style="width: 59%">
-<col style="width: 7%">
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 8%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">PA2</th>
-<th style="text-align: right;">PA1</th>
-<th style="text-align: right;">PA3</th>
-<th style="text-align: right;">PA5</th>
-<th style="text-align: right;">PA4</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Get angry easily.</td>
-<td style="text-align: right;">0.83</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Get irritated easily.</td>
-<td style="text-align: right;">0.78</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Have frequent mood swings.</td>
-<td style="text-align: right;">0.71</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Panic easily.</td>
-<td style="text-align: right;">0.49</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.21</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Often feel blue.</td>
-<td style="text-align: right;">0.46</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Find it difficult to approach others.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.67</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Make friends easily.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.57</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.30</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Don’t talk a lot.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.55</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Take charge.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.40</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.25</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Know how to captivate people.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.38</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.23</td>
-<td style="text-align: right;">0.34</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Continue until everything is perfect.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.66</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Do things in a half-way manner.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.61</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Do things according to a plan.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Waste my time.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.55</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Am exacting in my work.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.55</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Know how to comfort others.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.67</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Inquire about others’ well-being.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.65</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Make people feel at ease.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.21</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Love children.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Am indifferent to the feelings of others.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.43</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Carry the conversation to a higher level.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.64</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Am full of ideas.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.55</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Will not probe deeply into a subject.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">-0.47</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Spend time reflecting on things.</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.36</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">0.40</td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <section id="junk-factors" class="level2">
@@ -701,15 +614,257 @@ font-style: inherit;">factor_based =</span> F)</span></code></pre></div>
 </section>
 <section id="singleton-factors" class="level2">
 <h2 class="anchored" data-anchor-id="singleton-factors">Singleton Factors</h2>
-<p>We also worry about “singleton” factors. These have a high loading (&gt;0.5 or so) on a single item and all other loadings are small (&lt;0.3 or so). EFA is for finding factors that explain variability across items. Singleton factors do not do this. When your solution has a singleton factor, it is generally best to extract 1 factor fewer. However, doing so does not always get rid of the singleton. It might collapse two legitmate factors into one factor. In this case, you probably want to return to the solution with the singleton.</p>
+<p>We also worry about “singleton” factors. These have a high loading (&gt;0.5 or so) on a single item and all other loadings are small (&lt;0.3 or so). EFA is for finding factors that explain variability across items. Singleton factors do not do this. When your solution has a singleton factor, it is generally best to extract 1 factor fewer. However, doing so does not always get rid of the singleton factor. It might collapse two legitimate factors into one factor. In this case, you probably want to return to the previous solution with the singleton (or exclude the problematic item from the analysis).</p>
 </section>
 <section id="factor-correlations" class="level2">
 <h2 class="anchored" data-anchor-id="factor-correlations">Factor correlations</h2>
+<p>The correlation matrrix of the latent factors in a an EFA is sometimes referred to as the Φ (Phi) matrix. To extract the factor correlations from the <code>fa</code> function’s output, we can do like so:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fa</span>(d_bfi, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nfactors =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fm =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pa"</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Phi</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         PA2     PA1     PA3     PA5      PA4
+PA2  1.00000  0.2282 -0.1897 -0.0733  0.03735
+PA1  0.22822  1.0000 -0.2204 -0.3185 -0.18808
+PA3 -0.18967 -0.2204  1.0000  0.2160  0.18971
+PA5 -0.07330 -0.3185  0.2160  1.0000  0.26729
+PA4  0.03735 -0.1881  0.1897  0.2673  1.00000</code></pre>
+</div>
+</div>
+<p>Plotted, the Φ matrix look like this:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">factor_labels <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Extraversion"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Neuroticism"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Conscientiousness"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Openness"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Agreeableness"</span>)</span>
+<span id="cb13-2"></span>
+<span id="cb13-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fa</span>(d_bfi, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nfactors =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fm =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pa"</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Phi <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb13-4">  corrr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_cordf</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">diagonal =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb13-5">  corrr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stretch</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb13-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(x, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> factor_labels),</span>
+<span id="cb13-7">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(y, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> factor_labels)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb13-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(x,y)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_tile</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> r)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> WJSmisc<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">prob_label</span>(r)), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family  =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nudge_x =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size.unit =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pt"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-11">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_gradient2</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> \(x) WJSmisc<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">prob_label</span>(x, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">seq</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-13">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.key.height =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb13-14">                                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">units =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"null"</span>), </span>
+<span id="cb13-15">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-16">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_discrete</span>(<span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expansion</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_discrete</span>(<span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expansion</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_equal</span>()</span></code></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/showphi-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -717,7 +872,7 @@ font-style: inherit;">factor_based =</span> F)</span></code></pre></div>
 <p>The correlations among these factors are generally low (&lt; 0.3 or so). Thus, the principal components method of parallel analysis is likely more accurate than the factor analysis version of parallel analysis. Thus, we should probably stick with 5 factors.</p>
 <p>However, we should probably extract 6 factors and see what we get. After all, this is exploratory work.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">fa</span>(d_bfi, <span class="at" style="color: #657422;
 background-color: null;
@@ -730,12 +885,12 @@ background-color: null;
 font-style: inherit;">"pa"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb11-2">  <span class="fu" style="color: #4758AB;
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">fa.sort</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb11-3">  <span class="fu" style="color: #4758AB;
+<span id="cb14-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -851,7 +1006,7 @@ Minimum correlation of possible factor scores     0.72 0.58 0.56 0.53 0.44 0.10<
 <h1>Exercise questions</h1>
 <p>The second data file is a questionnaire generated to capture the kinds of responses that beginning elementary school teachers give when asked what they do when the class’s attention starts to wander and the teacher needs to redirect the class to get back on task or pay attention to the teacher.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">d_redirect <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">d_redirect <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -859,8 +1014,43 @@ font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://github.com/wjschne/EDUC5529/raw/master/HW4_Redirect.csv"</span>)</span></code></pre></div>
 </div>
-<p>Here are the questionaire items for teacher redirection strategies:</p>
+<p>Here are the questionnaire items for teacher redirection strategies:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Items =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">colnames</span>(d_redirect)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb17-2">  knitr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">kable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Table 2. Teacher redirection strategies"</span>,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">format =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"html"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb17-3">  kableExtra<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">kable_styling</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">kable_input =</span> ., <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bootstrap_options =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"striped"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <table class="table table-striped table-sm small" data-quarto-postprocess="true">
@@ -979,6 +1169,7 @@ font-style: inherit;">"https://github.com/wjschne/EDUC5529/raw/master/HW4_Redire
   <dc:creator>W. Joel Schneider</dc:creator>
   <link>https://wjschne.github.io/tutorials/Regression/regression.html</link>
   <description><![CDATA[ 
+
 
 
 
@@ -4709,6 +4900,7 @@ font-style: inherit;">summary</span>(m_math)</span></code></pre></div>
   <dc:creator>W. Joel Schneider</dc:creator>
   <link>https://wjschne.github.io/tutorials/ANOVA/ANOVA.html</link>
   <description><![CDATA[ 
+
 
 
 
@@ -8711,6 +8903,7 @@ non-significant (difference = 2.27, 95% CI [ -1.37, 5.90], t(297) = 1.50, p =
   <dc:creator>W. Joel Schneider</dc:creator>
   <link>https://wjschne.github.io/tutorials/DataWrangling/data_wrangling.html</link>
   <description><![CDATA[ 
+
 
 
 
@@ -27785,7 +27978,7 @@ font-style: inherit;">vars</span>(id))</span></code></pre></div>
 </div>
 <p>Looks even better!</p>
 <p>If I wanted a more polished plot for publication, I might create something like Figure&nbsp;1.</p>
-<div class="cell page-columns page-full">
+<div class="cell preview-image page-columns page-full">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39" data-cap-location="margin" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="co" style="color: #5E5E5E;
@@ -28337,6 +28530,7 @@ Figure&nbsp;1: Effect on Intervention on Time on Task for Eight Children
   <dc:creator>W. Joel Schneider</dc:creator>
   <link>https://wjschne.github.io/tutorials/GettingReady/getting_ready_to_use_RStudio.html</link>
   <description><![CDATA[ 
+
 
 
 

@@ -2,9 +2,6 @@
 title: "Exploratory Factor Analysis with R"
 author: "W. Joel Schneider"
 date: 2024-03-12
-execute: 
-  # cache: false
-  echo: true
 knitr: 
   opts_chunk: 
     dev: "ragg_png"
@@ -34,6 +31,9 @@ library(simstandard)
 library(GPArotation)
 library(psych)
 library(easystats)
+read_csv <- function(...) {
+  readr::read_csv(..., show_col_types = FALSE)
+}
 options(knitr.kable.NA = '', digits = 4)
 bg_color <- "#ECE5D3"
 fore_color <- "#2D2718"
@@ -57,15 +57,16 @@ show_answer <- FALSE
 
 The following code will install the tidyverse, GPArotation, and psych packages if they are not installed already.
 
-```{r}
+```{r installpackages}
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("GPArotation")) install.packages("GPArotation")
 if (!require("psych")) install.packages("psych")
+if (!require("psych")) install.packages("easystats")
 ```
 
 
 
-```{r}
+```{r loadpackages}
 
 library(tidyverse)
 library(GPArotation)
@@ -75,7 +76,9 @@ library(easystats)
 
 # Data Import
 
-```{r, eval=FALSE, echo=FALSE}
+```{r makedata}
+#| eval: false
+#| echo: false
 d_bfi <- bfi %>% select(A1:O5) %>% select(-O2) %>% as_tibble() 
 colnames(d_bfi) <- bfi.dictionary$Item[1:25][-22]
 fa.parallel(d_bfi, fm = "pa")
@@ -87,15 +90,19 @@ write_csv(d_bfi, path = "HW4_BFI.csv")
 
 Let's import a version of a data set from the psych package altered to make it suitable for an assignment like this. It consists of personality test items from the International Personality Item Pool [@goldbergBroadbandwidthPublicDomain1999]. The data were collected as a part of the SAPA project [@revellePsychProceduresPsychological2015].
 
-```{r, message=FALSE}
+```{r importdata}
+#| messsage: false
 d_bfi <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/HW4_BFI.csv")
 ```
 
 Here are the personality items:
 
-```{r, echo = F}
+```{r}
+#| echo: false
+#| tab-cap: Big Five Inventory Personality Items
+#| label: tbl-bfi
 tibble(Items = colnames(d_bfi)) %>% 
-  knitr::kable(format = "html", caption = "Table 1. Personality Items") %>% kableExtra::kable_styling(bootstrap_options = "striped")
+  knitr::kable(format = "html") %>% kableExtra::kable_styling(bootstrap_options = "striped")
 
 ```
 
@@ -103,11 +110,20 @@ tibble(Items = colnames(d_bfi)) %>%
 
 In one line of code, we can get information we need to apply the Kaiser-Guttman rule, the scree plot rule, and parallel analysis. For the personality data:
 
-```{r}
+```{r showparallel}
 fa.parallel(d_bfi)
 ```
 
-```{r, eval = FALSE, echo=FALSE, include=FALSE}
+-   There are 6 eigenvalues above 1 (from the PC series with the Xs), so the Kaiser-Guttman rule says that we should select 6 factors.
+-   There are 6 eigenvalues above the scree in the PC series. So the scree plot rule says to extract 6 factors.
+-   The principal components version of parallel analysis says to extract 5 factors. This method works best if the factors have weak correlations. Thus, if the factors are weakly correlated (\< 0.3 or so), we should extract 5 factors.
+-   The factor analysis version of parallel analysis says to extract 6 factors (the FA series with the triangles). If the factors are strongly correlated (\> 0.3 or so), we should extract 6 factors.
+
+Here is the same plot, but rendered to be more easily interpreted:
+
+
+```{r polishedparallel}
+#| echo: false
 quiet <- function(x) { 
   sink(tempfile()) 
   on.exit(sink()) 
@@ -116,76 +132,124 @@ quiet <- function(x) {
 
 pa <- quiet(fa.parallel(d_bfi,plot = F))
 
-tibble(Number = 1:length(pa$pc.values),
-       Observed_PC = pa$pc.values, 
-       Observed_FA = pa$fa.values, 
-       Simulated_PC = pa$pc.sim, 
-       Simulated_FA = pa$fa.sim) %>% 
-  gather(series_name, Eigenvalues, -Number) %>% 
-  separate(series_name, c("Data", "Series"), remove = F) %>% 
-  mutate(Series = factor(Series, levels = c("PC","FA"), labels = c("Principal Components","Factor Analysis"))) %>% 
-  ggplot(aes(Number, Eigenvalues, color = Data)) +
-  geom_line(aes(group = series_name, alpha = Data), show.legend = F) +
-  geom_point(data = . %>% filter(Data == "Observed")) +
-  facet_grid(cols = vars(Series)) + 
-  theme_light() +
-  theme(legend.position = c(.98,0.98), legend.justification = c(1,1)) + 
-  xlab("Component/Factor Number") +
-  scale_color_manual(values = c("black", "dodgerblue")) +
-  scale_alpha_manual(values = c(.5, 1))
+tibble(
+  Number = 1:length(pa$pc.values),
+  `Observed_Principal Components` = pa$pc.values,
+  `Observed_Factor Analysis` = pa$fa.values,
+  `Simulated_Principal Components` = pa$pc.sim,
+  `Simulated_Factor Analysis` = pa$fa.sim
+) %>%
+  pivot_longer(-Number,
+               names_pattern = "(.*)_(.*)",
+               names_to = c(".value", "Series")) %>%
+  arrange(Series, Number) %>%
+  mutate(isgreater = Observed > Simulated) %>%
+  mutate(countgreater = sum(1 * isgreater), .by = Series) %>% 
+  mutate(
+    lastgreater = ifelse(
+      isgreater &
+        !lead(isgreater),
+      paste0(countgreater, 
+             " observed eigenvalue", 
+             ifelse(countgreater > 1, "s", ""), 
+             "<br>above simulated data"),
+      NA
+    ),
+    .by = Series
+  ) %>%
+  select(-countgreater) %>%
+  ggplot(aes(Number, Observed, color = Series)) +
+  geom_line(alpha = .3) +
+  geom_point() +
+  geomtextpath::geom_labelpath(
+    aes(y = Simulated, label = "Simulated"),
+    linetype = "dashed",
+    hjust = .9,
+    straight = T,
+    boxcolour = NA,
+    family = "Roboto Condensed", 
+    size = 5
+  ) +
+  ggtext::geom_richtext(
+    data = . %>% filter(!is.na(lastgreater)),
+    aes(label = lastgreater),
+    label.color = NA,
+    vjust = 0,
+    hjust = 0,
+    label.margin = margin(b = 2, l = 2),
+    show.legend = F,
+    size = 5,
+    family = "Roboto Condensed"
+  ) +
+  facet_wrap( ~ Series) +
+  theme_light(base_family = "Roboto Condensed", base_size = 16) +
+  theme(legend.position = "none") +
+  scale_color_discrete(type = c("#461f6b", "#1e6119"))
 
 ```
 
--   There are 6 eigenvalues above 1 (from the PC series with the Xs), so the Kaiser-Guttman rule says that we should select 6 factors.
--   There are 6 eigenvalues above the scree in the PC series. So the scree plot rule says to extract 6 facotrs.
--   The principal components version of parallel analysis says to extract 5 factors. This method works best if the factors have weak correlations. Thus, if the factors are weakly correlated (\< 0.3 or so), we should extract 5 factors.
--   The factor analysis version of parallel analysis says to extract 6 factors (the FA series with the triangles). If the factors are strongly correlated (\> 0.3 or so), we should extract 6 factors.
+
 
 # Conducting Exploratory Factor Analysis
 
 There are many variants of factor analysis and each has its advantages and disadvantages. Remember, EFA is called "exploratory" for a reason. With EFA, there are no firm answers that we can stand behind forever and always and in every situation.
 
-Let's extract 5 factors and then 6 factors. We are going to use the most traditional method of EFA by seting the factor method `fm` to "pa" (principal-axis factor analysis). By default, the most common method of rotation is used: oblimin rotation.
+Let's extract 5 factors and then 6 factors. We are going to use the most traditional method of EFA by setting the factor method `fm` to "pa" (principal-axis factor analysis). By default, the most common method of rotation is used: oblimin rotation.
 
-```{r}
+```{r showloadings}
+fa(d_bfi, nfactors = 5, fm = "pa") %>% 
+  parameters() 
+```
+
+The amount of output can be overwhelming. Let's simplify it by sorting the output by the strongest loadings in each factor and removing all loadings smaller than .2. 
+
+```{r showsortedloadings}
 fa(d_bfi, nfactors = 5, fm = "pa") %>% 
   # WJSmisc::plot_loading()
-  parameters(sort = TRUE) %>% 
-  select(PA1, PA2, PA3, PA4, PA5)
+  parameters(sort = TRUE, threshold = .2) 
 ```
 
-The amount of output can be overwhelming. Let's simplify it by sorting the output by the strongest loadings in each factor. Also, we can see the patterns more easily in the data if we color table so that small loadings have faint colors. Note that sometimes the psych package displays the factors somewhat out of order.
 
-```{r}
-fa(d_bfi, nfactors = 5, fm = "pa") %>% 
-  parameters(sort = TRUE) %>% 
-  mutate(Variable = fct_inorder(Variable) %>% fct_rev()) %>% 
-  # as_tibble() %>% 
-  select(-Complexity, -Uniqueness) %>% 
-  pivot_longer(-Variable) %>% 
-  mutate(name = fct_inorder(name)) %>% 
+Also, we can see the patterns more easily in the data if we color table so that small loadings have faint colors. 
+
+
+```{r displayloadings}
+#| code-fold: true
+fa(d_bfi, nfactors = 5, fm = "pa") %>%
+  parameters(sort = TRUE) %>%
+  mutate(Variable = fct_inorder(Variable) %>% 
+           fct_rev()) %>%
+  select(-Complexity, -Uniqueness) %>%
+  pivot_longer(-Variable) %>%
+  mutate(maxrow = max(abs(value)), 
+         .by = Variable) %>%
+  mutate(sortfactor = if_else(abs(value) == maxrow, 
+                             true = name, 
+                             false = NA)) %>%
+  arrange(sortfactor, desc(maxrow)) %>%
+  mutate(Variable = fct_inorder(Variable) %>% 
+           fct_rev()) %>%
   ggplot(aes(name, Variable)) +
-  geom_tile(aes(fill = value)) + 
-  geom_text(aes(label = WJSmisc::prob_label(value)), hjust = 1, nudge_x = .06) +
-  theme_minimal() +
-  scale_fill_gradient2("Loadings", limits = c(-1,1)) + 
-  labs(x = NULL, y = NULL)
-  
-fa(d_bfi, nfactors = 5, fm = "pa") %>% 
-  WJSmisc::plot_loading()
+  geom_tile(aes(fill = value)) +
+  geom_text(aes(label = WJSmisc::prob_label(value)),
+            hjust = 1,
+            nudge_x = .06) +
+  theme_minimal(base_size = 14, 
+                base_family = "Roboto Condensed") +
+  theme(legend.position = "bottom", legend.key.width = unit(2,"cm")) +
+  scale_fill_gradient2(NULL,
+                       limits = c(-1, 1),
+                       labels = WJSmisc::prob_label) +
+  scale_x_discrete(NULL, expand = expansion(), 
+                   position = c("top")) +
+  scale_y_discrete(NULL, expand = expansion())
 
-d_bfi %>% 
-  WJSmisc::parallel_analysis(factor_based = F)
+
 ```
 
-Let's look at just the first part of the output, the pattern matrix.
 
-```{r, echo=FALSE}
-fa(d_bfi, nfactors = 5, fm = "pa") %>% 
-  fa.sort() %$% loadings[,] %>% 
-  apply(2, function(x) ifelse(abs(x) > 0.2, x, NA_real_)) %>% 
-  knitr::kable(digits = 2)
-```
+
+
 
 ## Junk Factors
 
@@ -203,22 +267,39 @@ In this case, all the factors are interpretable:
 
 ## Singleton Factors
 
-We also worry about "singleton" factors. These have a high loading (\>0.5 or so) on a single item and all other loadings are small (\<0.3 or so). EFA is for finding factors that explain variability across items. Singleton factors do not do this. When your solution has a singleton factor, it is generally best to extract 1 factor fewer. However, doing so does not always get rid of the singleton. It might collapse two legitmate factors into one factor. In this case, you probably want to return to the solution with the singleton.
+We also worry about "singleton" factors. These have a high loading (\>0.5 or so) on a single item and all other loadings are small (\<0.3 or so). EFA is for finding factors that explain variability across items. Singleton factors do not do this. When your solution has a singleton factor, it is generally best to extract 1 factor fewer. However, doing so does not always get rid of the singleton factor. It might collapse two legitimate factors into one factor. In this case, you probably want to return to the previous solution with the singleton (or exclude the problematic item from the analysis).
 
 ## Factor correlations
 
-```{r, echo=FALSE}
+The correlation matrrix of the latent factors in a an EFA is sometimes referred to as the &Phi; (Phi) matrix. To extract the factor correlations from the `fa` function's output, we can do like so:
+
+```{r extractphi}
+fa(d_bfi, nfactors = 5, fm = "pa")$Phi
+```
+
+Plotted, the &Phi; matrix look like this:
+
+```{r showphi}
+#| code-fold: true
+
+factor_labels <- c("Extraversion", "Neuroticism", "Conscientiousness", "Openness", "Agreeableness")
+
 fa(d_bfi, nfactors = 5, fm = "pa")$Phi %>% 
   corrr::as_cordf(diagonal = 1) %>% 
   corrr::stretch() %>% 
-  mutate(x = factor(x, labels = c("Extraversion", "Neuroticism", "Conscientiousness", "Openness", "Agreeableness")),
-         y = factor(y, labels = c("Extraversion", "Neuroticism", "Conscientiousness", "Openness", "Agreeableness"))) %>% 
+  mutate(x = factor(x, labels = factor_labels),
+         y = factor(y, labels = factor_labels)) %>% 
   ggplot(aes(x,y)) + 
   geom_tile(aes(fill = r)) + 
-  geom_text(aes(label = WJSmisc::prob_label(r))) + 
-  scale_fill_gradient2(limits = c(-1,1)) + 
-  theme_minimal() + 
-  labs(x = NULL, y = NULL)
+  geom_text(aes(label = WJSmisc::prob_label(r)), family  = "Roboto Condensed", hjust = 1, nudge_x = .1, size.unit = "pt", size = 12) + 
+  scale_fill_gradient2(limits = c(-1,1), labels = \(x) WJSmisc::prob_label(x, .1), breaks = seq(-1,1,.1)) + 
+  theme_minimal(base_family = "Roboto Condensed", base_size = 12) + 
+  theme(legend.key.height = unit(1, 
+                                 units = "null"), 
+        legend.text = element_text(hjust = 1)) +
+  scale_x_discrete(NULL, expand = expansion()) + 
+  scale_y_discrete(NULL, expand = expansion()) +
+  coord_equal()
 
 ```
 
@@ -226,7 +307,7 @@ The correlations among these factors are generally low (\< 0.3 or so). Thus, the
 
 However, we should probably extract 6 factors and see what we get. After all, this is exploratory work.
 
-```{r}
+```{r show6factors}
 fa(d_bfi, nfactors = 6, fm = "pa") %>% 
   fa.sort() %>% 
   print(cut = 0.2)
@@ -249,7 +330,10 @@ However, given that PA6 has no strong loadings, it is a weak factor and possibly
 
 The second data file is a questionnaire generated to capture the kinds of responses that beginning elementary school teachers give when asked what they do when the class's attention starts to wander and the teacher needs to redirect the class to get back on task or pay attention to the teacher.
 
-```{r datacreation, echo = FALSE, eval = FALSE, include=FALSE}
+```{r datacreation}
+#| echo: false
+#| eval: false
+#| include: false
 set.seed(9)
 d_items <- data.frame(stringsAsFactors = FALSE,
    Description = c("I make my lessons extremely organized.",
@@ -295,13 +379,13 @@ fa(d, 5, fm = "pa") %>% fa.sort() %>% print(cut = 0.2)
 readr::write_csv(x = d, path = "HW4_redirect.csv")
 ```
 
-```{r, message=FALSE}
+```{r redirectimport}
 d_redirect <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/HW4_Redirect.csv")
 ```
 
-Here are the questionaire items for teacher redirection strategies:
+Here are the questionnaire items for teacher redirection strategies:
 
-```{r, echo = F}
+```{r showredirectitems}
 tibble(Items = colnames(d_redirect)) %>% 
   knitr::kable(caption = "Table 2. Teacher redirection strategies",format = "html") %>% 
   kableExtra::kable_styling(kable_input = ., bootstrap_options = "striped")
@@ -333,7 +417,9 @@ Run a parallel analysis on the `d_redirect` data with the `fa.parallel` function
 Run an EFA on the `d_redirect` data extracting 4 factors using the `fm`= "pa" method.
 :::
 
-```{r, eval=FALSE, include=FALSE}
+```{r peekatanswers}
+#| eval: false
+#| echo: false
 fa.parallel(d_redirect)
 
 fa(d_redirect, 4, fm = "pa") %>% 
