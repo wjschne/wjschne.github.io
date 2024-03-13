@@ -215,6 +215,7 @@ Also, we can see the patterns more easily in the data if we color table so that 
 
 ```{r displayloadings}
 #| code-fold: true
+#| classes: preview-image
 fa(d_bfi, nfactors = 5, fm = "pa") %>%
   parameters(sort = TRUE) %>%
   mutate(Variable = fct_inorder(Variable) %>% 

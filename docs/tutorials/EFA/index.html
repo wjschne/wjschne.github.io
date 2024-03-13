@@ -133,7 +133,10 @@ div.csl-indent {
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="W. Joel Schneider">
 <meta property="og:description" content="W. Joel Schneider is a professor at Temple University.">
+<meta property="og:image" content="https://wjschne.github.io/tutorials/EFA/index_files/figure-html/displayloadings-1.png">
 <meta property="og:site_name" content="W. Joel Schneider">
+<meta property="og:image:height" content="1536">
+<meta property="og:image:width" content="1536">
 </head>
 
 <body class="floating nav-fixed slimcontent">
@@ -497,7 +500,7 @@ The 5 latent factors (oblimin rotation) accounted for 42.19% of the total varian
 </div>
 </div>
 <p>Also, we can see the patterns more easily in the data if we color table so that small loadings have faint colors.</p>
-<div class="cell">
+<div class="cell preview-image">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fa</span>(d_bfi, <span class="at">nfactors =</span> <span class="dv">5</span>, <span class="at">fm =</span> <span class="st">"pa"</span>) <span class="sc">%&gt;%</span></span>
@@ -803,6 +806,9 @@ Minimum correlation of possible factor scores     0.72 0.58 0.56 0.53 0.44 0.10<
 </div>
 <div class="instruction">
 <p>Run an EFA on the <code>d_redirect</code> data extracting 4 factors using the <code>fm</code>= “pa” method.</p>
+</div>
+<div class="cell">
+
 </div>
 <div class="question">
 <p><strong>Question 5</strong>: When you extract 4 factors, are there any singleton factors (i.e,. factors with only one loading with an absolute value higher than 0.5 or so and all other loadings are low (&lt; .3 or so)?</p>
