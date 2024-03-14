@@ -3,6 +3,8 @@ title: "Getting Ready to Use R and RStudio"
 author: "W. Joel Schneider"
 affiliation: Temple University
 date: 2024-01-20
+description: Tips for Installation and Configuration
+freeze: true
 format: 
   html: 
     code-fold: true
@@ -123,10 +125,9 @@ The ease of use of a point-and-click interface has a trade-off. If you never lea
 
 In @fig-learningcurve, I recreate a plot made by many others before me.
 
-```{r}
+```{r fig-learningcurve}
 #| fig-cap: Different Learning Curves for Different Tasks
 #| warning: false
-#| label: fig-learningcurve
 #| classes: preview-image
 tibble(
   Complexity = seq(0, 100, 0.01),
@@ -190,7 +191,7 @@ The instructions can be overwhelming to newcomers so I have included a picture w
 
 [Install R on Ubuntu with this Bash script:]{.instruction}
 
-```{bash}
+```{bash linuxinstall}
 #| eval: false
 #| code-fold: false
 sudo apt-get install r-base 
@@ -294,7 +295,7 @@ Without projects, we would need to write out the entire file name like so:
 Technically, there are other ways around this problem, but they are not recommended.
 :::
 
-```{r}
+```{r readcsv}
 #| eval: false
 #| code-fold: false
 read_csv("C:/Users/my_user_name/Research/My_Project/my_data.csv")
@@ -302,7 +303,7 @@ read_csv("C:/Users/my_user_name/Research/My_Project/my_data.csv")
 
 With projects, we can import data with just the bare file name, like so:
 
-```{r}
+```{r readshortname}
 #| eval: false
 #| code-fold: false
 read_csv("my_data.csv")
@@ -337,7 +338,7 @@ Okay, let's get to it.
 
 # Be Kind to Future-You
 
-Hadley Wickham reminds us that the most important person to write code for is future-you.
+Hadley Wickham reminds us that the most important person to write code for is *future-you*.
 
 At all times, work with the assumption that 10 minutes from now, you will suffer catastrophic *datamnesia*---memory failure for everything related to your analysis.
 
@@ -359,30 +360,6 @@ Future-you spends an inordinate amount of time recreating what present-you thoug
 -   Also Good: Within your file synchronization service, have a well-organized hierarchical structure to your folders.
 -   Even Better: Use version control software like [Git](https://git-scm.com/), and save the code in an online repository like [GitHub](https://github.com/).
 
-```{r, echo = F, fig.cap="The backtick (`) is not the single quote (').", dev="png", eval = F}
-
-x_scale = 1600 / 1163
-w <- 64 * x_scale
-x <- 10 * x_scale
-h <- 70 * x_scale
-y <- 126 * x_scale
-
-
-keyboard <- image_read(path = "LenovoKeyboard.jpg") %>% 
-  image_crop("1163x521+0") %>% 
-  image_scale("1600")
-img <- image_draw(keyboard)
-
-rect(xleft = x, 
-     xright = x + w,
-     ytop = y,
-     ybottom = y + h, 
-     border = "red", 
-     lwd = 10)
-invisible(dev.off())
-
-img
-```
 
 # File Name Guidance
 
@@ -424,7 +401,8 @@ Here is a data file name that begins with a date, followed by the school distric
 
 One of the benefits of using dates in the ISO format is that they sort chronologically. Which file names would you prefer to deal with?
 
-```{r, echo = F}
+```{r datetable}
+#| echo: false
 k <- 8
 iso <- (ymd(20060201) + days(sample(1:360, k, replace = T)) + years(sample(1:k, replace = T))) 
 
