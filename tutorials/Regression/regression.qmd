@@ -247,7 +247,7 @@ standardise_parameters(m1)
 
 In this data set, all participants identified as either male or female. We assume that males are, on average, taller than females. The codes are male = 1 and female = 2. Let's mutate the gender variable so that it becomes a categorical "factor" instead of a numeric variable.
 
-```{r}
+```{r gender}
 d <- d %>% 
   mutate(gender = factor(gender, levels = c(1, 2), 
                          labels = c("Males", "Females"))) 
@@ -338,19 +338,19 @@ The [`tab_model` function in sjPlot](https://strengejacke.github.io/sjPlot/artic
 
 Show a single model
 
-```{r}
+```{r tabmodel1}
 sjPlot::tab_model(m1)
 ```
 
 Compare nested models
 
-```{r}
+```{r tabmodel12}
 sjPlot::tab_model(m1, m2)
 ```
 
 ## gtsummary
 
-```{r}
+```{r gtsummary}
 library(gtsummary)
 # Plain table
 tbl_regression(m1)
@@ -370,7 +370,7 @@ tbl_stack(list(tbl_regression(m1), tbl_regression(m2)),
 
 ## rempsych
 
-```{r}
+```{r rempsych}
 parameters(m2) %>% 
   rempsyc::nice_table()
 
@@ -378,12 +378,6 @@ parameters(m2) %>%
 ```
 
 
-## stargazer
-
-```{r}
-stargazer::stargazer(m1, type = "html")
-stargazer::stargazer(m1, m2, type = "html")
-```
 
 
 :::
@@ -393,7 +387,7 @@ stargazer::stargazer(m1, m2, type = "html")
 
 The preceding analyses might seem like a lot, but it is not really so much when you see it all in just a few lines of code. Here are all the main analyses:
 
-```{r}
+```{r allthecodeinoneplace}
 #| eval: false
 # Load packages
 library(tidyverse)
@@ -447,7 +441,7 @@ Use the Transfer of Learning data set. A set of 38 inmates participated in a stu
 * `learning` = 1 (Learning disabled), 0 (Not learning disabled)
 * `income` = Annual income before incarceration
 
-```{r}
+```{r importtransfer}
 #| message: false
 d_learn <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/transfer_of_learning.csv") 
 ```
@@ -460,32 +454,32 @@ Create a regression model in which you predict reading at time 2 (`read_2`) usin
 
 Is `read_1` a significant predictor of `read_2`?
 
-<details><summary>Hint 1</summary>
+:::{.callout-note collapse=true}
+### Hint 1
 
 Make model fit object called `m_read` using the `lm` function.
 
-```{r}
+```{r q1model}
 #| include: false
-
 m_read <- lm(read_2 ~ read_1, data = d_learn)
 ```
 
-```{r}
+```{r q1modeldisplay}
 #| eval: false
-
 m_read <- lm(read_2 ~ read_1, data = d_learn)
 ```
 
-</details>
+:::
 
 
-<details><summary>Hint 2</summary>
+:::{.callout-note collapse=true}
+### Hint 2
 
 View coefficient-level statistics with the `parameters` function.
 
 You could also use Base R's `summary` function.
 
-```{r}
+```{r q1parameters}
 #| eval: false
 parameters(m_read)
 
@@ -494,31 +488,32 @@ parameters(m_read)
 summary(m_read)
 ```
 
-</details>
+:::
 
 
-<details><summary>Hint 3</summary>
+:::{.callout-note collapse=true}
+### Hint 3
 
 In the read_1 row, is the p.value column less than 0.05?
 
-```{r}
+```{r q1pvalues}
 parameters(m_read)
 ```
 
-
-</details>
+:::
 
 ## Question  2
 
 What is the *R*^2^ for the `m_read` model?
 
-<details><summary>Hint</summary>
+:::{.callout-note collapse=true}
+### Hint
 
 View model-level statistics with the `performance` function.
 
 You could also use Base R's `summary` function.
 
-```{r}
+```{r q2summary}
 #| eval: false
 
 performance(m_read)
@@ -528,42 +523,45 @@ performance(m_read)
 summary(m_read)
 ```
 
-</details>
+:::
 
 ## Question 3
 
 What does the scatter plot look like when `read_1` is on the *x*-axis and `read_2` is on the *y*-axis? Also plot the regression line. Save your plot using the `ggsave` function.
 
-<details><summary>Hint Model</summary>
+:::{.callout-note collapse=true}
+### Hint for Getting Started
 
 This will get you started
 
-```{r}
+```{r q3start}
 #| eval: false
 
 ggplot(d_learn, aes(read_1, read_2))
 ```
 
-</details>
+:::
 
-<details><summary>Hint for Adding Points</summary>
+:::{.callout-note collapse=true}
+### Hint for Adding Points
 
 Here is how you add points.
 
-```{r}
+```{r q3point}
 #| eval: false
 
 ggplot(d_learn, aes(read_1, read_2)) +
   geom_point() 
 ```
 
-</details>
+:::
 
-<details><summary>Hint for Adding Line</summary>
+:::{.callout-note collapse=true}
+### Hint for Adding a Regression Line
 
 Here is how you add a regression line.
 
-```{r}
+```{r q3line}
 #| eval: false
 
 ggplot(d_learn, aes(read_1, read_2)) +
@@ -571,13 +569,14 @@ ggplot(d_learn, aes(read_1, read_2)) +
   geom_smooth(method = "lm") 
 ```
 
-</details>
+:::
 
-<details><summary>Plot Polishing</summary>
+:::{.callout-note collapse=true}
+### Plot Polishing
 
 This is overkill for now. But someday you might want to be able to make your plots as polished as possible.
 
-```{r}
+```{r q3polishing}
 #| fig-width: 6
 #| fig-height: 7
 #| message: false
@@ -616,7 +615,7 @@ ggplot(d_learn, aes(read_1, read_2)) +
     vjust = -0.5)
 ```
 
-</details>
+:::
 
 ## Question 4
 
@@ -627,15 +626,15 @@ Does `math_1`  predict `math_2`?.
 
 Does `math_1` still predict `math_2` after controlling for `read_1`?
 
-<details><summary>Hint</summary>
+:::{.callout-note collapse=true}
+### Hint
 
-```{r}
+```{r q4}
 #| eval: false
 m_math <- lm(math_2 ~ math_1 + read_1, data = d_learn)
 summary(m_math)
 ```
 
-</details>
-
+:::
 
 
