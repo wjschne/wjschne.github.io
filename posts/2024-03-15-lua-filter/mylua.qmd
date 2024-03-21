@@ -1,0 +1,54 @@
+---
+title: My lua filters
+date: '2024-03-15'
+engine: knitr
+categories: 
+  - lua
+  - pandoc
+description: "A collection of lua filters"
+tags:
+  - lua
+  - pandoc
+---
+
+For a long time I thought that someone would write a complete Quarto extension for APA-style manuscripts. It turns out that someone was me.
+
+Making [apaquarto](https://wjschne.github.io/apaquarto/) was more of a challange than I imagined going in. At first the extension relied a lot of hacks---things I knew were fragile, but I did not know how to do it better. The better way was to use [Lua](https://www.lua.org/) filters. It took time before I wrapped my head around Pandoc Lua filters, but eventually I was able to make them work for me.
+
+As I understand it, Pandoc translates text into a the AST (abstract syntax tree). For example, a short paragraph like "I like Quarto." would be
+
+```
+[Para [
+   [ Str "I"
+   , Space
+   , Str "like"
+   , Space
+   , Str "Quarto"]
+   ]
+]
+```
+
+A Lua filter can select and transform specific elements For example, to transform all the `Str` (string) elements to uppercase:
+
+```{lua}
+#| eval: false
+Str = function(s)
+  return string.upper(s)
+end
+```
+
+After running this filter, the paragraph would be transformed like so:
+
+```
+[Para [
+   [ Str "I"
+   , Space
+   , Str "LIKE"
+   , Space
+   , Str "QUARTO"]
+   ]
+]
+```
+
+Each filter you run will walk through the AST, making any changes to it. Quarto walks through the AST many times (e.g., normalizing metadata, processing figure references).
+

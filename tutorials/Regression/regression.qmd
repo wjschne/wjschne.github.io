@@ -2,11 +2,12 @@
 title: "Regression in R"
 author: "W. Joel Schneider"
 description: "A step-by-step introduction to regresion in R"
-freeze: true
+freeze: false
 date: 2024-03-07
 format: 
   html: 
     df-print: kable
+    keep-md: true
 knitr:
   opts_chunk: 
     out-width: 100%
@@ -351,12 +352,11 @@ sjPlot::tab_model(m1, m2)
 ## gtsummary
 
 ```{r gtsummary}
+
 library(gtsummary)
 # Plain table
 tbl_regression(m1)
-# Add model fit
-tbl_regression(m2) %>% 
-  add_glance_source_note()
+
 
 # Merging tables
 tbl_merge(tbls = list(tbl_regression(m1) %>% add_glance_table(),
@@ -371,6 +371,7 @@ tbl_stack(list(tbl_regression(m1), tbl_regression(m2)),
 ## rempsych
 
 ```{r rempsych}
+
 parameters(m2) %>% 
   rempsyc::nice_table()
 

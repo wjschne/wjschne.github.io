@@ -198,7 +198,8 @@ Philadelphia, PA 19122-6091
 **Office**: (215) 204-8093  
 **Email**: [schneider\@temple.edu](mailto:W. Joel Schneider <schneider@temple.edu>?subject=Question%20from%20your%20website&body=Dear%20Dr.%20Schneider%2C%0D%0A "W. Joel Schneider<schneider@temple.edu>")  
 **Web**: [Faculty Profile](https://education.temple.edu/about/faculty-staff/w-joel-schneider-tuh42402){target="_blank"}  
-**Blog**: [AssessingPsyche](https://assessingpsyche.wordpress.com/){target="_blank"}
+**Assessment Blog**: [AssessingPsyche](https://assessingpsyche.wordpress.com/){target="_blank"}
+**R Blog**: [AssessingPsyche](https://wjschne.github.io/blog.html){target="_blank"}
 :::
 
 ::::
@@ -560,7 +561,7 @@ jsonlite::read_json("data/My Talks.json", simplifyVector = T) %>%
          ) %>% 
   mutate(title = paste0(title, chair, `container-title`) %>% str_replace_all("\\.\\.", ".")) %>% 
   mutate(citation = glue::glue(
-    '<div class="csl-entry">{author} ({date}). {title} [{genre}]. {`event-title`}, {`event-place`}.   {URL}</div>')) %>% 
+    '<div class="csl-entry">{author} ({date}). {title} [{genre}]. {`event-title`} {na2empty(`event-place`, paste0(", ", `event-place`))}. {na2empty(URL, paste0("<a href=",URL,">",URL,"</a>"))}</div>')) %>% 
  arrange(-year, -month, -day, author) %>% 
   pull(citation) %>% 
   paste0(collapse = "\n") %>% 

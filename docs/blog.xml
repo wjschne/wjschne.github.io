@@ -9,8 +9,91 @@
 <link>https://wjschne.github.io/blog.html</link>
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.5.24</generator>
-<lastBuildDate>Sat, 26 Aug 2023 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.5.25</generator>
+<lastBuildDate>Fri, 15 Mar 2024 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>My lua filters</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/2024-03-15-lua-filter/mylua.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>For a long time I thought that someone would write a complete Quarto extension for APA-style manuscripts. It turns out that someone was me.</p>
+<p>Making <a href="https://wjschne.github.io/apaquarto/">apaquarto</a> was more of a challange than I imagined going in. At first the extension relied a lot of hacks—things I knew were fragile, but I did not know how to do it better. The better way was to use <a href="https://www.lua.org/">lua</a> filters. It took time before I wrapped my head around Pandoc lua filters, but eventually I was able to make them work for me.</p>
+<p>As I understand it, Pandoc translates text into a the AST (abstract syntax tree). For example, a short paragraph like “I like Quarto.” would be</p>
+<pre><code>[Para [
+   [ Str "I"
+   , Space
+   , Str "like"
+   , Space
+   , Str "Quarto"]
+   ]
+]</code></pre>
+<p>A lua filter can select and transform specific elements For example, to transform all the <code>Str</code> (string) elements to uppercase:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb2-1"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">Str</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb2-2">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">string.upper</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb2-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span></code></pre></div>
+</div>
+<p>After running this filter, the paragraph would be transformed like so:</p>
+<pre><code>[Para [
+   [ Str "I"
+   , Space
+   , Str "LIKE"
+   , Space
+   , Str "QUARTO"]
+   ]
+]</code></pre>
+<p>Each filter you run will walk through the AST, making any changes to it. Quarto walks through the AST many times (e.g., normalizing metadata, processing figure references).</p>
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2024,
+  author = {Schneider, W. Joel},
+  title = {My Lua Filters},
+  date = {2024-03-15},
+  url = {https://wjschne.github.io/posts/2024-03-15-lua-filter/mylua.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2024" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2024, March 15). My lua filters.
+<em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/2024-03-15-lua-filter/mylua.html">https://wjschne.github.io/posts/2024-03-15-lua-filter/mylua.html</a>
+</div></div></section></div> ]]></description>
+  <category>lua</category>
+  <category>pandoc</category>
+  <guid>https://wjschne.github.io/posts/2024-03-15-lua-filter/mylua.html</guid>
+  <pubDate>Fri, 15 Mar 2024 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Making a custom arrowhead for ggplot2 using ggarrow and arrowheadr</title>
   <dc:creator>W. Joel Schneider</dc:creator>
