@@ -11,6 +11,7 @@ library(tidyverse)
 library(easystats)
 library(haven)
 library(sjstats)
+library(skimr)
 options(digits = 2)
 ```
 
@@ -161,17 +162,10 @@ d %>%
   data_tabulate()
 ```
 
-We can get descriptives statistics of our numeric variables separated by group. There are many ways to do this, the simplest is the `describeBy` function from the psych package
+We can get descriptives statistics of our numeric variables separated by group. There are many ways to do this, but the simplest is the `describeBy` function from the psych package
 
 ```{r describeby}
 psych::describeBy(d, group = "Attachment")
-
-
-
-
-
-
-
 ```
 
 The datawizard package has some really nice functions for descriptives:
@@ -181,6 +175,21 @@ d %>%
   datawizard::means_by_group(
     select = contains("Anxiety") , 
     group = "Attachment")
+```
+
+
+The skimr package is also quite nice:
+
+```{r}
+library(skimr)
+# Overall summary
+d %>% 
+  skim()
+
+# Grouped summaries
+d %>% 
+  group_by(Attachment) %>% 
+  skim()
 ```
 
 
@@ -237,7 +246,7 @@ d |>
   ggplot(aes(x = Attachment,
              y = Anxiety_Questionnaire)) +
   geom_violin() +
-  stat_summary()
+  stat_summary() 
 ```
 
 Just looking at the plot, we can see that the Ambivalent group has a higher mean anxiety than the other two groups. However, let's conduct a formal test of the difference of the group means.
