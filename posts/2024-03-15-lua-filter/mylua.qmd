@@ -13,7 +13,7 @@ tags:
 
 For a long time I thought that someone would write a complete Quarto extension for APA-style manuscripts. It turns out that someone was me.
 
-Making [apaquarto](https://wjschne.github.io/apaquarto/) was more of a challange than I imagined going in. At first the extension relied a lot of hacks---things I knew were fragile, but I did not know how to do it better. The better way was to use [Lua](https://www.lua.org/) filters. It took time before I wrapped my head around Pandoc Lua filters, but eventually I was able to make them work for me.
+Making [apaquarto](https://wjschne.github.io/apaquarto/) was more of a challenge than I imagined going in. At first the extension relied a lot of hacks---things I knew were fragile, but I did not know how to do it better. The better way was to use [Lua](https://www.lua.org/) filters. It took time before I wrapped my head around Pandoc Lua filters, but eventually I was able to make them work for me.
 
 As I understand it, Pandoc translates text into a the AST (abstract syntax tree). For example, a short paragraph like "I like Quarto." would be
 
@@ -52,3 +52,122 @@ After running this filter, the paragraph would be transformed like so:
 
 Each filter you run will walk through the AST, making any changes to it. Quarto walks through the AST many times (e.g., normalizing metadata, processing figure references).
 
+The documentation for [Pandoc Lua filters](https://pandoc.org/lua-filters.html) is comprehensive and has instructive examples. I will be adding more examples to this post as I go.
+
+
+## Replacing ampersands in in-text citations.
+
+When there are multiple authors, APA Style requires an "and" in in-text citations, but apa.csl cannot do that and still get parenthetical citations right. Lua to the rescue!
+
+## First Try
+Adapted from [Samuel Dodson](https://github.com/citation-style-language/styles/issues/3748#issuecomment-430871259):
+
+```{lua}
+function Cite (ct)
+  if ct.citations[1].mode == "AuthorInText" then
+    ct.content = ct.content:walk {
+      Str = function(s)
+        if s.text == "&" then
+          s.text = "and"
+          return s
+        end
+      end
+    }
+    return ct.content
+  end
+end
+```
+
+This function walks down a document and runs every time a citation is found.
+
+The `pandoc.Cite` type has several fields in it, including `citations` and `content`. The `citations` field is a table that can contain several citations because parenthetical citations can have more than one citation. In-text citations have only one citation. To find the first citation in the `citation` field, we use square brackets and an index of `1`. Thus, `ct.citations[1]` retrieves the first citation.
+
+Each citation is a special element component that has several fields:
+
+- `id` has the citation identifier
+- `mode` tells the citation type (`NormalCitation`, `AuthorInText`, or `SuppressAuthor`)
+- `prefix` and `suffix` contain text before (e.g., `e.g., `) and after the citation (e.g., `pp. 33-49`)
+
+We only want to change `AuthorInText` citations. Thus, `if ct.citations[1].mode == "AuthorInText" then` means to only proceed if the citation is an in-text citation.
+
+The `content` field of a `pandoc.Cite` contains the text that is going to be displayed from the citation (e.g., "Schneider & McGrew (2018)"). It is not actually a long string, but a sequence of "inline" elements like so:
+
+```
+[ Str "Schneider"
+  , Space
+  , Str "&"
+  , Space
+  , Str "McGrew"
+  , Space
+  , Str "(2018)"]
+```
+
+We want to "walk" through this sequence and find the `Str` elements that are ampersands and replace them.
+
+So, the following command says, "Walk through the `ct.content` field, and find each `Str` element. If the text of the `Str` element has an ampersand, replace the ampersand with `"and"`. Return the `Str` element.
+
+```{lua}
+ct.content = ct.content:walk {
+  Str = function(s)
+    if s.text == "&" then
+      s.text = "and"
+      return s
+    end
+  end
+  }
+```
+
+
+## Adding support for languages beyond English
+
+I wanted people to use the filter in any language. In their metadata, they need to tell apaquarto what their word for *and* is. For example, Spanish speakers can substitute *y* for *and* like so:
+
+```{yaml}
+lang: es
+language:
+   citation-last-author-separator: y
+```
+
+
+To make this work, the Lua filter needs to be able to access the `citation-last-author-separator` field in the metadata.
+
+We set up a local variable `andreplacement` with a default value `"and"`. 
+
+To pass metadata into a function, we need to set up two local functions, one to retrieve the replacement word for *and* in the metadata (`get_and`) and one replace ampersands in the citations (`replace_and`). Then the `return` function runs the `get_and` function on the metadata, followed by the `replace_and` function on each citation:
+
+```{lua}
+-- set default value for and
+local andreplacement = "and"
+
+-- get andreplacement if it is specified in metadata
+local function get_and(m)
+  -- check if m.language exists
+  -- check if m.language["citation-last-author-separator"] exists
+  if m.language and m.language["citation-last-author-separator"] then
+     -- create string from metadata
+     andreplacement = pandoc.utils.stringify(m.language["citation-last-author-separator"])
+  end
+end
+
+-- Replace ampersand for in-text citations
+local function replace_and (ct)
+    if ct.citations[1].mode == "AuthorInText" then
+    ct.content = ct.content:walk {
+      Str = function(s)
+        if s.text == "&" then
+          s.text = andreplacement
+          return s
+        end
+      end
+    }
+    return ct.content
+  end
+end
+
+-- run the get_and function first, 
+-- then the replace_and function
+return {
+    { Meta = get_and },
+    { Cite = replace_and }
+}
+```

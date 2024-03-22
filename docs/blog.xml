@@ -22,7 +22,7 @@
 
 
 <p>For a long time I thought that someone would write a complete Quarto extension for APA-style manuscripts. It turns out that someone was me.</p>
-<p>Making <a href="https://wjschne.github.io/apaquarto/">apaquarto</a> was more of a challange than I imagined going in. At first the extension relied a lot of hacks—things I knew were fragile, but I did not know how to do it better. The better way was to use <a href="https://www.lua.org/">lua</a> filters. It took time before I wrapped my head around Pandoc lua filters, but eventually I was able to make them work for me.</p>
+<p>Making <a href="https://wjschne.github.io/apaquarto/">apaquarto</a> was more of a challenge than I imagined going in. At first the extension relied a lot of hacks—things I knew were fragile, but I did not know how to do it better. The better way was to use <a href="https://www.lua.org/">Lua</a> filters. It took time before I wrapped my head around Pandoc Lua filters, but eventually I was able to make them work for me.</p>
 <p>As I understand it, Pandoc translates text into a the AST (abstract syntax tree). For example, a short paragraph like “I like Quarto.” would be</p>
 <pre><code>[Para [
    [ Str "I"
@@ -32,7 +32,7 @@
    , Str "Quarto"]
    ]
 ]</code></pre>
-<p>A lua filter can select and transform specific elements For example, to transform all the <code>Str</code> (string) elements to uppercase:</p>
+<p>A Lua filter can select and transform specific elements For example, to transform all the <code>Str</code> (string) elements to uppercase:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb2-1"><span class="va" style="color: #111111;
 background-color: null;
@@ -75,8 +75,564 @@ font-style: inherit;">end</span></span></code></pre></div>
    ]
 ]</code></pre>
 <p>Each filter you run will walk through the AST, making any changes to it. Quarto walks through the AST many times (e.g., normalizing metadata, processing figure references).</p>
+<p>The documentation for <a href="https://pandoc.org/lua-filters.html">Pandoc Lua filters</a> is comprehensive and has instructive examples. I will be adding more examples to this post as I go.</p>
+<section id="replacing-ampersands-in-in-text-citations." class="level2">
+<h2 class="anchored" data-anchor-id="replacing-ampersands-in-in-text-citations.">Replacing ampersands in in-text citations.</h2>
+<p>When there are multiple authors, APA Style requires an “and” in in-text citations, but apa.csl cannot do that and still get parenthetical citations right. Lua to the rescue!</p>
+</section>
+<section id="first-try" class="level2">
+<h2 class="anchored" data-anchor-id="first-try">First Try</h2>
+<p>Adapted from <a href="https://github.com/citation-style-language/styles/issues/3748#issuecomment-430871259">Samuel Dodson</a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb4-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span> Cite <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb4-2">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">citations</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">].</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">mode</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"AuthorInText"</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb4-3">    <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>walk <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb4-4">      <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">Str</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb4-5">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">text</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"&amp;"</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb4-6">          <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">text</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"and"</span></span>
+<span id="cb4-7">          <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span></span>
+<span id="cb4-8">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb4-9">      <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb4-10">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb4-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span></span>
+<span id="cb4-12">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb4-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span></code></pre></div>
+</div>
+<p>This function walks down a document and runs every time a citation is found.</p>
+<p>The <code>pandoc.Cite</code> type has several fields in it, including <code>citations</code> and <code>content</code>. The <code>citations</code> field is a table that can contain several citations because parenthetical citations can have more than one citation. In-text citations have only one citation. To find the first citation in the <code>citation</code> field, we use square brackets and an index of <code>1</code>. Thus, <code>ct.citations[1]</code> retrieves the first citation.</p>
+<p>Each citation is a special element component that has several fields:</p>
+<ul>
+<li><code>id</code> has the citation identifier</li>
+<li><code>mode</code> tells the citation type (<code>NormalCitation</code>, <code>AuthorInText</code>, or <code>SuppressAuthor</code>)</li>
+<li><code>prefix</code> and <code>suffix</code> contain text before (e.g., <code>e.g.,</code>) and after the citation (e.g., <code>pp. 33-49</code>)</li>
+</ul>
+<p>We only want to change <code>AuthorInText</code> citations. Thus, <code>if ct.citations[1].mode == "AuthorInText" then</code> means to only proceed if the citation is an in-text citation.</p>
+<p>The <code>content</code> field of a <code>pandoc.Cite</code> contains the text that is going to be displayed from the citation (e.g., “Schneider &amp; McGrew (2018)”). It is not actually a long string, but a sequence of “inline” elements like so:</p>
+<pre><code>[ Str "Schneider"
+  , Space
+  , Str "&amp;"
+  , Space
+  , Str "McGrew"
+  , Space
+  , Str "(2018)"]</code></pre>
+<p>We want to “walk” through this sequence and find the <code>Str</code> elements that are ampersands and replace them.</p>
+<p>So, the following command says, “Walk through the <code>ct.content</code> field, and find each <code>Str</code> element. If the text of the <code>Str</code> element has an ampersand, replace the ampersand with <code>"and"</code>. Return the <code>Str</code> element.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb6-1"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>walk <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb6-2">  <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">Str</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb6-3">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">text</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"&amp;"</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb6-4">      <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">text</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"and"</span></span>
+<span id="cb6-5">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span></span>
+<span id="cb6-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb6-7">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb6-8">  <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+</div>
+</section>
+<section id="adding-support-for-languages-beyond-english" class="level2">
+<h2 class="anchored" data-anchor-id="adding-support-for-languages-beyond-english">Adding support for languages beyond English</h2>
+<p>I wanted people to use the filter in any language. In their metadata, they need to tell apaquarto what their word for <em>and</em> is. For example, Spanish speakers can substitute <em>y</em> for <em>and</em> like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lang</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> es</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">language</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb7-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">citation-last-author-separator</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">y</span></span></code></pre></div>
+</div>
+<p>To make this work, the Lua filter needs to be able to access the <code>citation-last-author-separator</code> field in the metadata.</p>
+<p>We set up a local variable <code>andreplacement</code> with a default value <code>"and"</code>.</p>
+<p>To pass metadata into a function, we need to set up two local functions, one to retrieve the replacement word for <em>and</em> in the metadata (<code>get_and</code>) and one replace ampersands in the citations (<code>replace_and</code>). Then the <code>return</code> function runs the <code>get_and</code> function on the metadata, followed by the <code>replace_and</code> function on each citation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- set default value for and</span></span>
+<span id="cb8-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">local</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">andreplacement</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"and"</span></span>
+<span id="cb8-3"></span>
+<span id="cb8-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- get andreplacement if it is specified in metadata</span></span>
+<span id="cb8-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">local</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span> get_and<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">m</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb8-6">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- check if m.language exists</span></span>
+<span id="cb8-7">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- check if m.language["citation-last-author-separator"] exists</span></span>
+<span id="cb8-8">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">m</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">language</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">and</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">m</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">language</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"citation-last-author-separator"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb8-9">     <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- create string from metadata</span></span>
+<span id="cb8-10">     <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">andreplacement</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">pandoc</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">utils</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>stringify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">m</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">language</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"citation-last-author-separator"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">])</span></span>
+<span id="cb8-11">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb8-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb8-13"></span>
+<span id="cb8-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- Replace ampersand for in-text citations</span></span>
+<span id="cb8-15"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">local</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span> replace_and <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb8-16">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">citations</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">].</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">mode</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"AuthorInText"</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb8-17">    <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>walk <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb8-18">      <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">Str</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb8-19">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">text</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"&amp;"</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb8-20">          <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">text</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">andreplacement</span></span>
+<span id="cb8-21">          <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">s</span></span>
+<span id="cb8-22">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb8-23">      <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb8-24">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb8-25">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">content</span></span>
+<span id="cb8-26">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb8-27"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span>
+<span id="cb8-28"></span>
+<span id="cb8-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- run the get_and function first, </span></span>
+<span id="cb8-30"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- then the replace_and function</span></span>
+<span id="cb8-31"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb8-32">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">Meta</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">get_and</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">},</span></span>
+<span id="cb8-33">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">Cite</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">replace_and</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb8-34"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+</div>
 
 
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2024,
   author = {Schneider, W. Joel},

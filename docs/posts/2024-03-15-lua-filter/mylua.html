@@ -240,7 +240,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sections</h2>
+   
+  <ul>
+  <li><a href="#replacing-ampersands-in-in-text-citations." id="toc-replacing-ampersands-in-in-text-citations." class="nav-link active" data-scroll-target="#replacing-ampersands-in-in-text-citations.">Replacing ampersands in in-text citations.</a></li>
+  <li><a href="#first-try" id="toc-first-try" class="nav-link" data-scroll-target="#first-try">First Try</a></li>
+  <li><a href="#adding-support-for-languages-beyond-english" id="toc-adding-support-for-languages-beyond-english" class="nav-link" data-scroll-target="#adding-support-for-languages-beyond-english">Adding support for languages beyond English</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -254,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>For a long time I thought that someone would write a complete Quarto extension for APA-style manuscripts. It turns out that someone was me.</p>
-<p>Making <a href="https://wjschne.github.io/apaquarto/">apaquarto</a> was more of a challange than I imagined going in. At first the extension relied a lot of hacks—things I knew were fragile, but I did not know how to do it better. The better way was to use <a href="https://www.lua.org/">lua</a> filters. It took time before I wrapped my head around Pandoc lua filters, but eventually I was able to make them work for me.</p>
+<p>Making <a href="https://wjschne.github.io/apaquarto/">apaquarto</a> was more of a challenge than I imagined going in. At first the extension relied a lot of hacks—things I knew were fragile, but I did not know how to do it better. The better way was to use <a href="https://www.lua.org/">Lua</a> filters. It took time before I wrapped my head around Pandoc Lua filters, but eventually I was able to make them work for me.</p>
 <p>As I understand it, Pandoc translates text into a the AST (abstract syntax tree). For example, a short paragraph like “I like Quarto.” would be</p>
 <pre><code>[Para [
    [ Str "I"
@@ -264,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    , Str "Quarto"]
    ]
 ]</code></pre>
-<p>A lua filter can select and transform specific elements For example, to transform all the <code>Str</code> (string) elements to uppercase:</p>
+<p>A Lua filter can select and transform specific elements For example, to transform all the <code>Str</code> (string) elements to uppercase:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">Str</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">string.upper</span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
@@ -280,8 +288,109 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    ]
 ]</code></pre>
 <p>Each filter you run will walk through the AST, making any changes to it. Quarto walks through the AST many times (e.g., normalizing metadata, processing figure references).</p>
+<p>The documentation for <a href="https://pandoc.org/lua-filters.html">Pandoc Lua filters</a> is comprehensive and has instructive examples. I will be adding more examples to this post as I go.</p>
+<section id="replacing-ampersands-in-in-text-citations." class="level2">
+<h2 class="anchored" data-anchor-id="replacing-ampersands-in-in-text-citations.">Replacing ampersands in in-text citations.</h2>
+<p>When there are multiple authors, APA Style requires an “and” in in-text citations, but apa.csl cannot do that and still get parenthetical citations right. Lua to the rescue!</p>
+</section>
+<section id="first-try" class="level2">
+<h2 class="anchored" data-anchor-id="first-try">First Try</h2>
+<p>Adapted from <a href="https://github.com/citation-style-language/styles/issues/3748#issuecomment-430871259">Samuel Dodson</a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> Cite <span class="op">(</span><span class="va">ct</span><span class="op">)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="va">ct</span><span class="op">.</span><span class="va">citations</span><span class="op">[</span><span class="dv">1</span><span class="op">].</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"AuthorInText"</span> <span class="cf">then</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">ct</span><span class="op">.</span><span class="va">content</span> <span class="op">=</span> <span class="va">ct</span><span class="op">.</span><span class="va">content</span><span class="op">:</span>walk <span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="va">Str</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">s</span><span class="op">.</span><span class="va">text</span> <span class="op">==</span> <span class="st">"&amp;"</span> <span class="cf">then</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>          <span class="va">s</span><span class="op">.</span><span class="va">text</span> <span class="op">=</span> <span class="st">"and"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>          <span class="cf">return</span> <span class="va">s</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">ct</span><span class="op">.</span><span class="va">content</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This function walks down a document and runs every time a citation is found.</p>
+<p>The <code>pandoc.Cite</code> type has several fields in it, including <code>citations</code> and <code>content</code>. The <code>citations</code> field is a table that can contain several citations because parenthetical citations can have more than one citation. In-text citations have only one citation. To find the first citation in the <code>citation</code> field, we use square brackets and an index of <code>1</code>. Thus, <code>ct.citations[1]</code> retrieves the first citation.</p>
+<p>Each citation is a special element component that has several fields:</p>
+<ul>
+<li><code>id</code> has the citation identifier</li>
+<li><code>mode</code> tells the citation type (<code>NormalCitation</code>, <code>AuthorInText</code>, or <code>SuppressAuthor</code>)</li>
+<li><code>prefix</code> and <code>suffix</code> contain text before (e.g., <code>e.g.,</code>) and after the citation (e.g., <code>pp. 33-49</code>)</li>
+</ul>
+<p>We only want to change <code>AuthorInText</code> citations. Thus, <code>if ct.citations[1].mode == "AuthorInText" then</code> means to only proceed if the citation is an in-text citation.</p>
+<p>The <code>content</code> field of a <code>pandoc.Cite</code> contains the text that is going to be displayed from the citation (e.g., “Schneider &amp; McGrew (2018)”). It is not actually a long string, but a sequence of “inline” elements like so:</p>
+<pre><code>[ Str "Schneider"
+  , Space
+  , Str "&amp;"
+  , Space
+  , Str "McGrew"
+  , Space
+  , Str "(2018)"]</code></pre>
+<p>We want to “walk” through this sequence and find the <code>Str</code> elements that are ampersands and replace them.</p>
+<p>So, the following command says, “Walk through the <code>ct.content</code> field, and find each <code>Str</code> element. If the text of the <code>Str</code> element has an ampersand, replace the ampersand with <code>"and"</code>. Return the <code>Str</code> element.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">ct</span><span class="op">.</span><span class="va">content</span> <span class="op">=</span> <span class="va">ct</span><span class="op">.</span><span class="va">content</span><span class="op">:</span>walk <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">Str</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="va">s</span><span class="op">.</span><span class="va">text</span> <span class="op">==</span> <span class="st">"&amp;"</span> <span class="cf">then</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="va">s</span><span class="op">.</span><span class="va">text</span> <span class="op">=</span> <span class="st">"and"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="va">s</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="adding-support-for-languages-beyond-english" class="level2">
+<h2 class="anchored" data-anchor-id="adding-support-for-languages-beyond-english">Adding support for languages beyond English</h2>
+<p>I wanted people to use the filter in any language. In their metadata, they need to tell apaquarto what their word for <em>and</em> is. For example, Spanish speakers can substitute <em>y</em> for <em>and</em> like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang</span><span class="kw">:</span><span class="at"> es</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">language</span><span class="kw">:</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">   </span><span class="fu">citation-last-author-separator</span><span class="kw">:</span><span class="at"> </span><span class="ch">y</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To make this work, the Lua filter needs to be able to access the <code>citation-last-author-separator</code> field in the metadata.</p>
+<p>We set up a local variable <code>andreplacement</code> with a default value <code>"and"</code>.</p>
+<p>To pass metadata into a function, we need to set up two local functions, one to retrieve the replacement word for <em>and</em> in the metadata (<code>get_and</code>) and one replace ampersands in the citations (<code>replace_and</code>). Then the <code>return</code> function runs the <code>get_and</code> function on the metadata, followed by the <code>replace_and</code> function on each citation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- set default value for and</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="va">andreplacement</span> <span class="op">=</span> <span class="st">"and"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- get andreplacement if it is specified in metadata</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="kw">function</span> get_and<span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- check if m.language exists</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- check if m.language["citation-last-author-separator"] exists</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="va">m</span><span class="op">.</span><span class="va">language</span> <span class="kw">and</span> <span class="va">m</span><span class="op">.</span><span class="va">language</span><span class="op">[</span><span class="st">"citation-last-author-separator"</span><span class="op">]</span> <span class="cf">then</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     <span class="co">-- create string from metadata</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>     <span class="va">andreplacement</span> <span class="op">=</span> <span class="va">pandoc</span><span class="op">.</span><span class="va">utils</span><span class="op">.</span>stringify<span class="op">(</span><span class="va">m</span><span class="op">.</span><span class="va">language</span><span class="op">[</span><span class="st">"citation-last-author-separator"</span><span class="op">])</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">-- Replace ampersand for in-text citations</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="kw">function</span> replace_and <span class="op">(</span><span class="va">ct</span><span class="op">)</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="va">ct</span><span class="op">.</span><span class="va">citations</span><span class="op">[</span><span class="dv">1</span><span class="op">].</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"AuthorInText"</span> <span class="cf">then</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">ct</span><span class="op">.</span><span class="va">content</span> <span class="op">=</span> <span class="va">ct</span><span class="op">.</span><span class="va">content</span><span class="op">:</span>walk <span class="op">{</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="va">Str</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">s</span><span class="op">.</span><span class="va">text</span> <span class="op">==</span> <span class="st">"&amp;"</span> <span class="cf">then</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>          <span class="va">s</span><span class="op">.</span><span class="va">text</span> <span class="op">=</span> <span class="va">andreplacement</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>          <span class="cf">return</span> <span class="va">s</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">ct</span><span class="op">.</span><span class="va">content</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">-- run the get_and function first, </span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">-- then the replace_and function</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> <span class="op">{</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span> <span class="va">Meta</span> <span class="op">=</span> <span class="va">get_and</span> <span class="op">},</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span> <span class="va">Cite</span> <span class="op">=</span> <span class="va">replace_and</span> <span class="op">}</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2024,
   author = {Schneider, W. Joel},
