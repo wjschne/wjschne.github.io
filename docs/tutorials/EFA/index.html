@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.25">
+<meta name="generator" content="quarto-1.5.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -36,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -151,7 +151,7 @@ div.csl-indent {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -291,9 +291,6 @@ div.csl-indent {
 </section>
 <section id="data-import" class="level1 page-columns page-full">
 <h1>Data Import</h1>
-<div class="cell">
-
-</div>
 <p>Let’s import a version of a data set from the psych package altered to make it suitable for an assignment like this. It consists of personality test items from the International Personality Item Pool <span class="citation" data-cites="goldbergBroadbandwidthPublicDomain1999">(<a href="#ref-goldbergBroadbandwidthPublicDomain1999" role="doc-biblioref">Goldberg, 1999</a>)</span>. The data were collected as a part of the SAPA project <span class="citation" data-cites="revellePsychProceduresPsychological2015">(<a href="#ref-revellePsychProceduresPsychological2015" role="doc-biblioref">Revelle, 2015</a>)</span>.</p>
 <div class="no-row-height column-margin column-container"><div id="ref-goldbergBroadbandwidthPublicDomain1999" class="csl-entry" role="listitem">
 Goldberg, L. R. (1999). A broad-bandwidth, public domain, personality inventory measuring the lower-level facets of several five-factor models. <em>Personality Psychology in Europe</em>, <em>7</em>(1), 7–28.
@@ -305,7 +302,6 @@ Revelle, W. (2015). <em>Psych: <span>Procedures</span> for psychological, psycho
 <p>Here are the personality items:</p>
 <div id="tbl-bfi" class="cell anchored" data-tab-cap="Big Five Inventory Personality Items">
 <div class="cell-output-display">
-<div>
 <table class="table table-striped table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
@@ -389,7 +385,6 @@ Revelle, W. (2015). <em>Psych: <span>Procedures</span> for psychological, psycho
 </table>
 
 
-</div>
 </div>
 </div>
 </section>
@@ -730,7 +725,6 @@ Minimum correlation of possible factor scores     0.72 0.58 0.56 0.53 0.44 0.10<
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Table 2. Teacher redirection strategies"</span>,<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">kable_input =</span> ., <span class="at">bootstrap_options =</span> <span class="st">"striped"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
 <table class="table table-striped table-sm small" data-quarto-postprocess="true">
 <caption>Table 2. Teacher redirection strategies</caption>
 <thead>
@@ -793,7 +787,6 @@ Minimum correlation of possible factor scores     0.72 0.58 0.56 0.53 0.44 0.10<
 
 </div>
 </div>
-</div>
 <div class="instruction">
 <p>Run a parallel analysis on the <code>d_redirect</code> data with the <code>fa.parallel</code> function and answer the next 4 questions.</p>
 </div>
@@ -811,9 +804,6 @@ Minimum correlation of possible factor scores     0.72 0.58 0.56 0.53 0.44 0.10<
 </div>
 <div class="instruction">
 <p>Run an EFA on the <code>d_redirect</code> data extracting 4 factors using the <code>fm</code>= “pa” method.</p>
-</div>
-<div class="cell">
-
 </div>
 <div class="question">
 <p><strong>Question 5</strong>: When you extract 4 factors, are there any singleton factors (i.e,. factors with only one loading with an absolute value higher than 0.5 or so and all other loadings are low (&lt; .3 or so)?</p>

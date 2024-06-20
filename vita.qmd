@@ -407,15 +407,15 @@ jsonlite::read_json("data/My Articles.json", simplifyVector = T) %>%
                          suffix = title_suffix(title)),
          pubid = str_remove(note, "pubid:"),
          issue = na2empty(issue, paste0("(", issue, ")")),
-         page = ifelse(is.na(page), "", str_replace(page, "-", "&ndash;")),
+         page = ifelse(is.na(page), "", paste0(", ", str_replace(page, "-", "&ndash;"))),
          volume = ifelse(is.na(volume), "", paste0(", ", volume))) %>% 
   left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>% 
   mutate(citations = make_citation_button(cites, cid, year)) %>% 
-  mutate(citation = glue::glue('<div class="csl-entry">{author} ({year}). {title} <em>{journal}{volume}</em>{issue}, {page}. {doi2link(DOI)}{citations}</div>')) %>% 
+  mutate(citation = glue::glue('<div class="csl-entry">{author} ({year}). {title} <em>{journal}{volume}</em>{issue}{page}. {doi2link(DOI)}{citations}</div>')) %>% 
  arrange(-year, author) %>%  
   pull(citation) %>% 
   str_replace("\\. ,", ".") %>% 
-  cat
+  cat()
 
 ```
 
@@ -598,12 +598,12 @@ jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>%
 ### Temple University
 
 *	CPSY 5519—Group Counseling [(Spring 2018–2019)]{.smalldate}
-*	CPSY 5694—Introduction to Assessment [(Fall 2017–2019)]{.smalldate}
+*	CPSY 5694—Introduction to Assessment [(Fall 2017–2019, 2023)]{.smalldate}
 *	EDUC 5101—Critical Understanding of Social Science Research [(Fall 2018)]{.smalldate}
 *	EDUC 5325—Introduction to Statistics and Research [(Fall 2017, 2021)]{.smalldate}
-*	EPSY 5529—Tests and Measurements [(Spring 2019–2020, 2022)]{.smalldate}
+*	EPSY 5529—Tests and Measurements [(Spring 2019–2020, 2022, 2023)]{.smalldate}
 *	EPSY 8825—Advanced Data Analysis [(Spring 2020, 2022)]{.smalldate}
-*	SPSY 9687/8—Seminar in School Psychology/Psychoeducational Clinic [(Fall 2019, Spring 2020–2021)]{.smalldate}
+*	SPSY 9687/8—Seminar in School Psychology/Psychoeducational Clinic [(Fall 2019, Spring 2020–2021, Fall 2023)]{.smalldate}
 
 
 ### Illinois State University
@@ -628,11 +628,13 @@ jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>%
 
 #### Temple University
 
+* Aidan Campagnolio 
+* Christine An [(co-chair)]{.smalldate}
 * Megan Barone
 * Randy Taylor
-* Bernard Dillard
-*	Stephanie Iaccarino [(co-chair)]{.smalldate}
-*	Justin Harper [(2022)]{.smalldate}
+* Bernard Dillard [(2024)]{.smalldate}
+*	Stephanie Iaccarino [(2023, co-chair)]{.smalldate}
+*	Justin Harper [(2022, co-chair)]{.smalldate}
 
 
 #### Illinois State University
@@ -645,10 +647,10 @@ jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>%
 
 #### Temple University
 
-* Valerie Woxholt
 * Emunah Mager-Garfield
 *	Denae Sisco
 * Octavia Blount
+* Valerie Woxholt [(2023)]{.smalldate}
 *	Codie Kane [(2023)]{.smalldate}
 * Patrick Clancy [(2023)]{.smalldate}
 * Shana Levi-Nielsen [(2022)]{.smalldate}
@@ -679,8 +681,6 @@ jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>%
 * Paul Jewsbury [(2014) University of Melbourne]{.smalldate}
 
 ### Master's Thesis Chair
-
-
 
 #### Illinois State University
 
@@ -764,9 +764,10 @@ readr::read_csv("data/service.csv") %>%
 ```{r editorialpositions}
 tibble::tribble(
            ~Date,                                  ~Journal,             ~Position,
-  "2019–2020", "*Journal of Psychoeducational Assessment*",    "Associate Editor",
-          "2015",            "*Journal of School Psychology*", "Guest Action Editor"
+  "2019–2020", "Journal of Psychoeducational Assessment",    "Associate Editor",
+          "2015",            "Journal of School Psychology", "Guest Action Editor"
   ) %>% 
+  mutate(Journal = paste0("<em>", Journal, "</em>")) %>% 
   mutate(across(.cols = everything(),
                 .fns = ~str_replace_all(.x, 
                                         "–", 
@@ -783,13 +784,14 @@ tibble::tribble(
 ```{r editorial}
 tibble::tribble(
              ~Date,                                  ~Journal,             ~Position,
-  "2018–",                  "*Journal of Intelligence*",      "Editorial Board",
-   "2011–",            "*Journal of School Psychology*",     "Editorial Board",
-   "2010–", "*Journal of Psychoeducational Assessment*",     "Editorial Board",
-   "2017–",       "*Archives of Scientific Psychology*",   "Consulting Editor",
-      "2009–2018",                "*Psychological Assessment*",   "Consulting Editor",
-      "1997–2000",             "*Clinician's Research Digest*", "Editorial Associate"
+  "2018–",                  "Journal of Intelligence",      "Editorial Board",
+   "2011–",            "Journal of School Psychology",     "Editorial Board",
+   "2010–", "Journal of Psychoeducational Assessment",     "Editorial Board",
+   "2017–2021",       "Archives of Scientific Psychology",   "Consulting Editor",
+      "2009–2018",                "Psychological Assessment",   "Consulting Editor",
+      "1997–2000",             "Clinician's Research Digest", "Editorial Associate"
   ) %>% 
+  mutate(Journal = paste0("<em>", Journal, "</em>")) %>% 
   mutate(across(.cols = everything(),
                 .fns = ~str_replace_all(.x, 
                                         "–", 
