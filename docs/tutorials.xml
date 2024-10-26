@@ -9,7 +9,7 @@
 <link>https://wjschne.github.io/tutorials.html</link>
 <atom:link href="https://wjschne.github.io/tutorials.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.5.37</generator>
+<generator>quarto-1.5.57</generator>
 <lastBuildDate>Tue, 12 Mar 2024 04:00:00 GMT</lastBuildDate>
 <item>
   <title>Exploratory Factor Analysis with R</title>
@@ -116,7 +116,7 @@ font-style: inherit;">"https://github.com/wjschne/EDUC5529/raw/master/HW4_BFI.cs
 <p>Here are the personality items:</p>
 <div id="tbl-bfi" class="cell anchored" data-tab-cap="Big Five Inventory Personality Items">
 <div class="cell-output-display">
-<table class="table table-striped table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Items</th>
@@ -1047,7 +1047,7 @@ font-style: inherit;">bootstrap_options =</span> <span class="st" style="color: 
 background-color: null;
 font-style: inherit;">"striped"</span>)</span></code></pre></div>
 <div class="cell-output-display">
-<table class="table table-striped table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table 2. Teacher redirection strategies</caption>
 <thead>
 <tr class="header">
@@ -1398,7 +1398,7 @@ background-color: null;
 font-style: inherit;">performance</span>(m1)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">AIC</th>
@@ -1476,7 +1476,7 @@ background-color: null;
 font-style: inherit;">parameters</span>(m1) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 16%">
@@ -1536,7 +1536,7 @@ background-color: null;
 font-style: inherit;">standardise_parameters</span>(m1)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Parameter</th>
@@ -1669,7 +1669,7 @@ background-color: null;
 font-style: inherit;">standardise_parameters</span>(m2)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Parameter</th>
@@ -1741,7 +1741,7 @@ background-color: null;
 font-style: inherit;">test_wald</span>(m1, m2)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
@@ -1782,7 +1782,7 @@ background-color: null;
 font-style: inherit;">test_bf</span>(m1, m2)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Model</th>
@@ -1816,10 +1816,6 @@ font-style: inherit;">%&gt;%</span> </span>
 <span id="cb36-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">report</span>()</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Function `format_text()` is deprecated and will be removed in a future
-  release. Please use `text_format()` instead.</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factors were computed using the BIC approximation, by which BF10 =
 exp((BIC0 - BIC1)/2). Compared to the avgphgt model, we found extreme evidence
@@ -1829,12 +1825,12 @@ model).</code></pre>
 </div>
 <p>To compare many performance statistics at once:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">compare_performance</span>(m1, m2) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 6%">
 <col style="width: 8%">
@@ -1911,13 +1907,13 @@ font-style: inherit;">compare_performance</span>(m1, m2) </span></code></pre></d
 <p>The <a href="https://strengejacke.github.io/sjPlot/articles/tab_model_estimates.html"><code>tab_model</code> function in sjPlot</a> look great as is, but if it gives you too much or not enough, check out <a href="https://strengejacke.github.io/sjPlot/reference/tab_model.html">its options</a> to see if it can do what you want.</p>
 <p>Show a single model</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">sjPlot<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">sjPlot<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tab_model</span>(m1)</span></code></pre></div>
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th" style="text-align: center; border-top: double; font-style: normal; font-weight: bold; padding: 0.2cm;">&nbsp;</td>
@@ -1957,13 +1953,13 @@ font-style: inherit;">tab_model</span>(m1)</span></code></pre></div>
 </div>
 <p>Compare nested models</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1">sjPlot<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">sjPlot<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tab_model</span>(m1, m2)</span></code></pre></div>
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th" style="text-align: center; border-top: double; font-style: normal; font-weight: bold; padding: 0.2cm;">&nbsp;</td>
@@ -2025,33 +2021,33 @@ font-style: inherit;">tab_model</span>(m1, m2)</span></code></pre></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(gtsummary)</span>
-<span id="cb42-2"><span class="co" style="color: #5E5E5E;
+<span id="cb41-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Plain table</span></span>
-<span id="cb42-3"><span class="fu" style="color: #4758AB;
+<span id="cb41-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
 <div class="cell-output-display">
-<div id="ksdvgkgrkz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ksdvgkgrkz table {
+<div id="iryycioskz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#iryycioskz table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ksdvgkgrkz thead, #ksdvgkgrkz tbody, #ksdvgkgrkz tfoot, #ksdvgkgrkz tr, #ksdvgkgrkz td, #ksdvgkgrkz th {
+#iryycioskz thead, #iryycioskz tbody, #iryycioskz tfoot, #iryycioskz tr, #iryycioskz td, #iryycioskz th {
   border-style: none;
 }
 
-#ksdvgkgrkz p {
+#iryycioskz p {
   margin: 0;
   padding: 0;
 }
 
-#ksdvgkgrkz .gt_table {
+#iryycioskz .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2077,12 +2073,12 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-left-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_caption {
+#iryycioskz .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ksdvgkgrkz .gt_title {
+#iryycioskz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2094,7 +2090,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-bottom-width: 0;
 }
 
-#ksdvgkgrkz .gt_subtitle {
+#iryycioskz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2106,7 +2102,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-top-width: 0;
 }
 
-#ksdvgkgrkz .gt_heading {
+#iryycioskz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2118,13 +2114,13 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_bottom_border {
+#iryycioskz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_col_headings {
+#iryycioskz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2139,7 +2135,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_col_heading {
+#iryycioskz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2159,7 +2155,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#ksdvgkgrkz .gt_column_spanner_outer {
+#iryycioskz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2171,15 +2167,15 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   padding-right: 4px;
 }
 
-#ksdvgkgrkz .gt_column_spanner_outer:first-child {
+#iryycioskz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ksdvgkgrkz .gt_column_spanner_outer:last-child {
+#iryycioskz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ksdvgkgrkz .gt_column_spanner {
+#iryycioskz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2191,11 +2187,11 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   width: 100%;
 }
 
-#ksdvgkgrkz .gt_spanner_row {
+#iryycioskz .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ksdvgkgrkz .gt_group_heading {
+#iryycioskz .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2221,7 +2217,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   text-align: left;
 }
 
-#ksdvgkgrkz .gt_empty_group_heading {
+#iryycioskz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2236,15 +2232,15 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   vertical-align: middle;
 }
 
-#ksdvgkgrkz .gt_from_md > :first-child {
+#iryycioskz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ksdvgkgrkz .gt_from_md > :last-child {
+#iryycioskz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ksdvgkgrkz .gt_row {
+#iryycioskz .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2263,7 +2259,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#ksdvgkgrkz .gt_stub {
+#iryycioskz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2276,7 +2272,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#ksdvgkgrkz .gt_stub_row_group {
+#iryycioskz .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2290,15 +2286,15 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   vertical-align: top;
 }
 
-#ksdvgkgrkz .gt_row_group_first td {
+#iryycioskz .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ksdvgkgrkz .gt_row_group_first th {
+#iryycioskz .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ksdvgkgrkz .gt_summary_row {
+#iryycioskz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2308,16 +2304,16 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#ksdvgkgrkz .gt_first_summary_row {
+#iryycioskz .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_first_summary_row.thick {
+#iryycioskz .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ksdvgkgrkz .gt_last_summary_row {
+#iryycioskz .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2327,7 +2323,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_grand_summary_row {
+#iryycioskz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2337,7 +2333,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#ksdvgkgrkz .gt_first_grand_summary_row {
+#iryycioskz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2347,7 +2343,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-top-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_last_grand_summary_row_top {
+#iryycioskz .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2357,11 +2353,11 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_striped {
+#iryycioskz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ksdvgkgrkz .gt_table_body {
+#iryycioskz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2370,7 +2366,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_footnotes {
+#iryycioskz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2384,7 +2380,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_footnote {
+#iryycioskz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2393,7 +2389,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#ksdvgkgrkz .gt_sourcenotes {
+#iryycioskz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2407,7 +2403,7 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#ksdvgkgrkz .gt_sourcenote {
+#iryycioskz .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2415,86 +2411,95 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#ksdvgkgrkz .gt_left {
+#iryycioskz .gt_left {
   text-align: left;
 }
 
-#ksdvgkgrkz .gt_center {
+#iryycioskz .gt_center {
   text-align: center;
 }
 
-#ksdvgkgrkz .gt_right {
+#iryycioskz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ksdvgkgrkz .gt_font_normal {
+#iryycioskz .gt_font_normal {
   font-weight: normal;
 }
 
-#ksdvgkgrkz .gt_font_bold {
+#iryycioskz .gt_font_bold {
   font-weight: bold;
 }
 
-#ksdvgkgrkz .gt_font_italic {
+#iryycioskz .gt_font_italic {
   font-style: italic;
 }
 
-#ksdvgkgrkz .gt_super {
+#iryycioskz .gt_super {
   font-size: 65%;
 }
 
-#ksdvgkgrkz .gt_footnote_marks {
+#iryycioskz .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ksdvgkgrkz .gt_asterisk {
+#iryycioskz .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ksdvgkgrkz .gt_indent_1 {
+#iryycioskz .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ksdvgkgrkz .gt_indent_2 {
+#iryycioskz .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ksdvgkgrkz .gt_indent_3 {
+#iryycioskz .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ksdvgkgrkz .gt_indent_4 {
+#iryycioskz .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ksdvgkgrkz .gt_indent_5 {
+#iryycioskz .gt_indent_5 {
   text-indent: 25px;
+}
+
+#iryycioskz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#iryycioskz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_col_headings">
-<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
-<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
-<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">Average height of parents</td>
 <td class="gt_row gt_center" headers="estimate">1.2</td>
-<td class="gt_row gt_center" headers="ci">0.90, 1.5</td>
+<td class="gt_row gt_center" headers="conf.low">0.90, 1.5</td>
 <td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="even">
-<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> CI = Confidence Interval</td>
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> CI = Confidence Interval</td>
 </tr>
 </tfoot>
 
@@ -2502,10 +2507,10 @@ font-style: inherit;">tbl_regression</span>(m1)</span></code></pre></div>
 
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Merging tables</span></span>
-<span id="cb43-2"><span class="fu" style="color: #4758AB;
+<span id="cb42-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tbl_merge</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -2518,14 +2523,14 @@ background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">add_glance_table</span>(),</span>
-<span id="cb43-3">                      <span class="fu" style="color: #4758AB;
+<span id="cb42-3">                      <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tbl_regression</span>(m2) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">add_glance_table</span>()),</span>
-<span id="cb43-4">          <span class="at" style="color: #657422;
+<span id="cb42-4">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">tab_spanner =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2535,23 +2540,23 @@ font-style: inherit;">"Parent Height"</span>, <span class="st" style="color: #20
 background-color: null;
 font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></div>
 <div class="cell-output-display">
-<div id="papbwbyqnd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#papbwbyqnd table {
+<div id="kdrhbhzcmp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kdrhbhzcmp table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#papbwbyqnd thead, #papbwbyqnd tbody, #papbwbyqnd tfoot, #papbwbyqnd tr, #papbwbyqnd td, #papbwbyqnd th {
+#kdrhbhzcmp thead, #kdrhbhzcmp tbody, #kdrhbhzcmp tfoot, #kdrhbhzcmp tr, #kdrhbhzcmp td, #kdrhbhzcmp th {
   border-style: none;
 }
 
-#papbwbyqnd p {
+#kdrhbhzcmp p {
   margin: 0;
   padding: 0;
 }
 
-#papbwbyqnd .gt_table {
+#kdrhbhzcmp .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2577,12 +2582,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-left-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_caption {
+#kdrhbhzcmp .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#papbwbyqnd .gt_title {
+#kdrhbhzcmp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2594,7 +2599,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-bottom-width: 0;
 }
 
-#papbwbyqnd .gt_subtitle {
+#kdrhbhzcmp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2606,7 +2611,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-top-width: 0;
 }
 
-#papbwbyqnd .gt_heading {
+#kdrhbhzcmp .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2618,13 +2623,13 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-right-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_bottom_border {
+#kdrhbhzcmp .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_col_headings {
+#kdrhbhzcmp .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2639,7 +2644,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-right-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_col_heading {
+#kdrhbhzcmp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2659,7 +2664,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   overflow-x: hidden;
 }
 
-#papbwbyqnd .gt_column_spanner_outer {
+#kdrhbhzcmp .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2671,15 +2676,15 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   padding-right: 4px;
 }
 
-#papbwbyqnd .gt_column_spanner_outer:first-child {
+#kdrhbhzcmp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#papbwbyqnd .gt_column_spanner_outer:last-child {
+#kdrhbhzcmp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#papbwbyqnd .gt_column_spanner {
+#kdrhbhzcmp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2691,11 +2696,11 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   width: 100%;
 }
 
-#papbwbyqnd .gt_spanner_row {
+#kdrhbhzcmp .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#papbwbyqnd .gt_group_heading {
+#kdrhbhzcmp .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2721,7 +2726,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   text-align: left;
 }
 
-#papbwbyqnd .gt_empty_group_heading {
+#kdrhbhzcmp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2736,15 +2741,15 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   vertical-align: middle;
 }
 
-#papbwbyqnd .gt_from_md > :first-child {
+#kdrhbhzcmp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#papbwbyqnd .gt_from_md > :last-child {
+#kdrhbhzcmp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#papbwbyqnd .gt_row {
+#kdrhbhzcmp .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2763,7 +2768,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   overflow-x: hidden;
 }
 
-#papbwbyqnd .gt_stub {
+#kdrhbhzcmp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2776,7 +2781,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   padding-right: 5px;
 }
 
-#papbwbyqnd .gt_stub_row_group {
+#kdrhbhzcmp .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2790,15 +2795,15 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   vertical-align: top;
 }
 
-#papbwbyqnd .gt_row_group_first td {
+#kdrhbhzcmp .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#papbwbyqnd .gt_row_group_first th {
+#kdrhbhzcmp .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#papbwbyqnd .gt_summary_row {
+#kdrhbhzcmp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2808,16 +2813,16 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   padding-right: 5px;
 }
 
-#papbwbyqnd .gt_first_summary_row {
+#kdrhbhzcmp .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_first_summary_row.thick {
+#kdrhbhzcmp .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#papbwbyqnd .gt_last_summary_row {
+#kdrhbhzcmp .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2827,7 +2832,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-bottom-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_grand_summary_row {
+#kdrhbhzcmp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2837,7 +2842,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   padding-right: 5px;
 }
 
-#papbwbyqnd .gt_first_grand_summary_row {
+#kdrhbhzcmp .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2847,7 +2852,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-top-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_last_grand_summary_row_top {
+#kdrhbhzcmp .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2857,11 +2862,11 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-bottom-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_striped {
+#kdrhbhzcmp .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#papbwbyqnd .gt_table_body {
+#kdrhbhzcmp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2870,7 +2875,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-bottom-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_footnotes {
+#kdrhbhzcmp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2884,7 +2889,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-right-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_footnote {
+#kdrhbhzcmp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2893,7 +2898,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   padding-right: 5px;
 }
 
-#papbwbyqnd .gt_sourcenotes {
+#kdrhbhzcmp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2907,7 +2912,7 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   border-right-color: #D3D3D3;
 }
 
-#papbwbyqnd .gt_sourcenote {
+#kdrhbhzcmp .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2915,68 +2920,77 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
   padding-right: 5px;
 }
 
-#papbwbyqnd .gt_left {
+#kdrhbhzcmp .gt_left {
   text-align: left;
 }
 
-#papbwbyqnd .gt_center {
+#kdrhbhzcmp .gt_center {
   text-align: center;
 }
 
-#papbwbyqnd .gt_right {
+#kdrhbhzcmp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#papbwbyqnd .gt_font_normal {
+#kdrhbhzcmp .gt_font_normal {
   font-weight: normal;
 }
 
-#papbwbyqnd .gt_font_bold {
+#kdrhbhzcmp .gt_font_bold {
   font-weight: bold;
 }
 
-#papbwbyqnd .gt_font_italic {
+#kdrhbhzcmp .gt_font_italic {
   font-style: italic;
 }
 
-#papbwbyqnd .gt_super {
+#kdrhbhzcmp .gt_super {
   font-size: 65%;
 }
 
-#papbwbyqnd .gt_footnote_marks {
+#kdrhbhzcmp .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#papbwbyqnd .gt_asterisk {
+#kdrhbhzcmp .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#papbwbyqnd .gt_indent_1 {
+#kdrhbhzcmp .gt_indent_1 {
   text-indent: 5px;
 }
 
-#papbwbyqnd .gt_indent_2 {
+#kdrhbhzcmp .gt_indent_2 {
   text-indent: 10px;
 }
 
-#papbwbyqnd .gt_indent_3 {
+#kdrhbhzcmp .gt_indent_3 {
   text-indent: 15px;
 }
 
-#papbwbyqnd .gt_indent_4 {
+#kdrhbhzcmp .gt_indent_4 {
   text-indent: 20px;
 }
 
-#papbwbyqnd .gt_indent_5 {
+#kdrhbhzcmp .gt_indent_5 {
   text-indent: 25px;
+}
+
+#kdrhbhzcmp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#kdrhbhzcmp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 14%">
 <col style="width: 14%">
@@ -2988,38 +3002,42 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 </colgroup>
 <thead>
 <tr class="header gt_col_headings gt_spanner_row">
-<th rowspan="2" id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
-<th colspan="3" id="Parent Height" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">Parent Height</span></th>
-<th colspan="3" id="Parent Height + Gender" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">Parent Height + Gender</span></th>
+<th rowspan="2" id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th colspan="3" id="Parent Height" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+Parent Height
+</div></th>
+<th colspan="3" id="Parent Height + Gender" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+Parent Height + Gender
+</div></th>
 </tr>
 <tr class="odd gt_col_headings">
-<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
-<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
-<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
-<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+<th id="estimate_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="conf.low_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="p.value_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+<th id="estimate_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="conf.low_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="p.value_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">Average height of parents</td>
 <td class="gt_row gt_center" headers="estimate_1">1.2</td>
-<td class="gt_row gt_center" headers="ci_1">0.90, 1.5</td>
+<td class="gt_row gt_center" headers="conf.low_1">0.90, 1.5</td>
 <td class="gt_row gt_center" headers="p.value_1">&lt;0.001</td>
 <td class="gt_row gt_center" headers="estimate_2">0.67</td>
-<td class="gt_row gt_center" headers="ci_2">0.35, 0.99</td>
+<td class="gt_row gt_center" headers="conf.low_2">0.35, 0.99</td>
 <td class="gt_row gt_center" headers="p.value_2">&lt;0.001</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3">R²</td>
 <td class="gt_row gt_center" headers="estimate_1" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3">0.641</td>
-<td class="gt_row gt_center" headers="ci_1" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3"><br>
+<td class="gt_row gt_center" headers="conf.low_1" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3">0.780</td>
-<td class="gt_row gt_center" headers="ci_2" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3"><br>
+<td class="gt_row gt_center" headers="conf.low_2" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2" style="border-top-width: 2px; border-top-style: solid; border-top-color: #D3D3D3"><br>
 </td>
@@ -3027,12 +3045,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">Adjusted R²</td>
 <td class="gt_row gt_center" headers="estimate_1">0.631</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">0.769</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3040,12 +3058,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="even">
 <td class="gt_row gt_left" headers="label">Sigma</td>
 <td class="gt_row gt_center" headers="estimate_1">2.68</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">2.12</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3053,12 +3071,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">Statistic</td>
 <td class="gt_row gt_center" headers="estimate_1">67.7</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">65.7</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3066,12 +3084,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="even">
 <td class="gt_row gt_left" headers="label">p-value</td>
 <td class="gt_row gt_center" headers="estimate_1">&lt;0.001</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">&lt;0.001</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3079,12 +3097,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">df</td>
 <td class="gt_row gt_center" headers="estimate_1">1</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">2</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3092,12 +3110,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="even">
 <td class="gt_row gt_left" headers="label">Log-likelihood</td>
 <td class="gt_row gt_center" headers="estimate_1">-95.2</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">-85.3</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3105,12 +3123,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">AIC</td>
 <td class="gt_row gt_center" headers="estimate_1">196</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">179</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3118,12 +3136,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="even">
 <td class="gt_row gt_left" headers="label">BIC</td>
 <td class="gt_row gt_center" headers="estimate_1">201</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">185</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3131,12 +3149,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">Deviance</td>
 <td class="gt_row gt_center" headers="estimate_1">273</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">167</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3144,12 +3162,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="even">
 <td class="gt_row gt_left" headers="label">Residual df</td>
 <td class="gt_row gt_center" headers="estimate_1">38</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">37</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3157,12 +3175,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">No. Obs.</td>
 <td class="gt_row gt_center" headers="estimate_1">40</td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">40</td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3171,13 +3189,13 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <td class="gt_row gt_left" headers="label">gender</td>
 <td class="gt_row gt_center" headers="estimate_1"><br>
 </td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2"><br>
 </td>
-<td class="gt_row gt_center" headers="ci_2"><br>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
@@ -3186,12 +3204,12 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Males</td>
 <td class="gt_row gt_center" headers="estimate_1"><br>
 </td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">—</td>
-<td class="gt_row gt_center" headers="ci_2">—</td>
+<td class="gt_row gt_center" headers="conf.low_2">—</td>
 <td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
 </tr>
@@ -3199,17 +3217,17 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Females</td>
 <td class="gt_row gt_center" headers="estimate_1"><br>
 </td>
-<td class="gt_row gt_center" headers="ci_1"><br>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
 </td>
 <td class="gt_row gt_center" headers="p.value_1"><br>
 </td>
 <td class="gt_row gt_center" headers="estimate_2">-4.5</td>
-<td class="gt_row gt_center" headers="ci_2">-6.3, -2.6</td>
+<td class="gt_row gt_center" headers="conf.low_2">-6.3, -2.6</td>
 <td class="gt_row gt_center" headers="p.value_2">&lt;0.001</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="even">
-<td colspan="7" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> CI = Confidence Interval</td>
+<td colspan="7" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> CI = Confidence Interval</td>
 </tr>
 </tfoot>
 
@@ -3217,10 +3235,10 @@ font-style: inherit;">"Parent Height + Gender"</span>)) </span></code></pre></di
 
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Stacking tables</span></span>
-<span id="cb44-2"><span class="fu" style="color: #4758AB;
+<span id="cb43-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tbl_stack</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3229,7 +3247,7 @@ background-color: null;
 font-style: inherit;">tbl_regression</span>(m1), <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tbl_regression</span>(m2)),</span>
-<span id="cb44-3">          <span class="at" style="color: #657422;
+<span id="cb43-3">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">group_header =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3239,23 +3257,23 @@ font-style: inherit;">"Parent Height"</span>, <span class="st" style="color: #20
 background-color: null;
 font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div>
 <div class="cell-output-display">
-<div id="ybfnprmsdr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ybfnprmsdr table {
+<div id="bubkpfuanu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bubkpfuanu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ybfnprmsdr thead, #ybfnprmsdr tbody, #ybfnprmsdr tfoot, #ybfnprmsdr tr, #ybfnprmsdr td, #ybfnprmsdr th {
+#bubkpfuanu thead, #bubkpfuanu tbody, #bubkpfuanu tfoot, #bubkpfuanu tr, #bubkpfuanu td, #bubkpfuanu th {
   border-style: none;
 }
 
-#ybfnprmsdr p {
+#bubkpfuanu p {
   margin: 0;
   padding: 0;
 }
 
-#ybfnprmsdr .gt_table {
+#bubkpfuanu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3281,12 +3299,12 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-left-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_caption {
+#bubkpfuanu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ybfnprmsdr .gt_title {
+#bubkpfuanu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3298,7 +3316,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-bottom-width: 0;
 }
 
-#ybfnprmsdr .gt_subtitle {
+#bubkpfuanu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3310,7 +3328,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-top-width: 0;
 }
 
-#ybfnprmsdr .gt_heading {
+#bubkpfuanu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3322,13 +3340,13 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_bottom_border {
+#bubkpfuanu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_col_headings {
+#bubkpfuanu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3343,7 +3361,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_col_heading {
+#bubkpfuanu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3363,7 +3381,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   overflow-x: hidden;
 }
 
-#ybfnprmsdr .gt_column_spanner_outer {
+#bubkpfuanu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3375,15 +3393,15 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   padding-right: 4px;
 }
 
-#ybfnprmsdr .gt_column_spanner_outer:first-child {
+#bubkpfuanu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ybfnprmsdr .gt_column_spanner_outer:last-child {
+#bubkpfuanu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ybfnprmsdr .gt_column_spanner {
+#bubkpfuanu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3395,11 +3413,11 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   width: 100%;
 }
 
-#ybfnprmsdr .gt_spanner_row {
+#bubkpfuanu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ybfnprmsdr .gt_group_heading {
+#bubkpfuanu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3425,7 +3443,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   text-align: left;
 }
 
-#ybfnprmsdr .gt_empty_group_heading {
+#bubkpfuanu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3440,15 +3458,15 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   vertical-align: middle;
 }
 
-#ybfnprmsdr .gt_from_md > :first-child {
+#bubkpfuanu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ybfnprmsdr .gt_from_md > :last-child {
+#bubkpfuanu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ybfnprmsdr .gt_row {
+#bubkpfuanu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3467,7 +3485,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   overflow-x: hidden;
 }
 
-#ybfnprmsdr .gt_stub {
+#bubkpfuanu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3480,7 +3498,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   padding-right: 5px;
 }
 
-#ybfnprmsdr .gt_stub_row_group {
+#bubkpfuanu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3494,15 +3512,15 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   vertical-align: top;
 }
 
-#ybfnprmsdr .gt_row_group_first td {
+#bubkpfuanu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ybfnprmsdr .gt_row_group_first th {
+#bubkpfuanu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ybfnprmsdr .gt_summary_row {
+#bubkpfuanu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3512,16 +3530,16 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   padding-right: 5px;
 }
 
-#ybfnprmsdr .gt_first_summary_row {
+#bubkpfuanu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_first_summary_row.thick {
+#bubkpfuanu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ybfnprmsdr .gt_last_summary_row {
+#bubkpfuanu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3531,7 +3549,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_grand_summary_row {
+#bubkpfuanu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3541,7 +3559,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   padding-right: 5px;
 }
 
-#ybfnprmsdr .gt_first_grand_summary_row {
+#bubkpfuanu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3551,7 +3569,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-top-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_last_grand_summary_row_top {
+#bubkpfuanu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3561,11 +3579,11 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_striped {
+#bubkpfuanu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ybfnprmsdr .gt_table_body {
+#bubkpfuanu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3574,7 +3592,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_footnotes {
+#bubkpfuanu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3588,7 +3606,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_footnote {
+#bubkpfuanu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3597,7 +3615,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   padding-right: 5px;
 }
 
-#ybfnprmsdr .gt_sourcenotes {
+#bubkpfuanu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3611,7 +3629,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ybfnprmsdr .gt_sourcenote {
+#bubkpfuanu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3619,68 +3637,77 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
   padding-right: 5px;
 }
 
-#ybfnprmsdr .gt_left {
+#bubkpfuanu .gt_left {
   text-align: left;
 }
 
-#ybfnprmsdr .gt_center {
+#bubkpfuanu .gt_center {
   text-align: center;
 }
 
-#ybfnprmsdr .gt_right {
+#bubkpfuanu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ybfnprmsdr .gt_font_normal {
+#bubkpfuanu .gt_font_normal {
   font-weight: normal;
 }
 
-#ybfnprmsdr .gt_font_bold {
+#bubkpfuanu .gt_font_bold {
   font-weight: bold;
 }
 
-#ybfnprmsdr .gt_font_italic {
+#bubkpfuanu .gt_font_italic {
   font-style: italic;
 }
 
-#ybfnprmsdr .gt_super {
+#bubkpfuanu .gt_super {
   font-size: 65%;
 }
 
-#ybfnprmsdr .gt_footnote_marks {
+#bubkpfuanu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ybfnprmsdr .gt_asterisk {
+#bubkpfuanu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ybfnprmsdr .gt_indent_1 {
+#bubkpfuanu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ybfnprmsdr .gt_indent_2 {
+#bubkpfuanu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ybfnprmsdr .gt_indent_3 {
+#bubkpfuanu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ybfnprmsdr .gt_indent_4 {
+#bubkpfuanu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ybfnprmsdr .gt_indent_5 {
+#bubkpfuanu .gt_indent_5 {
   text-indent: 25px;
+}
+
+#bubkpfuanu .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#bubkpfuanu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
@@ -3689,10 +3716,10 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
 </colgroup>
 <thead>
 <tr class="header gt_col_headings">
-<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
-<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
-<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -3702,7 +3729,7 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
 <tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Parent Height  label">Average height of parents</td>
 <td class="gt_row gt_center" headers="Parent Height  estimate">1.2</td>
-<td class="gt_row gt_center" headers="Parent Height  ci">0.90, 1.5</td>
+<td class="gt_row gt_center" headers="Parent Height  conf.low">0.90, 1.5</td>
 <td class="gt_row gt_center" headers="Parent Height  p.value">&lt;0.001</td>
 </tr>
 <tr class="odd gt_group_heading_row">
@@ -3711,14 +3738,14 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
 <tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Parent Height + Gender  label">Average height of parents</td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  estimate">0.67</td>
-<td class="gt_row gt_center" headers="Parent Height + Gender  ci">0.35, 0.99</td>
+<td class="gt_row gt_center" headers="Parent Height + Gender  conf.low">0.35, 0.99</td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  p.value">&lt;0.001</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="Parent Height + Gender  label">gender</td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  estimate"><br>
 </td>
-<td class="gt_row gt_center" headers="Parent Height + Gender  ci"><br>
+<td class="gt_row gt_center" headers="Parent Height + Gender  conf.low"><br>
 </td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  p.value"><br>
 </td>
@@ -3726,19 +3753,19 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
 <tr class="even">
 <td class="gt_row gt_left" headers="Parent Height + Gender  label">&nbsp;&nbsp;&nbsp;&nbsp;Males</td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  estimate">—</td>
-<td class="gt_row gt_center" headers="Parent Height + Gender  ci">—</td>
+<td class="gt_row gt_center" headers="Parent Height + Gender  conf.low">—</td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  p.value"><br>
 </td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="Parent Height + Gender  label">&nbsp;&nbsp;&nbsp;&nbsp;Females</td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  estimate">-4.5</td>
-<td class="gt_row gt_center" headers="Parent Height + Gender  ci">-6.3, -2.6</td>
+<td class="gt_row gt_center" headers="Parent Height + Gender  conf.low">-6.3, -2.6</td>
 <td class="gt_row gt_center" headers="Parent Height + Gender  p.value">&lt;0.001</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="even">
-<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> CI = Confidence Interval</td>
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> CI = Confidence Interval</td>
 </tr>
 </tfoot>
 
@@ -3750,18 +3777,18 @@ font-style: inherit;">"Parent Height + Gender"</span>))</span></code></pre></div
 </div>
 <div id="tabset-1-3" class="tab-pane" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(m2) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb45-2">  rempsyc<span class="sc" style="color: #5E5E5E;
+<span id="cb44-2">  rempsyc<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">nice_table</span>()</span></code></pre></div>
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-3dfa0ade{table-layout:auto;}.cl-3df0c03c{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3df0c046{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3df47592{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-3df4759c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-3df48fdc{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3df48fe6{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3df48ff0{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3df48ff1{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3df48ffa{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-3dfa0ade"><thead><tr style="overflow-wrap:break-word;"><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c03c">Parameter</span></p></th><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c046">b</span></p></th><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c046">SE</span></p></th><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c03c">CI</span></p></th><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c046">t</span></p></th><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c046">df</span></p></th><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c046">p</span></p></th><th class="cl-3df48fdc"><p class="cl-3df47592"><span class="cl-3df0c03c">95% CI</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-3df48fe6"><p class="cl-3df4759c"><span class="cl-3df0c03c">(Intercept)</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">24.57</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">10.93</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">0.95</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">2.25</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">37</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">.031*</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">[2.42, 46.72]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3df48fe6"><p class="cl-3df4759c"><span class="cl-3df0c03c">avgphgt</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">0.67</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">0.16</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">0.95</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">4.26</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">37</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">&lt; .001***</span></p></td><td class="cl-3df48ff0"><p class="cl-3df47592"><span class="cl-3df0c03c">[0.35, 0.99]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3df48ff1"><p class="cl-3df4759c"><span class="cl-3df0c03c">genderFemales</span></p></td><td class="cl-3df48ffa"><p class="cl-3df47592"><span class="cl-3df0c03c">-4.47</span></p></td><td class="cl-3df48ffa"><p class="cl-3df47592"><span class="cl-3df0c03c">0.92</span></p></td><td class="cl-3df48ffa"><p class="cl-3df47592"><span class="cl-3df0c03c">0.95</span></p></td><td class="cl-3df48ffa"><p class="cl-3df47592"><span class="cl-3df0c03c">-4.85</span></p></td><td class="cl-3df48ffa"><p class="cl-3df47592"><span class="cl-3df0c03c">37</span></p></td><td class="cl-3df48ffa"><p class="cl-3df47592"><span class="cl-3df0c03c">&lt; .001***</span></p></td><td class="cl-3df48ffa"><p class="cl-3df47592"><span class="cl-3df0c03c">[-6.33, -2.60]</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-a1234762{table-layout:auto;}.cl-a1181fae{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a1181fc2{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a11c0fec{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-a11c0ff6{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-a11c3346{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a11c3347{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a11c3350{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a11c3351{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a11c335a{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a1234762"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fae">Parameter</span></p></th><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fc2">b</span></p></th><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fc2">SE</span></p></th><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fae">CI</span></p></th><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fc2">t</span></p></th><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fc2">df</span></p></th><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fc2">p</span></p></th><th class="cl-a11c3346"><p class="cl-a11c0fec"><span class="cl-a1181fae">95% CI</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a11c3347"><p class="cl-a11c0ff6"><span class="cl-a1181fae">(Intercept)</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">24.57</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">10.93</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">0.95</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">2.25</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">37</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">.031*</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">[2.42, 46.72]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a11c3347"><p class="cl-a11c0ff6"><span class="cl-a1181fae">avgphgt</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">0.67</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">0.16</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">0.95</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">4.26</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">37</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">&lt; .001***</span></p></td><td class="cl-a11c3350"><p class="cl-a11c0fec"><span class="cl-a1181fae">[0.35, 0.99]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a11c3351"><p class="cl-a11c0ff6"><span class="cl-a1181fae">genderFemales</span></p></td><td class="cl-a11c335a"><p class="cl-a11c0fec"><span class="cl-a1181fae">-4.47</span></p></td><td class="cl-a11c335a"><p class="cl-a11c0fec"><span class="cl-a1181fae">0.92</span></p></td><td class="cl-a11c335a"><p class="cl-a11c0fec"><span class="cl-a1181fae">0.95</span></p></td><td class="cl-a11c335a"><p class="cl-a11c0fec"><span class="cl-a1181fae">-4.85</span></p></td><td class="cl-a11c335a"><p class="cl-a11c0fec"><span class="cl-a1181fae">37</span></p></td><td class="cl-a11c335a"><p class="cl-a11c0fec"><span class="cl-a1181fae">&lt; .001***</span></p></td><td class="cl-a11c335a"><p class="cl-a11c0fec"><span class="cl-a1181fae">[-6.33, -2.60]</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </div>
@@ -3772,20 +3799,20 @@ font-style: inherit;">nice_table</span>()</span></code></pre></div>
 <h1>All the code in one place:</h1>
 <p>The preceding analyses might seem like a lot, but it is not really so much when you see it all in just a few lines of code. Here are all the main analyses:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Load packages</span></span>
-<span id="cb46-2"><span class="fu" style="color: #4758AB;
+<span id="cb45-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
-<span id="cb46-3"><span class="fu" style="color: #4758AB;
+<span id="cb45-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(easystats)</span>
-<span id="cb46-4"></span>
-<span id="cb46-5"><span class="co" style="color: #5E5E5E;
+<span id="cb45-4"></span>
+<span id="cb45-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Import data</span></span>
-<span id="cb46-6">d <span class="ot" style="color: #003B4F;
+<span id="cb45-6">d <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> haven<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -3794,43 +3821,43 @@ background-color: null;
 font-style: inherit;">read_spss</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://github.com/wjschne/EDUC5325/raw/master/height.sav"</span>)</span>
-<span id="cb46-7"></span>
-<span id="cb46-8"><span class="co" style="color: #5E5E5E;
+<span id="cb45-7"></span>
+<span id="cb45-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Plot data</span></span>
-<span id="cb46-9"><span class="fu" style="color: #4758AB;
+<span id="cb45-9"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(d, <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(weight,height)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb46-10">  <span class="fu" style="color: #4758AB;
+<span id="cb45-10">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb46-11">  <span class="fu" style="color: #4758AB;
+<span id="cb45-11">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"lm"</span>)</span>
-<span id="cb46-12"></span>
-<span id="cb46-13"><span class="co" style="color: #5E5E5E;
+<span id="cb45-12"></span>
+<span id="cb45-13"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Save plot</span></span>
-<span id="cb46-14"><span class="fu" style="color: #4758AB;
+<span id="cb45-14"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"my_plot.pdf"</span>)</span>
-<span id="cb46-15"></span>
-<span id="cb46-16"><span class="co" style="color: #5E5E5E;
+<span id="cb45-15"></span>
+<span id="cb45-16"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Create regression model</span></span>
-<span id="cb46-17">m1 <span class="ot" style="color: #003B4F;
+<span id="cb45-17">m1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3839,37 +3866,37 @@ background-color: null;
 font-style: inherit;">~</span>avgphgt, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> d)</span>
-<span id="cb46-18"></span>
-<span id="cb46-19"><span class="co" style="color: #5E5E5E;
+<span id="cb45-18"></span>
+<span id="cb45-19"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Check model assumptions</span></span>
-<span id="cb46-20"><span class="fu" style="color: #4758AB;
+<span id="cb45-20"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">check_model</span>(m1)</span>
-<span id="cb46-21"></span>
-<span id="cb46-22"><span class="co" style="color: #5E5E5E;
+<span id="cb45-21"></span>
+<span id="cb45-22"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Display results</span></span>
-<span id="cb46-23"><span class="fu" style="color: #4758AB;
+<span id="cb45-23"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(m1)</span>
-<span id="cb46-24"><span class="co" style="color: #5E5E5E;
+<span id="cb45-24"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Model fit</span></span>
-<span id="cb46-25"><span class="fu" style="color: #4758AB;
+<span id="cb45-25"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">performance</span>(m1)</span>
-<span id="cb46-26"><span class="co" style="color: #5E5E5E;
+<span id="cb45-26"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Model parameters</span></span>
-<span id="cb46-27"><span class="fu" style="color: #4758AB;
+<span id="cb45-27"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(m1)</span>
-<span id="cb46-28"></span>
-<span id="cb46-29"><span class="co" style="color: #5E5E5E;
+<span id="cb45-28"></span>
+<span id="cb45-29"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Multiple regression</span></span>
-<span id="cb46-30">m2 <span class="ot" style="color: #003B4F;
+<span id="cb45-30">m2 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3880,27 +3907,27 @@ background-color: null;
 font-style: inherit;">+</span> gender, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> d)</span>
-<span id="cb46-31"><span class="fu" style="color: #4758AB;
+<span id="cb45-31"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(m2)</span>
-<span id="cb46-32"><span class="fu" style="color: #4758AB;
+<span id="cb45-32"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(m2, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">standardize =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"refit"</span>)</span>
-<span id="cb46-33"></span>
-<span id="cb46-34"><span class="co" style="color: #5E5E5E;
+<span id="cb45-33"></span>
+<span id="cb45-34"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Compare model m1 and model m2</span></span>
-<span id="cb46-35"><span class="fu" style="color: #4758AB;
+<span id="cb45-35"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">test_wald</span>(m1, m2)</span>
-<span id="cb46-36"><span class="fu" style="color: #4758AB;
+<span id="cb45-36"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">test_bf</span>(m1, m2)</span>
-<span id="cb46-37"><span class="fu" style="color: #4758AB;
+<span id="cb45-37"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">compare_performance</span>(m1, m2)</span></code></pre></div>
 </div>
@@ -3919,7 +3946,7 @@ font-style: inherit;">compare_performance</span>(m1, m2)</span></code></pre></di
 <li><code>income</code> = Annual income before incarceration</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1">d_learn <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1">d_learn <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3946,7 +3973,7 @@ Hint 1
 <div class="callout-body-container callout-body">
 <p>Make model fit object called <code>m_read</code> using the <code>lm</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1">m_read <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1">m_read <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3974,15 +4001,15 @@ Hint 2
 <p>View coefficient-level statistics with the <code>parameters</code> function.</p>
 <p>You could also use Base R’s <code>summary</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(m_read)</span>
-<span id="cb49-2"></span>
-<span id="cb49-3"><span class="co" style="color: #5E5E5E;
+<span id="cb48-2"></span>
+<span id="cb48-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or</span></span>
-<span id="cb49-4"></span>
-<span id="cb49-5"><span class="fu" style="color: #4758AB;
+<span id="cb48-4"></span>
+<span id="cb48-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(m_read)</span></code></pre></div>
 </div>
@@ -4003,12 +4030,12 @@ Hint 3
 <div class="callout-body-container callout-body">
 <p>In the read_1 row, is the p.value column less than 0.05?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(m_read)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 16%">
@@ -4083,15 +4110,15 @@ Hint
 <p>View model-level statistics with the <code>performance</code> function.</p>
 <p>You could also use Base R’s <code>summary</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">performance</span>(m_read)</span>
-<span id="cb51-2"></span>
-<span id="cb51-3"><span class="co" style="color: #5E5E5E;
+<span id="cb50-2"></span>
+<span id="cb50-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or</span></span>
-<span id="cb51-4"></span>
-<span id="cb51-5"><span class="fu" style="color: #4758AB;
+<span id="cb50-4"></span>
+<span id="cb50-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(m_read)</span></code></pre></div>
 </div>
@@ -4116,7 +4143,7 @@ Hint for Getting Started
 <div class="callout-body-container callout-body">
 <p>This will get you started</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -4139,14 +4166,14 @@ Hint for Adding Points
 <div class="callout-body-container callout-body">
 <p>Here is how you add points.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(read_1, read_2)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb53-2">  <span class="fu" style="color: #4758AB;
+<span id="cb52-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() </span></code></pre></div>
 </div>
@@ -4167,19 +4194,19 @@ Hint for Adding a Regression Line
 <div class="callout-body-container callout-body">
 <p>Here is how you add a regression line.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(read_1, read_2)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb54-2">  <span class="fu" style="color: #4758AB;
+<span id="cb53-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb54-3">  <span class="fu" style="color: #4758AB;
+<span id="cb53-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -4204,15 +4231,15 @@ Plot Polishing
 <div class="callout-body-container callout-body">
 <p>This is overkill for now. But someday you might want to be able to make your plots as polished as possible.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># I want to put the equation at x = 130</span></span>
-<span id="cb55-2">equation_x <span class="ot" style="color: #003B4F;
+<span id="cb54-2">equation_x <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">130</span></span>
-<span id="cb55-3">equation_y <span class="ot" style="color: #003B4F;
+<span id="cb54-3">equation_y <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -4223,11 +4250,11 @@ background-color: null;
 font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">read_1 =</span> equation_x))</span>
-<span id="cb55-4"></span>
-<span id="cb55-5"><span class="co" style="color: #5E5E5E;
+<span id="cb54-4"></span>
+<span id="cb54-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Extracting the coefficients</span></span>
-<span id="cb55-6">b_read <span class="ot" style="color: #003B4F;
+<span id="cb54-6">b_read <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -4236,11 +4263,11 @@ background-color: null;
 font-style: inherit;">coef</span>(m_read),<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>)</span>
-<span id="cb55-7"></span>
-<span id="cb55-8"><span class="co" style="color: #5E5E5E;
+<span id="cb54-7"></span>
+<span id="cb54-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The angle of the regression line is the inverse tangent of the slope (converted to degrees)</span></span>
-<span id="cb55-9">eq_angle <span class="ot" style="color: #003B4F;
+<span id="cb54-9">eq_angle <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -4253,43 +4280,43 @@ background-color: null;
 font-style: inherit;">180</span> <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span> pi</span>
-<span id="cb55-10"></span>
-<span id="cb55-11"><span class="co" style="color: #5E5E5E;
+<span id="cb54-10"></span>
+<span id="cb54-11"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Equation</span></span>
-<span id="cb55-12">eq_read <span class="ot" style="color: #003B4F;
+<span id="cb54-12">eq_read <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"italic(Y) == "</span>, </span>
-<span id="cb55-13">                  b_read[<span class="dv" style="color: #AD0000;
+<span id="cb54-13">                  b_read[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>], </span>
-<span id="cb55-14">                  <span class="st" style="color: #20794D;
+<span id="cb54-14">                  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">" + "</span>, </span>
-<span id="cb55-15">                  b_read[<span class="dv" style="color: #AD0000;
+<span id="cb54-15">                  b_read[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>], </span>
-<span id="cb55-16">                  <span class="st" style="color: #20794D;
+<span id="cb54-16">                  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">" *  italic(X) + italic(e)"</span>)</span>
-<span id="cb55-17"></span>
-<span id="cb55-18"><span class="fu" style="color: #4758AB;
+<span id="cb54-17"></span>
+<span id="cb54-18"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(d_learn, <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(read_1, read_2)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb55-19">  <span class="fu" style="color: #4758AB;
+<span id="cb54-19">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb55-20">  <span class="fu" style="color: #4758AB;
+<span id="cb54-20">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -4298,61 +4325,61 @@ background-color: null;
 font-style: inherit;">"lm"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb55-21">  <span class="fu" style="color: #4758AB;
+<span id="cb54-21">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Reading at Time 1"</span>,</span>
-<span id="cb55-22">       <span class="at" style="color: #657422;
+<span id="cb54-22">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Reading at Time 2"</span>,</span>
-<span id="cb55-23">       <span class="at" style="color: #657422;
+<span id="cb54-23">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Using Reading at Time 1 to Predict Reading at Time 2"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb55-24">  <span class="fu" style="color: #4758AB;
+<span id="cb54-24">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">coord_fixed</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb55-25">  <span class="fu" style="color: #4758AB;
+<span id="cb54-25">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb55-26">  <span class="fu" style="color: #4758AB;
+<span id="cb54-26">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">annotate</span>(</span>
-<span id="cb55-27">    <span class="at" style="color: #657422;
+<span id="cb54-27">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"text"</span>,</span>
-<span id="cb55-28">    <span class="at" style="color: #657422;
+<span id="cb54-28">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> equation_x,</span>
-<span id="cb55-29">    <span class="at" style="color: #657422;
+<span id="cb54-29">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> equation_y,</span>
-<span id="cb55-30">    <span class="at" style="color: #657422;
+<span id="cb54-30">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">angle =</span> eq_angle,</span>
-<span id="cb55-31">    <span class="at" style="color: #657422;
+<span id="cb54-31">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label =</span> eq_read,</span>
-<span id="cb55-32">    <span class="at" style="color: #657422;
+<span id="cb54-32">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">parse =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>,</span>
-<span id="cb55-33">    <span class="at" style="color: #657422;
+<span id="cb54-33">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">vjust =</span> <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -4389,7 +4416,7 @@ Hint
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1">m_math <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1">m_math <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -4400,7 +4427,7 @@ background-color: null;
 font-style: inherit;">+</span> read_1, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> d_learn)</span>
-<span id="cb56-2"><span class="fu" style="color: #4758AB;
+<span id="cb55-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(m_math)</span></code></pre></div>
 </div>
@@ -4985,7 +5012,7 @@ font-style: inherit;">%&gt;%</span> </span>
 background-color: null;
 font-style: inherit;">skim</span>()</span></code></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -5027,7 +5054,7 @@ font-style: inherit;">skim</span>()</span></code></pre></div>
 </tbody>
 </table>
 <p><strong>Variable type: factor</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 12%">
@@ -5058,7 +5085,7 @@ font-style: inherit;">skim</span>()</span></code></pre></div>
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 27%">
 <col style="width: 12%">
@@ -5132,7 +5159,7 @@ font-style: inherit;">%&gt;%</span> </span>
 background-color: null;
 font-style: inherit;">skim</span>()</span></code></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -5170,7 +5197,7 @@ font-style: inherit;">skim</span>()</span></code></pre></div>
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 23%">
 <col style="width: 11%">
@@ -5834,7 +5861,7 @@ font-style: inherit;">5</span>)</span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_col_headings">
 <th class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
@@ -6688,7 +6715,7 @@ font-style: inherit;">View</span>(d)</span></code></pre></div>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">d</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 3%">
@@ -7392,7 +7419,7 @@ background-color: null;
 font-style: inherit;">8</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 3%">
@@ -7612,7 +7639,7 @@ background-color: null;
 font-style: inherit;">7</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 3%">
@@ -7837,7 +7864,7 @@ background-color: null;
 font-style: inherit;">10</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 3%">
@@ -8191,7 +8218,7 @@ background-color: null;
 font-style: inherit;">10</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 3%">
@@ -8733,7 +8760,7 @@ background-color: null;
 font-style: inherit;">select</span>(id, time_1)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -8790,7 +8817,7 @@ background-color: null;
 font-style: inherit;">:</span>time_5)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">time_1</th>
@@ -8874,7 +8901,7 @@ background-color: null;
 font-style: inherit;">-</span>id)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 3%">
 <col style="width: 4%">
@@ -9538,7 +9565,7 @@ background-color: null;
 font-style: inherit;">"time"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 1%">
 <col style="width: 1%">
@@ -10181,7 +10208,7 @@ background-color: null;
 font-style: inherit;">"0"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">time_10</th>
@@ -10276,7 +10303,7 @@ background-color: null;
 font-style: inherit;">"_2"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 8%">
 <col style="width: 9%">
@@ -10431,7 +10458,7 @@ background-color: null;
 font-style: inherit;">"time_"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -10502,7 +10529,7 @@ background-color: null;
 font-style: inherit;">baseline =</span> baseline_sessions_n)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 2%">
 <col style="width: 1%">
@@ -11200,7 +11227,7 @@ background-color: null;
 font-style: inherit;">"Time "</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 3%">
@@ -11891,7 +11918,7 @@ background-color: null;
 font-style: inherit;">any_of</span>(v_names))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 1%">
@@ -12574,7 +12601,7 @@ background-color: null;
 font-style: inherit;">"intervention_sessions_n"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 0%">
 <col style="width: 1%">
@@ -13271,7 +13298,7 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-striped table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
@@ -13308,7 +13335,7 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 <p>What we need is:</p>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-striped table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
@@ -13383,7 +13410,7 @@ background-color: null;
 font-style: inherit;">:</span>time_3)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -13465,7 +13492,7 @@ background-color: null;
 font-style: inherit;">"on_task"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -13552,7 +13579,7 @@ background-color: null;
 font-style: inherit;">"time_"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -13646,7 +13673,7 @@ background-color: null;
 font-style: inherit;">time =</span> as.integer)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -13744,7 +13771,7 @@ background-color: null;
 font-style: inherit;">as.integer</span>())</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -13862,7 +13889,7 @@ background-color: null;
 font-style: inherit;">"time_"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 29%">
@@ -13961,7 +13988,7 @@ background-color: null;
 font-style: inherit;">1</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 27%">
@@ -17831,7 +17858,7 @@ font-style: inherit;">1</span>)</span></code></pre></div>
 <div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">d_longer</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -21251,7 +21278,7 @@ font-style: inherit;">"Post-Intervention"</span> </span>
 <span id="cb35-8">d_longer</span></code></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 3%">
 <col style="width: 25%">
@@ -26489,7 +26516,7 @@ font-style: inherit;">"my_data.csv"</span>)</span></code></pre></div>
 <p>One of the benefits of using dates in the ISO format is that they sort chronologically. Which file names would you prefer to deal with?</p>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Sorted Traditional Dates</th>
