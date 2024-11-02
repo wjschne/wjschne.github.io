@@ -77,7 +77,7 @@ Overture/</a>
 <p>Because a complete description of CHC theory can be found in <a href="http://www.iapsych.com/articles/schneider2012.pdf">Schneider and McGrew (2012)</a>, no space will be wasted on a summary here. Figure&nbsp;1 displays the broad abilities arranged conceptually.</p>
 <div class="cell fig-cap-location-bottom page-columns page-full">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-chc" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" alt="A graphical depiction of CHC Theory" data-cap-location="bottom">
+<div id="fig-chc" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="bottom" alt="A graphical depiction of CHC Theory">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-chc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="https://wjschne.github.io/AssessingPsyche/2016-10-26 RESCA-E/CHC.svg" class="img-fluid figure-img column-page-right" style="width:100.0%" alt="A graphical depiction of CHC Theory">
@@ -1995,6 +1995,230 @@ deviation, and the half-normal distribution. <em>AssessingPsyche</em>.
 </div></div></section></div> ]]></description>
   <guid>https://wjschne.github.io/AssessingPsyche/2014-05-05-difference-scores-absolute-deviation-half-normal-distribution/</guid>
   <pubDate>Mon, 05 May 2014 04:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Visualizing Covariance</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/AssessingPsyche/2024-11-02-visualizing-covariance/visualizingcovariance.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Correlation? I get it. I have a gut-level sense of what it is. Covariance? Somehow it just eludes me. I mean, I know the formulas, and I can give you a conceptual definition of it—but its meaning never really sunk in.</p>
+<p>One thing about covariance that always seemed counterintuitive to me is that covariance between two variables of unequal variance can sometimes be larger than the variance of the variable with less variance. For example, if X has a variance of 9, Y has a variance of 64 and the correlation between X and Y is 0.5, the covariance between X and Y is 12. How can X have a larger covariance with Y than its own variance (i.e., its covariance with itself)? Never made sense to me.</p>
+<p>To figure it out, I created a little web app that allows the user to change the standard deviations of variables <em>x</em> and <em>y</em>, as well as the correlation between the two variables.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 650
+library(shiny)
+library(glue)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(ggtext) 
+# ?geom_rect
+
+prob_label &lt;- function (p, accuracy = 0.01, digits = NULL, max_digits = NULL, 
+    remove_leading_zero = TRUE, round_zero_one = TRUE) 
+{
+    if (is.null(digits)) {
+        l &lt;- scales::number(p, accuracy = accuracy)
+    }
+    else {
+        sig_digits &lt;- abs(ceiling(log10(p + p/1e+09)) - digits)
+        pgt99 &lt;- p &gt; 0.99
+        sig_digits[pgt99] &lt;- abs(ceiling(log10(1 - p[pgt99])) - 
+            digits + 1)
+        sig_digits[ceiling(log10(p)) == log10(p) &amp; (-log10(p) &gt;= 
+            digits)] &lt;- sig_digits[ceiling(log10(p)) == log10(p) &amp; 
+            (-log10(p) &gt;= digits)] - 1
+        sig_digits[is.infinite(sig_digits)] &lt;- 0
+        l &lt;- purrr::map2_chr(p, sig_digits, formatC, format = "f", 
+            flag = "#")
+    }
+    if (remove_leading_zero) 
+        l &lt;- sub("^-0", "-", sub("^0", "", l))
+    if (round_zero_one) {
+        l[p == 0] &lt;- "0"
+        l[p == 1] &lt;- "1"
+        l[p == -1] &lt;- "-1"
+    }
+    if (!is.null(max_digits)) {
+        if (round_zero_one) {
+            l[round(p, digits = max_digits) == 0] &lt;- "0"
+            l[round(p, digits = max_digits) == 1] &lt;- "1"
+            l[round(p, digits = max_digits) == -1] &lt;- "-1"
+        }
+        else {
+            l[round(p, digits = max_digits) == 0] &lt;- paste0(".", 
+                paste0(rep("0", max_digits), collapse = ""))
+            l[round(p, digits = max_digits) == 1] &lt;- paste0("1.", 
+                paste0(rep("0", max_digits), collapse = ""))
+            l[round(p, digits = max_digits) == -1] &lt;- paste0("-1.", 
+                paste0(rep("0", max_digits), collapse = ""))
+        }
+    }
+    l &lt;- sub(pattern = "-", replacement = "−", x = l)
+    Encoding(l) &lt;- "UTF-8"
+    dim(l) &lt;- dim(p)
+    l
+}
+ui &lt;- fluidPage(
+  sidebarLayout(
+      mainPanel(
+      plotOutput(outputId = "distPlot",width = "400px", height = "400px")
+    ),
+    sidebarPanel(
+      div(style="display: inline-block; width: 200px;",
+      sliderInput(
+        inputId = "sd_blue",
+        label = "SD for x:",
+        min = 1,
+        max = 10,
+        value = 10
+      )),
+      div(style="display: inline-block; width: 200px;",
+      sliderInput(
+        inputId = "sd_red",
+        label = "SD for y:",
+        min = 1,
+        max = 10,
+        value = 10
+      )),
+      div(style="display: inline-block; width: 200px;",
+      sliderInput(
+        inputId = "r",
+        label = "Correlation (r)",
+        min = 0,
+        max = 1,
+        value = .5, step = .01
+      ))
+    )
+    
+  )
+)
+server &lt;- function(input, output) {
+  output$distPlot &lt;- renderPlot({
+    sd_blue &lt;- input$sd_blue
+    sd_red &lt;- input$sd_red
+    r &lt;- input$r
+    x_red &lt;- sd_red / 2
+    y_red &lt;- x_red + sd_blue
+    x_blue &lt;- sd_red + sd_blue / 2
+    y_blue &lt;- sd_blue / 2
+    x_pink &lt;- x_blue
+    y_pink &lt;- y_red
+    x_purple &lt;- x_blue
+    y_purple &lt;- sd_blue + r * sd_red / 2
+    tibble(
+      x = c(x_red, x_blue, x_pink, x_purple),
+      y = c(y_red, y_blue, y_pink, y_purple),
+      width =  c(sd_red, sd_blue, sd_blue, sd_blue),
+      height = c(sd_red, sd_blue, sd_red, sd_red  * r),
+      color = c("firebrick4", "dodgerblue4", "orchid", "orchid4"),
+      label = c(
+        glue("Var(*y*) = {sd_red ^ 2}"),
+        glue("Var(*x*) = {sd_blue ^ 2}"),
+        "",
+        glue("Cov(*xy*) = {round(sd_blue * sd_red * r, 2)}")
+      )
+    ) %&gt;%
+      ggplot(aes(x, y)) +
+      geom_tile((aes(
+        width = width,
+        height = height,
+        fill = I(color)
+      ))) +
+      geom_richtext(
+        aes(label = label),
+        color = "white",
+        size = 4,
+        fill = NA,
+        label.color = NA
+      ) +
+      geom_segment(
+        data = tibble(
+          x = c(sd_red, sd_red, sd_red + sd_blue),
+          y = c(sd_blue, sd_blue, sd_blue),
+          xend = c(sd_red + sd_blue, sd_red, sd_red + sd_blue),
+          yend = c(sd_blue, sd_red + sd_blue, r * sd_red + sd_blue)
+        ),
+        aes(xend = xend, yend = yend),
+        color = "white",
+        arrow = arrow(
+          15,
+          length = unit(10, "pt"),
+          ends = "both",
+          type = "closed"
+        )
+      ) +
+      geom_richtext(
+        data = tibble(
+          x = c(x_blue, sd_red, sd_red + sd_blue),
+          y = c(sd_blue, x_pink, y_purple),
+          label = c(
+            glue("SD~*x*~ = {sd_blue}"),
+            glue("SD~*y*~ = {sd_red}"),
+            glue("*r*~*xy*~ = {prob_label(r)}")
+          ),
+          angle = c(0, 90, 90),
+          vjust = c(.5, .5, 1.1)
+        ),
+        aes(
+          label = label,
+          angle = angle,
+          vjust = vjust
+        )
+      ) +
+      scale_x_continuous(NULL, 
+                         expand = expansion(add = 1), 
+                         limits = c(0, 20)) +
+      scale_y_continuous(NULL, 
+                         expand = expansion(add = 1), 
+                         limits = c(0, 20))+
+      coord_equal(clip = "off") +
+      theme_void() +
+      theme(panel.background = element_rect("black"))
+  })
+}
+shinyApp(ui = ui, server = server)</code></pre>
+<p>The area of the blue square is equal to the variance of X. The area of the red square is equal to the variance of Y. The pink rectangle (which is partially occluded by the purple rectangle) is how large covariance could be if X and Y were perfectly correlated. The area of the purple square is equal to the covariance between X and Y. The ratio of the area of the purple rectangle to the area of the pink rectangle is equal to the correlation between X and Y.</p>
+<p>I’m not sure why but this visualization has made me feel better about covariance. It’s like were friends now. 😉</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Originally <a href="https://assessingpsyche.wordpress.com/2012/09/13/visualizing-covariance/">posted 2012-09-13 on AssessingPsyche</a>. The original article had a web app created with Mathematica’s computatable document format. Because link to the app is now dead, I recreated the app in Shinylive.</p>
+</div>
+</div>
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2012,
+  author = {Schneider, W. Joel},
+  title = {Visualizing {Covariance}},
+  date = {2012-09-13},
+  url = {https://wjschne.github.io/AssessingPsyche/2024-11-02-visualizing-covariance/visualizingcovariance.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2012" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2012, September 13). Visualizing Covariance.
+<em>AssessingPsyche</em>. <a href="https://wjschne.github.io/AssessingPsyche/2024-11-02-visualizing-covariance/visualizingcovariance.html">https://wjschne.github.io/AssessingPsyche/2024-11-02-visualizing-covariance/visualizingcovariance.html</a>
+</div></div></section></div> ]]></description>
+  <category>lua</category>
+  <category>pandoc</category>
+  <guid>https://wjschne.github.io/AssessingPsyche/2024-11-02-visualizing-covariance/visualizingcovariance.html</guid>
+  <pubDate>Thu, 13 Sep 2012 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
