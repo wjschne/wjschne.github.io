@@ -1,0 +1,624 @@
+---
+title: A Gentle, Non-Technical Introduction to Factor Analysis
+date: '2014-01-13'
+engine: knitr
+categories: 
+  - statistics
+description: "Discovering Underlying Dimensions in Data"
+tags:
+  - factor analysis
+  - statistics
+filters: 
+  - shinylive
+knitr: 
+  opts_chunk: 
+    dev: ragg_png
+    echo: false
+    cache: true
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggdiagram)
+library(ggtext)
+library(gt)
+library(GPArotation)
+myfont <- "Roboto Condensed"
+fills <- class_color(viridis::viridis(4, .6, .2, .8))
+fills@brightness <- .55
+fills@red
+
+d_items <- "
+Items                                 	1   	2   	3   	4   	5   	6   
+1. gets in fights frequently at school	1.00	0.81	0.79	0.42	0.39	0.37
+2. is defiant to adults               	0.81	1.00	0.75	0.38	0.34	0.34
+3. is very impulsive                  	0.79	0.75	1.00	0.36	0.34	0.32
+4. has stomachaches frequently        	0.42	0.38	0.36	1.00	0.77	0.77
+5. is anxious about many things       	0.39	0.34	0.34	0.77	1.00	0.74
+6. appears sad much of the time       	0.37	0.34	0.32	0.77	0.74	1.00" %>%
+	readr::read_tsv()
+```
+
+When measuring characteristics of physical objects, there may be some disagreement about the best methods to use but there is little disagreement about which dimensions are being measured. We know that we are measuring length when we use a ruler and we know that we are measuring temperature when we use a thermometer. It is true that heating some materials makes them expand but we are virtually never confused about whether heat and length represent distinct dimensions that are independent of each other. That is, they are independent of each other in the sense that things can be cold and long, cold and short, hot and long, or hot and short.
+
+Unfortunately, we are not nearly as clear about what we are measuring when we attempt to measure psychological dimensions such as personality traits, motivations, beliefs, attitudes, and cognitive abilities. Psychologists often disagree not only about what to name these dimensions but also about how many dimensions there are to measure. For example, you might think that there exists a personality trait called niceness. Another person might disagree with you, arguing that niceness is a vague term that lumps together 2 related but distinguishable traits called friendliness and kindness. Another person could claim that kindness is too general and that we must separate kindness with friends from kindness with strangers.
+
+As you might imagine, these kinds of arguments can quickly lead to hypothesizing the existence of as many different traits as our imaginations can generate. The result would be a hopeless confusion among psychological researchers because they would have no way to agree on what to measure so that they can build upon one another’s findings. Fortunately, there are ways to put some limits on the number of psychological dimensions and come to some degree of consensus about what should be measured. One of the most commonly used of such methods is called factor analysis.
+
+Although the mathematics of factor analysis is complicated, the logic behind it is not difficult to understand. The assumption behind factor analysis is that things that co-occur tend to have a common cause. For example, fevers, sore throats, stuffy noses, coughs, and sneezes tend to occur at roughly the same time in the same person. Often, they are caused by the same thing, namely, the virus that causes the common cold. Note that although the virus is one thing, its manifestations are quite diverse. In psychological assessment research, we measure a diverse set of abilities, behaviors and symptoms and attempt to deduce which underlying dimensions cause or account for the variations in behavior and symptoms we observe in large groups of people. We measure the relations between various behaviors, symptoms, and test scores with correlation coefficients and use factor analysis to discover patterns of correlation coefficients that suggest the existence of underlying psychological dimensions.
+
+All else being equal, a simple theory is better than a complicated theory. Therefore, factor analysis helps us discover the smallest number of psychological dimensions (i.e., factors) that can account for the correlation patterns in the various behaviors, symptoms, and test scores we observe. For example, imagine that we create 4 different tests that would measure people’s knowledge of vocabulary, grammar, arithmetic, and geometry. If the correlations between all of these tests were 0 (i.e., high scorers on one test are no more likely to score high on the other tests than low scorers), then the factor analysis would suggest to us that we have measured 4 distinct abilities and no simplification of the data is possible. The correlations between all the tests are displayed in @tbl-independent.
+
+```{r tbl-independent}
+#| tbl-cap: "Correlation Matrix of Academic Tests"
+#| fig-width: 7
+#| fig-height: 7
+d <- tibble::tribble(
+        ~tests, ~Vocabulary, ~Grammar, ~Arithmetic, ~Geometry,
+  "Vocabulary",          1L,       0L,          0L,        0L,
+     "Grammar",          0L,       1L,          0L,        0L,
+  "Arithmetic",          0L,       0L,          1L,        0L,
+    "Geometry",          0L,       0L,          0L,        1L
+  ) 
+
+d %>% 
+  column_to_rownames("tests") %>% 
+  corrr::as_cordf(diagonal = T) %>% 
+  corrr::stretch() %>% 
+  mutate(x = fct_inorder(x),
+         y = fct_inorder(y) %>% fct_rev(),
+         color = ifelse(r < .5, "gray20", "gray95")) %>% 
+  ggplot(aes(x,y)) +
+  geom_tile(aes(alpha = I(r)), linewidth = .5, fill = fills@mean) +
+  geom_text(aes(label = round_probability(r), color = I(color)), family = myfont, size = 18, size.unit = "pt") +
+  geom_vline(xintercept = 0:4 + .5, color = "gray80") +
+  geom_hline(yintercept = 0:4 + .5, color = "gray80") +
+  scale_x_discrete(NULL, position = "top") +
+  scale_y_discrete(NULL) +
+  coord_equal() +
+  theme_minimal(base_size = 18, base_family = myfont) + 
+  theme(legend.position = "none", panel.grid.major = element_blank()) + 
+  scale_fill_continuous()
+```
+
+In @fig-independent, the theoretical model that would be implied is that there are 4 abilities (shown as circles) that influence performance on 4 tests (shown as squares). The numbers beside the arrows imply that the abilities and the tests have high but imperfect correlations of 0.9.
+
+```{r fig-independent}
+#| fig-cap: Four Independent Tests
+#| fig-width: 7
+#| fig-height: 4.6
+ggdiagram(font_family = myfont) +
+  {l <- ob_circle(radius = 2 / sqrt(pi)) %>%
+      ob_array(
+        k = 4,
+        sep = .5,
+        label = ob_label(
+          d$tests,
+          color = "white",
+          fill = NA,
+          size = 14
+        ),
+        fill = fills,
+        color = NA
+      )} +
+  {o <- ob_ellipse(m1 = 12) %>% ob_array(
+      4,
+      4,
+      label = ob_label(
+        d$tests,
+        color = "white",
+        fill = NA,
+        size = 14
+      ),
+      fill = fills,
+      color = NA
+    ) %>% place(l, "below", 2)} +
+  connect(
+    l,
+    o,
+    resect = 2,
+    color = fills,
+    label = ob_label(
+      ggdiagram::round_probability(.9, phantom_text = "."),
+      angle = 0,
+      size = 14
+    )
+  )
+
+
+```
+
+Of course, you probably recognize that it is very unlikely that the correlations between these tests would be 0. Therefore, imagine that the correlation between the vocabulary and grammar tests is quite high: .81. This means that high scorers on vocabulary are likely to also score high on grammar and low scorers on vocabulary are likely to score low on grammar. The correlation between arithmetic and geometry is .81 also. Furthermore, the correlations between the language tests and the mathematics tests is 0. The new correlation matrix is in @tbl-independent2.
+
+```{r tbl-independent2}
+#| tbl-cap: "Correlation Matrix of Academic Tests"
+#| fig-width: 7
+#| fig-height: 7
+d <- tibble::tribble(
+        ~tests, ~Vocabulary, ~Grammar, ~Arithmetic, ~Geometry,
+  "Vocabulary",          1L,       .81,          0L,        0L,
+     "Grammar",          .81,       1L,          0L,        0L,
+  "Arithmetic",          0L,       0L,          1L,        .81,
+    "Geometry",          0L,       0L,          .81,        1L
+  ) 
+
+d %>% 
+  column_to_rownames("tests") %>% 
+  corrr::as_cordf(diagonal = T) %>% 
+  corrr::stretch() %>% 
+  mutate(x = fct_inorder(x),
+         y = fct_inorder(y) %>% fct_rev(),
+         color = ifelse(r < .5, "gray20", "gray95")) %>% 
+  ggplot(aes(x,y)) +
+  geom_tile(aes(alpha = I(r)), linewidth = .5, fill = fills@mean) +
+  geom_text(aes(label = round_probability(r), color = I(color)), 
+            family = myfont, 
+            size = 18, 
+            size.unit = "pt") +
+  geom_vline(xintercept = 0:4 + .5, color = "gray80") +
+  geom_hline(yintercept = 0:4 + .5, color = "gray80") +
+  scale_x_discrete(NULL, position = "top") +
+  scale_y_discrete(NULL) +
+  coord_equal() +
+  theme_minimal(base_size = 18, base_family = myfont) + 
+  theme(legend.position = "none", panel.grid.major = element_blank()) + 
+  scale_fill_continuous()
+```
+
+Factor analysis would suggest that we have measured not 4 distinct abilities but rather 2 abilities. Researchers interpreting the results of the factor analysis would have to use their best judgment to decide what to call these 2 abilities. In this case, it would seem reasonable to call them language ability and mathematical ability. These 2 abilities (shown below as circles in @fig-independent2) influence performance on 4 tests (shown as squares).
+
+```{r fig-independent2}
+#| fig-cap: Two Independent Academic Abilities
+#| fig-width: 7
+#| fig-height: 5.3
+
+p <- ggdiagram(font_family = myfont) +
+  {o <- ob_ellipse(m1 = 12) %>% ob_array(
+      4,
+      .5,
+      label = ob_label(
+        d$tests,
+        color = "white",
+        fill = NA,
+        size = 14
+      ),
+      fill = fills,
+      color = NA
+    ) } +
+  {lang <- ob_circle(
+      fill = fills[1:2]@mean,
+      color = NA,
+      radius = sqrt(2) * 2 / sqrt(pi),
+      label = ob_label(
+        "Language<br>Ability",
+        color = "white",
+        fill = NA,
+        size = 20
+      )
+    ) %>%
+      place(o[1:2]@bounding_box, "above", 2)} +
+  {math <- ob_circle(
+      fill = fills[3:4]@mean,
+      color = NA,
+      radius = sqrt(2) * 2 / sqrt(pi),
+      label = ob_label(
+        "Math<br>Ability",
+        color = "white",
+        fill = NA,
+        size = 20
+      )
+    ) %>%
+      place(o[3:4]@bounding_box, "above", 2)} +
+  connect(
+    lang,
+    o[1:2],
+    color = fills[1:2]@mean,
+    resect = 2,
+    label = ob_label(
+      round_probability(.9, phantom_text = "."),
+      angle = 0,
+      size = 14
+    )
+  ) +
+  connect(
+    math,
+    o[3:4],
+    color = fills[3:4]@mean,
+    resect = 2,
+    label = ob_label(
+      round_probability(.9, phantom_text = "."),
+      angle = 0,
+      size = 14
+    )
+  )
+p
+
+```
+
+Now imagine that the correlations between all 4 tests is equally high, as shown in @tbl-general. That is, for example, vocabulary is just as strongly correlated with geometry as it is with grammar.
+
+```{r tbl-general}
+#| tbl-cap: "Correlation Matrix of Academic Tests"
+#| fig-width: 7
+#| fig-height: 7
+d <- tibble::tribble(
+        ~tests, ~Vocabulary, ~Grammar, ~Arithmetic, ~Geometry,
+  "Vocabulary",          1L,       .81,          .81,        .81,
+     "Grammar",          .81,       1L,          .81,        .81,
+  "Arithmetic",          .81,       .81,          1L,        .81,
+    "Geometry",          .81,       .81,          .81,        1L
+  ) 
+
+d %>% 
+  column_to_rownames("tests") %>% 
+  corrr::as_cordf(diagonal = T) %>% 
+  corrr::stretch() %>% 
+  mutate(x = fct_inorder(x),
+         y = fct_inorder(y) %>% fct_rev(),
+         color = ifelse(r < .5, "gray20", "gray95")) %>% 
+  ggplot(aes(x,y)) +
+  geom_tile(aes(alpha = I(r)), linewidth = .5, fill = fills@mean) +
+  geom_text(aes(label = round_probability(r), color = I(color)), 
+            family = myfont, 
+            size = 18, 
+            size.unit = "pt") +
+  geom_vline(xintercept = 0:4 + .5, color = "gray80") +
+  geom_hline(yintercept = 0:4 + .5, color = "gray80") +
+  scale_x_discrete(NULL, position = "top") +
+  scale_y_discrete(NULL) +
+  coord_equal() +
+  theme_minimal(base_size = 18, base_family = myfont) + 
+  theme(legend.position = "none", panel.grid.major = element_blank()) + 
+  scale_fill_continuous()
+```
+
+In this case, factor analysis would suggest that the simplest explanation for this pattern of correlations is that there is just 1 factor that causes all of these tests to be equally correlated. We might call this factor *general academic ability*, as shown in @fig-general.
+
+```{r fig-general}
+#| fig-cap: General Academic Ability
+#| fig-width: 7
+#| fig-height: 7
+
+
+ggdiagram(font_family = myfont) +
+  {o <- ob_ellipse(m1 = 12) %>% ob_array(
+      4,
+      .5,
+      label = ob_label(
+        d$tests,
+        color = "white",
+        fill = NA,
+        size = 14
+      ),
+      fill = fills,
+      color = NA
+    ) } +
+  {g <- ob_circle(
+      fill = fills@mean,
+      color = NA,
+      radius = 2 * 2 / sqrt(pi),
+      label = ob_label(
+        "Academic<br>Ability",
+        color = "white",
+        fill = NA,
+        size = 32
+      )
+    ) %>%
+      place(o@bounding_box, "above", 3)} +
+  {loadings <- connect(
+    g,
+    o,
+    color = fills@mean,
+    resect = 2
+  ) } +
+  ob_label(
+      round_probability(.9, phantom_text = "."),
+      angle = 0,
+      size = 14,
+      color = fills@mean
+    ) %>% 
+  place(loadings@line@point_at_y(loadings[2]@midpoint()@y), 
+        sep = 0)
+
+```
+
+In reality, if you were to actually measure these 4 abilities, the results would not be so clear. It is likely that all of the correlations would be positive and substantially above 0. It is also likely that the language subtests would correlate more strongly with each other than with the mathematical subtests. The new correlation matrix is in @tbl-hierarchical.
+
+```{r tbl-hierarchical}
+#| tbl-cap: "Correlation Matrix of Academic Tests"
+#| fig-width: 7
+#| fig-height: 7
+d <- tibble::tribble(
+        ~tests, ~Vocabulary, ~Grammar, ~Arithmetic, ~Geometry,
+  "Vocabulary",          1L,       .81,          .52,        .52,
+     "Grammar",          .81,       1L,          .52,        .52,
+  "Arithmetic",          .52,       .52,          1L,        .81,
+    "Geometry",          .52,       .52,          .81,        1L
+  ) 
+
+d %>% 
+  column_to_rownames("tests") %>% 
+  corrr::as_cordf(diagonal = T) %>% 
+  corrr::stretch() %>% 
+  mutate(x = fct_inorder(x),
+         y = fct_inorder(y) %>% fct_rev(),
+         color = ifelse(r < .5, "gray20", "gray95")) %>% 
+  ggplot(aes(x,y)) +
+  geom_tile(aes(alpha = I(r)), linewidth = .5, fill = fills@mean) +
+  geom_text(aes(label = round_probability(r), color = I(color)), 
+            family = myfont, 
+            size = 18, 
+            size.unit = "pt") +
+  geom_vline(xintercept = 0:4 + .5, color = "gray80") +
+  geom_hline(yintercept = 0:4 + .5, color = "gray80") +
+  scale_x_discrete(NULL, position = "top") +
+  scale_y_discrete(NULL) +
+  coord_equal() +
+  theme_minimal(base_size = 18, base_family = myfont) + 
+  theme(legend.position = "none", panel.grid.major = element_blank()) + 
+  scale_fill_continuous()
+```
+
+Given the correlations in @tbl-hierarchical, factor analysis would suggest that language and mathematical abilities are distinct but not entirely independent from each other. That is, language abilities and mathematics abilities are substantially correlated with each other. Factors can be correlated for a variety of reasons, but one possibility is that there is a general academic (or intellectual) ability that influences performance in all academic areas. @fig-hierarchical, abilities are arranged in hierarchies with general abilities influencing narrow abilities.
+
+```{r fig-hierarchical}
+#| fig-width: 7
+#| fig-height: 9.87
+#| fig-cap: "A Hierarchical Model of Academic Abilities"
+a <- bind(c(math,lang))
+p +   
+  {g <- ob_circle(
+      fill = fills@mean,
+      color = NA,
+      radius = 2 * 2 / sqrt(pi),
+      label = ob_label(
+        "Academic<br>Ability",
+        color = "white",
+        fill = NA,
+        size = 32
+      )
+    ) %>%
+      place(a@bounding_box, "above", 1.7)} +
+  connect(g, a, color = g@fill, resect = 2, label = ob_label(round_probability(.8), color = g@fill, angle = 0, size = 14))
+
+
+```
+
+# Exploratory Factor Analysis
+
+Factor analysis can help researchers decide how best to summarize large amounts of information about people using just a few scores. For example, when we ask parents to complete questionnaires about behavior problems their children might have, the questionnaires can have hundreds of items. It would take too long and would be too confusing to review every item. Factor analysis can simplify the information while minimizing the loss of detail. Here is an example of a short questionnaire that factor analysis can be used to summarize.
+
+On a scale of 1 to 5, compared to other children his or her age, my child...
+
+1.  gets in fights frequently at school
+2.  is defiant to adults
+3.  is very impulsive
+4.  has stomachaches frequently
+5.  is anxious about many things
+6.  appears sad much of the time
+
+If we give this questionnaire to a large, representative sample of parents, we can calculate the correlations between the items (@tbl-rating).
+
+```{r tbl-rating}
+#| fig-width: 7
+#| fig-height: 4
+#| tbl-cap: Correleations Among Rating Scale Items
+
+
+d_items %>% 
+  pivot_longer(-Items, values_to = "r") %>% 
+  mutate(name = factor(name),
+         Items = fct_inorder(Items) %>% fct_rev(),
+         color = ifelse(r < .5, "gray20", "gray95")) %>% 
+  ggplot(aes(name,Items)) +
+  geom_tile(aes(alpha = I(r)), linewidth = .5, fill = fills@mean) +
+  geom_text(aes(label = round_probability(r), color = I(color)), family = myfont, size = 18, size.unit = "pt") +
+  geom_vline(xintercept = 0:4 + .5, color = "gray80") +
+  geom_hline(yintercept = 0:4 + .5, color = "gray80") +
+  scale_x_discrete(NULL, position = "top") +
+  scale_y_discrete(NULL) +
+  coord_equal() +
+  theme_minimal(base_size = 18, base_family = myfont) + 
+  theme(legend.position = "none", panel.grid.major = element_blank(), axis.text.y = element_text(hjust = 0)) + 
+  scale_fill_continuous()
+```
+
+Using this set of correlation coefficients, factor analysis suggests that there are 2 factors being measured by this behavior rating scale. The logic of factor analysis suggests that the reason items 1-3 have high correlations with each other is that each of them has a high correlation with the first factor. Similarly, items 4-6 have high correlations with each other because they have high correlations with the second factor. The correlations that the items have with the hypothesized factors are called factor loadings. The factor loadings can be seen in @tbl-loadings
+
+```{r tbl-loadings}
+#| tbl-cap: "EFA Loadings for Behavioral Items"
+
+fit <- d_items %>% 
+  tibble::column_to_rownames("Items") %>% 
+  `colnames<-`(rownames(.)) %>% 
+  psych::fa(2, fm = "pa")
+fit$loadings[,] %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column("Items") %>% 
+  rename(`Factor 1` = PA1, `Factor 2` = PA2) %>% 
+  mutate(Items = fct_inorder(Items) %>% fct_rev()) %>% 
+  pivot_longer(-Items, values_to = "r") %>% 
+  mutate(name = factor(name),
+         color = ifelse(r < .5, "gray20", "gray95")) %>% 
+  ggplot(aes(name, Items)) +
+  geom_tile(aes(alpha = I(abs(r))), linewidth = .5, fill = fills@mean) +
+  geom_richtext(aes(label = round_probability(r), color = I(color)), family = myfont, size = .8 * 18 / ggplot2::.pt, fill = NA, label.color = NA, hjust = 1, nudge_x = .22) +
+  geom_vline(xintercept = 0:4 + .5, color = "gray80") +
+  geom_hline(yintercept = 0:4 + .5, color = "gray80") +
+  scale_x_discrete(NULL, position = "top") +
+  scale_y_discrete(NULL) +
+  coord_equal() +
+  theme_minimal(base_size = 18, base_family = myfont) + 
+  theme(legend.position = "none", panel.grid.major = element_blank(), axis.text.y = element_text(hjust = 0)) + 
+  scale_fill_continuous()
+  
+```
+
+Factor analysis tells us which items "load" on which factors but it cannot interpret the meaning of the factors. Usually researchers look at all of the items that load on a factor and use their intuition or knowledge of theory to identify what the items have in common. In this case, Factor 1 could receive any number of names such as *Conduct Problems*, *Acting Out*, or *Externalizing Behaviors*. Likewise, Factor 2 could be called *Mood Problems*, *Negative Affectivity*, or *Internalizing Behaviors*. Thus, the problems on this behavior rating scale can be summarized fairly efficiently with just 2 scores. 
+
+In this example, a reduction of 6 scores to 2 scores may not seem terribly useful. In actual behavior rating scales, factor analysis can reduce the overwhelming complexity of hundreds of different behavior problems to a more manageable number of scores that help professionals more easily conceptualize individual cases.
+
+It should be noted that factor analysis also calculates the correlation among factors. If a large number of factors are identified and there are substantial correlations (i.e., significantly larger than 0) among factors, this new correlation matrix can be factor analyzed also to obtain *second-order factors*. These factors, in turn, can be analyzed to obtain *third-order factors*. Theoretically, it is possible to have even higher order factors but most researchers rarely find it necessary to go beyond third-order factors. The *g*-factor from intelligence test data is an example of a third-order factor that emerges because all tests of cognitive abilities are positively correlated. 
+
+In @tbl-loadings, the 2 factors have a correlation of .46, suggesting that children who have externalizing problems are also at risk of having internalizing problems. It is therefore reasonable to calculate a second-order factor score that measures the overall level of behavior problems.
+
+This example illustrates the most commonly used type of factor analysis: *exploratory factor analysis*. Exploratory factor analysis is helpful when we wish to summarize data efficiently, we are not sure how many factors are present in our data, or we are not sure which items load on which factors.
+
+
+# Confirmatory Factor Analysis
+
+*Confirmatory factor analysis* is a method that researchers can use to test highly specific hypotheses. For example, a researcher might want to know if the 2 different types of items on the WISC-IV Digit Span subtest measures the same ability or 2 different abilities. On the Digits Forward type of item, the child must repeat a string of digits in the same order in which they were heard. On the Digits Backward type of item, the child must repeat the string of digits in reverse order. Some researchers believe that repeating numbers verbatim measures auditory short-term memory storage capacity and that repeating numbers in reverse order measures executive control, the ability to allocate attentional resources efficiently to solve multi-step problems. Typically, clinicians add the raw scores of both types of items to produce a single score. If the 2 item types measure different abilities, adding the raw scores together is like adding apples and orangutans. If, however, they measure the same ability, adding the scores together is valid and will produce a more reliable score than using separate scores.
+
+To test this hypothesis, we can use confirmatory factor analysis to see if the 2 item types measure different abilities. We would need to identify or invent several tests that are likely to measure the 2 separate abilities that we believe are measured by the 2 types of Digit Span items. Usually, using 3 tests per factor is sufficient.
+
+Next, we specify the hypotheses, or models, we wish to test:
+
+## All of the tests measure the same ability
+
+A graphical representation of a hypothesis in confirmatory factor analysis is called a path diagram. Tests are drawn with rectangles and hypothetical factors are drawn with ovals. The correlations between tests and factors are drawn with arrows. The path diagram for this hypothesis would look like @fig-gwm.
+
+```{r fig-gwm}
+#| fig-cap: General Working Memory
+ggdiagram(font_family = myfont) + 
+  {ob <- ob_rectangle(width = 2.75, 
+                      height = .5, 
+                      fill = fills@mean, 
+                      color = NA,
+                      vertex_radius = unit(5, "pt")) %>% 
+    ob_array(8, 
+             sep = .1, 
+             where = "south", 
+             vertex_radius = unit(5, "pt"), 
+             )} +
+  ob_label(c(paste0("Short-Term Memory ", 1:3), 
+             "Digits Forward", 
+             "Digits Backward", 
+             paste0("Executive Control ", 1:3)),
+           ob@center, 
+           size = 18,
+           fill = NA,
+           color = "white") +
+  {gmw <- ob_circle(fill = fills@mean, color = NA, label =  ob_label("Working<br>Memory<br>Capacity", fill = NA, size = 18, color = "white")) %>% 
+    place(ob@bounding_box@east,where = "right", 2)} +
+  connect(gmw, ob@east, color = fills@mean, resect = 2)
+```
+
+## Both Digits Forward and Digits Backward measure short-term memory storage capacity and are distinct from executive control. 
+
+The path diagram would look like this (the curved arrow allows for the possibility that the 2 factors might be correlated)
+
+
+```{r fig-gwm2}
+#| fig-cap: Two-Factors of Working Memory, Model 1
+ggdiagram(font_family = myfont) + 
+  {ob <- ob_rectangle(width = 2.75, 
+                      height = .5, 
+                      color = NA,
+                      vertex_radius = unit(5, "pt")) %>% 
+    ob_array(8, 
+             sep = .1, 
+             where = "south", 
+             fill = fills[c(rep(1,5), rep(3, 3))]
+             )} +
+  ob_label(c(paste0("Short-Term Memory ", 1:3), 
+             "Digits Forward", 
+             "Digits Backward", 
+             paste0("Executive Control ", 1:3)),
+           ob@center, 
+           size = 18,
+           fill = NA,
+           color = "white") +
+    {
+      sts <- ob_circle(
+        fill = fills[1],
+        color = NA,
+        label =  ob_label(
+          "Short-Term<br>Storage Capacity",
+          fill = NA,
+          size = 18,
+          color = "white"
+        )
+      ) %>%
+        place(ob[1:5]@bounding_box@east, where = "right", 2)
+    } +
+      connect(sts, ob[1:5]@east, color = fills[1], resect = 2) +
+  {
+      ec <- ob_circle(
+        fill = fills[3],
+        color = NA,
+        label =  ob_label(
+          "Executive<br>Control",
+          fill = NA,
+          size = 18,
+          color = "white"
+        )
+      ) %>%
+        place(ob[6:8]@bounding_box@east, where = "right", 2)
+  } +
+      connect(ec, ob[6:8]@east, color = fills[3], resect = 2) +
+  ob_covariance(sts, ec, resect = 1, color = fills[c(1,3)]@mean, linewidth = .75)
+```
+
+## Digits Forward and Digits Backward measure different abilities. 
+
+If Digits Forward is primarily a measure of Short-Term Storage, and Digits Backward is primary a measure of Executive control, the path diagram would look like @fig-gwm3
+
+```{r fig-gwm3}
+#| fig-cap: Two-Factors of Working Memory, Model 2
+ggdiagram(font_family = myfont) + 
+  {ob <- ob_rectangle(width = 2.75, 
+                      height = .5, 
+                      color = NA,
+                      vertex_radius = unit(5, "pt")) %>% 
+    ob_array(8, 
+             sep = .1, 
+             where = "south", 
+             fill = fills[c(rep(1,4), rep(3, 4))]
+             )} +
+  ob_label(c(paste0("Short-Term Memory ", 1:3), 
+             "Digits Forward", 
+             "Digits Backward", 
+             paste0("Executive Control ", 1:3)),
+           ob@center, 
+           size = 18,
+           fill = NA,
+           color = "white") +
+    {
+      sts <- ob_circle(
+        fill = fills[1],
+        color = NA,
+        label =  ob_label(
+          "Short-Term<br>Storage Capacity",
+          fill = NA,
+          size = 18,
+          color = "white"
+        )
+      ) %>%
+        place(ob[1:4]@bounding_box@east, where = "right", 2)
+    } +
+      connect(sts, ob[1:4]@east, color = fills[1], resect = 2) +
+  {
+      ec <- ob_circle(
+        fill = fills[3],
+        color = NA,
+        label =  ob_label(
+          "Executive<br>Control",
+          fill = NA,
+          size = 18,
+          color = "white"
+        )
+      ) %>%
+        place(ob[5:8]@bounding_box@east, where = "right", 2)
+  } +
+      connect(ec, ob[5:8]@east, color = fills[3], resect = 2) +
+  ob_covariance(sts, ec, resect = 1, color = fills[c(1,3)]@mean, linewidth = .75)
+```
+
+
+Confirmatory factor analysis produces a number of statistics, called fit statistics that tell us which of the models or hypotheses we tested are most in agreement with the data. Studying the results, we can select the best model or perhaps generate a new model if none of them provide a good “fit” with the data. With structural equation modeling, a procedure that is very similar to confirmatory factor analysis, we can test extremely complex hypotheses about the structure of psychological variables.
+
+::: callout-note
+## Note
+
+Originally [posted 2014-01-13 on AssessingPsyche](https://assessingpsyche.wordpress.com/2014/01/13/a-gentle-non-technical-introduction-to-factor-analysis/). The article has been revised several times since it was written originally for *Cohen & Swerdlik’s Psychological Testing and Assessment: An Introduction To Tests and Measurement* (Ninth Edition) 
+:::
