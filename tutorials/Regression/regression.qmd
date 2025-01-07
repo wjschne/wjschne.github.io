@@ -110,7 +110,7 @@ Here I save a .pdf file of the plot to the working directory:
 ggsave("my_plot.pdf")
 ```
 
-What is the working directory? Is the folder on your machine that R thinks it should look first if it needs to find files or save files. If you are every curious about which directory is the working directory, you can use the `getwd` function:
+What is the working directory? Is the folder on your machine that R thinks it should look first if it needs to find files or save files. If you are ever curious about which directory is the working directory, you can see the current working directory with the `getwd` function:
 
 ```{r workingdirectory}
 #| eval: false
@@ -119,6 +119,8 @@ getwd()
 
 If you saved the plot above as `"my_plot.pdf"`, you will find the file in the working directory returned by `getwd`.
 
+If you need to set the working working directly to something different from what it is, use the `setwd` function. In the `Session` menu in RStudio, you can also set the working directory with a point-an-click dialog box.
+
 
 ## Vector-based images
 
@@ -126,7 +128,7 @@ The .pdf format gives the best image quality but can only be viewed in a .pdf re
 
 ## Raster images
 
-The .png format gives good image quality and renders small file sizes. 
+The .png format gives good image quality and renders small file sizes. I prefer using the `ragg::agg_png` device to render a .png because it handles system fonts without any fuss. 
 
 The primary use of the .gif format is to create animated plots. Otherwise stick with .png.
 
@@ -245,7 +247,7 @@ standardise_parameters(m1)
 
 # Multiple regression
 
-In this data set, all participants identified as either male or female. We assume that males are, on average, taller than females. The codes are male = 1 and female = 2. Let's mutate the gender variable so that it becomes a categorical "factor" instead of a numeric variable.
+In this data set, all participants self-identified as either male or female on the traditional gender binary. We assume that males are, on average, taller than females. The codes are male = 1 and female = 2. Let's `mutate` the gender variable so that it becomes a categorical "factor" instead of a numeric variable.
 
 ```{r gender}
 d <- d %>% 
@@ -378,6 +380,14 @@ parameters(m2) %>%
 ```
 
 
+## flextable
+
+A primary advantage of the flextable package is that it is compatible with MS Word's .docx format as well as .html and .pdf.
+
+```{r}
+m1 %>% 
+  flextable::as_flextable()
+```
 
 
 :::

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -92,10 +92,10 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-fce05e5e5cef2c531c9faa6c50a01155.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -300,9 +300,15 @@ Revelle, W. (2015). <em>Psych: <span>Procedures</span> for psychological, psycho
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d_bfi <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/wjschne/EDUC5529/raw/master/HW4_BFI.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here are the personality items:</p>
-<div id="tbl-bfi" class="cell anchored" data-tab-cap="Big Five Inventory Personality Items">
+<div class="cell">
+<div id="tbl-bfi" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bfi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Big Five Inventory Personality Items
+</figcaption>
+<div aria-describedby="tbl-bfi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table table-striped caption-top table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped do-not-create-environment cell caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Items</th>
@@ -387,6 +393,9 @@ Revelle, W. (2015). <em>Psych: <span>Procedures</span> for psychological, psycho
 
 </div>
 </div>
+</figure>
+</div>
+</div>
 </section>
 <section id="how-many-factors-to-extract" class="level1">
 <h1>How many factors to extract?</h1>
@@ -431,32 +440,32 @@ Revelle, W. (2015). <em>Psych: <span>Procedures</span> for psychological, psycho
 <div class="cell-output cell-output-stdout">
 <pre><code># Rotated loadings from Factor Analysis (oblimin-rotation)
 
-Variable                                  |    PA2    |  PA1  |    PA3    |    PA5    |    PA4    | Complexity | Uniqueness
+Variable                                  |       PA2 |   PA1 |       PA3 |       PA5 |       PA4 | Complexity | Uniqueness
 ---------------------------------------------------------------------------------------------------------------------------
-Am indifferent to the feelings of others. |   0.19    | -0.16 |   0.07    |   -0.43   | -9.00e-03 |    1.78    |    0.81   
-Inquire about others' well-being.         | -7.83e-03 | 0.01  |   0.07    |   0.65    |   0.03    |    1.03    |    0.55   
-Know how to comfort others.               |   -0.01   | -0.10 |   0.02    |   0.67    |   0.03    |    1.05    |    0.47   
-Love children.                            |   -0.03   | -0.07 |   0.19    |   0.45    |   -0.15   |    1.63    |    0.72   
-Make people feel at ease.                 |   -0.11   | -0.21 | -1.65e-03 |   0.53    |   0.07    |    1.45    |    0.54   
-Am exacting in my work.                   |   0.05    | 0.04  |   0.55    |   -0.04   |   0.17    |    1.24    |    0.66   
-Continue until everything is perfect.     |   0.13    | 0.10  |   0.66    |   0.07    |   0.07    |    1.17    |    0.55   
-Do things according to a plan.            |   0.04    | 0.06  |   0.56    |   0.09    |   -0.06   |    1.11    |    0.68   
-Do things in a half-way manner.           |   0.16    | 0.01  |   -0.61   |   0.02    | -1.44e-03 |    1.14    |    0.56   
-Waste my time.                            |   0.17    | 0.16  |   -0.55   | -8.28e-03 |   0.12    |    1.46    |    0.57   
-Don't talk a lot.                         |   -0.07   | 0.55  |   0.10    |   -0.10   |   -0.11   |    1.26    |    0.65   
-Find it difficult to approach others.     |   0.09    | 0.67  |   -0.02   |   -0.07   |   -0.07   |    1.08    |    0.45   
-Know how to captivate people.             |   0.06    | -0.38 | -4.09e-03 |   0.23    |   0.34    |    2.68    |    0.55   
-Make friends easily.                      |   0.03    | -0.57 |   0.02    |   0.30    |   -0.03   |    1.54    |    0.48   
-Take charge.                              |   0.13    | -0.40 |   0.27    |   0.04    |   0.25    |    2.85    |    0.59   
-Get angry easily.                         |   0.83    | -0.11 | 6.26e-03  |   -0.09   |   -0.05   |    1.07    |    0.33   
-Get irritated easily.                     |   0.78    | -0.04 |   0.01    |   -0.09   |   0.02    |    1.03    |    0.40   
-Have frequent mood swings.                |   0.71    | 0.10  |   -0.04   |   0.08    |   0.02    |    1.08    |    0.45   
-Often feel blue.                          |   0.46    | 0.39  |   -0.14   |   0.08    |   0.08    |    2.28    |    0.51   
-Panic easily.                             |   0.49    | 0.20  |   -0.01   |   0.21    |   -0.13   |    1.87    |    0.66   
-Am full of ideas.                         |   -0.04   | -0.06 |   0.08    |   -0.03   |   0.55    |    1.08    |    0.66   
-Carry the conversation to a higher level. |   -0.03   | -0.10 |   0.02    |   0.04    |   0.64    |    1.06    |    0.53   
-Spend time reflecting on things.          |   0.08    | 0.36  |   -0.02   |   0.13    |   0.40    |    2.29    |    0.73   
-Will not probe deeply into a subject.     |   0.16    | -0.11 |   -0.04   |   0.06    |   -0.47   |    1.39    |    0.77   
+Am indifferent to the feelings of others. |      0.19 | -0.16 |      0.07 |     -0.43 | -9.00e-03 |       1.78 |       0.81
+Inquire about others' well-being.         | -7.83e-03 |  0.01 |      0.07 |      0.65 |      0.03 |       1.03 |       0.55
+Know how to comfort others.               |     -0.01 | -0.10 |      0.02 |      0.67 |      0.03 |       1.05 |       0.47
+Love children.                            |     -0.03 | -0.07 |      0.19 |      0.45 |     -0.15 |       1.63 |       0.72
+Make people feel at ease.                 |     -0.11 | -0.21 | -1.65e-03 |      0.53 |      0.07 |       1.45 |       0.54
+Am exacting in my work.                   |      0.05 |  0.04 |      0.55 |     -0.04 |      0.17 |       1.24 |       0.66
+Continue until everything is perfect.     |      0.13 |  0.10 |      0.66 |      0.07 |      0.07 |       1.17 |       0.55
+Do things according to a plan.            |      0.04 |  0.06 |      0.56 |      0.09 |     -0.06 |       1.11 |       0.68
+Do things in a half-way manner.           |      0.16 |  0.01 |     -0.61 |      0.02 | -1.44e-03 |       1.14 |       0.56
+Waste my time.                            |      0.17 |  0.16 |     -0.55 | -8.28e-03 |      0.12 |       1.46 |       0.57
+Don't talk a lot.                         |     -0.07 |  0.55 |      0.10 |     -0.10 |     -0.11 |       1.26 |       0.65
+Find it difficult to approach others.     |      0.09 |  0.67 |     -0.02 |     -0.07 |     -0.07 |       1.08 |       0.45
+Know how to captivate people.             |      0.06 | -0.38 | -4.09e-03 |      0.23 |      0.34 |       2.68 |       0.55
+Make friends easily.                      |      0.03 | -0.57 |      0.02 |      0.30 |     -0.03 |       1.54 |       0.48
+Take charge.                              |      0.13 | -0.40 |      0.27 |      0.04 |      0.25 |       2.85 |       0.59
+Get angry easily.                         |      0.83 | -0.11 |  6.26e-03 |     -0.09 |     -0.05 |       1.07 |       0.33
+Get irritated easily.                     |      0.78 | -0.04 |      0.01 |     -0.09 |      0.02 |       1.03 |       0.40
+Have frequent mood swings.                |      0.71 |  0.10 |     -0.04 |      0.08 |      0.02 |       1.08 |       0.45
+Often feel blue.                          |      0.46 |  0.39 |     -0.14 |      0.08 |      0.08 |       2.28 |       0.51
+Panic easily.                             |      0.49 |  0.20 |     -0.01 |      0.21 |     -0.13 |       1.87 |       0.66
+Am full of ideas.                         |     -0.04 | -0.06 |      0.08 |     -0.03 |      0.55 |       1.08 |       0.66
+Carry the conversation to a higher level. |     -0.03 | -0.10 |      0.02 |      0.04 |      0.64 |       1.06 |       0.53
+Spend time reflecting on things.          |      0.08 |  0.36 |     -0.02 |      0.13 |      0.40 |       2.29 |       0.73
+Will not probe deeply into a subject.     |      0.16 | -0.11 |     -0.04 |      0.06 |     -0.47 |       1.39 |       0.77
 
 The 5 latent factors (oblimin rotation) accounted for 42.19% of the total variance of the original data (PA2 = 10.50%, PA1 = 8.76%, PA3 = 8.38%, PA5 = 8.32%, PA4 = 6.22%).</code></pre>
 </div>
@@ -469,32 +478,32 @@ The 5 latent factors (oblimin rotation) accounted for 42.19% of the total varian
 <div class="cell-output cell-output-stdout">
 <pre><code># Rotated loadings from Factor Analysis (oblimin-rotation)
 
-Variable                                  | PA2  |  PA1  |  PA3  |  PA5  |  PA4  | Complexity | Uniqueness
+Variable                                  |  PA2 |   PA1 |   PA3 |   PA5 |   PA4 | Complexity | Uniqueness
 ----------------------------------------------------------------------------------------------------------
-Get angry easily.                         | 0.83 |       |       |       |       |    1.07    |    0.33   
-Get irritated easily.                     | 0.78 |       |       |       |       |    1.03    |    0.40   
-Have frequent mood swings.                | 0.71 |       |       |       |       |    1.08    |    0.45   
-Panic easily.                             | 0.49 |       |       | 0.21  |       |    1.87    |    0.66   
-Often feel blue.                          | 0.46 | 0.39  |       |       |       |    2.28    |    0.51   
-Find it difficult to approach others.     |      | 0.67  |       |       |       |    1.08    |    0.45   
-Make friends easily.                      |      | -0.57 |       | 0.30  |       |    1.54    |    0.48   
-Don't talk a lot.                         |      | 0.55  |       |       |       |    1.26    |    0.65   
-Take charge.                              |      | -0.40 | 0.27  |       | 0.25  |    2.85    |    0.59   
-Know how to captivate people.             |      | -0.38 |       | 0.23  | 0.34  |    2.68    |    0.55   
-Continue until everything is perfect.     |      |       | 0.66  |       |       |    1.17    |    0.55   
-Do things in a half-way manner.           |      |       | -0.61 |       |       |    1.14    |    0.56   
-Do things according to a plan.            |      |       | 0.56  |       |       |    1.11    |    0.68   
-Waste my time.                            |      |       | -0.55 |       |       |    1.46    |    0.57   
-Am exacting in my work.                   |      |       | 0.55  |       |       |    1.24    |    0.66   
-Know how to comfort others.               |      |       |       | 0.67  |       |    1.05    |    0.47   
-Inquire about others' well-being.         |      |       |       | 0.65  |       |    1.03    |    0.55   
-Make people feel at ease.                 |      | -0.21 |       | 0.53  |       |    1.45    |    0.54   
-Love children.                            |      |       |       | 0.45  |       |    1.63    |    0.72   
-Am indifferent to the feelings of others. |      |       |       | -0.43 |       |    1.78    |    0.81   
-Carry the conversation to a higher level. |      |       |       |       | 0.64  |    1.06    |    0.53   
-Am full of ideas.                         |      |       |       |       | 0.55  |    1.08    |    0.66   
-Will not probe deeply into a subject.     |      |       |       |       | -0.47 |    1.39    |    0.77   
-Spend time reflecting on things.          |      | 0.36  |       |       | 0.40  |    2.29    |    0.73   
+Get angry easily.                         | 0.83 |       |       |       |       |       1.07 |       0.33
+Get irritated easily.                     | 0.78 |       |       |       |       |       1.03 |       0.40
+Have frequent mood swings.                | 0.71 |       |       |       |       |       1.08 |       0.45
+Panic easily.                             | 0.49 |       |       |  0.21 |       |       1.87 |       0.66
+Often feel blue.                          | 0.46 |  0.39 |       |       |       |       2.28 |       0.51
+Find it difficult to approach others.     |      |  0.67 |       |       |       |       1.08 |       0.45
+Make friends easily.                      |      | -0.57 |       |  0.30 |       |       1.54 |       0.48
+Don't talk a lot.                         |      |  0.55 |       |       |       |       1.26 |       0.65
+Take charge.                              |      | -0.40 |  0.27 |       |  0.25 |       2.85 |       0.59
+Know how to captivate people.             |      | -0.38 |       |  0.23 |  0.34 |       2.68 |       0.55
+Continue until everything is perfect.     |      |       |  0.66 |       |       |       1.17 |       0.55
+Do things in a half-way manner.           |      |       | -0.61 |       |       |       1.14 |       0.56
+Do things according to a plan.            |      |       |  0.56 |       |       |       1.11 |       0.68
+Waste my time.                            |      |       | -0.55 |       |       |       1.46 |       0.57
+Am exacting in my work.                   |      |       |  0.55 |       |       |       1.24 |       0.66
+Know how to comfort others.               |      |       |       |  0.67 |       |       1.05 |       0.47
+Inquire about others' well-being.         |      |       |       |  0.65 |       |       1.03 |       0.55
+Make people feel at ease.                 |      | -0.21 |       |  0.53 |       |       1.45 |       0.54
+Love children.                            |      |       |       |  0.45 |       |       1.63 |       0.72
+Am indifferent to the feelings of others. |      |       |       | -0.43 |       |       1.78 |       0.81
+Carry the conversation to a higher level. |      |       |       |       |  0.64 |       1.06 |       0.53
+Am full of ideas.                         |      |       |       |       |  0.55 |       1.08 |       0.66
+Will not probe deeply into a subject.     |      |       |       |       | -0.47 |       1.39 |       0.77
+Spend time reflecting on things.          |      |  0.36 |       |       |  0.40 |       2.29 |       0.73
 
 The 5 latent factors (oblimin rotation) accounted for 42.19% of the total variance of the original data (PA2 = 10.50%, PA1 = 8.76%, PA3 = 8.38%, PA5 = 8.32%, PA4 = 6.22%).</code></pre>
 </div>
@@ -914,8 +923,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1026,7 +1033,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

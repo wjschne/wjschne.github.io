@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -39,10 +39,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-fce05e5e5cef2c531c9faa6c50a01155.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -283,7 +283,7 @@ W. Joel Schneider
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1709269200000" data-listing-file-modified-sort="1710422024916" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3796">
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1709269200000" data-listing-file-modified-sort="1731169745304" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3797">
 <div class="thumbnail">
 <p><a href="./tutorials/DataWrangling/data_wrangling.html" class="no-external"></a></p><a href="./tutorials/DataWrangling/data_wrangling.html" class="no-external">
 <p class="card-img-top"><img src="tutorials\DataWrangling\data_wrangling_files\figure-html\fig-polished-1.png"  class="thumbnail-image card-img"/></p>
@@ -311,7 +311,7 @@ W. Joel Schneider
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1709614800000" data-listing-file-modified-sort="1711115511734" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1261">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1709614800000" data-listing-file-modified-sort="1731860467330" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1261">
 <div class="thumbnail">
 <p><a href="./tutorials/ANOVA/ANOVA.html" class="no-external"></a></p><a href="./tutorials/ANOVA/ANOVA.html" class="no-external">
 <p class="card-img-top"><img src="tutorials\ANOVA\ANOVA_files\figure-html\ggplotmeans-1.png"  class="thumbnail-image card-img"/></p>
@@ -339,7 +339,7 @@ W. Joel Schneider
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1709787600000" data-listing-file-modified-sort="1730583608102" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2525">
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1709787600000" data-listing-file-modified-sort="1736209558979" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2617">
 <div class="thumbnail">
 <p><a href="./tutorials/Regression/regression.html" class="no-external"></a></p><a href="./tutorials/Regression/regression.html" class="no-external">
 <p class="card-img-top"><img src="tutorials\Regression\regression_files\figure-html\regressionplot-1.png"  class="thumbnail-image card-img"/></p>
@@ -482,8 +482,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -594,7 +592,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

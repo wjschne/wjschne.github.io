@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-fce05e5e5cef2c531c9faa6c50a01155.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -151,7 +151,10 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="W. Joel Schneider">
 <meta property="og:description" content="Plot group means and test to see if their differences are statistically significant.">
+<meta property="og:image" content="https://wjschne.github.io/tutorials/ANOVA/ANOVA_files/figure-html/ggplotmeans-1.png">
 <meta property="og:site_name" content="W. Joel Schneider">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
 </head>
 
 <body class="floating nav-fixed slimcontent">
@@ -657,7 +660,7 @@ Ambivalent | 105 | 35.00 |   35.00 |       100.00
 &lt;NA&gt;       |   0 |  0.00 |    &lt;NA&gt; |         &lt;NA&gt;</code></pre>
 </div>
 </div>
-<p>We can get descriptives statistics of our numeric variables separated by group. There are many ways to do this, the simplest is the <code>describeBy</code> function from the psych package</p>
+<p>We can get descriptives statistics of our numeric variables separated by group. There are many ways to do this, but the simplest is the <code>describeBy</code> function from the psych package</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describeBy</span>(d, <span class="at">group =</span> <span class="st">"Attachment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -699,7 +702,7 @@ Anxiety_Questionnaire    -0.10 0.97</code></pre>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  datawizard<span class="sc">::</span><span class="fu">means_by_group</span>(</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">select =</span> <span class="fu">contains</span>(<span class="st">"Anxiety"</span>) , </span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="st">"Attachment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"Attachment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Mean of Anxiety_Physiological by Attachment
 
@@ -1061,23 +1064,23 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_stub_indent</span>(<span class="fu">everything</span>(), <span class="at">indent =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="ecngclchul" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ecngclchul table {
+<div id="omxdpaujkg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#omxdpaujkg table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ecngclchul thead, #ecngclchul tbody, #ecngclchul tfoot, #ecngclchul tr, #ecngclchul td, #ecngclchul th {
+#omxdpaujkg thead, #omxdpaujkg tbody, #omxdpaujkg tfoot, #omxdpaujkg tr, #omxdpaujkg td, #omxdpaujkg th {
   border-style: none;
 }
 
-#ecngclchul p {
+#omxdpaujkg p {
   margin: 0;
   padding: 0;
 }
 
-#ecngclchul .gt_table {
+#omxdpaujkg .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1103,12 +1106,12 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#ecngclchul .gt_caption {
+#omxdpaujkg .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ecngclchul .gt_title {
+#omxdpaujkg .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1120,7 +1123,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-bottom-width: 0;
 }
 
-#ecngclchul .gt_subtitle {
+#omxdpaujkg .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1132,7 +1135,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-top-width: 0;
 }
 
-#ecngclchul .gt_heading {
+#omxdpaujkg .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1144,13 +1147,13 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ecngclchul .gt_bottom_border {
+#omxdpaujkg .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ecngclchul .gt_col_headings {
+#omxdpaujkg .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1165,7 +1168,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ecngclchul .gt_col_heading {
+#omxdpaujkg .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1185,7 +1188,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   overflow-x: hidden;
 }
 
-#ecngclchul .gt_column_spanner_outer {
+#omxdpaujkg .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1197,15 +1200,15 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   padding-right: 4px;
 }
 
-#ecngclchul .gt_column_spanner_outer:first-child {
+#omxdpaujkg .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ecngclchul .gt_column_spanner_outer:last-child {
+#omxdpaujkg .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ecngclchul .gt_column_spanner {
+#omxdpaujkg .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1217,11 +1220,11 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   width: 100%;
 }
 
-#ecngclchul .gt_spanner_row {
+#omxdpaujkg .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ecngclchul .gt_group_heading {
+#omxdpaujkg .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1247,7 +1250,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   text-align: left;
 }
 
-#ecngclchul .gt_empty_group_heading {
+#omxdpaujkg .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1262,15 +1265,15 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   vertical-align: middle;
 }
 
-#ecngclchul .gt_from_md > :first-child {
+#omxdpaujkg .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ecngclchul .gt_from_md > :last-child {
+#omxdpaujkg .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ecngclchul .gt_row {
+#omxdpaujkg .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1289,7 +1292,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   overflow-x: hidden;
 }
 
-#ecngclchul .gt_stub {
+#omxdpaujkg .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1302,7 +1305,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   padding-right: 5px;
 }
 
-#ecngclchul .gt_stub_row_group {
+#omxdpaujkg .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1316,15 +1319,15 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   vertical-align: top;
 }
 
-#ecngclchul .gt_row_group_first td {
+#omxdpaujkg .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ecngclchul .gt_row_group_first th {
+#omxdpaujkg .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ecngclchul .gt_summary_row {
+#omxdpaujkg .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1334,16 +1337,16 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   padding-right: 5px;
 }
 
-#ecngclchul .gt_first_summary_row {
+#omxdpaujkg .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ecngclchul .gt_first_summary_row.thick {
+#omxdpaujkg .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ecngclchul .gt_last_summary_row {
+#omxdpaujkg .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1353,7 +1356,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#ecngclchul .gt_grand_summary_row {
+#omxdpaujkg .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1363,7 +1366,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   padding-right: 5px;
 }
 
-#ecngclchul .gt_first_grand_summary_row {
+#omxdpaujkg .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1373,7 +1376,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#ecngclchul .gt_last_grand_summary_row_top {
+#omxdpaujkg .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1383,11 +1386,11 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#ecngclchul .gt_striped {
+#omxdpaujkg .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ecngclchul .gt_table_body {
+#omxdpaujkg .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1396,7 +1399,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#ecngclchul .gt_footnotes {
+#omxdpaujkg .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1410,7 +1413,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ecngclchul .gt_footnote {
+#omxdpaujkg .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1419,7 +1422,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   padding-right: 5px;
 }
 
-#ecngclchul .gt_sourcenotes {
+#omxdpaujkg .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1433,7 +1436,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ecngclchul .gt_sourcenote {
+#omxdpaujkg .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1441,81 +1444,90 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
   padding-right: 5px;
 }
 
-#ecngclchul .gt_left {
+#omxdpaujkg .gt_left {
   text-align: left;
 }
 
-#ecngclchul .gt_center {
+#omxdpaujkg .gt_center {
   text-align: center;
 }
 
-#ecngclchul .gt_right {
+#omxdpaujkg .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ecngclchul .gt_font_normal {
+#omxdpaujkg .gt_font_normal {
   font-weight: normal;
 }
 
-#ecngclchul .gt_font_bold {
+#omxdpaujkg .gt_font_bold {
   font-weight: bold;
 }
 
-#ecngclchul .gt_font_italic {
+#omxdpaujkg .gt_font_italic {
   font-style: italic;
 }
 
-#ecngclchul .gt_super {
+#omxdpaujkg .gt_super {
   font-size: 65%;
 }
 
-#ecngclchul .gt_footnote_marks {
+#omxdpaujkg .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ecngclchul .gt_asterisk {
+#omxdpaujkg .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ecngclchul .gt_indent_1 {
+#omxdpaujkg .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ecngclchul .gt_indent_2 {
+#omxdpaujkg .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ecngclchul .gt_indent_3 {
+#omxdpaujkg .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ecngclchul .gt_indent_4 {
+#omxdpaujkg .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ecngclchul .gt_indent_5 {
+#omxdpaujkg .gt_indent_5 {
   text-indent: 25px;
+}
+
+#omxdpaujkg .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#omxdpaujkg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
-<tr class="header gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<tr class="gt_col_headings header">
+<th id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Mean" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Mean</th>
 <th id="SD" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SD</th>
 <th id="n" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">n</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
-<tr class="odd gt_group_heading_row">
+<tr class="gt_group_heading_row odd">
 <td colspan="4" id="Anxiety Physiological" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Anxiety Physiological</td>
 </tr>
-<tr class="even gt_row_group_first">
+<tr class="gt_row_group_first even">
 <td class="gt_row gt_center gt_stub gt_indent_5" headers="Anxiety Physiological stub_1_1 stub_1">Secure</td>
 <td class="gt_row gt_right" headers="Anxiety Physiological stub_1_1 Mean">50</td>
 <td class="gt_row gt_right" headers="Anxiety Physiological stub_1_1 SD">10.7</td>
@@ -1533,10 +1545,10 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
 <td class="gt_row gt_right" headers="Anxiety Physiological stub_1_3 SD">9.8</td>
 <td class="gt_row gt_right" headers="Anxiety Physiological stub_1_3 n">85</td>
 </tr>
-<tr class="odd gt_group_heading_row">
+<tr class="gt_group_heading_row odd">
 <td colspan="4" id="Anxiety Questionnaire" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Anxiety Questionnaire</td>
 </tr>
-<tr class="even gt_row_group_first">
+<tr class="gt_row_group_first even">
 <td class="gt_row gt_center gt_stub gt_indent_5" headers="Anxiety Questionnaire stub_1_4 stub_1">Secure</td>
 <td class="gt_row gt_right" headers="Anxiety Questionnaire stub_1_4 Mean">50</td>
 <td class="gt_row gt_right" headers="Anxiety Questionnaire stub_1_4 SD">10.9</td>
@@ -1591,7 +1603,7 @@ Anova: R2=0.385; adj.R2=0.381; F=92.975; p&lt;.001</code></pre>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Attachment,</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> Anxiety_Questionnaire)) <span class="sc">+</span></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1692,7 +1704,10 @@ Effect sizes were labelled following Field's (2013) recommendations.</code></pre
 <div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
+<pre><code>No variable was specified for contrast estimation. Selecting `contrast =
+  "
+  Attachment
+  "`.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Marginal Contrasts Analysis
@@ -1709,7 +1724,10 @@ p-value adjustment method: Holm (1979)</code></pre>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_contrasts</span>(fit) <span class="sc">|&gt;</span> </span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>No variable was specified for contrast estimation. Selecting `contrast = "Attachment"`.</code></pre>
+<pre><code>No variable was specified for contrast estimation. Selecting `contrast =
+  "
+  Attachment
+  "`.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The marginal contrasts analysis suggests the following. The difference between
@@ -1810,8 +1828,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1922,7 +1938,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

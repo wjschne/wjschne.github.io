@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -37,10 +37,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-fce05e5e5cef2c531c9faa6c50a01155.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/iconify-2.0.0/iconify-icon.min.js"></script>
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -157,7 +157,7 @@ ul.task-list li input[type="checkbox"] {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">About Me</h1></header>
 
 
 
@@ -198,7 +198,7 @@ Professor<br>
 
 </div><div class="column" style="width:62%;">
 <section id="about-me" class="level1">
-<h1>About Me</h1>
+
 <p>I am a professor at <a href="https://education.temple.edu/">Temple University in the College of Education and Human Development</a> in the <a href="https://education.temple.edu/pse">Psychological Studies in Education Department</a>. I belong to both the <a href="https://www.temple.edu/academics/degree-programs/school-psychology-phd-ed-scps-phd">School Psychology</a> and <a href="https://education.temple.edu/counseling">Counseling Psychology</a> programs.</p>
 <p>Although I have diverse interests, my primary focus is trying to understand and improve the validity of psychological assessment practices. I <a href=".\courses">teach courses</a> in assessment, counseling, statistics, and research methods.</p>
 <p>I grew up in Southern California (1970–1990) and lived in Córdoba, Argentina (1990–1992). I completed my undergraduate degree in <a href="https://psychology.berkeley.edu/">Psychology at the University of California at Berkeley</a> in 1995 and my doctoral studies in <a href="https://liberalarts.tamu.edu/psychology/phd/clinical/">clinical psychology at Texas A&amp;M University</a> in 2003. My internship year (2001–2002) was spent in the <a href="https://www.dutchessny.gov/Departments/DBCH/dbch.htm">Dutchess County Department of Behavioral &amp; Community Health</a> in Poughkeepsie, NY. Since then I have been a faculty member at <a href="https://psychology.illinoisstate.edu/">Illinois State University</a> (2002–2017) and <a href="https://education.temple.edu/">Temple University</a> (2017–Present).</p>
@@ -291,8 +291,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -403,7 +401,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
