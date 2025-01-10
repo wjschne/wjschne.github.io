@@ -99,7 +99,7 @@ In programs like SPSS, the data seem to live in a spreadsheet that is always ope
 
 The major benefit of working with data in R is that all of the changes, transformations, and restructuring happens in code---which can be recreated at any time. There is usually no need to "save" the data after you have transformed it. The next time you work with the data, you just run your code and all the calculations will transform the data exactly the same way as before.
 
-Why does this matter? If you feel the need to save your data all the time, you end of having multiple copies of it: `data.sav`, `data_restructured.sav`, `data_new.sav`, `data_new_final.sav`, `fixed_data_new_final.sav`, `restructued_final_with_missing_cases_removed.sav`, and so forth and so on. It can be hard to figure out where to start the next time you work with your data. You might not remember which version has errors and which version has what you need.
+Why does this matter? If you feel the need to save your data all the time, you end up having multiple copies of it: `data.sav`, `data_restructured.sav`, `data_new.sav`, `data_new_final.sav`, `fixed_data_new_final.sav`, `restructued_final_with_missing_cases_removed.sav`, and so forth and so on. It can be hard to figure out where to start the next time you work with your data. You might not remember which version has errors and which version has what you need.
 
 In general, start with a completely raw data file (one that is exactly the way you started). Resist the temptation to make any changes to it directly. If you must, save a pristine copy somewhere and only then change it. Import your data and make all changes to it with code. One benefit of doing so is that the code documents any changes you would otherwise need to record in your lab notebook.
 
@@ -600,13 +600,15 @@ To create a new variable in `d_longer`, we "mutate" the tibble. For example, if 
 
 ```{r}
 d_longer %>% 
-  mutate(ontask_plus_1 = on_task + 1)
+  mutate(ontask_plus_1 = on_task + 1) %>% 
+  head()
 ```
 
 Notice that the variable is not saved anywhere because we did not assign the output to a variable:
 
 ```{r}
-d_longer
+d_longer %>% 
+  head()
 ```
 
 We need to identify which rows are part of the pre-intervention phase, which are in the intervention phase, and which are in the post-intervention phase. Let's use the `case_when` function, which is like a series of "if-then" statements followed by the desired result.
@@ -619,7 +621,8 @@ d_longer <- d_longer %>%
     time > baseline_sessions_n + intervention_sessions_n ~ "Post-Intervention" 
   ))
 
-d_longer
+d_longer %>% 
+  head()
 ```
 
 # Plot the results:
