@@ -6,13 +6,13 @@ date: 2024-03-07
 format: 
   html: 
     df-print: kable
-    keep-md: true
 knitr:
   opts_chunk: 
     out-width: 100%
     fig-height: 7
     fig-width: 7
     dev: "ragg_png"
+    cache: true
 ---
 
 ```{r}
@@ -86,18 +86,20 @@ This code reaches across the web to the file in quotes, "reads" it into our sess
 
 # Make a plot
 
-Use the [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html) function from the [ggplot2](https://ggplot2.tidyverse.org/) package to make a scatterplot with points and a regression line:
+Use the [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html) function from the [ggplot2](https://ggplot2.tidyverse.org/) package to make a scatterplot with points and a regression line in @fig-regressionplot.
 
-```{r regressionplot}
+```{r fig-regressionplot}
 #| classes: preview-image
+#| fig-cap: Regression line with its 95% confidence region
+#| message: false
 ggplot(d, aes(avgphgt,height)) +
   geom_point() +
   geom_smooth(method = "lm")
 ```
 
-Annotated, here is what the code does:
+@fig-annotated gives an annotated explanation of what the code does.
 
-![Annotated ggplot2 code](ggplotcode.svg)
+![Annotated ggplot2 code](ggplotcode.svg){#fig-annotated}
 
 ## Save the plot!
 
@@ -130,6 +132,12 @@ The .pdf format gives the best image quality but can only be viewed in a .pdf re
 
 The .png format gives good image quality and renders small file sizes. I prefer using the `ragg::agg_png` device to render a .png because it handles system fonts without any fuss. 
 
+```{r ragg}
+#| echo: false
+ggsave("my_plot.png", device = ragg::agg_png)
+```
+
+
 The primary use of the .gif format is to create animated plots. Otherwise stick with .png.
 
 Although the .jpg format is good for photos, it is terrible for plots---it often renders text and sharp corners with pixelated smudges. 
@@ -150,12 +158,58 @@ Notice that we did not get any results. Instead, we created the model fit object
 
 Regression assumes that the observations should independent, and the residuals should be normal and homoscedastic. The [performance package](https://easystats.github.io/performance/index.html) has a great function for checking model assumptions: [`check_model`](https://easystats.github.io/performance/reference/check_model.html)
 
-```{r checkmodel}
+```{r fig-checkmodel}
 #| fig-height: 8
+#| fig-cap: Regression diagnostic plots
 check_model(m1)
 ```
 
-Here we see that none of the assumptions have been severely violated.
+In @fig-checkmodel we see that none of the assumptions have been severely violated. We can look at each plot one a time as well.
+
+```{r fig-posterior}
+#| fig-cap: Posterior Predictive Check
+diagnostic_plots <- plot(check_model(m1, panel = FALSE))
+diagnostic_plots[[1]]
+```
+The @fig-posterior generates several sets of random "simulated" data based on the model and plots the distributions as the thin blue lines. Each simulated data set is of the same size as the original data. The thicker green line is based on the observed data. If the blue lines have roughly the same shape as the green line, then the model is likely of the right form. 
+
+The green line is not that far off from the blue lines, but the green line appears to have 2 peaks, and most of the blue lines have one peak. Because we know that males and females have different mean heights, there is a good chance that we need to model their heights separately. We will do so later in the tutorial.
+
+The [tutorial for the `check_model` function](https://easystats.github.io/performance/articles/check_model.html) gives an example of a posterior prediction check that signals that something is awry.
+
+
+```{r fig-linearity}
+#| fig-cap: Linearity assumption
+diagnostic_plots[[2]]
+```
+
+In @fig-linearity, we see that the fitted values (i.e., $\hat{Y}$ or predicted values) plotted against the residuals is roughly flat and horizontal. If the green line were clearly not flat, we would consider non-linear models.
+
+
+```{r fig-homogeneity}
+#| fig-cap: Homogeneity of variance assumption
+diagnostic_plots[[3]]
+```
+
+@fig-homogeneity is similar to @fig-linearity except that the fitted values are  standardized (i.e., converted to z-scores) and then square root of their absolute values are plotted on the *Y*-axis. The homogeneity of variance assumption requires that variability of the residuals should be roughly the same across the entire distribution of fitted values. Thus, the line in @fig-homogeneity should be roughly flat and horizontal, which it is. Indeed, we can draw a horizontal line entirely within the gray confidence region around the green line.
+
+
+```{r fig-influential}
+#| fig-cap: Influential observations
+diagnostic_plots[[4]]
+```
+
+Sometimes a single outlier can radically alter a regression model. The plot in @fig-influential shows how influential each point is in creating the regression model. If any point is outside the green dotted lines, we might worry that the point has had undue influence on the model.
+
+```{r fig-normality}
+#| fig-cap: Influential observations
+diagnostic_plots[[5]]
+```
+
+The normality assumption does not require that all variables be normal. It requires that the prediction residuals be approximately normal. If the residuals were perfectly normal, the blue dots would fall exactly on the green line in @fig-normality. The blue dots are not that far from the green line. Because ordinary least squares is robust to minor violations of the normality assumption, nothing in @fig-normality should make us worry about needing to model the data with some other kind of residuals.
+
+Overall, the plots in @fig-checkmodel give us little to worry about.
+
 
 # Summarising results
 
@@ -211,8 +265,8 @@ The model explains 64% of the variance.
 Using rmarkdown, instead of typing the numeric results, we type pull the results using an [inline code chunk](https://rmarkdown.rstudio.com/lesson-4.html):
 
 
-``` md
-The model explains `r round(100 * r2(m1)$R2, 0)`% of the variance.
+```
+The model explains `{{r}} round(100 * r2(m1)$R2, 0)`% of the variance.
 ```
 
 Which, when rendered, produces the correct output:
@@ -267,13 +321,14 @@ m2 <- lm(height ~ avgphgt + gender, data = d)
 
 ## Checking assumptions
 
-```{r checkmodelm2}
+```{r fig-checkmodelm2}
 #| fig-height: 8
+#| fig-cap: Assumption check for model 2
 check_model(m2)
 
 ```
 
-All looks well.
+The diagnostic plots in @fig-checkmodel2 looks good. It has one additional plot checking the collinearity of the predictors. If any predictor is strongly predictable from the other predictors, it is difficult for ordinary least squares regression to locate the regression coefficients with precision. Why? Because the regression coefficients represent the independent effect of each variable controlling for all the other variables. If a predictor has little variability left after controlling for the other variables, estimating its independent effect is difficult, which is manifest in "inflated" standardized errors around the coefficient. The VIF (variance inflation factor) statistic estimates how much the standard errors are made large due to collinearity. If the VIF is larger than 10 or so, it is likely that the estimate of the coefficient is not precise.
 
 ## Summarizing results
 
@@ -323,7 +378,7 @@ test_bf(m1, m2) %>%
 
 To compare many performance statistics at once: 
 
-```{r}
+```{r comparemodelperformance}
 compare_performance(m1, m2) 
 ```
 
