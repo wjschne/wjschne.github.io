@@ -207,7 +207,7 @@
     "href": "tutorials/Regression/regression.html#checking-assumptions-1",
     "title": "Regression in R",
     "section": "Checking assumptions",
-    "text": "Checking assumptions\n\ncheck_model(m2)\n\n\n\n\n\n\n\n\nAll looks well."
+    "text": "Checking assumptions\n\ncheck_model(m2)\n\n\n\n\n\n\n\nFigure 9: Assumption check for model 2\n\n\n\n\n\nThe diagnostic plots in ?@fig-checkmodel2 looks good. It has one additional plot checking the collinearity of the predictors. If any predictor is strongly predictable from the other predictors, it is difficult for ordinary least squares regression to locate the regression coefficients with precision. Why? Because the regression coefficients represent the independent effect of each variable controlling for all the other variables. If a predictor has little variability left after controlling for the other variables, estimating its independent effect is difficult, which is manifest in “inflated” standardized errors around the coefficient. The VIF (variance inflation factor) statistic estimates how much the standard errors are made large due to collinearity. If the VIF is larger than 10 or so, it is likely that the estimate of the coefficient is not precise."
   },
   {
     "objectID": "tutorials/Regression/regression.html#summarizing-results",

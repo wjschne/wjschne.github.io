@@ -770,14 +770,19 @@ computed using a Wald t-distribution approximation.</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="regression_files/figure-html/checkmodelm2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<div id="fig-checkmodelm2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-checkmodelm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="regression_files/figure-html/fig-checkmodelm2-1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-checkmodelm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Assumption check for model 2
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>All looks well.</p>
+<p>The diagnostic plots in <strong>?@fig-checkmodel2</strong> looks good. It has one additional plot checking the collinearity of the predictors. If any predictor is strongly predictable from the other predictors, it is difficult for ordinary least squares regression to locate the regression coefficients with precision. Why? Because the regression coefficients represent the independent effect of each variable controlling for all the other variables. If a predictor has little variability left after controlling for the other variables, estimating its independent effect is difficult, which is manifest in “inflated” standardized errors around the coefficient. The VIF (variance inflation factor) statistic estimates how much the standard errors are made large due to collinearity. If the VIF is larger than 10 or so, it is likely that the estimate of the coefficient is not precise.</p>
 </section>
 <section id="summarizing-results" class="level2">
 <h2 class="anchored" data-anchor-id="summarizing-results">Summarizing results</h2>
