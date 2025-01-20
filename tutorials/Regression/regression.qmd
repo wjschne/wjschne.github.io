@@ -12,7 +12,7 @@ knitr:
     fig-height: 7
     fig-width: 7
     dev: "ragg_png"
-    cache: true
+    cache: false
 ---
 
 ```{r}
@@ -36,7 +36,7 @@ An **R package** is software that extends the capabilities of R. To use a packag
 
 ## Install tidyverse 
 
-Some packages are designed to work with several other packages as a system. The [tidyverse package](https://www.tidyverse.org/) is a "meta-package" that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. It also installs the [haven](https://haven.tidyverse.org/) package, which we will use to import some data. If you do not have a recent version of tidyverse already installed, you can install it with this code:
+Some packages are designed to work with several other packages as a system. The [tidyverse package](https://www.tidyverse.org/) is a "meta-package" that installs and loads a coherent set of packages designed to help you import, manipulate, visualize, and interpret data. If you do not have a recent version of tidyverse already installed, you can install it with this code:
 
 ```{r installtidyverse}
 #| eval: false
@@ -74,12 +74,11 @@ library(easystats) # Loads packages that make extracting data from model fit obj
 If I use only one data set in an analysis, I call it `d`. If I need multiple data sets, I use a `d_` prefix to differentiate them. For example, if I have separate data sets for juniors and seniors, I might call them, `d_juniors` and `d_seniors`, respectively. This kind of consistency seems like extra work, but it pays off in making it easy for *future-you* to read and understand your own code.
 :::
 
-You can import the `height.sav` data set directly from my github repository for this course. There is no need to save the data anywhere. This code loads the data into variable `d` using the [`read_spss`](https://haven.tidyverse.org/reference/read_spss.html) function from the [haven package](https://haven.tidyverse.org/).
-
-We could load haven using `library(haven)`, but we only need to use one function one time. So instead of loading the whole package, we can use a function without loading the package by using the package name as prefix followed by two colons like so:
+You can import the `height.csv` data set directly from my github repository for this course. There is no need to save the data anywhere. 
 
 ```{r import}
-d <- haven::read_spss("https://github.com/wjschne/EDUC5325/raw/master/height.sav")
+d <- read_csv("https://github.com/wjschne/EDUC5325/raw/master/height.csv")
+
 ```
 
 This code reaches across the web to the file in quotes, "reads" it into our session, and holds the data in a new variable we called `d`. Every time we need the data, we will get it from the `d` variable.
@@ -133,7 +132,8 @@ The .pdf format gives the best image quality but can only be viewed in a .pdf re
 The .png format gives good image quality and renders small file sizes. I prefer using the `ragg::agg_png` device to render a .png because it handles system fonts without any fuss. 
 
 ```{r ragg}
-#| echo: false
+#| echo: true
+#| message: false
 ggsave("my_plot.png", device = ragg::agg_png)
 ```
 
@@ -301,13 +301,7 @@ standardise_parameters(m1)
 
 # Multiple regression
 
-In this data set, all participants self-identified as either male or female on the traditional gender binary. We assume that males are, on average, taller than females. The codes are male = 1 and female = 2. Let's `mutate` the gender variable so that it becomes a categorical "factor" instead of a numeric variable.
-
-```{r gender}
-d <- d %>% 
-  mutate(gender = factor(gender, levels = c(1, 2), 
-                         labels = c("Males", "Females"))) 
-```
+In this data set, all participants self-identified as either male or female on the traditional gender binary. We assume that males are, on average, taller than females. 
 
 By default, the first category in a factor is the "reference level" that all other categories are compared to. Thus, the regression coefficient for `gender` will refer to how much "Females" differ from "Males," on average. If want to do it the other way around, you can reverse the order of the levels and labels in the `factor` function. See also the [`fct_rev`](https://forcats.tidyverse.org/reference/fct_rev.html) or [`fct_relevel`](https://forcats.tidyverse.org/reference/fct_relevel.html) function for other ways to do this.
 
@@ -328,7 +322,7 @@ check_model(m2)
 
 ```
 
-The diagnostic plots in @fig-checkmodel2 looks good. It has one additional plot checking the collinearity of the predictors. If any predictor is strongly predictable from the other predictors, it is difficult for ordinary least squares regression to locate the regression coefficients with precision. Why? Because the regression coefficients represent the independent effect of each variable controlling for all the other variables. If a predictor has little variability left after controlling for the other variables, estimating its independent effect is difficult, which is manifest in "inflated" standardized errors around the coefficient. The VIF (variance inflation factor) statistic estimates how much the standard errors are made large due to collinearity. If the VIF is larger than 10 or so, it is likely that the estimate of the coefficient is not precise.
+The diagnostic plots in @fig-checkmodelm2 looks good. It has one additional plot checking the collinearity of the predictors. If any predictor is strongly predictable from the other predictors, it is difficult for ordinary least squares regression to locate the regression coefficients with precision. Why? Because the regression coefficients represent the independent effect of each variable controlling for all the other variables. If a predictor has little variability left after controlling for the other variables, estimating its independent effect is difficult, which is manifest in "inflated" standardized errors around the coefficient. The VIF (variance inflation factor) statistic estimates how much the standard errors are made large due to collinearity. If the VIF is larger than 10 or so, it is likely that the estimate of the coefficient is not precise.
 
 ## Summarizing results
 
@@ -391,7 +385,7 @@ There are several packages that automate the production of pretty regression tab
 
 ## sjPlot
 
-The [`tab_model` function in sjPlot](https://strengejacke.github.io/sjPlot/articles/tab_model_estimates.html) look great as is, but if it gives you too much or not enough, check out [its options](https://strengejacke.github.io/sjPlot/reference/tab_model.html) to see if it can do what you want.
+The [`tab_model` function in sjPlot](https://strengejacke.github.io/sjPlot/articles/tab_model_estimates.html) looks great as is, but if it gives you too much or not enough, check out [its options](https://strengejacke.github.io/sjPlot/reference/tab_model.html) to see if it can do what you want.
 
 Show a single model
 
@@ -439,8 +433,8 @@ parameters(m2) %>%
 
 A primary advantage of the flextable package is that it is compatible with MS Word's .docx format as well as .html and .pdf.
 
-```{r}
-m1 %>% 
+```{r flextable}
+m2 %>% 
   flextable::as_flextable()
 ```
 
@@ -459,7 +453,7 @@ library(tidyverse)
 library(easystats)
 
 # Import data
-d <- haven::read_spss("https://github.com/wjschne/EDUC5325/raw/master/height.sav")
+d <- read_csv("https://github.com/wjschne/EDUC5325/raw/master/height.csv")
 
 # Plot data
 ggplot(d, aes(weight,height)) +
