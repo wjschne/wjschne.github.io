@@ -12,7 +12,7 @@ knitr:
     fig-height: 7
     fig-width: 7
     dev: "ragg_png"
-    cache: false
+    cache: true
 ---
 
 ```{r}
@@ -77,13 +77,35 @@ If I use only one data set in an analysis, I call it `d`. If I need multiple dat
 You can import the `height.csv` data set directly from my github repository for this course. There is no need to save the data anywhere. 
 
 ```{r import}
+#| message: false
 d <- read_csv("https://github.com/wjschne/EDUC5325/raw/master/height.csv")
 
 ```
 
 This code reaches across the web to the file in quotes, "reads" it into our session, and holds the data in a new variable we called `d`. Every time we need the data, we will get it from the `d` variable.
 
+The `head` function, by default, displays the first 6 rows of a `data.frame` (a collection of variables in which all columns have the same number of rows) or `tibble` (a `data.frame` with various enhancements for printing and data creation).
+
+```{r}
+head(d)
+```
+
+*Dataset variables*
+
+- `idnum` An identifying variable for each student
+- `avgphgt` Average of parent height
+- `income` Parental income
+- `calcium` Calcium intake
+- `age` Student age
+- `gender` Student gender
+- `weight` Student weight (in pounds)
+- `height` Student height (in inches)
+- `smoke15` Number of cigarettes smoked per week
+
+
 # Make a plot
+
+Let's predict student height (`height`) from the average of their parents' height (`avgphgt`).
 
 Use the [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html) function from the [ggplot2](https://ggplot2.tidyverse.org/) package to make a scatterplot with points and a regression line in @fig-regressionplot.
 
@@ -91,7 +113,7 @@ Use the [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html) function
 #| classes: preview-image
 #| fig-cap: Regression line with its 95% confidence region
 #| message: false
-ggplot(d, aes(avgphgt,height)) +
+ggplot(d, aes(avgphgt, height)) +
   geom_point() +
   geom_smooth(method = "lm")
 ```
@@ -99,6 +121,25 @@ ggplot(d, aes(avgphgt,height)) +
 @fig-annotated gives an annotated explanation of what the code does.
 
 ![Annotated ggplot2 code](ggplotcode.svg){#fig-annotated}
+
+Note that this plot is not quite presentation worthy. For example, @fig-presentationworthy improves upon @fig-regressionplot by having proper axis labels, spacing the axis ticks, setting the aspect ratio to 1:1, and setting the font and font size to make .
+
+```{r fig-presentationworthy}
+#| fig-cap: Regression line with its 95% confidence region
+#| message: false
+ggplot(d, aes(avgphgt, height)) +
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  scale_x_continuous("Average Parent Height (inches)", 
+                     limits = c(60, 75)) +
+  scale_y_continuous("Student Height (inches)", 
+                     limits = c(60, 75)) + 
+  coord_equal() + 
+  theme_gray(base_family = "Roboto Condensed", 
+             base_size = 18)
+```
+
+
 
 ## Save the plot!
 
@@ -129,14 +170,14 @@ The .pdf format gives the best image quality but can only be viewed in a .pdf re
 
 ## Raster images
 
-The .png format gives good image quality and renders small file sizes. I prefer using the `ragg::agg_png` device to render a .png because it handles system fonts without any fuss. 
+The .png format gives good image quality and renders small file sizes. I prefer using the `ragg::agg_png` device to render a .png because it allows me to use any system font with no extra fuss. 
 
 ```{r ragg}
 #| echo: true
 #| message: false
+#| eval: false
 ggsave("my_plot.png", device = ragg::agg_png)
 ```
-
 
 The primary use of the .gif format is to create animated plots. Otherwise stick with .png.
 
@@ -164,19 +205,24 @@ Regression assumes that the observations should independent, and the residuals s
 check_model(m1)
 ```
 
-In @fig-checkmodel we see that none of the assumptions have been severely violated. We can look at each plot one a time as well.
+In @fig-checkmodel we see that none of the assumptions have been severely violated. Normally, we would stop here. If needed, we can look at each plot one at a time.
+
+## Posterier Predictions
+
 
 ```{r fig-posterior}
 #| fig-cap: Posterior Predictive Check
 diagnostic_plots <- plot(check_model(m1, panel = FALSE))
 diagnostic_plots[[1]]
 ```
+
 The @fig-posterior generates several sets of random "simulated" data based on the model and plots the distributions as the thin blue lines. Each simulated data set is of the same size as the original data. The thicker green line is based on the observed data. If the blue lines have roughly the same shape as the green line, then the model is likely of the right form. 
 
 The green line is not that far off from the blue lines, but the green line appears to have 2 peaks, and most of the blue lines have one peak. Because we know that males and females have different mean heights, there is a good chance that we need to model their heights separately. We will do so later in the tutorial.
 
 The [tutorial for the `check_model` function](https://easystats.github.io/performance/articles/check_model.html) gives an example of a posterior prediction check that signals that something is awry.
 
+## Linearity Assumption
 
 ```{r fig-linearity}
 #| fig-cap: Linearity assumption
@@ -184,6 +230,8 @@ diagnostic_plots[[2]]
 ```
 
 In @fig-linearity, we see that the fitted values (i.e., $\hat{Y}$ or predicted values) plotted against the residuals is roughly flat and horizontal. If the green line were clearly not flat, we would consider non-linear models.
+
+## Homogeneity of Variance Assumption
 
 
 ```{r fig-homogeneity}
@@ -193,6 +241,8 @@ diagnostic_plots[[3]]
 
 @fig-homogeneity is similar to @fig-linearity except that the fitted values are  standardized (i.e., converted to z-scores) and then square root of their absolute values are plotted on the *Y*-axis. The homogeneity of variance assumption requires that variability of the residuals should be roughly the same across the entire distribution of fitted values. Thus, the line in @fig-homogeneity should be roughly flat and horizontal, which it is. Indeed, we can draw a horizontal line entirely within the gray confidence region around the green line.
 
+## Influential Observations and Outlier Detection
+
 
 ```{r fig-influential}
 #| fig-cap: Influential observations
@@ -201,14 +251,38 @@ diagnostic_plots[[4]]
 
 Sometimes a single outlier can radically alter a regression model. The plot in @fig-influential shows how influential each point is in creating the regression model. If any point is outside the green dotted lines, we might worry that the point has had undue influence on the model.
 
+Many additional outlier detection methods are available via the `check_outliers` function:
+
+```{r}
+#| message: false
+check_outliers(m1, method = "all")
+```
+
+
+## Normality Assumption
+
+The normality assumption does not require that all variables be normal. It requires that the prediction residuals be approximately normal. 
+
 ```{r fig-normality}
-#| fig-cap: Influential observations
+#| fig-cap: Normality assumption
 diagnostic_plots[[5]]
 ```
 
-The normality assumption does not require that all variables be normal. It requires that the prediction residuals be approximately normal. If the residuals were perfectly normal, the blue dots would fall exactly on the green line in @fig-normality. The blue dots are not that far from the green line. Because ordinary least squares is robust to minor violations of the normality assumption, nothing in @fig-normality should make us worry about needing to model the data with some other kind of residuals.
 
-Overall, the plots in @fig-checkmodel give us little to worry about.
+If the residuals were perfectly normal, the blue dots would fall exactly on the green line in @fig-normality. The blue dots are not that far from the green line. Because ordinary least squares is robust to minor violations of the normality assumption, nothing in @fig-normality should make us worry about needing to model the data with some other kind of residuals.
+
+
+If we suspect that the residuals are generated from a different distribution, the `check_distribution` function will estimate the probability that the residuals (and response/outcome variable) come from 12 major distribution families:
+
+```{r}
+check_distribution(m1) 
+plot(check_distribution(m1))
+```
+
+Here we see that of the 12 major distribution families tested, the residuals are more likely normal than any of the others. After we control for gender, this probability will increase. If the results had strongly suggested the residuals were generated from one of the other distributions, we might consider switching from a linear model to a [generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model).
+
+
+
 
 
 # Summarising results
@@ -234,6 +308,17 @@ report::report(m1)
 
 Some statistics like the *coefficient of determination* (*R*^2^) or the *standard error of the estimate* (*&sigma;~e~*) describe the model as a whole.
 
+
+### *R*^2^
+
+
+The *R*^2^ statistic measures the percentage of variance in the outcome explained by the predictors.
+
+$$
+R^2=\frac{\sigma_{\hat{Y}}^2}{\sigma_{Y}^2}=1-\frac{\sigma_e^2}{\sigma_Y^2}
+$$
+
+
 The model-level statistics can be extracted with the performance package's [`model_performance`](https://easystats.github.io/performance/reference/model_performance.lm.html) function.
 
 ```{r performancem1}
@@ -241,20 +326,66 @@ performance(m1)
 ```
 
 
-*R*^2^ is in the `glance` function's `r.squared` column, and the *standard error of the estimate* is in the `sigma` column.
+
+
+*R*^2^ is the percentage of variance in the outcome variable (i.e., Height) explained by the predictor variables (i.e., Average Parent Height). In @fig-r2, the black line toggles between the best fitting regression line and the horizontal line running through the outcome variable's mean. The vertical line segments running from each point to the black line are, on average, smaller for the best fitting regression line. Their squared distances shrink, on average, by `r round(100 * r2(m1)$R2, 0)`%. Thus, we say that the predictor variance "explains" `r round(100 * r2(m1)$R2, 0)`% of the variance in the outcome variable.
+
+```{r fig-r2}
+#| fig-cap: "Percentage of Variance Explained"
+#| warning: false
+#| code-fold: true
+r <- d %>% select(avgphgt, height) %>% cor() %>% `[[`(1, 2)
+m <- d %>% select(avgphgt, height) %>% colMeans()
+s <- d %>% select(avgphgt, height) %>% sapply(sd)
+n <- 2
+d_slope <- tibble(id = c("0.00", round(r^2, 2)),
+                  r = seq(0, r, length.out = n)) %>%
+  mutate(i = -1 * r * m[1] * s[2] / s[1] + m[2], 
+         b = r * s[2] / s[1])
+library(gganimate)
+anim <- d %>% select(idnum, avgphgt, height) %>%
+  crossing(d_slope) %>%
+  mutate(yhat = b * avgphgt + i, 
+         Error = height - yhat) %>%
+  arrange(idnum, Error) %>%
+  ggplot(aes(avgphgt, height)) +
+  geom_abline(aes(slope = b, intercept = i)) +
+  geom_segment(aes(xend = avgphgt, yend = yhat, color = Error)) +
+  geom_point() +
+  transition_states(id, state_length = 3, transition_length = 1) +
+  scale_color_gradient2(
+    low = "royalblue4",
+    mid = "gray",
+    high = "firebrick4",
+    breaks = seq(-6, 6, 2),
+    labels = signs::signs
+  ) +
+  scale_x_continuous("Average Parent Height (inches)", limits = c(60, 75)) +
+  scale_y_continuous("Student Height (inches)", limits = c(60, 75)) +
+  labs(title = "Variance Explained = {closest_state}") +
+  coord_equal() +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 18) +
+  theme(
+    legend.text.position = "left",
+    legend.text = element_text(hjust = 1),
+    legend.key.height = unit(2, "cm")
+  )
+gganimate::animate(
+  anim,
+  nframes = 50 * 4,
+  device = "ragg_png",
+  width = 10,
+  height = 10,
+  fps = 50,
+  res = 144
+)
+```
+
 If all you wanted was the *R*^2^, you could do this:
 
 ```{r r2m1}
-r2(m1)
+performance(m1)$R2
 ```
-
-
-For the *standard error of the estimate*:
-
-```{r sigmam1}
-sigma(m1)
-```
-
 
 Why would you want just one number instead of reading it from a table? In reproducible research, we intermingle text and code so that it is clear where every number came from. Thus, "hard-coding" your results like this is considered poor practice:
 
@@ -275,6 +406,29 @@ Which, when rendered, produces the correct output:
 
 That seems like a lot of extra work, right? Yes, it is---unless there is a possibility that your underlying data might change or that you might copy your numbers incorrectly. If you are imperfect, the extra time and effort is worth it. It makes it easy for other scholars to see exactly where each number came from. Hard-coded results are harder to trust.
 
+Regression errors are the vertical distances of the outcome variable and regression line. That is, errors are the difference between the outcome and the predicted outcome: 
+
+$$
+e=Y-\hat{Y}
+$$
+
+### Standard Error of the Estimate (*&sigma;~e~*)
+
+The *standard error of the estimate* (i.e., Sigma in the `performance` output table) is the standard deviation of the regression errors $\sigma_{e}$. It represents the typical size of the prediction error. That is, when we make a prediction, how far off is that prediction likely to be? 
+
+The standard error of the estimate can be extracted from a regression fit object with the `sigma` function:
+
+```{r sigmam1}
+sigma(m1)
+```
+
+Alternately, it can be extracted from the `performance` function's output:
+
+```{r}
+performance(m1)$Sigma
+```
+
+
 ## Coefficient-level statistics
 
 The regression coefficients---the intercept (*b*~0~) and the slope (*b*~1~)---have a number of statistics associated with them, which we will discuss later in the course.
@@ -287,23 +441,24 @@ coef(m1)
 
 Thus, the intercept is `r round(coef(m1)[1],2)` and the slope is `r round(coef(m1)[2],2)`.
 
-To get the model parameters (intercept and slope coefficients) along with their p-values and other statistical information
+To get the model parameters (intercept and slope coefficients) along with their standard errors, confidence intervals, *t* statistics, and *p*-values:
+
 ```{r parametersm1}
 parameters(m1) 
 ```
 
-If you want standardized parameters:
+Standardized parameters are the regression coefficients if all variables in the analysis were standardized (i.e., convernted to *z*-scores). Standardized coefficients have a straightforward interpretation: They represent the predicted change in the outcome associated with a change of 1 standard deviation in the predictor variable.
 
 ```{r standardparm1}
-standardise_parameters(m1)
+standardize_parameters(m1)
 ```
 
 
 # Multiple regression
 
-In this data set, all participants self-identified as either male or female on the traditional gender binary. We assume that males are, on average, taller than females. 
+In this data set, all participants self-identified as either male or female on the traditional gender binary. We would predict that males are, on average, taller than females. 
 
-By default, the first category in a factor is the "reference level" that all other categories are compared to. Thus, the regression coefficient for `gender` will refer to how much "Females" differ from "Males," on average. If want to do it the other way around, you can reverse the order of the levels and labels in the `factor` function. See also the [`fct_rev`](https://forcats.tidyverse.org/reference/fct_rev.html) or [`fct_relevel`](https://forcats.tidyverse.org/reference/fct_relevel.html) function for other ways to do this.
+By default, the first category in a factor or character (text) variable is the "reference level" that all other categories are compared to. In R, a factor can list categories in any order. In character variables, the categories are listed in alphabetical order. The `gender` variable consists of text, so the `lm` function puts the "female" category first and the "male" category second. Thus, the regression coefficient for `gender` will refer to how much "Males" differ from "Females," on average. If want to do it the other way around, you can reverse the order of the levels and labels in the `factor` function. See also the [`fct_rev`](https://forcats.tidyverse.org/reference/fct_rev.html) or [`fct_relevel`](https://forcats.tidyverse.org/reference/fct_relevel.html) function for other ways to do this.
 
 
 We run the regression model with 2 predictors like so:
@@ -332,10 +487,23 @@ To summarize the results, use the `summary` function:
 summary(m2)
 ```
 
+Model-level statistics:
+
+```{r}
+performance(m2)
+```
+
+Coefficient-level statistics:
+
+```{r}
+parameters(m2)
+```
+
+
 Standardized coefficients:
 
 ```{r standardizedm2}
-standardise_parameters(m2)
+standardize_parameters(m2)
 ```
 
 
@@ -349,15 +517,31 @@ report(m2)
 
 ## Comparing models
 
-To compare two regression models:
+In the first model, there was only one predictor. The second model had an additional predictor. To test whether the second predictor has *incremental validity* (predicts variance in the outcome beyond what is predicted by other predictors), we can compare the two models using the Wald test:
 
 ```{r comparem1m2}
 test_wald(m1, m2)
 ```
 
-The p-value is significant, meaning that `m2` explains more variance than `m1`.
+The Wald test can also be conducted in base R with the `anova` function:
 
-This uses Bayes Factor instead of a p-value:
+```{r}
+anova(m1, m2)
+```
+
+Either way, the p-value is significant, meaning that `m2` explains more variance than `m1`.
+
+The semi-partial correlation coefficient squared tells us how much incremental variance each predictor has over the other:
+
+```{r}
+r2_semipartial(m2)
+```
+
+Thus, `gender` explains `r round(100 * r2_semipartial(m2)$r2_semipartial[2] ^ 2, 0)`% variance beyond `avgphgt`. Likewise, `avgphgt` explains `r round(100 * r2_semipartial(m2)$r2_semipartial[1] ^ 2, 0)`% variance beyond `gender`.
+
+### Bayes Factors
+
+An alternate method of comparing two models uses the Bayes factor. It tells us under which model the observed data are more probable.
 
 ```{r bayesm1m2}
 test_bf(m1, m2)
@@ -421,10 +605,12 @@ tbl_stack(list(tbl_regression(m1), tbl_regression(m2)),
 ## rempsych
 
 ```{r rempsych}
-
 parameters(m2) %>% 
   rempsyc::nice_table()
 
+m2 %>% 
+  report_table() %>% 
+  rempsyc::nice_table()
 
 ```
 
@@ -440,6 +626,26 @@ m2 %>%
 
 
 :::
+
+
+# Case-level Statistics
+
+A great deal of information can be extracted about each row in your data. Perhaps the most important among these are the predicted value of the outcome variable and the error/residual. The `estimate_prediction` function gives these values, as well as the standard error around the prediction and the 95% confidence interval.
+
+```{r caseprediction}
+estimate_prediction(m1)
+```
+
+The `augment` function from the broom package gives the predicted value (`.fitted`), the residual (`.resid`), the residual converted to a standardized z-score (`.std.resid`), Cook's distance (.cooksd) to identify influential cases, hat values (`.hat`) to identify cases that have leverage (i.e., the potential to be influential), and `.sigma` (the estimated residual standard deviation when the corresponding observation is dropped from the model).
+
+```{r broomaugment}
+broom::augment(m1)
+```
+
+
+The idea of leverage can be found in @fig-leverage. When the red dot has an extreme value of *x*, it can easily alter where the regression line will be, depending on the value of *y*. That is, extreme values of *x* have *leverage*. When the red dot has a value of *x* in the middle, the value of *y* will have little effect on the location of the regression line. Thus, values of *x* near the mean have little leverage. When there are multiple predictors, the hat values help spot cases with leverage even though a visualization is not always possible.
+
+![Animation showing preditor values with high and low leverage](leverage.gif){#fig-leverage}
 
 
 # All the code in one place:
@@ -695,5 +901,9 @@ summary(m_math)
 ```
 
 :::
+
+
+
+
 
 
