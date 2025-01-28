@@ -2,6 +2,7 @@
 title: "Random Intercept Models in R"
 author: "W. Joel Schneider"
 subtitle: "Advanced Data Analysis (EDUC 8825)"
+date: 2025-01-27
 format: 
   html: 
     # css: tutorial.css
@@ -14,8 +15,9 @@ format:
     toc-location: left
 ---
 
-```{r setup, include=FALSE}
-#| incluse: false
+```{r setup}
+#| include: false
+#| cache: false
 knitr::opts_chunk$set(
   warning = F,
   message = F,
@@ -35,6 +37,7 @@ library(lubridate)
 library(lme4)
 library(easystats)
 library(broom.mixed)
+library(broom)
 
 options(digits = 4)
 # bg_color <- "#ECE5D3"
@@ -716,7 +719,9 @@ d %>%
 
 Here a fancier version of the same plot.
 
-```{r}
+```{r fig-model0}
+#| fig-cap: Model 0 Group intercepts
+#| classes: preview-image
 # ggtext displays rich text
 library(ggtext)
 
