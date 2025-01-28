@@ -61,8 +61,8 @@ t1_north <- t1_0 + ob_point(0, t1_r)
 t2_north <- t2_0 + ob_point(0, t2_r)
 gv2t1 <- ob_segment(p1 = gv@center, p2 = t1_north)
 gv2t2 <- ob_segment(p1 = gv@center, p2 = t2_north)
-igv2t1 <- intersection(gv2t1@line, gv)[[1]]
-igv2t2 <- intersection(gv2t2@line, gv)[[1]]
+igv2t1 <- intersection(gv2t1@line, gv)[1]
+igv2t2 <- intersection(gv2t2@line, gv)[1]
 
 path_gv2t1 <- ob_segment(p1 = igv2t1, p2 = t1_north)
 path_gv2t2 <- ob_segment(p1 = igv2t2, p2 = t2_north)
@@ -98,14 +98,8 @@ pp <- rbind(gv@center@xy,
             lineheight = .85) +
   theme_void() +
   coord_equal() +
-  geom_arrow(data = path_gv2t1@xy, 
-             resect = 1.5, 
-             colour = "gray80",
-             arrow_head = arrowheadr::arrow_head_deltoid()) + 
-  geom_arrow(data = path_gv2t2@xy, 
-             resect = 1.5,
-             colour = "gray80",
-             arrow_head = arrowheadr::arrow_head_deltoid()) +
+  connect(gv, t1_0) +
+  connect(gv, t2_0) +
   geom_circle(data = d_label, 
               fill = "white", 
               color = NA, 
@@ -122,6 +116,9 @@ pp <- rbind(gv@center@xy,
 
 # DeLuciatoR::get_dims(pp, maxheight = 6, maxwidth = 8)
   pp
+  
+  
+ggdiagram()
 ```
 
 Both tests are measured with the standard score metric (mean = 100, SD = 15). Because these tests are intended to measure the same ability, we are surprised to see that they differ by 20 points (20 standard score points = 1⅓ standard deviations). How common is it for tests that allegedly measure the same thing to differ by 20 points or more?

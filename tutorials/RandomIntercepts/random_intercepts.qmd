@@ -1,0 +1,1057 @@
+---
+title: "Random Intercept Models in R"
+author: "W. Joel Schneider"
+subtitle: "Advanced Data Analysis (EDUC 8825)"
+format: 
+  html: 
+    # css: tutorial.css
+    fig-height: 8
+    fig-width: 8
+    highlight: zenburn
+    theme: journal
+    toc: true
+    toc-float: true
+    toc-location: left
+---
+
+```{r setup, include=FALSE}
+#| incluse: false
+knitr::opts_chunk$set(
+  warning = F,
+  message = F,
+  dev = "svg",
+  # class.source = 'fold-show',
+  echo = TRUE,
+  dev = "ragg_png",
+  cache = T,
+  out.width = '100%',
+  out.height = '100%'
+)
+options(digits = 3, knitr.kable.NA = '')
+
+
+library(tidyverse)
+library(lubridate)
+library(lme4)
+library(easystats)
+library(broom.mixed)
+
+options(digits = 4)
+# bg_color <- "#ECE5D3"
+# fore_color <- "#2D2718"
+# line_color <- "#7C4728"
+# area_color <- "#624E3E"
+myfont <- "Roboto Condensed"
+
+# ggplot2::update_geom_defaults("label", list(family =  myfont))
+# ggplot2::update_geom_defaults("text", list(family =  myfont))
+# ggplot2::update_geom_defaults("point", list(colour =  fore_color))
+# ggplot2::update_geom_defaults("line", list(colour =  line_color))
+# ggplot2::update_geom_defaults("smooth", list(colour =  line_color))
+# ggplot2::update_geom_defaults("area", list(fill = area_color))
+# ggplot2::update_geom_defaults("density", list(fill = area_color))
+# ggplot2::theme_set(ggplot2::theme_grey(base_size = 18, base_family = myfont) + ggplot2::theme(
+  # panel.background = ggplot2::element_rect(bg_color)))
+
+CurrentQuestion <- 0
+
+inc_num <- function() {
+  CurrentQuestion <<- CurrentQuestion + 1
+  CurrentQuestion
+}
+
+show_answer <- FALSE
+```
+
+```{r datageneralation, echo = F}
+# make_groups <- function(
+#   n_samples,
+#   sample_size_function = rnorm,
+#   .id = "id",
+#   .group_id = "group_id",
+#   ...) {
+#   arglist <- c(list(n = n_samples), list(...))
+#   group_id <- 1:n_samples
+#   sample_sizes <-
+#     as.integer(round(do.call(sample_size_function, arglist)))
+#   if (any(sample_sizes < 1))
+#     stop("Some sample sizes are less than zero.")
+# 
+#   tibble(group_id = 1:n_samples, group_n = sample_sizes) %>%
+#     pmap_df(function(group_id, group_n)
+#       tibble(group_id = rep(group_id, group_n))) %>%
+#     mutate(id = seq(1, nrow(.) )) %>% 
+#     rename(!!sym(.id) := id,
+#            !!sym(.group_id) := group_id)
+# }
+
+# random_3 <- tibble::tribble(
+#   ~coefficients, ~b_00k, ~b_10k,
+#         "b_00k",     3L,     2L,
+#         "b_10k",     2L,     3L
+#   ) %>% 
+#   WJSmisc::df2matrix()
+# 
+# fixed_3 <- c(u_00k = 50, 
+#              u_10k = 5)
+# 
+# 
+# mvtnorm::rmvnorm(k_school, mean = c(u_00k = 0, u_10k = 0), sigma = random_3) %>%
+# as.tibble() %>% 
+#   rowid_to_column("school_id")
+# 
+# tibble(school_id = 1:k_school) %>% 
+#   mutate(
+#     b_000 = 50,
+#     b_100 = 5) %>% 
+#   bind_cols(mvtnorm::rmvnorm(k_school, mean = c(u_00k = 0, u_10k = 0), sigma = random_3) %>% as_tibble()) 
+#     
+#     k_class = rpois(nrow(.), lambda = 20)) %>% 
+#   make_groups(.cluster_size = "k_class", .cluster_id = "school_id")
+# 
+# 
+# 
+# data = d
+# sigma <- 10
+# make_groups(30, rpois, lambda = 30,  .id = "student_id", .group_id = "class_id") %>% 
+#   mutate(e_ij = rnorm(nrow(.), mean = 0, sd = sigma ^ 0.5))
+# 
+#  get_sample_size <- function(id, mu = 20, sigma = 8) {
+#   n <- as.integer(round(rnorm(1,mu, sigma)))
+#   tibble(id_order = 1:n)
+# }
+# 
+# d_classroom <- tibble(classroom_id = factor(1:k), class_e = rnorm(k, 0, 10), treatment = factor(sample(c("Treatment", "Control"), k, replace = T))) %>%
+#   mutate(class_mean = overall_mean + b_treatment * (treatment == "Treatment") + class_e)
+# 
+# d_student <- crossing(student_id = 1:30, classroom_id = 1:k) %>%
+#   mutate_all(factor) %>%
+#   left_join(d_classroom, by = "classroom_id") %>%
+#   mutate(e = rnorm(n * k, 0, sd = 20),
+#          reading_comprehension = class_mean + e) %>%
+#   mutate(classroom_id = fct_reorder(classroom_id, reading_comprehension) %>% fct_rev)
+```
+
+
+```{r make_data, eval=F, echo=F}
+set.seed(18)
+k <- 30
+n <- 30
+
+overall_mean <- 50
+b_treatment <- 20
+
+make_groups <- function(data,
+                        .cluster_id = "cluster_id",
+                        .cluster_size = "cluster_size",
+                        .id = "id") {
+  dplyr::mutate(data,
+                .clusters = purrr::map2(!!ensym(.cluster_id),!!ensym(.cluster_size),
+                                        rep)) %>%
+    unnest(.clusters) %>%
+    mutate(!!.id := 1:nrow(.)) %>%
+    select(-.clusters)
+}
+
+k_school <- 100
+
+r_tau <- matrix(c(1,-0.5,
+                  -0.5, 1), 
+                nrow = 2)
+sd_tau <- c(0.75, 0.5)
+tau <- lavaan::cor2cov(r_tau, sds = sd_tau)
+
+u <- mvtnorm::rmvnorm(k_school, sigma = tau) %>% 
+  as.data.frame() %>% 
+  set_names(nm = c("u_0j", "u_1j"))
+
+tibble(cluster_id = 1:k_school, 
+       cluster_size = rpois(k_school, 25),
+       treatment_1j = sample(c(0,1), k_school, replace = T),
+       b_00 = 0,
+       b_10 = 1,
+       b_20 = 0.8,
+       ) %>% 
+  bind_cols(u) %>% 
+  mutate(b_0j = b_00 + u_0j,
+         b_1j = b_10 + u_1j) %>% 
+  make_groups() %>% 
+  mutate(e_1_ij = rnorm(nrow(.),0, 1),
+         e_2_ij = rnorm(nrow(.),0, 1),
+         reading_1_ij = b_0j + e_1_ij,
+         reading_2_ij = b_0j + b_1j * treatment_1j + b_20 * reading_1_ij + e_2_ij ) %>% 
+  dplyr::select(id, cluster_id, treatment_1j, reading_1_ij, reading_2_ij)
+
+
+
+```
+
+
+# Fixed vs. Random Effects 
+
+In a one-way ANOVA, there is a fixed variable and a random variable. Usually, our focus is on the fixed variable---so much so that we might not realize that the random variable is a variable at all.
+
+A *fixed effect* is used when the comparisons between groups of scores are meaningful. There is a small, defined number of groups, and all of them are sampled. A *random effect* is one where the number of groups is open-ended, and the differences between specific groups are not of theoretical interest. 
+
+For example, suppose that we compare an outcome variable collected from children who have been given no treatment, a short intervention, and a long-lasting intervention.
+
+$$
+Outcome_i=Treatment_i+e_i
+$$
+
+* The fixed effect is the *treatment* variable with 3 group means for the control group, the short intervention group, and the long intervention group.
+* The random effect is the difference of each *child* $(e)$. It is a random effect because there is an open-ended number of children who could have been in our study, and we have no theoretical interest in comparing specific children with other specific children. 
+
+The one-way ANOVA comparing the three groups of children will reveal something about the group mean differences on the outcome variable, but nothing substantive about individual children.
+
+# Random variables at multiple levels of analysis
+
+In multilevel modeling (and in random-effects ANOVA), we can specify more than one random variable. For example, in educational research, we collect data from many classrooms. Thus, both *student* and *classroom* are random variables, because we have no theoretical interest in the differences among specific students or specific classrooms. We cannot collect data from every student or every classroom, so we collect data from a representative number of students and classrooms.
+
+A variable is said to be **nested** if every unit belongs to exactly one group. In elementary school, each student belongs to one class only. Thus, the *student* random variable is nested in the *classroom* random variable. 
+
+Because there are many students in each classroom, the *student* variable is said to be a "level-1 random variable," and *classroom* is said to be a "level-2 random variable."
+
+In middle school and beyond, student and classroom are not nested because each student belongs to multiple classes. In such data sets, *student* and *classroom* are said to be **crossed** random variables.
+
+In longitudinal studies, we have multiple scores per person, one for each time period. Thus the two random variables are *time period* and *person*, and *time period* is nested in *person*. In this case, the *time period* is the level-1 random variable and *person* is the level-2 variable. If these people were arranged in different psychotherapy groups, then *therapy group* would be a level-3 random variable. 
+
+There is no theoretical limit to the number levels your analysis can have, but practical and computational difficulties often arise as the number of levels increases.
+
+# A Reading Comprehension Intervention Study
+
+Suppose we study the effects of an intervention on second-grade students' performance on reading comprehension tests. Some students receive the intervention and some are given treatment-as-usual. We use a [*cluster-randomized controlled trial*](https://www.wikiwand.com/en/Cluster_randomised_controlled_trial), meaning that instead of assigning students to intervention groups individually, we assign whole *clusters* at a time. In the case, the clusters are classrooms. Thus, some classrooms are in the intervention condition, and some are in the control condition.
+
+# Install and Load packages
+
+## lme4
+
+The primary package for multilevel modeling we will use in this class is [lme4](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf).
+
+## Easystats
+
+The [easystats](https://easystats.github.io/easystats/) package, like the tidyverse package, loads a family of packages that can make many aspects of analysis much, much easier than they used to be. You should know that the packages are still very much in development.
+
+
+
+* [![parameters](https://easystats.github.io/parameters/logo.png){width=100px}](https://easystats.github.io/parameters/) [parameters](https://easystats.github.io/parameters/) gets information about model parameters.
+* [![performance](https://easystats.github.io/performance/logo.png){width=100px}](https://github.com/easystats/performance) [performance](https://github.com/easystats/performance) helps you evaluate the performance of your models.
+* [![modelbased](https://easystats.github.io/modelbased/logo.png){width=100px}](https://easystats.github.io/modelbased/) [modelbased](https://github.com/easystats/modelbased) computes marginal means and model-based predictions.
+* [![insight](https://easystats.github.io/insight/logo.png){width=100px}](https://easystats.github.io/insight/) [insight](https://github.com/easystats/insight) extracts fundamental information about your model.
+* [![effectsize](https://easystats.github.io/effectsize/logo.png){width=100px}](https://easystats.github.io/effectsize/) [effectsize](https://easystats.github.io/effectsize/) computes model effect sizes.
+* [![correlation](https://easystats.github.io/correlation/logo.png){width=100px}](https://easystats.github.io/correlation/) [correlation](https://easystats.github.io/correlation/) makes working with correlations easier.
+* [![datawizard](https://easystats.github.io/datawizard/logo.png){width=100px}](https://easystats.github.io/datawizard/) [datawizard](https://easystats.github.io/datawizard/) makes transforming your data easier.
+* [![see](https://easystats.github.io/see/logo.png){width=100px}](https://easystats.github.io/see/) [see](https://easystats.github.io/see/) makes publication-ready data visualizations.
+* [![report](https://easystats.github.io/report/logo.png){width=100px}](https://easystats.github.io/report/) [report](https://easystats.github.io/report/) automates model interpretation.
+
+```{r installpackages, eval = F}
+# Install packages, if needed.
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("lme4")) install.packages("lme4")
+if (!require("easystats")) install.packages("easystats")
+if (!require("broom.mixed")) install.packages("broom.mixed")
+
+```
+
+
+```{r loadpackages}
+# Load packages
+library(lme4) # Multilevel modeling
+library(tidyverse) # General data management and plotting
+library(easystats) # General modeling enhancements
+library(broom.mixed) # Predicted values for multilevel models
+```
+
+
+# Import data .csv data
+
+Here I import the data frame, and I specify the nature of the variables. 
+
+I can just import the data with no fuss like so:
+
+```{r import}
+d <- readr::read_csv(
+  "https://github.com/wjschne/EDUC5529/raw/master/random_intercept.csv")
+```
+
+
+The .csv format (comma separated values) is widely used because it is straightforward and non-proprietary. Every statistics and spreadsheet program can open it. It will never die. You can count on it. 
+
+However, unlike SPSS's .sav data format, the .csv format has very little *metadata* (data about data). By convention, a .csv file's only metadata is that the first row contains the variable names. The rest of the file is just raw text separated by commas. Should a particular column be considered numeric? text? dates? If it is text, should the text be ordered in any way (e.g., *strongly disagree*, *disagree*, *agree*, *strongly agree*)?
+
+The `readr::read_csv` function will make sensible guesses about each variable's format, but it cannot possibly anticipate everything. We might need to tell it what is going on with each variable.
+
+If we import a file with defaults, we can ask readr which guesses it made like so:
+
+
+```{r readspecs, comment=""}
+readr::spec(d)
+```
+
+The console output of this function is nice because we can copy, paste, and modify it to just what we want.
+
+The `read_csv` function looks at the first few thousand cases of each variable and guesses what kind of variable it is: numeric (integers or decimals), character (text), logical (TRUE/FALSE), or factors. A factor in R is a nominal or ordinal variable. 
+
+The `student_id` variable uses numbers (`col_double` means [*double-precision floating-point decimal format*](https://en.wikipedia.org/wiki/Double-precision_floating-point_format)) to uniquely identify the students. Thus, it is not a quantity, but an identifier. In the same way, social security numbers and telephone numbers are identifiers, not quantities. Because `student_id` is just a sequence of integers, the `read_csv` will by default assume it is a numeric variable. We would like to override the default and specify it to be a factor (R's term for categorical data). Likewise, the `classroom_id` variable would be an integer, but we want it to be a factor. 
+
+The `treatment` variable is imported as text, but we would like it to be an ordered factor with "Control" listed first and "Treatment" listed second. In this case, "Control" and "Treatment" are already in alphabetical order, but it is a good idea to set the order you want explicitly. An additional benefit of doing so is that your code will document what it expects to find.
+
+Next I re-import the data according to more precise specifications. This might seem like a lot of extra work. It is. However, being clear and explicit about your variables' format usually saves you time and prevents tedium and heartache at later stages of your analysis. 
+
+```{r import2}
+d <- readr::read_csv(
+  "https://github.com/wjschne/EDUC5529/raw/master/random_intercept.csv",
+  col_types = cols(
+    student_id = col_factor(),
+    classroom_id = col_factor(),
+    treatment = col_factor(levels = c("Control", "Treatment")),
+    reading_comprehension = col_double())) %>% 
+  mutate(classroom_id = fct_reorder(
+    .f = classroom_id, 
+    .x = reading_comprehension, 
+    .fun = mean))
+```
+
+There is no inherent order to the `classroom_id`, so we can re-order it in any convenient fashion. Here I use the `mutate` function to update the `classroom_id` variable. I re-order it with the `fct_reorder` function, which re-orders according to each classroom's mean on the `reading_comprhension` variable. That is, we want the low-scoring classrooms first and the high-scoring classrooms last.
+
+To view the first few rows of the data:
+
+```{r headd}
+head(d)
+```
+
+
+# Model 0: Random Intercepts
+
+We are going to run a model in which there are no predictors at all, other than that each classroom has its own mean:
+
+$$\begin{align*}
+\mathbf{\text{Level 1:}}\\
+Reading_{ij}&=\beta_{0j}+e_{ij}\\[1.5ex]
+\mathbf{\text{Level 2:}}\\
+\beta_{0j}&=\gamma_{00}+u_{0j}\\[1.5ex]
+\mathbf{\text{Combined:}}\\
+Reading_{ij}&=\underbrace{\gamma_{00}+u_{0j}}_{\beta_{0j}}+e_{ij}\\
+u_{0j} &\sim N(0,\tau_{00})\\
+e_{ij} &\sim N(0,\sigma_e^2)
+\end{align*}$$
+
+Where: 
+
+* $\beta_{0j}$ is the random intercept for classroom $j$
+* $\gamma_{00}$ is the overall fixed intercept
+* $u_{0j}$ is the level 2 cluster random variable for classroom $j$
+* $e_{ij}$ is the random level 1 individual random variable for student $i$ in classroom $j$. It is the individual's deviation from the classroom mean.
+* $\tau_{00}$ is the variance of $u_{0j}$. It is each classroom mean's deviation from the overall mean $\gamma_{00}$.
+* $\sigma_e^2$ is the variance of $e_{ij}$.
+
+Why run a model with no predictors? We need a baseline model--a null hypothesis against which to run other models.
+
+## lme4 Formula Syntax
+
+The `lmer` function from the lme4 package is our primary tool for estimating multilevel models. The same syntax for OLS regression applies to lmer formulas, with one addition.
+
+![lme4 syntax for a random intercepts model](model_formula_0.svg)
+
+* The variable on the left is the outcome variable, `reading_comprehension`. 
+* The `~` means "predicted by."
+* The first `1` is the overall intercept. In this model it represents the weighted mean of all the classrooms on the outcome variable (`reading_comprehension`).
+* The parentheses are for specifying a random variable.
+* The `1` inside the parentheses represents the random intercepts for each classroom. 
+* The `|` means "nested in."
+
+## Model Fit Object
+
+You can assign the model's fit object to a variable. I am calling mine `m_0`.
+
+```{r m0}
+m_0 <- lmer(reading_comprehension ~ 1 + (1 | classroom_id), data = d)
+```
+
+Thus far nothing appears to have happened. However, the `m_0` variable contains all the information we need to evaluate the model.
+
+## Checking Model Assumptions
+
+The performance package has a nice, overall check:
+
+```{r checkmodel}
+check_model(m_0)
+```
+
+
+Everything looks good. If we want, we can check things one at a time.
+
+### Normality Assumptions
+
+We want the level 1 and level 2 residuals to be normal. Here we check the level 1 residuals:
+
+```{r normcheck}
+norm_check <- check_normality(m_0)
+norm_check
+```
+
+
+The output says that the residuals are approximately normal. If the output says that the residuals are not normal, it might not be a major concern. Small departures from normality can trigger a significant test result. In general, we worry about large departures from normality, not statistically significant small ones. They best way to detect large departures from normality is to plot the residuals.
+
+```{r fig-qqplot}
+#| fig-cap: Checking the normality assumption with a Q-Q plot
+plot(norm_check)
+```
+
+
+@fig-qqplot is called a Q-Q plot (Quantile-Quantile plot), which plots the standard normal distribution against the observed residuals. If the residuals are perfectly normal, the dots will be on a diagonal line. If a few points are outside the confidence interval in gray, there probably is nothing to worry about. However, if the points are not even close to the line or the gray confidence region, then maybe you need a generalized linear mixed model (`lme4::glmer`) instead of the linear mixed model (`lme4:lmer`). More on that later in the course.
+
+
+The Level 1 residuals look approximately normal in @fig-qqplot.
+
+
+We can also check the normality of the level-2 residuals. 
+
+```{r norm2}
+norm_check_level2 <- check_normality(m_0, effects = "random")
+norm_check_level2
+```
+
+@fig-norm2 suggests that the level-2 random effects are approximately normal. If the error bars did not straddle the regression line, then we would start to worry about the plausibility of the normality assumption at level 2.
+
+```{r fig-norm2}
+#| fig-cap: "The Q-Q plot of the level-2 random effects"
+plot(norm_check_level2)
+```
+
+
+The performance package has an admittedly experimental function that uses machine learning to predict the distribution of your residuals and response variable (i.e., *Y*, the variable you are predicting):
+
+```{r checkdistribution}
+check_distribution(m_0)
+```
+
+@fig-checkdistribution plots these estimates along with showing plots of the two residual distributions.
+
+```{r fig-checkdistribution}
+plot(check_distribution(m_0))
+```
+
+This function will become useful when we look at generalized linear mixed models and need to select a distribution family for our residuals.
+
+### Check for auto-correlation
+
+If your data were gathered independently, the order of the cases should show no discernible trends. If adjacent cases are more similar to each other than to non-adjacent cases, then you have auto-correlation in your data. That might be a sign that the independence assumption has been violated.
+
+```{r autocor}
+check_autocorrelation(m_0) 
+```
+
+Fortunately, there is no evidence of autocorrelation here.
+
+### Check for non-constant error variance (heteroscedasticity)
+
+```{r heteroscasticity}
+check_heteroscedasticity(m_0)
+```
+
+There is some of evidence of non-constant error variance. By itself, the warning that heteroscedasticity has been detected is not a big deal. In a large sample, statistically significant results sometimes can be triggered by trivially small departures from homoscedasticity. A plot can help us decide if this violation is worrisome.
+
+```{r fig-checkhetero}
+#| fig-cap: Checking the homoscedasticity assumption 
+
+plot(check_heteroscedasticity(m_0))
+```
+
+@fig-checkhetero shows a mostly flat line. If you see major departures from a flat line, we might need to worry about why the residuals have larger variances for some predicted values than for others. This plot suggests that there is little to worry about.
+
+### Check for outliers
+
+When the sample size is small, outliers can distort your findings.
+
+```{r checkoutlier}
+check_outliers(m_0)
+```
+
+
+```{r fig-checkoutlier}
+#| Checking for outliers
+plot(check_outliers(m_0))
+```
+
+
+This plot looks squished because none of the points have extreme leverage. Observations with high leverage are not necessarily bad. What we do not want to see is the combination of extreme residuals with extreme leverage.
+
+An extreme residual is, by definition, far from the regression line. An observation with extreme leverage, by definition, is an outlier in terms of the predictor variables (i.e., in multiple regression, it is a multivariate outlier in the *predictor space*). 
+
+In the plot below, the blue line is the estimated regression line before the red outlier is added. The red line hows how the estimated regression line changes in the presence of the red outlier point. 
+
+```{r fig-leverage}
+#| echo: false
+#| eval: false
+set.seed(2)
+n <- 29
+d <- mvtnorm::rmvnorm(n, sigma = matrix(c(1,0.8,0.8,1),2)) %>% data.frame
+colnames(d) <- c("x", "y")
+
+# time <- seq(-3.93,3.93, 0.01)
+interval <- 1
+ytime4 <- 4 * sin(seq(-1*pi/2,3*pi/2,length.out = 51))
+npause = 5
+ndist = 10
+ytime0 <- 4 * sin(seq(pi,-1*pi,length.out = 51)) 
+xtime <- c(rep(-4,npause),
+           rep(-4,length(ytime4)), 
+           rep(-4,npause), 
+           seq(-4,0,length.out = ndist),
+           rep(0,npause),
+           rep(0,length(ytime0)),
+           rep(0,npause),
+           seq(0,4,length.out = ndist),
+           rep(4,npause),
+           rep(4,length(ytime4)),
+           rep(4,npause),
+           seq(4,-4, length.out = ndist))
+
+ytime <- c(rep(-4,npause),
+           ytime4, 
+           rep(-4,npause), 
+           seq(-4,0,length.out = ndist),
+           rep(0,npause),
+           ytime0,
+           rep(0,npause),
+           seq(0,4,length.out = ndist),
+           rep(4,npause),
+           ytime4 * -1,
+           rep(4,npause),
+           seq(4,-4, length.out = ndist))
+for (i in 1:length(ytime)) {
+  # x1 <- time[i]
+  # y1 <- sin(x1 * 6) * 4
+  x1 <- xtime[i]
+  y1 <- ytime[i]
+  dxy <- data.frame(x = x1, y = y1)
+  d1 <- rbind(d,dxy)
+
+  p <- ggplot(d, aes(x, y)) + 
+    geom_point() + 
+    xlim(-4,4) + 
+    ylim(-4,4) + 
+    geom_smooth(method = "lm", color = "#376597") + 
+    stat_ellipse() + 
+    geom_point(data = dxy,color = "firebrick") + 
+    geom_smooth(data = d1, 
+                method = "lm", 
+                color = "firebrick", 
+                se = F) + 
+    coord_equal()
+
+
+  ggsave(
+    paste0("Plot/R", 10000 + i, ".png"),
+    plot = p,
+    device = ragg::agg_png,
+    width = 6,
+    height = 6
+  )
+  
+}
+
+library(animation)
+ani.options(ani.width = 600, ani.height = 600,interval = 0.05, ani.dev = "png", ani.type = "png")
+
+im.convert("Plot/R*.png", convert = "convert", output = "temp.gif", clean = TRUE)
+
+```
+
+
+![A point with high leverage and a large residual can cause large changes in the regession coefficients.](leverage.gif){fig-leverageplot}
+
+Outliers in the predictor space are said to have *leverage* (the ability to influence coefficients). Notice that the red point barely changes the regression line when the predictor is near the mean of the predictor variable (i.e., when it has little leverage). When the red point is at either extreme of the predictor distribution, it has a lot of leverage to change the regression line. If the red point is near the original regression line, there is no harm done. However, if the red point has the combination of high leverage and a large residual (i.e., it is an outlier in terms of the predictors and also in terms of the residuals), the red regression line can become quite misleading.
+
+## Model Summary
+
+As with OLS (ordinary least squares) models generated with the `lm` function, we can see the overall results with the `summary` function. 
+
+```{r summary0}
+summary(m_0)
+```
+
+Here we are given the method by which the parameters were estimated: REML (Restricted Maximum Likelihood). We are told the range and interquartile range of the residuals. We are told the variance and SD of the random effects. We are given the estimates, standard errors, and $t$ statistics for the fixed variables, though in this case the only fixed effect is the overall intercept.
+
+## Model Statistics
+
+```{r modelperformance}
+performance(m_0)
+```
+
+Here we see the `Sigma`, the individual-level variance. The root-mean squared error is also a measure of individual-level variance but does not correct for degrees of freedom. The `AIC` and `BIC` statistics are useful for comparing models that are non-nested (i.e., models that differ in ways other than merely adding predictors). The R2 (cond.) is the variance explained by all terms, including random effects. The R2 (marg.) is the variance explained by the fixed effect effects. Because there are no fixed effects, this statistic is 0. ICC is the proportion of variance explained by the random effects, which in this case is equal to the R2 (cond.)
+
+The report package has an automated interpretation function:
+
+```{r modelreport, warning=FALSE}
+report(m_0)
+```
+
+If you do not want the entire report, it can be broken down into several components:
+
+```{r modelreportparts}
+report_info(m_0)
+report_model(m_0)
+report_effectsize(m_0)
+report_random(m_0)
+report_intercept(m_0)
+report_parameters(m_0)
+report_statistics(m_0)
+```
+
+## Intraclass Correlation Coefficient (ICC)
+
+If there is little variability in the level-2 intercepts, then a multilevel model might not be all that important. The intraclass correlation coefficient estimates how much variability in the outcome variable is explained by the level-2 intercepts:
+
+$$\text{ICC}=\frac{\tau_{00}}{\tau_{00}+\sigma^2} = \frac{\text{Level 2 Residual Variance}}{\text{Level 2 + Level 1 Residual Variance}}$$
+
+The performance package extracts the intraclass correlation coefficient.
+
+```{r modelicc}
+icc(m_0)
+```
+
+The **ICC** here means that letting each classroom have its own mean explained `r round(performance::icc(m_0)$ICC_conditional * 100, 1)`% of the residual variance. Had the value 
+
+The regular ICC ("adjusted") takes into account all random effects. The unadjusted ICC takes both fixed and random effects into account. Because there are no fixed effects in this model, the adjusted and conditional ICC are the same.
+
+$$\text{ICC}_{\text{Unadjusted}}=\frac{\tau_{00}}{\tau_{00}+\sigma_e^2+\sigma_{\text{Fixed}}^2} = \frac{\text{Level 2 Residual Variance}}{\text{Total Variance}}$$
+
+
+
+
+ICC | Meaning 
+:-----------|:---------------------------------------------------------------------------------------
+Adjusted    | The proportion of random variance explained by the grouping structure.
+Unadjusted | The proportion of all variance (fixed and random) explained by the grouping structure.
+
+
+The performance package also gives us an alternate set of model statistics along with the ICC.
+
+## Variance Explained (*R^2^*)
+
+The variance explained by a model is one of the ways we evaluate its explanatory scope.
+
+```{r modelr2}
+performance::r2(m_0)
+```
+
+The Conditional *R*^2^ is the variance explained by both the fixed and random variables. Note that in this model, because $\sigma_{\text{fixed}}^2=0$, $\text{R}_{\text{Conditional}}^2=\text{ICC}$.
+
+
+$$\text{R}_{\text{Conditional}}^2=\frac{\tau_{00}+\sigma_{\text{Fixed}}^2}{\tau_{00}+\sigma_e^2+\sigma_{\text{Fixed}}^2} = \frac{\text{Level 2 Residual Variance + Fixed Variance}}{\text{Total Variance}}$$
+
+
+The Marginal *R*^2^ is the variance explained by just the fixed variables. In this case, there are no fixed variables. Thus, Marginal *R*^2^ = 0.
+
+$$\text{R}_{\text{Marginal}}^2=\frac{\sigma_{\text{Fixed}}^2}{\tau_{00}+\sigma_e^2+\sigma_{\text{Fixed}}^2} = \frac{\text{Fixed Variance}}{\text{Total Variance}}$$
+
+
+## Fixed and Random Coefficients
+
+Coefficient-level statistics can be viewed with the `parameters` function.
+
+```{r modelparameters, warning=F}
+parameters(m_0)
+```
+
+The only fixed coefficient is the overall intercept, which is not usually of theoretical interest. 
+
+If you only want fixed effect printed:
+
+```{r fixedcoef}
+parameters(m_0, effects = "fixed")
+```
+
+If you only want random effect printed:
+
+```{r randomcoef}
+parameters(m_0, effects = "random")
+```
+
+The random parameters are standard deviations. Squaring the estimate for `sd__(Intercept)` will give $\tau_{00}$. Squaring the estimate for `sd__Observation` will give $\sigma^2$.
+
+
+If you want estimated parameters for each group:
+
+```{r groupcoef}
+parameters(m_0, effects = "random", group_level = TRUE)
+```
+
+Why would you want the estimated values? Maybe you want to make a plot of the random  intercepts like in @fig-plotgroupcoef.
+
+```{r fig-plotgroupcoef}
+#| fig-cap: Group coefficients
+parameters(m_0, effects = "random", group_level = TRUE) %>% 
+  mutate(Level = fct_inorder(Level)) %>%  # Reorder classroom id
+  ggplot(aes(Level, Coefficient)) + 
+  geom_pointrange(aes(ymin = CI_low,
+                      ymax = CI_high )) + 
+  labs(x = "Classroom ID", 
+       y = "Random Intercepts")
+```
+
+## Basic Plot
+
+Suppose we want the predicted value for each classroom. There are a variety of ways to do this. The simplest way is to use the broom.mixed package's `augment` function. The name `augment` does not immediately inform us what it does. It starts with that data used to make the model, and "augments" the data by adding predicted values and other case-level information.
+
+
+```{r}
+d_augmented <- augment(m_0)
+d_augmented
+```
+
+
+```{r}
+# plot distributions and predicted values
+d %>%
+  ggplot(aes(x = classroom_id,
+             y = reading_comprehension)) +
+  geom_violin(color = NA) +
+  geom_point(data = d_augmented,
+             aes(y = .fitted)) +
+  geom_hline(aes(yintercept = get_intercept(m_0)))
+```
+
+Here a fancier version of the same plot.
+
+```{r}
+# ggtext displays rich text
+library(ggtext)
+
+# Data along with fitted values
+d_augmented %>%
+  # Overall plot
+  ggplot(aes(x = classroom_id, y = reading_comprehension)) +
+  # Within-group variability
+  geom_violin(color = NA, scale = "width") +
+  # Display raw data
+  ggbeeswarm::geom_quasirandom(size = .5, alpha = 0.5, pch = 16) +
+  # Group means as horizontal segments
+  geom_segment(
+    data = d_augmented %>% 
+      select(classroom_id, .fitted) %>% 
+      unique(),
+    aes(
+      x = as.numeric(classroom_id) - 0.5,
+      xend = as.numeric(classroom_id) + 0.5,
+      y = .fitted,
+      yend = .fitted),
+    linewidth =  .1) + 
+  # Group means as text
+  geom_label(aes(
+    y = .fitted, 
+    label = scales::number(.fitted,.1)), 
+    vjust = -0.3, 
+    size = 2.8, 
+    color = "gray30", 
+    label.padding = unit(0,"mm"), label.size = 0) + 
+  # Display Overall intercept coefficient as text
+  geom_richtext(data = tibble(
+    classroom_id = 1,
+    reading_comprehension = get_intercept(m_0),
+    label =  glue::glue("*&gamma;*<sub>00</sub> = {round(fixef(m_0), 2)}")
+    ),
+    aes(label = label),
+    label.margin = unit(1,"mm"),
+    label.padding = unit(0,"mm"),
+    label.color = NA,
+    fill = scales::alpha("white", 0.5), 
+    vjust = 0,
+    hjust = 0
+  ) +
+  # Display Overall intercept as horizontal line
+  geom_hline(yintercept = get_intercept(m_0)) +
+  # Axis labels
+  labs(x = "Classrooms", y = "Reading Comprehension")
+```
+
+# Model 1: Effect of Treatment
+
+:::{.sidenote}
+Had students been individually assigned to treatment, in every class there would be treated and untreated students. In this case, `treatment` would be individually randomized and therefore would have been a Level-1 effect.
+:::
+
+Now we add an effect of treatment to the model. This study has a "cluster-randomized" design, meaning that whole classes were randomly assigned to treatment groups. Thus, with this design, `treatment` is a Level-2 effect. 
+
+$$
+\begin{align*}
+\mathbf{\text{Level 1:}}\\
+Reading_{ij}&=\beta_{0j}+ e_{ij}\\[1.5ex]
+\mathbf{\text{Level 2:}}\\
+\beta_{0j}&=\gamma_{00}+\gamma_{01} Treatment_{j}+u_{0j}\\[1.5ex]
+\mathbf{\text{Combined:}}\\
+Reading_{ij}&=\gamma_{00}+\gamma_{01}Treatment_{j}+u_{0j}+e_{ij}\\
+u_{0j} &\sim N(0,\tau_{00})\\
+e_{ij} &\sim N(0,\sigma_e^2)
+\end{align*}
+$$
+
+Where: 
+
+* $Reading_{ij}$ is the reading comprehension score for person $i$ in classroom $j$.
+* $\beta_{0j}$ is the random intercept for classroom $j$.
+* $e_{ij}$ is the random level 1 individual random variable for student $i$ in classroom $j$. It is each individual's deviation from the classroom mean.
+* $\gamma_{00}$ is the fixed intercept. In this model, it represents the predicted value of reading when Treatment = 0 (i.e., the control group). 
+* $\gamma_{01}$ is the treatment effect---the difference between the overall control group mean and the treatment group mean.
+* $Treatment_{j}$ is value of treatment (Control = 0, Intervention = 1) for classroom $j$.
+* $u_{0j}$ is the level 2 cluster random variable for classroom $j$. It is each classroom mean's deviation from its respective treatment group mean.
+* $\tau_{00}$ is the variance of $u_{0j}$.
+* $\sigma_e^2$ is the variance of $e_{ij}$.
+
+## Fit object
+
+Representing the fixed intercept, the initial `1` is optional. I included it to be explicit, but most of the time it is omitted.
+
+```{r}
+m_1 <- lmer(reading_comprehension ~ 1 + treatment + (1 | classroom_id), 
+              data = d)
+```
+
+Sometimes these models can become large and unwieldy, making you vulnerable to coding errors. A safer way to create a nested model is to use the `update` function that only changes the part you specify. In this syntax, a `.` means that everything is the same.
+
+```{r}
+m_1 <- update(m_0, . ~ . + treatment)
+```
+
+
+The formula above means "Make a new model based on the `m_0` model. On the left-hand side, the outcome variable is the same. On the right-hand side, everything is the same except that we want to add the `treatment` variable as a predictor. Also, use the same data."
+
+It is best practice to use the `update` function wherever possible, because it reduces errors by making you explicitly state which part of the model will change.
+
+## Assumption Checks
+
+```{r}
+check_model(m_1)
+```
+
+Still no problems.
+
+## Summary
+
+```{r}
+summary(m_1)
+```
+
+With a *t* value of `r round(tidy(m_1)$statistic[2], 2)`, the effect of `treatment` is surely significant. 
+
+Note that `lmer` displays the `treatment` variable as `treatmentTreatment`. This means that it is how much the Treatment group differs from the reference group, which in this case the control group. R is not smart enough to know in advance that the control group is the reference group. Instead, it assumes that the first factor level listed is the reference group. In this case, the control group is listed first. If you want a different reference group, you need to change the order of the factor levels. The base R way is to use the `relevel` function, but see the [forcats package](https://forcats.tidyverse.org/) for other useful ways to do this.
+
+The report package has an automated interpretation function. Note that unlike the `summary` function, the `report` function includes *p*-values for the fixed effects.
+
+```{r, warning=FALSE}
+# Overall report
+report(m_1)
+```
+
+
+## Plot Model
+
+From @fig-plot2, it is easy to see that the treatment group has higher reading comprehension, on average, than the control group.
+
+```{r fig-plot2}
+#| fig-cap: Model-based estimate of the relationship between treatment and reading comprehension
+
+modelbased::estimate_relation(m_1) %>% 
+  plot() + 
+  labs(x = NULL, y = "Reading Comprehension")
+```
+
+
+## Fixed and Random Coefficients
+
+```{r, }
+parameters(m_1)
+```
+
+Here we see that the `treatment` variable's estimate is statistically significant.
+
+If we want to see what the estimated means are for the 2 treatment groups:
+
+```{r}
+modelbased::estimate_means(m_1)
+```
+
+
+## Intraclass Correlation Coefficient
+
+```{r}
+performance::icc(m_1)
+```
+
+Compare these values to Model 0's ICC
+
+```{r}
+performance::icc(m_0)
+```
+
+
+Here we see that the ICC's are reduced---because treatment explained some of the between-group variability.
+
+## Variance Explained (*R^2^*)
+
+In OLS regression, the variance explained is fairly straightforward because there is only one random residual. Its size changes with each new predictor added to the model. With multilevel models, variance explained is more complicated because there are multiple residuals to worry about. 
+
+Our model consists of fixed effects (intercept and predictors) and random effects at level 1 and level 1:
+
+$$
+Reading_{ij}=\underbrace{\gamma_{00}+\gamma_{01}Treatment_{j}}_{\text{Fixed}}+\underbrace{u_{0j}}_{\text{Random}_2}+\underbrace{e_{ij}}_{\text{Random}_1}
+$$
+
+We can calculate the variance of the fixed effects, and the 2 random effects.
+
+$$
+\begin{align}
+\sigma_{\text{Fixed}}^2&=\text{Var}(\gamma_{00}+\gamma_{01}Treatment_{j})\\
+\sigma_{1}^2&=\text{Var}(e_{ij})=\sigma_e^2\\
+\sigma_{2}^2&=\text{Var}(u_{0j})=\tau_{00}
+\end{align}
+$$
+
+The *marginal* $R^2$ is the ratio of the variance of the fixed effects and the total variance (fixed, level 1, and level 2). That is, what percentage of variance is explained by the fixed effects.
+
+$$
+R^2_{\text{Marginal}}=\frac{\sigma_{\text{Fixed}}^2}{\sigma_{\text{Fixed}}^2+\sigma_{2}^2+\sigma_{1}^2}
+$$
+
+The *conditional* $R^2$ compares the fixed and level 2 variances to the total variance (fixed, level 1, and level 2). In this context, what percentage of variance is explained by the fixed effects and the random intercepts.
+
+$$
+R^2_{\text{Conditional}}=\frac{\sigma_{\text{Fixed}}^2+\sigma_{2}^2}{\sigma_{\text{Fixed}}^2+\sigma_{2}^2+\sigma_{1}^2}
+$$
+
+```{r}
+performance::r2(m_1)
+```
+
+Here we see that Marginal *R^2^* increased from 0 to `r round(performance::r2(m_1)$R2_marginal, 2)`, meaning that a substantial portion of the between-group variability is accounted for by `treatment`. 
+
+The Conditional *R^2^* is the same as it was in model 0, because `treatment` cannot account for additional variability beyond `classroom_id` (which "accounts" for 100% of the between-group variability).
+
+## Compare Models
+
+To compare model coefficients, use the `parameters::compare_models` function:
+
+```{r}
+compare_models(m_0, m_1, effects = "all")
+```
+
+
+To test the whether one variable explains more variance than a different nested variable, use the `anova` function.
+
+```{r}
+anova(m_0, m_1)
+```
+
+The *p*-value is in `Pr(>Chisq)` column. It means that `m_1`'s deviance statistic is significantly smaller than that of `m_0`.
+
+The performance function `compare_peformance` gives many metrics of change. The Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC) can be used to compare non-nested models. The `AIC_wt` and `BIC_wt` columns tell you the conditional probabilities in favor of each model.
+
+```{r}
+compare_performance(m_0, m_1) 
+```
+
+
+In this case, it is clear that model `m_1` is preferred compared to `m_0`.
+
+```{r}
+test_performance(m_0, m_1) 
+```
+
+We can also compare the models with a Bayes Factor (`BF`). If `BF` > 1, there is more evidence for the second model. If `BF` < 1, there is greater evidence for the first model.
+
+Here are some guidelines for interpreting `BF` Raftery (1995):
+
+* *bf* = 1--3: Weak
+* *bf* = 3--20: Positive
+* *bf* = 20--150: Strong
+* *bf* > 150: Very strong
+
+Raftery, A. E. (1995). Bayesian model selection in social research. *Sociological Methodology 25*, 111--64.
+
+```{r}
+test_bf(m_0, m_1) %>% 
+  report()
+```
+
+
+Thus we see that there is strong evidence that `m_1` is a better model than `m_0`.
+
+## Reduction in random variable variance
+
+Although the Model 0 $\tau_{00}$ has the same symbol as the Model 1 $\tau_{00}$, they are not the same. I therefore will distinguish the Model 0 and Model1 $\tau_{00}$ with second-level subscripts: $\tau_{00_0}$ and $\tau_{00_1}$, respectively.
+
+$$\Delta R_2^2(\text{approx})=\frac{\tau_{00_0}-\tau_{00_1}}{\tau_{00_0}}$$
+
+```{r}
+tau_00_0 <- get_variance_random(m_0)
+tau_00_1 <- get_variance_random(m_1)
+
+(tau_00_0 - tau_00_1) / tau_00_0
+
+100*round((tau_00_0 - tau_00_1) / tau_00_0, 3)
+```
+
+This means that *&tau;*~00/1~ = `r round(tau_00_1,2)` is `r 100*round((tau_00_0 - tau_00_1) / tau_00_0, 3)`% smaller than *&tau;*~00/0~ = `r round(tau_00_0,2)`.
+
+We can likewise see if there is any reduction in level-1 variance by comparing the residual variance of both models:
+
+$$\Delta R_1^2(\text{approx})=\frac{\sigma_{0}^2-\sigma_{1}^2}{\sigma_{0}^2}$$
+
+```{r}
+sigma_e_0 <- get_variance_residual(m_0)
+sigma_e_1 <- get_variance_residual(m_1)
+
+(sigma_e_0 - sigma_e_1) / sigma_e_0
+```
+
+You can see that the reduction is very close to 0. Why? Because treatment was cluster-randomized. As a level-2 variable, it would be hard to see how it could influence individual variability. That is, everyone in the same classroom has the same treatment. The level-1 residuals (*e~ij~*) are created by subtracting from the classroom means. Thus, the `treatment` variable cannot distinguish between anyone in the same class and cannot explain any individual variability. 
+
+Later we will see that treatment might interact with an individual difference variable such that the treatment works for some students better than for others. In such a model, a level-2 predictor could influence individual variability.
+
+
+## Not-So Basic Plot
+
+@fig-notbasic makes it quite clear that the treatment is associated with higher overall scores.
+
+```{r fig-notbasic}
+#| fig-cap: Treatment effects for Model 1
+#| code-fold: true
+
+d_augmented_1 <- augment(m_1, conf.int = TRUE)
+
+# Get unique values of the fitted responses
+d_classroom_1 <- d_augmented_1 %>% 
+  select(classroom_id, .fitted, treatment) %>%
+  unique() %>% 
+  ungroup()
+
+# Get the mean values (.fixed) for each treatment condition
+d_treatment_1 <- d_augmented_1 %>% 
+  select(.fixed, treatment) %>% 
+  unique()
+
+# plot distributions and predicted values
+augment(m_1) %>%
+  mutate(treatment = fct_rev(treatment)) %>% 
+  ggplot(aes(x = classroom_id,
+             y = reading_comprehension)) +
+  geom_violin(color = NA, 
+              aes(fill = treatment), 
+              alpha = 0.5) +
+  geom_point(data = d_classroom_1,
+             aes(y = .fitted)) +
+  geom_hline(data = d_treatment_1, 
+             aes(yintercept = .fixed)) +
+  facet_grid(cols = vars(treatment), 
+             scales = "free") + 
+  theme(legend.position = "none")
+```
+
+
+
+
+
+
+

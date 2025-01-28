@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.3">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-7919dd190e3f128abe4f5b37f6add810.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-fce05e5e5cef2c531c9faa6c50a01155.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -428,7 +428,7 @@ View All the Code
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div></div><div class="cell">
+</div></div><div class="cell" data-df-print="tibble">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
@@ -5475,7 +5475,7 @@ View All the Code
 </div>
 </div>
 </div>
-<p>If you have a vector with names in it you can rename many variables at once:</p>
+<p>If you have a vector with names in it, you can rename many variables at once:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>v_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">ID =</span> <span class="st">"id"</span>, </span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">Baseline =</span> <span class="st">"baseline_sessions_n"</span>,</span>
@@ -7572,34 +7572,47 @@ View All the Code
 </section>
 <section id="plot-the-results" class="level1 page-columns page-full">
 <h1>Plot the results:</h1>
-<p>Plotting is rarely done all at once. We usually build it step-by-step and layer-by-layer. Here is the first attempt:</p>
+<p>Plotting is rarely done all at once. We usually build it step-by-step and layer-by-layer. <a href="#fig-firstattempt" class="quarto-xref">Figure&nbsp;1</a> is the first attempt.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="data_wrangling_files/figure-html/unnamed-chunk-30-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="data_wrangling_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<div id="fig-firstattempt" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-firstattempt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="data_wrangling_files/figure-html/fig-firstattempt-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: First attempt at plotting. Messy, messy, messy!"><img src="data_wrangling_files/figure-html/fig-firstattempt-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-firstattempt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: First attempt at plotting. Messy, messy, messy!
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>That was not so great! Let’s make a separate plot for each person:</p>
+<p>That was not so great! Let’s make a separate plot for each person in <a href="#fig-plotfacet" class="quarto-xref">Figure&nbsp;2</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase)) <span class="sc">+</span> </span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="data_wrangling_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="data_wrangling_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<div id="fig-plotfacet" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plotfacet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="data_wrangling_files/figure-html/fig-plotfacet-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Plot each person’s data on separate facet plots"><img src="data_wrangling_files/figure-html/fig-plotfacet-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plotfacet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Plot each person’s data on separate facet plots
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Better! Let’s reorder the cases by the order in which the intervention is first implemented:</p>
+<p>Better!</p>
+<p>Let’s reorder the cases by the order in which the intervention is first implemented. The <code>fct_reorder</code> function is incredibly useful for creating plots. Because the <code>id</code> variable is just a number, we need to change it to a <code>factor</code> variable first. A <code>factor</code> is R’s way of grouping categorical data in any order we wish.</p>
+<p>We need to reorder the <code>id</code> variable so that people with shorter baselines come before people with longer baselines. The first slot in the <code>fct_reorder</code> function is the variable we want to transform into a reordered factor. The second slot is another variable we want to order the factor factor by. Thus, the <code>fct_reorder</code> function usually takes this form: <code>fct_reorder(variable_to_be_reordered, variable_to_sort_by)</code></p>
+<p>In this case, we are assigning the reordered variable back to the same variable <code>id</code> that we started with. Putting it all together, we get <a href="#fig-plotreorder" class="quarto-xref">Figure&nbsp;3</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">fct_reorder</span>(<span class="fu">factor</span>(id), baseline_sessions_n)) <span class="sc">%&gt;%</span> </span>
@@ -7607,15 +7620,20 @@ View All the Code
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase)) <span class="sc">+</span> </span>
 <span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="data_wrangling_files/figure-html/unnamed-chunk-32-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="data_wrangling_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<div id="fig-plotreorder" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plotreorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="data_wrangling_files/figure-html/fig-plotreorder-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Reordered facet plots"><img src="data_wrangling_files/figure-html/fig-plotreorder-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plotreorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Reordered facet plots
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Looks even better!</p>
-<p>If I wanted a more polished plot for publication, I might create something like <a href="#fig-polished" class="quarto-xref">Figure&nbsp;1</a>.</p>
+<p>If I wanted a more polished plot for publication, I might create something like <a href="#fig-polished" class="quarto-xref">Figure&nbsp;4</a>. My priorities for a plot in a publication are quite different than a plot I am making just for my own use. I want the plot to be nearly self-explanatory. I want reader to understand the plot without needing to work hard. Thus, I prefer direct labels rather than plot legends that require looking things up. I also want my plot to be inclusive, so I choose a large font size from a legible font family. I also choose colors that are distinguishable by people different kinds of color blindness.</p>
 <div class="cell preview-image page-columns page-full">
 <details class="code-fold">
 <summary>Code</summary>
@@ -7624,7 +7642,7 @@ View All the Code
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">factor</span>(id) <span class="sc">%&gt;%</span> <span class="fu">fct_reorder</span>(baseline_sessions_n),</span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">phase =</span> <span class="fu">fct_inorder</span>(phase)) <span class="sc">%&gt;%</span> </span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(phase) <span class="sc">%&gt;%</span> </span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">factor</span>(id, <span class="at">labels =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>]))</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">factor</span>(id, <span class="at">labels =</span> <span class="fu">paste0</span>(<span class="st">"Child "</span>, LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])))</span>
 <span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co"># data for phase rectangles</span></span>
 <span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>d_phases <span class="ot">&lt;-</span> d_longer_processed <span class="sc">%&gt;%</span> </span>
@@ -7638,14 +7656,14 @@ View All the Code
 <span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
 <span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">55</span>,<span class="dv">5</span>), <span class="at">each =</span> <span class="dv">4</span>), <span class="at">linewidth =</span> <span class="fu">unit</span>(.<span class="dv">1</span>, <span class="st">"mm"</span>), <span class="at">color =</span> <span class="st">"gray80"</span>) <span class="sc">+</span></span>
 <span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  ggtext<span class="sc">::</span><span class="fu">geom_richtext</span>(</span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id <span class="sc">==</span> <span class="st">"E"</span>, time <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)),</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id <span class="sc">==</span> <span class="st">"Child E"</span>, time <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)),</span>
 <span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> phase, <span class="at">color =</span> phase),</span>
 <span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.color =</span> <span class="cn">NA</span>,</span>
 <span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> scales<span class="sc">::</span><span class="fu">alpha</span>(<span class="st">"white"</span>, .<span class="dv">5</span>),</span>
 <span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">"mm"</span>),</span>
 <span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.margin =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">"mm"</span>),</span>
 <span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">angle =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">21</span>, <span class="dv">0</span>),</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">angle =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">24</span>, <span class="dv">0</span>),</span>
 <span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">5.5</span>,</span>
 <span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="st">"Roboto Condensed"</span></span>
 <span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
@@ -7688,15 +7706,16 @@ View All the Code
 <div id="fig-polished" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-polished-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="data_wrangling_files/figure-html/fig-polished-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;1: Effect on Intervention on Time on Task for Eight Children"><img src="data_wrangling_files/figure-html/fig-polished-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+<a href="data_wrangling_files/figure-html/fig-polished-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Effect on Intervention on Time on Task for Eight Children"><img src="data_wrangling_files/figure-html/fig-polished-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-polished-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Effect on Intervention on Time on Task for Eight Children
+Figure&nbsp;4: Effect on Intervention on Time on Task for Eight Children
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>For practice data wrangling, download <a href="&quot;https://github.com/wjschne/EDUC8825/raw/master/data_wrangling_exercise.qmd&quot;">this quarto document</a> and complete the data-wrangling exercises therein.</p>
 
 
 </section>
