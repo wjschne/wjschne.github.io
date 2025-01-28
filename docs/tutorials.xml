@@ -121,11 +121,11 @@ font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">require</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"broom.mixed"</span>)) <span class="fu" style="color: #4758AB;
+font-style: inherit;">"marginaleffects"</span>)) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"broom.mixed"</span>)</span></code></pre></div>
+font-style: inherit;">"marginaleffects"</span>)</span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
@@ -148,9 +148,9 @@ background-color: null;
 font-style: inherit;"># General modeling enhancements</span></span>
 <span id="cb2-5"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">library</span>(broom.mixed) <span class="co" style="color: #5E5E5E;
+font-style: inherit;">library</span>(marginaleffects) <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Predicted values for multilevel models</span></span></code></pre></div>
+font-style: inherit;"># Predicted values </span></span></code></pre></div>
 </div>
 </section>
 </section>
@@ -450,7 +450,7 @@ font-style: inherit;">plot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">check_distribution</span>(m_0))</span></code></pre></div>
 <div class="cell-output-display">
-<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored" height="100%" width="100%">
+<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-checkdistribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://wjschne.github.io/tutorials/RandomIntercepts/random_intercepts_files/figure-html/fig-checkdistribution-1.png" id="fig-checkdistribution" style="width:100.0%;height:100.0%" class="figure-img">
@@ -900,53 +900,42 @@ Figure&nbsp;5: Group coefficients
 </section>
 <section id="basic-plot" class="level2">
 <h2 class="anchored" data-anchor-id="basic-plot">Basic Plot</h2>
-<p>Suppose we want the predicted value for each classroom. There are a variety of ways to do this. The simplest way is to use the broom.mixed package’s <code>augment</code> function. The name <code>augment</code> does not immediately inform us what it does. It starts with that data used to make the model, and “augments” the data by adding predicted values and other case-level information.</p>
+<p>Suppose we want the predicted value for each classroom. There are a variety of ways to do this. We are going to get case-level predictions from the marginaleffects package’s <code>predictions</code> function. A nice feature of his function is that it will average the predictions over any variable. In this case, the prediction is the same for all 30 groups, so instead of 900 predictions (one for each person), we only need 30 predictions (one for each classroom).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1">d_augmented <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1">d_predicted <span class="ot" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">&lt;-</span> marginaleffects<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">augment</span>(m_0)</span>
-<span id="cb62-2">d_augmented</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 900 × 13
-   reading_comprehension classroom_id .fitted  .resid   .hat   .cooksd .fixed
-                   &lt;dbl&gt; &lt;fct&gt;          &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;
- 1                 89.6  1               84.2   5.41  0.0319 0.00238     57.0
- 2                105.   2               88.9  15.9   0.0319 0.0206      57.0
- 3                  7.42 3               35.8 -28.3   0.0319 0.0651      57.0
- 4                 60.7  4               64.6  -3.93  0.0319 0.00125     57.0
- 5                 35.4  5               49.2 -13.8   0.0319 0.0154      57.0
- 6                 35.6  6               51.6 -16.0   0.0319 0.0208      57.0
- 7                 14.1  7               33.7 -19.6   0.0319 0.0312      57.0
- 8                 84.1  8               74.9   9.17  0.0319 0.00682     57.0
- 9                 39.7  9               50.0 -10.3   0.0319 0.00857     57.0
-10                 63.7  10              64.1  -0.398 0.0319 0.0000128   57.0
-# ℹ 890 more rows
-# ℹ 6 more variables: .mu &lt;dbl&gt;, .offset &lt;dbl&gt;, .sqrtXwt &lt;dbl&gt;, .sqrtrwt &lt;dbl&gt;,
-#   .weights &lt;dbl&gt;, .wtres &lt;dbl&gt;</code></pre>
-</div>
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predictions</span>(</span>
+<span id="cb62-2">  m_0, </span>
+<span id="cb62-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"classroom_id"</span>) </span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># plot distributions and predicted values</span></span>
-<span id="cb64-2">d <span class="sc" style="color: #5E5E5E;
+<span id="cb63-2">d <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb64-3">  <span class="fu" style="color: #4758AB;
+<span id="cb63-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> classroom_id,</span>
-<span id="cb64-4">             <span class="at" style="color: #657422;
+<span id="cb63-4">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> reading_comprehension)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb64-5">  <span class="fu" style="color: #4758AB;
+<span id="cb63-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_violin</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -955,19 +944,19 @@ background-color: null;
 font-style: inherit;">NA</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb64-6">  <span class="fu" style="color: #4758AB;
+<span id="cb63-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">data =</span> d_augmented,</span>
-<span id="cb64-7">             <span class="fu" style="color: #4758AB;
+font-style: inherit;">data =</span> d_predicted,</span>
+<span id="cb63-7">             <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">y =</span> .fitted)) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">y =</span> estimate)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb64-8">  <span class="fu" style="color: #4758AB;
+<span id="cb63-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_hline</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -986,37 +975,32 @@ font-style: inherit;">get_intercept</span>(m_0)))</span></code></pre></div>
 </div>
 <p>Here a fancier version of the same plot.</p>
 <div class="cell preview-image">
-<div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb64" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># ggtext displays rich text</span></span>
-<span id="cb65-2"><span class="fu" style="color: #4758AB;
+<span id="cb64-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggtext)</span>
-<span id="cb65-3"></span>
-<span id="cb65-4"><span class="co" style="color: #5E5E5E;
+<span id="cb64-3"></span>
+<span id="cb64-4">d <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Data along with fitted values</span></span>
-<span id="cb65-5">d_augmented <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb65-6">  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Overall plot</span></span>
-<span id="cb65-7">  <span class="fu" style="color: #4758AB;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb64-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">x =</span> classroom_id, <span class="at" style="color: #657422;
+font-style: inherit;">x =</span> classroom_id,</span>
+<span id="cb64-6">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> reading_comprehension)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb65-8">  <span class="co" style="color: #5E5E5E;
+font-style: inherit;">+</span> </span>
+<span id="cb64-7">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Within-group variability</span></span>
-<span id="cb65-9">  <span class="fu" style="color: #4758AB;
+<span id="cb64-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_violin</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1029,10 +1013,10 @@ background-color: null;
 font-style: inherit;">"width"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb65-10">  <span class="co" style="color: #5E5E5E;
+<span id="cb64-9">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Display raw data</span></span>
-<span id="cb65-11">  ggbeeswarm<span class="sc" style="color: #5E5E5E;
+<span id="cb64-10">  ggbeeswarm<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1051,29 +1035,19 @@ background-color: null;
 font-style: inherit;">16</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb65-12">  <span class="co" style="color: #5E5E5E;
+<span id="cb64-11">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Group means as horizontal segments</span></span>
-<span id="cb65-13">  <span class="fu" style="color: #4758AB;
+<span id="cb64-12">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_segment</span>(</span>
-<span id="cb65-14">    <span class="at" style="color: #657422;
+<span id="cb64-13">    <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">data =</span> d_augmented <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb65-15">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">select</span>(classroom_id, .fitted) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb65-16">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unique</span>(),</span>
-<span id="cb65-17">    <span class="fu" style="color: #4758AB;
+font-style: inherit;">data =</span> d_predicted,</span>
+<span id="cb64-14">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(</span>
-<span id="cb65-18">      <span class="at" style="color: #657422;
+<span id="cb64-15">      <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1082,7 +1056,7 @@ background-color: null;
 font-style: inherit;">-</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.5</span>,</span>
-<span id="cb65-19">      <span class="at" style="color: #657422;
+<span id="cb64-16">      <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">xend =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1091,57 +1065,60 @@ background-color: null;
 font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.5</span>,</span>
-<span id="cb65-20">      <span class="at" style="color: #657422;
+<span id="cb64-17">      <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">y =</span> .fitted,</span>
-<span id="cb65-21">      <span class="at" style="color: #657422;
+font-style: inherit;">y =</span> estimate ,</span>
+<span id="cb64-18">      <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">yend =</span> .fitted),</span>
-<span id="cb65-22">    <span class="at" style="color: #657422;
+font-style: inherit;">yend =</span> estimate ),</span>
+<span id="cb64-19">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">linewidth =</span>  .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb65-23">  <span class="co" style="color: #5E5E5E;
+font-style: inherit;">+</span></span>
+<span id="cb64-20">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Group means as text</span></span>
-<span id="cb65-24">  <span class="fu" style="color: #4758AB;
+<span id="cb64-21">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_label</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(</span>
-<span id="cb65-25">    <span class="at" style="color: #657422;
+<span id="cb64-22">    <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">y =</span> .fitted, </span>
-<span id="cb65-26">    <span class="at" style="color: #657422;
+font-style: inherit;">y =</span> estimate, </span>
+<span id="cb64-23">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label =</span> scales<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">number</span>(.fitted,.<span class="dv" style="color: #AD0000;
+font-style: inherit;">number</span>(estimate,.<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>)), </span>
-<span id="cb65-27">    <span class="at" style="color: #657422;
+<span id="cb64-24">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d_predicted,</span>
+<span id="cb64-25">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">vjust =</span> <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.3</span>, </span>
-<span id="cb65-28">    <span class="at" style="color: #657422;
+<span id="cb64-26">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">size =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2.8</span>, </span>
-<span id="cb65-29">    <span class="at" style="color: #657422;
+<span id="cb64-27">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"gray30"</span>, </span>
-<span id="cb65-30">    <span class="at" style="color: #657422;
+<span id="cb64-28">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label.padding =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1155,28 +1132,28 @@ font-style: inherit;">label.size =</span> <span class="dv" style="color: #AD0000
 background-color: null;
 font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb65-31">  <span class="co" style="color: #5E5E5E;
+font-style: inherit;">+</span></span>
+<span id="cb64-29">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Display Overall intercept coefficient as text</span></span>
-<span id="cb65-32">  <span class="fu" style="color: #4758AB;
+<span id="cb64-30">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_richtext</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tibble</span>(</span>
-<span id="cb65-33">    <span class="at" style="color: #657422;
+<span id="cb64-31">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">classroom_id =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>,</span>
-<span id="cb65-34">    <span class="at" style="color: #657422;
+<span id="cb64-32">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">reading_comprehension =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">get_intercept</span>(m_0),</span>
-<span id="cb65-35">    <span class="at" style="color: #657422;
+<span id="cb64-33">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label =</span>  glue<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1185,13 +1162,13 @@ background-color: null;
 font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"*&amp;gamma;*&lt;sub&gt;00&lt;/sub&gt; = {round(fixef(m_0), 2)}"</span>)</span>
-<span id="cb65-36">    ),</span>
-<span id="cb65-37">    <span class="fu" style="color: #4758AB;
+<span id="cb64-34">    ),</span>
+<span id="cb64-35">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label =</span> label),</span>
-<span id="cb65-38">    <span class="at" style="color: #657422;
+<span id="cb64-36">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label.margin =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1200,7 +1177,7 @@ background-color: null;
 font-style: inherit;">1</span>,<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"mm"</span>),</span>
-<span id="cb65-39">    <span class="at" style="color: #657422;
+<span id="cb64-37">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label.padding =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1209,12 +1186,12 @@ background-color: null;
 font-style: inherit;">0</span>,<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"mm"</span>),</span>
-<span id="cb65-40">    <span class="at" style="color: #657422;
+<span id="cb64-38">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label.color =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NA</span>,</span>
-<span id="cb65-41">    <span class="at" style="color: #657422;
+<span id="cb64-39">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">fill =</span> scales<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1225,23 +1202,23 @@ background-color: null;
 font-style: inherit;">"white"</span>, <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.5</span>), </span>
-<span id="cb65-42">    <span class="at" style="color: #657422;
+<span id="cb64-40">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">vjust =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>,</span>
-<span id="cb65-43">    <span class="at" style="color: #657422;
+<span id="cb64-41">    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span></span>
-<span id="cb65-44">  ) <span class="sc" style="color: #5E5E5E;
+<span id="cb64-42">  ) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb65-45">  <span class="co" style="color: #5E5E5E;
+<span id="cb64-43">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Display Overall intercept as horizontal line</span></span>
-<span id="cb65-46">  <span class="fu" style="color: #4758AB;
+<span id="cb64-44">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_hline</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1250,10 +1227,10 @@ background-color: null;
 font-style: inherit;">get_intercept</span>(m_0)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb65-47">  <span class="co" style="color: #5E5E5E;
+<span id="cb64-45">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Axis labels</span></span>
-<span id="cb65-48">  <span class="fu" style="color: #4758AB;
+<span id="cb64-46">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1302,7 +1279,7 @@ Figure&nbsp;6: Model 0 Group intercepts
 <h2 class="anchored" data-anchor-id="fit-object">Fit object</h2>
 <p>Representing the fixed intercept, the initial <code>1</code> is optional. I included it to be explicit, but most of the time it is omitted.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1">m_1 <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1">m_1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1319,13 +1296,13 @@ background-color: null;
 font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|</span> classroom_id), </span>
-<span id="cb66-2">              <span class="at" style="color: #657422;
+<span id="cb65-2">              <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> d)</span></code></pre></div>
 </div>
 <p>Sometimes these models can become large and unwieldy, making you vulnerable to coding errors. A safer way to create a nested model is to use the <code>update</code> function that only changes the part you specify. In this syntax, a <code>.</code> means that everything is the same.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1">m_1 <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1">m_1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1341,7 +1318,7 @@ font-style: inherit;">+</span> treatment)</span></code></pre></div>
 <section id="assumption-checks" class="level2">
 <h2 class="anchored" data-anchor-id="assumption-checks">Assumption Checks</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb67" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">check_model</span>(m_1)</span></code></pre></div>
 <div class="cell-output-display">
@@ -1357,7 +1334,7 @@ font-style: inherit;">check_model</span>(m_1)</span></code></pre></div>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(m_1)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1391,10 +1368,10 @@ trtmntTrtmn -0.683</code></pre>
 <p>Note that <code>lmer</code> displays the <code>treatment</code> variable as <code>treatmentTreatment</code>. This means that it is how much the Treatment group differs from the reference group, which in this case the control group. R is not smart enough to know in advance that the control group is the reference group. Instead, it assumes that the first factor level listed is the reference group. In this case, the control group is listed first. If you want a different reference group, you need to change the order of the factor levels. The base R way is to use the <code>relevel</code> function, but see the <a href="https://forcats.tidyverse.org/">forcats package</a> for other useful ways to do this.</p>
 <p>The report package has an automated interpretation function. Note that unlike the <code>summary</code> function, the <code>report</code> function includes <em>p</em>-values for the fixed effects.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb70" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Overall report</span></span>
-<span id="cb71-2"><span class="fu" style="color: #4758AB;
+<span id="cb70-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">report</span>(m_1)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1420,19 +1397,19 @@ computed using a Wald t-distribution approximation.</code></pre>
 <h2 class="anchored" data-anchor-id="plot-model">Plot Model</h2>
 <p>From Figure&nbsp;7, it is easy to see that the treatment group has higher reading comprehension, on average, than the control group.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1">modelbased<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1">modelbased<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">estimate_relation</span>(m_1) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb73-2">  <span class="fu" style="color: #4758AB;
+<span id="cb72-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb73-3">  <span class="fu" style="color: #4758AB;
+<span id="cb72-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1460,7 +1437,7 @@ Figure&nbsp;7: Model-based estimate of the relationship between treatment and re
 <section id="fixed-and-random-coefficients-1" class="level2">
 <h2 class="anchored" data-anchor-id="fixed-and-random-coefficients-1">Fixed and Random Coefficients</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb73" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">parameters</span>(m_1)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1482,7 +1459,7 @@ SD (Residual)                |       20.49</code></pre>
 <p>Here we see that the <code>treatment</code> variable’s estimate is statistically significant.</p>
 <p>If we want to see what the estimated means are for the 2 treatment groups:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1">modelbased<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb75" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1">modelbased<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1502,7 +1479,7 @@ Marginal means estimated at treatment</code></pre>
 <section id="intraclass-correlation-coefficient" class="level2">
 <h2 class="anchored" data-anchor-id="intraclass-correlation-coefficient">Intraclass Correlation Coefficient</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1">performance<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb77" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1">performance<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1516,7 +1493,7 @@ font-style: inherit;">icc</span>(m_1)</span></code></pre></div>
 </div>
 <p>Compare these values to Model 0’s ICC</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1">performance<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb79" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1">performance<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1542,7 +1519,7 @@ font-style: inherit;">icc</span>(m_0)</span></code></pre></div>
 <p>The <em>conditional</em> <img src="https://latex.codecogs.com/png.latex?R%5E2"> compares the fixed and level 2 variances to the total variance (fixed, level 1, and level 2). In this context, what percentage of variance is explained by the fixed effects and the random intercepts.</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AR%5E2_%7B%5Ctext%7BConditional%7D%7D=%5Cfrac%7B%5Csigma_%7B%5Ctext%7BFixed%7D%7D%5E2+%5Csigma_%7B2%7D%5E2%7D%7B%5Csigma_%7B%5Ctext%7BFixed%7D%7D%5E2+%5Csigma_%7B2%7D%5E2+%5Csigma_%7B1%7D%5E2%7D%0A"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1">performance<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb81" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1">performance<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1561,7 +1538,7 @@ font-style: inherit;">r2</span>(m_1)</span></code></pre></div>
 <h2 class="anchored" data-anchor-id="compare-models">Compare Models</h2>
 <p>To compare model coefficients, use the <code>parameters::compare_models</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb83" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">compare_models</span>(m_0, m_1, <span class="at" style="color: #657422;
 background-color: null;
@@ -1586,7 +1563,7 @@ SD (Residual)                | 20.49 | 20.49</code></pre>
 </div>
 <p>To test the whether one variable explains more variance than a different nested variable, use the <code>anova</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb85" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">anova</span>(m_0, m_1)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1604,7 +1581,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>The <em>p</em>-value is in <code>Pr(&gt;Chisq)</code> column. It means that <code>m_1</code>’s deviance statistic is significantly smaller than that of <code>m_0</code>.</p>
 <p>The performance function <code>compare_peformance</code> gives many metrics of change. The Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC) can be used to compare non-nested models. The <code>AIC_wt</code> and <code>BIC_wt</code> columns tell you the conditional probabilities in favor of each model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb87" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">compare_performance</span>(m_0, m_1) </span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1623,7 +1600,7 @@ m_1  |      0.214 | 0.262 | 20.172 | 20.488</code></pre>
 </div>
 <p>In this case, it is clear that model <code>m_1</code> is preferred compared to <code>m_0</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb89" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">test_performance</span>(m_0, m_1) </span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1644,12 +1621,12 @@ Models were detected as nested (in terms of fixed parameters) and are compared i
 </ul>
 <p>Raftery, A. E. (1995). Bayesian model selection in social research. <em>Sociological Methodology 25</em>, 111–64.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb91" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">test_bf</span>(m_0, m_1) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb92-2">  <span class="fu" style="color: #4758AB;
+<span id="cb91-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">report</span>()</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1666,18 +1643,18 @@ classroom_id) model (the least supported model).</code></pre>
 <p>Although the Model 0 <img src="https://latex.codecogs.com/png.latex?%5Ctau_%7B00%7D"> has the same symbol as the Model 1 <img src="https://latex.codecogs.com/png.latex?%5Ctau_%7B00%7D">, they are not the same. I therefore will distinguish the Model 0 and Model1 <img src="https://latex.codecogs.com/png.latex?%5Ctau_%7B00%7D"> with second-level subscripts: <img src="https://latex.codecogs.com/png.latex?%5Ctau_%7B00_0%7D"> and <img src="https://latex.codecogs.com/png.latex?%5Ctau_%7B00_1%7D">, respectively.</p>
 <p><img src="https://latex.codecogs.com/png.latex?%5CDelta%20R_2%5E2(%5Ctext%7Bapprox%7D)=%5Cfrac%7B%5Ctau_%7B00_0%7D-%5Ctau_%7B00_1%7D%7D%7B%5Ctau_%7B00_0%7D%7D"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1">tau_00_0 <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb93" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1">tau_00_0 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">get_variance_random</span>(m_0)</span>
-<span id="cb94-2">tau_00_1 <span class="ot" style="color: #003B4F;
+<span id="cb93-2">tau_00_1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">get_variance_random</span>(m_1)</span>
-<span id="cb94-3"></span>
-<span id="cb94-4">(tau_00_0 <span class="sc" style="color: #5E5E5E;
+<span id="cb93-3"></span>
+<span id="cb93-4">(tau_00_0 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span> tau_00_1) <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1686,7 +1663,7 @@ font-style: inherit;">/</span> tau_00_0</span></code></pre></div>
 <pre><code>var.random 
     0.5077 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb96" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><span class="dv" style="color: #AD0000;
+<div class="sourceCode cell-code" id="cb95" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1708,18 +1685,18 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 <p>We can likewise see if there is any reduction in level-1 variance by comparing the residual variance of both models:</p>
 <p><img src="https://latex.codecogs.com/png.latex?%5CDelta%20R_1%5E2(%5Ctext%7Bapprox%7D)=%5Cfrac%7B%5Csigma_%7B0%7D%5E2-%5Csigma_%7B1%7D%5E2%7D%7B%5Csigma_%7B0%7D%5E2%7D"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1">sigma_e_0 <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb97" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1">sigma_e_0 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">get_variance_residual</span>(m_0)</span>
-<span id="cb98-2">sigma_e_1 <span class="ot" style="color: #003B4F;
+<span id="cb97-2">sigma_e_1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">get_variance_residual</span>(m_1)</span>
-<span id="cb98-3"></span>
-<span id="cb98-4">(sigma_e_0 <span class="sc" style="color: #5E5E5E;
+<span id="cb97-3"></span>
+<span id="cb97-4">(sigma_e_0 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span> sigma_e_1) <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1738,7 +1715,7 @@ font-style: inherit;">/</span> sigma_e_0</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb100" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1">d_augmented_1 <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb99" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1">d_augmented_1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1747,55 +1724,55 @@ background-color: null;
 font-style: inherit;">conf.int =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>)</span>
-<span id="cb100-2"></span>
-<span id="cb100-3"><span class="co" style="color: #5E5E5E;
+<span id="cb99-2"></span>
+<span id="cb99-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Get unique values of the fitted responses</span></span>
-<span id="cb100-4">d_classroom_1 <span class="ot" style="color: #003B4F;
+<span id="cb99-4">d_classroom_1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> d_augmented_1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb100-5">  <span class="fu" style="color: #4758AB;
+<span id="cb99-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">select</span>(classroom_id, .fitted, treatment) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb100-6">  <span class="fu" style="color: #4758AB;
+<span id="cb99-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">unique</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb100-7">  <span class="fu" style="color: #4758AB;
+<span id="cb99-7">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ungroup</span>()</span>
-<span id="cb100-8"></span>
-<span id="cb100-9"><span class="co" style="color: #5E5E5E;
+<span id="cb99-8"></span>
+<span id="cb99-9"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Get the mean values (.fixed) for each treatment condition</span></span>
-<span id="cb100-10">d_treatment_1 <span class="ot" style="color: #003B4F;
+<span id="cb99-10">d_treatment_1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> d_augmented_1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb100-11">  <span class="fu" style="color: #4758AB;
+<span id="cb99-11">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">select</span>(.fixed, treatment) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb100-12">  <span class="fu" style="color: #4758AB;
+<span id="cb99-12">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">unique</span>()</span>
-<span id="cb100-13"></span>
-<span id="cb100-14"><span class="co" style="color: #5E5E5E;
+<span id="cb99-13"></span>
+<span id="cb99-14"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># plot distributions and predicted values</span></span>
-<span id="cb100-15"><span class="fu" style="color: #4758AB;
+<span id="cb99-15"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">augment</span>(m_1) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb100-16">  <span class="fu" style="color: #4758AB;
+<span id="cb99-16">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1804,76 +1781,76 @@ background-color: null;
 font-style: inherit;">fct_rev</span>(treatment)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
-<span id="cb100-17">  <span class="fu" style="color: #4758AB;
+<span id="cb99-17">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> classroom_id,</span>
-<span id="cb100-18">             <span class="at" style="color: #657422;
+<span id="cb99-18">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> reading_comprehension)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb100-19">  <span class="fu" style="color: #4758AB;
+<span id="cb99-19">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_violin</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NA</span>, </span>
-<span id="cb100-20">              <span class="fu" style="color: #4758AB;
+<span id="cb99-20">              <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">fill =</span> treatment), </span>
-<span id="cb100-21">              <span class="at" style="color: #657422;
+<span id="cb99-21">              <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb100-22">  <span class="fu" style="color: #4758AB;
+<span id="cb99-22">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> d_classroom_1,</span>
-<span id="cb100-23">             <span class="fu" style="color: #4758AB;
+<span id="cb99-23">             <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> .fitted)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb100-24">  <span class="fu" style="color: #4758AB;
+<span id="cb99-24">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_hline</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> d_treatment_1, </span>
-<span id="cb100-25">             <span class="fu" style="color: #4758AB;
+<span id="cb99-25">             <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">yintercept =</span> .fixed)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb100-26">  <span class="fu" style="color: #4758AB;
+<span id="cb99-26">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_grid</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">vars</span>(treatment), </span>
-<span id="cb100-27">             <span class="at" style="color: #657422;
+<span id="cb99-27">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">scales =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"free"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb100-28">  <span class="fu" style="color: #4758AB;
+<span id="cb99-28">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
 background-color: null;

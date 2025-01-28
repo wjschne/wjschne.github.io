@@ -36,8 +36,7 @@ library(tidyverse)
 library(lubridate)
 library(lme4)
 library(easystats)
-library(broom.mixed)
-library(broom)
+library(marginaleffects)
 
 options(digits = 4)
 # bg_color <- "#ECE5D3"
@@ -252,7 +251,7 @@ The [easystats](https://easystats.github.io/easystats/) package, like the tidyve
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("lme4")) install.packages("lme4")
 if (!require("easystats")) install.packages("easystats")
-if (!require("broom.mixed")) install.packages("broom.mixed")
+if (!require("marginaleffects")) install.packages("marginaleffects")
 
 ```
 
@@ -262,7 +261,7 @@ if (!require("broom.mixed")) install.packages("broom.mixed")
 library(lme4) # Multilevel modeling
 library(tidyverse) # General data management and plotting
 library(easystats) # General modeling enhancements
-library(broom.mixed) # Predicted values for multilevel models
+library(marginaleffects) # Predicted values 
 ```
 
 
@@ -697,13 +696,17 @@ parameters(m_0, effects = "random", group_level = TRUE) %>%
 
 ## Basic Plot
 
-Suppose we want the predicted value for each classroom. There are a variety of ways to do this. The simplest way is to use the broom.mixed package's `augment` function. The name `augment` does not immediately inform us what it does. It starts with that data used to make the model, and "augments" the data by adding predicted values and other case-level information.
+Suppose we want the predicted value for each classroom. There are a variety of ways to do this. We are going to get case-level predictions from the marginaleffects package's `predictions` function. A nice feature of his function is that it will average the predictions over any variable. In this case, the prediction is the same for all 30 groups, so instead of 900 predictions (one for each person), we only need 30 predictions (one for each classroom).
 
 
 ```{r}
-d_augmented <- augment(m_0)
-d_augmented
+d_predicted <- marginaleffects::predictions(
+  m_0, 
+  by = "classroom_id") 
 ```
+
+
+
 
 
 ```{r}
@@ -712,8 +715,8 @@ d %>%
   ggplot(aes(x = classroom_id,
              y = reading_comprehension)) +
   geom_violin(color = NA) +
-  geom_point(data = d_augmented,
-             aes(y = .fitted)) +
+  geom_point(data = d_predicted,
+             aes(y = estimate)) +
   geom_hline(aes(yintercept = get_intercept(m_0)))
 ```
 
@@ -725,33 +728,31 @@ Here a fancier version of the same plot.
 # ggtext displays rich text
 library(ggtext)
 
-# Data along with fitted values
-d_augmented %>%
-  # Overall plot
-  ggplot(aes(x = classroom_id, y = reading_comprehension)) +
+d %>% 
+  ggplot(aes(x = classroom_id,
+             y = reading_comprehension)) + 
   # Within-group variability
   geom_violin(color = NA, scale = "width") +
   # Display raw data
   ggbeeswarm::geom_quasirandom(size = .5, alpha = 0.5, pch = 16) +
   # Group means as horizontal segments
   geom_segment(
-    data = d_augmented %>% 
-      select(classroom_id, .fitted) %>% 
-      unique(),
+    data = d_predicted,
     aes(
       x = as.numeric(classroom_id) - 0.5,
       xend = as.numeric(classroom_id) + 0.5,
-      y = .fitted,
-      yend = .fitted),
-    linewidth =  .1) + 
+      y = estimate ,
+      yend = estimate ),
+    linewidth =  .1) +
   # Group means as text
   geom_label(aes(
-    y = .fitted, 
-    label = scales::number(.fitted,.1)), 
+    y = estimate, 
+    label = scales::number(estimate,.1)), 
+    data = d_predicted,
     vjust = -0.3, 
     size = 2.8, 
     color = "gray30", 
-    label.padding = unit(0,"mm"), label.size = 0) + 
+    label.padding = unit(0,"mm"), label.size = 0) +
   # Display Overall intercept coefficient as text
   geom_richtext(data = tibble(
     classroom_id = 1,
