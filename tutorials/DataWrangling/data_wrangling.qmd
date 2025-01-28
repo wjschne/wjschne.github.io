@@ -3,7 +3,7 @@ title: "Data Wrangling"
 author: "W. Joel Schneider"
 description: Getting Data into Useable Formats
 date: 2024-03-01
-freeze: true
+freeze: false
 format: 
   html: 
     fig-height: 8
@@ -30,7 +30,9 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(lubridate)
 library(ggtext)
-
+library(kableExtra)
+library(broom)
+library(broom.mixed)
 # library(magick)
 
 # dutchmasters::dutchmasters
@@ -673,7 +675,7 @@ Looks even better!
 
 If I wanted a more polished plot for publication, I might create something like @fig-polished. My priorities for a plot in a publication are quite different than a plot I am making just for my own use. I want the plot to be nearly self-explanatory. I want reader to understand the plot without needing to work hard. Thus, I prefer direct labels rather than plot legends that require looking things up. I also want my plot to be inclusive, so I choose a large font size from a legible font family. I also choose colors that are distinguishable by people different kinds of color blindness. 
 
-```{r}
+```{r, dev='ragg_png'}
 #| label: fig-polished
 #| fig-cap: "Effect on Intervention on Time on Task for Eight Children"
 #| fig-cap-location: margin
@@ -750,7 +752,7 @@ d_longer_processed %>%
 ```
 
 
-For practice data wrangling, download [this quarto document]("https://github.com/wjschne/EDUC8825/raw/master/data_wrangling_exercise.qmd") and complete the data-wrangling exercises therein. 
+For practice data wrangling, download [this quarto document](https://raw.githubusercontent.com/wjschne/EDUC8825/master/data_wrangling_exercise.qmd) and complete the data-wrangling exercises therein. 
 
 
 
