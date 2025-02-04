@@ -3,6 +3,14 @@ title: "Random Intercept Models in R"
 author: "W. Joel Schneider"
 subtitle: "Advanced Data Analysis (EDUC 8825)"
 date: 2025-01-27
+engine: knitr
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
 format: 
   html: 
     # css: tutorial.css
@@ -19,13 +27,6 @@ format:
 #| include: false
 #| cache: false
 knitr::opts_chunk$set(
-  warning = F,
-  message = F,
-  dev = "svg",
-  # class.source = 'fold-show',
-  echo = TRUE,
-  dev = "ragg_png",
-  cache = T,
   out.width = '100%',
   out.height = '100%'
 )
@@ -40,21 +41,9 @@ library(marginaleffects)
 library(broom)
 library(broom.mixed)
 options(digits = 4)
-# bg_color <- "#ECE5D3"
-# fore_color <- "#2D2718"
-# line_color <- "#7C4728"
-# area_color <- "#624E3E"
+options(digits = 4)
 myfont <- "Roboto Condensed"
-
-# ggplot2::update_geom_defaults("label", list(family =  myfont))
-# ggplot2::update_geom_defaults("text", list(family =  myfont))
-# ggplot2::update_geom_defaults("point", list(colour =  fore_color))
-# ggplot2::update_geom_defaults("line", list(colour =  line_color))
-# ggplot2::update_geom_defaults("smooth", list(colour =  line_color))
-# ggplot2::update_geom_defaults("area", list(fill = area_color))
-# ggplot2::update_geom_defaults("density", list(fill = area_color))
-# ggplot2::theme_set(ggplot2::theme_grey(base_size = 18, base_family = myfont) + ggplot2::theme(
-  # panel.background = ggplot2::element_rect(bg_color)))
+theme_set(theme_minimal(base_size = 16, base_family = myfont))
 
 CurrentQuestion <- 0
 
@@ -715,7 +704,7 @@ d_predicted <- marginaleffects::predictions(
 d %>%
   ggplot(aes(x = classroom_id,
              y = reading_comprehension)) +
-  geom_violin(color = NA) +
+  geom_violin(color = NA, fill = "dodgerblue", alpha = .25) +
   geom_point(data = d_predicted,
              aes(y = estimate)) +
   geom_hline(aes(yintercept = get_intercept(m_0)))
@@ -733,7 +722,7 @@ d %>%
   ggplot(aes(x = classroom_id,
              y = reading_comprehension)) + 
   # Within-group variability
-  geom_violin(color = NA, scale = "width") +
+  geom_violin(color = NA, scale = "width", fill = "dodgerblue", alpha = .25) +
   # Display raw data
   ggbeeswarm::geom_quasirandom(size = .5, alpha = 0.5, pch = 16) +
   # Group means as horizontal segments
@@ -750,6 +739,7 @@ d %>%
     y = estimate, 
     label = scales::number(estimate,.1)), 
     data = d_predicted,
+    fill = tinter::lighten('dodgerblue', .25),
     vjust = -0.3, 
     size = 2.8, 
     color = "gray30", 
@@ -868,7 +858,7 @@ modelbased::estimate_relation(m_1) %>%
 
 ## Fixed and Random Coefficients
 
-```{r, }
+```{r, parameters1}
 parameters(m_1)
 ```
 
@@ -876,20 +866,20 @@ Here we see that the `treatment` variable's estimate is statistically significan
 
 If we want to see what the estimated means are for the 2 treatment groups:
 
-```{r}
+```{r estimatemeans}
 modelbased::estimate_means(m_1)
 ```
 
 
 ## Intraclass Correlation Coefficient
 
-```{r}
+```{r icc2}
 performance::icc(m_1)
 ```
 
 Compare these values to Model 0's ICC
 
-```{r}
+```{r icc0}
 performance::icc(m_0)
 ```
 
@@ -928,7 +918,7 @@ $$
 R^2_{\text{Conditional}}=\frac{\sigma_{\text{Fixed}}^2+\sigma_{2}^2}{\sigma_{\text{Fixed}}^2+\sigma_{2}^2+\sigma_{1}^2}
 $$
 
-```{r}
+```{r r2m1}
 performance::r2(m_1)
 ```
 
@@ -940,14 +930,14 @@ The Conditional *R^2^* is the same as it was in model 0, because `treatment` can
 
 To compare model coefficients, use the `parameters::compare_models` function:
 
-```{r}
+```{r compare01}
 compare_models(m_0, m_1, effects = "all")
 ```
 
 
 To test the whether one variable explains more variance than a different nested variable, use the `anova` function.
 
-```{r}
+```{r anova01}
 anova(m_0, m_1)
 ```
 
@@ -955,14 +945,14 @@ The *p*-value is in `Pr(>Chisq)` column. It means that `m_1`'s deviance statisti
 
 The performance function `compare_peformance` gives many metrics of change. The Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC) can be used to compare non-nested models. The `AIC_wt` and `BIC_wt` columns tell you the conditional probabilities in favor of each model.
 
-```{r}
+```{r compareperformance01}
 compare_performance(m_0, m_1) 
 ```
 
 
 In this case, it is clear that model `m_1` is preferred compared to `m_0`.
 
-```{r}
+```{r testperformance01}
 test_performance(m_0, m_1) 
 ```
 
@@ -977,7 +967,7 @@ Here are some guidelines for interpreting `BF` Raftery (1995):
 
 Raftery, A. E. (1995). Bayesian model selection in social research. *Sociological Methodology 25*, 111--64.
 
-```{r}
+```{r bf01}
 test_bf(m_0, m_1) %>% 
   report()
 ```
@@ -991,7 +981,7 @@ Although the Model 0 $\tau_{00}$ has the same symbol as the Model 1 $\tau_{00}$,
 
 $$\Delta R_2^2(\text{approx})=\frac{\tau_{00_0}-\tau_{00_1}}{\tau_{00_0}}$$
 
-```{r}
+```{r variancereduction}
 tau_00_0 <- get_variance_random(m_0)
 tau_00_1 <- get_variance_random(m_1)
 
@@ -1006,7 +996,7 @@ We can likewise see if there is any reduction in level-1 variance by comparing t
 
 $$\Delta R_1^2(\text{approx})=\frac{\sigma_{0}^2-\sigma_{1}^2}{\sigma_{0}^2}$$
 
-```{r}
+```{r variancereduction1}
 sigma_e_0 <- get_variance_residual(m_0)
 sigma_e_1 <- get_variance_residual(m_1)
 

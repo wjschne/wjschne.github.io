@@ -14,15 +14,19 @@ format:
     toc: true
     toc-location: left
     toc-float: true
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, dev = "svg")
 library(tidyverse)
 library(lubridate)
-library(extrafont)
 library(magick)
-extrafont::loadfonts(device = "win")
 
 options(digits = 4)
 bg_color <- "#ECE5D3"

@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-6415ee417fa2c12ca0bba5c798e71c46.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-8324e2080287992c21ba0f6d539105a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -601,7 +601,7 @@ Figure&nbsp;3
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_autocorrelation</span>(m_0) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.212).</code></pre>
+<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.242).</code></pre>
 </div>
 </div>
 <p>Fortunately, there is no evidence of autocorrelation here.</p>
@@ -930,7 +930,7 @@ Figure&nbsp;5: Group coefficients
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span></span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> classroom_id,</span>
 <span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> reading_comprehension)) <span class="sc">+</span></span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">color =</span> <span class="cn">NA</span>, <span class="at">fill =</span> <span class="st">"dodgerblue"</span>, <span class="at">alpha =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
 <span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> d_predicted,</span>
 <span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> estimate)) <span class="sc">+</span></span>
 <span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="fu">get_intercept</span>(m_0)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -951,7 +951,7 @@ Figure&nbsp;5: Group coefficients
 <span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> classroom_id,</span>
 <span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> reading_comprehension)) <span class="sc">+</span> </span>
 <span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Within-group variability</span></span>
-<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">color =</span> <span class="cn">NA</span>, <span class="at">scale =</span> <span class="st">"width"</span>) <span class="sc">+</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">color =</span> <span class="cn">NA</span>, <span class="at">scale =</span> <span class="st">"width"</span>, <span class="at">fill =</span> <span class="st">"dodgerblue"</span>, <span class="at">alpha =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
 <span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display raw data</span></span>
 <span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>  ggbeeswarm<span class="sc">::</span><span class="fu">geom_quasirandom</span>(<span class="at">size =</span> .<span class="dv">5</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">pch =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
 <span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Group means as horizontal segments</span></span>
@@ -968,28 +968,29 @@ Figure&nbsp;5: Group coefficients
 <span id="cb64-22"><a href="#cb64-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> estimate, </span>
 <span id="cb64-23"><a href="#cb64-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">number</span>(estimate,.<span class="dv">1</span>)), </span>
 <span id="cb64-24"><a href="#cb64-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> d_predicted,</span>
-<span id="cb64-25"><a href="#cb64-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.3</span>, </span>
-<span id="cb64-26"><a href="#cb64-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">2.8</span>, </span>
-<span id="cb64-27"><a href="#cb64-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray30"</span>, </span>
-<span id="cb64-28"><a href="#cb64-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"mm"</span>), <span class="at">label.size =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb64-29"><a href="#cb64-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display Overall intercept coefficient as text</span></span>
-<span id="cb64-30"><a href="#cb64-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_richtext</span>(<span class="at">data =</span> <span class="fu">tibble</span>(</span>
-<span id="cb64-31"><a href="#cb64-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">classroom_id =</span> <span class="dv">1</span>,</span>
-<span id="cb64-32"><a href="#cb64-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">reading_comprehension =</span> <span class="fu">get_intercept</span>(m_0),</span>
-<span id="cb64-33"><a href="#cb64-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span>  glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"*&amp;gamma;*&lt;sub&gt;00&lt;/sub&gt; = {round(fixef(m_0), 2)}"</span>)</span>
-<span id="cb64-34"><a href="#cb64-34" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb64-35"><a href="#cb64-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> label),</span>
-<span id="cb64-36"><a href="#cb64-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.margin =</span> <span class="fu">unit</span>(<span class="dv">1</span>,<span class="st">"mm"</span>),</span>
-<span id="cb64-37"><a href="#cb64-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"mm"</span>),</span>
-<span id="cb64-38"><a href="#cb64-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.color =</span> <span class="cn">NA</span>,</span>
-<span id="cb64-39"><a href="#cb64-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> scales<span class="sc">::</span><span class="fu">alpha</span>(<span class="st">"white"</span>, <span class="fl">0.5</span>), </span>
-<span id="cb64-40"><a href="#cb64-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="dv">0</span>,</span>
-<span id="cb64-41"><a href="#cb64-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">0</span></span>
-<span id="cb64-42"><a href="#cb64-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb64-43"><a href="#cb64-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display Overall intercept as horizontal line</span></span>
-<span id="cb64-44"><a href="#cb64-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">get_intercept</span>(m_0)) <span class="sc">+</span></span>
-<span id="cb64-45"><a href="#cb64-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Axis labels</span></span>
-<span id="cb64-46"><a href="#cb64-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Classrooms"</span>, <span class="at">y =</span> <span class="st">"Reading Comprehension"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-25"><a href="#cb64-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> tinter<span class="sc">::</span><span class="fu">lighten</span>(<span class="st">'dodgerblue'</span>, .<span class="dv">25</span>),</span>
+<span id="cb64-26"><a href="#cb64-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.3</span>, </span>
+<span id="cb64-27"><a href="#cb64-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">2.8</span>, </span>
+<span id="cb64-28"><a href="#cb64-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray30"</span>, </span>
+<span id="cb64-29"><a href="#cb64-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"mm"</span>), <span class="at">label.size =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb64-30"><a href="#cb64-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display Overall intercept coefficient as text</span></span>
+<span id="cb64-31"><a href="#cb64-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_richtext</span>(<span class="at">data =</span> <span class="fu">tibble</span>(</span>
+<span id="cb64-32"><a href="#cb64-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">classroom_id =</span> <span class="dv">1</span>,</span>
+<span id="cb64-33"><a href="#cb64-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">reading_comprehension =</span> <span class="fu">get_intercept</span>(m_0),</span>
+<span id="cb64-34"><a href="#cb64-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span>  glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"*&amp;gamma;*&lt;sub&gt;00&lt;/sub&gt; = {round(fixef(m_0), 2)}"</span>)</span>
+<span id="cb64-35"><a href="#cb64-35" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb64-36"><a href="#cb64-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> label),</span>
+<span id="cb64-37"><a href="#cb64-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.margin =</span> <span class="fu">unit</span>(<span class="dv">1</span>,<span class="st">"mm"</span>),</span>
+<span id="cb64-38"><a href="#cb64-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"mm"</span>),</span>
+<span id="cb64-39"><a href="#cb64-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.color =</span> <span class="cn">NA</span>,</span>
+<span id="cb64-40"><a href="#cb64-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> scales<span class="sc">::</span><span class="fu">alpha</span>(<span class="st">"white"</span>, <span class="fl">0.5</span>), </span>
+<span id="cb64-41"><a href="#cb64-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="dv">0</span>,</span>
+<span id="cb64-42"><a href="#cb64-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">0</span></span>
+<span id="cb64-43"><a href="#cb64-43" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb64-44"><a href="#cb64-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display Overall intercept as horizontal line</span></span>
+<span id="cb64-45"><a href="#cb64-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">get_intercept</span>(m_0)) <span class="sc">+</span></span>
+<span id="cb64-46"><a href="#cb64-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Axis labels</span></span>
+<span id="cb64-47"><a href="#cb64-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Classrooms"</span>, <span class="at">y =</span> <span class="st">"Reading Comprehension"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-model0" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">

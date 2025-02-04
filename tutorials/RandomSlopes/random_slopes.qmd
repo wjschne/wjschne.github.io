@@ -22,7 +22,8 @@ format:
     toc-location: left
     tbl-cap-location: margin
     fig-cap-location: margin
-    # css: tutorial.css
+callout-icon: false
+
 bibliography: 
   - references.bib
   - grateful-refs.bib
@@ -66,6 +67,71 @@ myfont <- "Roboto Condensed"
 # ggplot2::theme_set(ggplot2::theme_grey(base_size = 18, base_family = myfont) + ggplot2::theme(
 # panel.background = ggplot2::element_rect(bg_color)))
 theme_set(theme_minimal(base_size = 16, base_family = myfont))
+
+
+# ggdiagram is an experimental package that can be installed 
+# remotes::install_github("wjschne/ggdiagram")
+
+my_intercept <- redefault(
+  ob_ngon,
+  radius = .7,
+  angle = 90,
+  fill = NA,
+  color = "black",
+  label = "1~1~",
+  vertex_radius = unit(0.5, "mm")
+)
+
+my_path <- redefault(connect, resect = 2)
+
+
+my_error <- redefault(ob_circle, radius = .5)
+my_error_variance <- redefault(ob_variance,
+    resect = 1,
+    linewidth = .4,
+    theta = 60,
+    looseness = 1.5,
+    where = "right"
+  )
+my_error_variance_label <- redefault(
+  ob_latex,
+  tex = r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})",
+  width = .3,
+  family = myfont,
+  filename = "sigma_e_2",
+  force_recompile = F,
+  delete_files = F
+)
+
+my_path_label <- redefault(ob_label,
+        size = 13,
+        angle = 0,
+        position = .45,
+        label.padding = margin(1, 1, 1, 1)
+      )
+
+my_coefficient <- redefault(ob_circle, radius = .4, fill = "white")
+my_residual <- redefault(ob_circle, radius = .3, fill = "white")
+my_residual_label <- redefault(ob_label, size = 13)
+my_residual_variance <- redefault(
+  ob_variance,
+  resect = 1,
+  linewidth = .4,
+  theta = 60,
+  looseness = 2,
+  where = "right"
+)
+my_residual_variance_label <- redefault(
+  ob_label,
+  size = 13,
+  label.padding = margin(l = 1, r = 1, t = 1, b = 1),
+  position = .5
+)
+my_observed <- redefault(ob_ellipse, m1 = 20)
+my_observed_label <- redefault(ob_label, size = 22, fill = NA)
+
+my_observed_l2 <- redefault(ob_ellipse, m1 = 20, a = .7, b = .7)
+
 ```
 
 This is a long tutorial. Don't let that scare you. Once understood, the analyses themselves do not take that much time or effort to complete. My goal here is to give you a sense of your options when conducting analyses like these.
@@ -231,70 +297,6 @@ Sometimes equations can be overwhelming, especially for complex models. It can h
 #| fig-width: 8
 #| fig-height: 4.5
 #| code-fold: true
-
-# ggdiagram is an experimental package that can be installed 
-# remotes::install_github("wjschne/ggdiagram")
-
-my_intercept <- redefault(
-  ob_ngon,
-  radius = .7,
-  angle = 90,
-  fill = NA,
-  color = "black",
-  label = "1~1~",
-  vertex_radius = unit(0.5, "mm")
-)
-
-my_path <- redefault(connect, resect = 2)
-
-
-my_error <- redefault(ob_circle, radius = .5)
-my_error_variance <- redefault(ob_variance,
-    resect = 1,
-    linewidth = .4,
-    theta = 60,
-    looseness = 1.5,
-    where = "right"
-  )
-my_error_variance_label <- redefault(
-  ob_latex,
-  tex = r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})",
-  width = .3,
-  family = myfont,
-  filename = "sigma_e_2",
-  force_recompile = F,
-  delete_files = F
-)
-
-my_path_label <- redefault(ob_label,
-        size = 13,
-        angle = 0,
-        position = .45,
-        label.padding = margin(1, 1, 1, 1)
-      )
-
-my_coefficient <- redefault(ob_circle, radius = .4, fill = "white")
-my_residual <- redefault(ob_circle, radius = .3, fill = "white")
-my_residual_label <- redefault(ob_label, size = 13)
-my_residual_variance <- redefault(
-  ob_variance,
-  resect = 1,
-  linewidth = .4,
-  theta = 60,
-  looseness = 2,
-  where = "right"
-)
-my_residual_variance_label <- redefault(
-  ob_label,
-  size = 13,
-  label.padding = margin(l = 1, r = 1, t = 1, b = 1),
-  position = .5
-)
-my_observed <- redefault(ob_ellipse, m1 = 20)
-my_observed_label <- redefault(ob_label, size = 22, fill = NA)
-
-my_observed_l2 <- redefault(ob_ellipse, m1 = 20, a = .7, b = .7)
-
 
 p_read1 <- ggdiagram(myfont, font_size = 16) +
   {read_1 <- my_observed(label = my_observed_label("*Reading*~*1ij*~"))} +
@@ -1133,20 +1135,28 @@ sjPlot::plot_model(m_read_2_2, type = "pred", terms = c("reading_1", "school_ses
 
 The first term (`reading_1`) is on the x-axis. The second term (`school_ses`) is plotted at its mean and plus or minus 1 standard deviation.
 
-::: question
-**Question 1**: Is `school_ses` a significant predictor?
+::: {.callout-note}
+# Question 1
+
+Is `school_ses` a significant predictor?
 :::
 
-::: question
-**Question 2**: Comparing Models 1 and 2, by how much did `school_ses` reduce L2 variability?
+:::{.callout-note}
+# Question 2
+
+Comparing Models 1 and 2, by how much did `school_ses` reduce L2 variability?
+
 :::
 
-::: hint
-**Hint**: Use the `variance_reduction` function defined earlier:
+:::{.callout-tip collapse=true}
+# Hint (click to see)
+
+Use the `variance_reduction` function defined earlier:
 
 ```{r variance_reduction, eval=FALSE}
 variance_reduction(m_read_2_1, m_read_2_2)
 ```
+
 :::
 
 ## Reading 2 Model 3 = Model 2 + Random slopes uncorrelated with random intercepts
@@ -1290,7 +1300,7 @@ To specify a model in which `reading_1` has random slopes uncorrelated with rand
 
 `Y ~ 1 + X + A + (1 + X || cluster_id)`
 
-Note the double bar (`||`). It means uncorrelated slopes.
+Note the double bar (`||`). It means uncorrelated slopes. A single bar would be correlated slopes.
 
 Another way to specify uncorrelated slopes would be to add the intercept and the slopes separately:
 
@@ -1320,8 +1330,10 @@ compare_performance(m_read_2_2, m_read_2_3)
 test_performance(m_read_2_2, m_read_2_3)
 ```
 
-::: question
-**Question 3**: Does Model 3 fit better than Model 2?
+::: {.callout-note}
+# Question 3
+
+Does Model 3 fit better than Model 2?
 :::
 
 ## Reading 2 Model 4 = Model 3 + Random slopes correlated with random intercepts
@@ -1454,25 +1466,44 @@ p_read_2L1L2correlated <- p_read2L1L2uncorrelated +
 p_read_2L1L2correlated
 ```
 
-::: instruction
+```{r m2_4}
+#| include: false
+m_read_2_5 <- lmer(reading_2 ~ 1 + school_ses + reading_1 + (1 + reading_1 | school_id), data = d)
+```
+
+::: {.callout-note}
+# Question 4
+
 Make a model in which `reading_1` has random slopes correlated with random intercepts.
 
 Call your model `m_read_2_4`.
+
+Does Model 4 fit better than Model 3?
 :::
 
-::: hint
-Hint: If X is L1 and A is L2, X has random slopes correlated with random intercepts if
+::: {.callout-tip collapse=true}
+
+# Hint (click to see)
+
+If X is L1 and A is L2, X has random slopes correlated with random intercepts if
 
 `Y ~ 1 + X + A + (1 + X | cluster_id )`
 
-Note the single bar (\|).
-:::
-
-::: question
-**Question 4**: Does Model 4 fit better than Model 3?
+Note the single bar (`|`).
 :::
 
 ## Reading 2 Model 5 = Model 4 + Cross-Level Interaction of Reading~1~ and School SES
+
+An interaction effect (i.e., a moderator effect) is when the effect of one variable depends on the other variable. For example, impulsivity predicts a wide range of negative life outcomes, but its effect is worse when the person is violent. That is impulsive violent people have worse outcomes than non-impulsive violent people or non-violent impulsive people.
+
+Interactions can occur within level (e.g,. between two level-1 variables) or across levels (e.g., between a level-1 variable and a level-2 variable). Here we want to test the cross-level interaction between Reading~1~ and classroom SES.
+
+Interaction effects involve multiplicative relationships among variables. Thus the interaction between A and B would be specified like so:
+
+`Y ~ A * B`
+
+Technically, the `*` operator in a formula includes all lower-order effects among the variables multiplied (i.e., the simple slopes for A and B in addition to the interaction of A and B). Expanded, `A * B` becomes `A + B + A:B`. In this context, the `:` is just the multiplicative term. With three variables, `A*B*C` becomes `A + B + C + A:B + A:C + B:C + A:B:C`. If we wanted just the simple slopes and two-way interactions, we could specify `A + B + C + A:B + A:C + B:C` or `A*B - A:B:C`.
+
 
 $$
 \begin{align}
@@ -1590,46 +1621,65 @@ gt::tab_stubhead("Level")
 #| fig-width: 8
 #| fig-height: 8
 #| code-fold: true
-my_path(SES, 
+p_read_2L1L2correlated + 
+  my_path(SES, 
           b_1j, 
           label = my_path_label("*&gamma;*~*11*~"))
 ```
 
-::: instruction
+
+```{r m2_5}
+#| include: false
+m_read_2_5 <- lmer(reading_2 ~ 1 + school_ses * reading_1 + (1 + reading_1 | school_id), data = d)
+```
+
+
+::: {.callout-note}
+# Question 5
+
 Specify a model in which `reading_1` and `school_ses` interact.
 
 Call your model `m_read_2_5`
+
+Does Model 5 fit better than Model 4?
 :::
 
-::: hint
-**Hint**: If X is L1 and A is L2, the cross-level interaction is specified like so:
+:::{.callout-tip collapse=true}
+# Hint (click to see)
+
+If X is L1 and A is L2, the cross-level interaction is specified like so:
 
 `Y ~ 1 + X * A + (1 + X | cluster_id )`
 :::
 
-::: question
-**Question 5**: Does Model 5 fit better than Model 4?
+::: {.callout-note}
+# Question 6
+
+Compared to Model 0, by how much is level-2 variance reduced by model 5?
 :::
 
-::: question
-**Question 6**: Compared to Model 0, by how much is level-2 variance reduced by model 5?
-:::
+:::{.callout-tip collapse=true}
+# Hint (click to see)
 
-::: hint
 For this question and the next, use the `variance_reduction` function created earlier.
 :::
 
-::: question
-**Question 7**: Compared to Model 0, by how much is level-1 variance reduced by model 5?
+::: {.callout-note}
+# Question 7
+
+Compared to Model 0, by how much is level-1 variance reduced by model 5?
 :::
 
-::: question
-**Question 8**: What is your overall interpretation of these data?
+::: {.callout-note}
+# Question 8
+
+What is your overall interpretation of these data?
 :::
 
-Some plots that might aid your interpretation:
+Run this code to see some plots that might aid your interpretation:
 
-```{r hints, eval=FALSE}
+```{r hintsplots}
+#| eval: false
 # Fixed effects only
 sjPlot::plot_model(m_read_2_5,
   type = "pred",
@@ -1637,15 +1687,11 @@ sjPlot::plot_model(m_read_2_5,
 ) +
   scale_y_continuous(limits = c(-4, 4))
 
-# Random effects
+# Random effects only
 augment(m_read_2_5) %>%
   ggplot(aes(reading_1, reading_2, color = school_ses)) +
   geom_point(size = 0.2, alpha = 0.3) +
   geom_line(aes(y = .fitted, group = school_id), size = 0.2) +
   scale_color_viridis_c() +
-  theme(
-    panel.background = element_rect(fill = "black"),
-    panel.grid = element_line(color = "gray")
-  ) +
   coord_fixed()
 ```
