@@ -1,0 +1,1651 @@
+---
+title: "Random Slopes"
+author: "W. Joel Schneider"
+date: "Advanced Data Analysis (EDUC 8825)"
+engine: knitr
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
+      
+format: 
+  html: 
+    html-math-method: mathjax
+    fig-height: 8
+    fig-width: 8
+    theme: journal
+    toc: true
+    toc-float: true
+    toc-location: left
+    tbl-cap-location: margin
+    fig-cap-location: margin
+    # css: tutorial.css
+bibliography: 
+  - references.bib
+  - grateful-refs.bib
+
+csl: "https://www.zotero.org/styles/apa"
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+# knitr::opts_chunk$set(
+#   warning = F,
+#   message = F,
+#   echo = TRUE,
+#   cache = T,
+#   dev = "ragg_png"
+# )
+options(digits = 3, knitr.kable.NA = "")
+
+library(tidyverse) # Data wrangling and visualization
+library(lme4) # Multilevel modeling
+library(broom.mixed) # Model information
+library(easystats) # Model information and visualization
+library(sjPlot) # Model plots and tables
+library(gt)
+library(ggdiagram)
+library(sjPlot)
+
+options(digits = 4)
+# bg_color <- "#ECE5D3"
+# fore_color <- "#2D2718"
+# line_color <- "#7C4728"
+# area_color <- "#624E3E"
+myfont <- "Roboto Condensed"
+#
+# ggplot2::update_geom_defaults("label", list(family =  myfont))
+# ggplot2::update_geom_defaults("text", list(family =  myfont))
+# ggplot2::update_geom_defaults("point", list(colour =  fore_color))
+# ggplot2::update_geom_defaults("line", list(colour =  line_color))
+# ggplot2::update_geom_defaults("smooth", list(colour =  line_color))
+# ggplot2::update_geom_defaults("area", list(fill = area_color))
+# ggplot2::update_geom_defaults("density", list(fill = area_color))
+# ggplot2::theme_set(ggplot2::theme_grey(base_size = 18, base_family = myfont) + ggplot2::theme(
+# panel.background = ggplot2::element_rect(bg_color)))
+theme_set(theme_minimal(base_size = 16, base_family = myfont))
+```
+
+This is a long tutorial. Don't let that scare you. Once understood, the analyses themselves do not take that much time or effort to complete. My goal here is to give you a sense of your options when conducting analyses like these.
+
+# Load packages
+
+```{r loadlibrary, eval=FALSE}
+library(tidyverse) # Data wrangling and visualization
+library(lme4) # Multilevel modeling
+library(broom.mixed) # Model information
+library(easystats) # Model information and visualization
+library(sjPlot) # Model plots and tables
+```
+
+# Data Description
+
+Suppose that statewide reforms in reading instruction appear to be successful in improving reading test scores, particularly in low-SES schools. We are not going to do a longitudinal analysis just yet. Here we are going to concentrate on understanding the relationships among reading scores and socioeconomic status.
+
+```{r tbl-data}
+#| tbl-cap: Reading Scores Data Set Description
+#| echo: false
+
+tibble::tribble(
+  ~Variable, ~Description,
+  "`school_id`",  "A code for the school",
+  "`reading_1`",  "Each student’s reading test score in z-score units last year before the reform.",
+  "`reading_2`",  "Each student’s reading test score in z-score units this year after the reform.",
+  "`school_ses`", "Each school’s average level of socioeconomic status, measured in z-score units"
+) %>%
+  gt() %>%
+  gt::fmt_markdown(1) %>%
+  tab_options(table.width = "100%", 
+              quarto.disable_processing = TRUE, 
+              table_body.hlines.style = "none")
+```
+
+# Import data
+
+```{r importdata, warning=FALSE, cache=TRUE}
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/dhw4.csv") %>%
+  mutate(school_id = factor(school_id) %>%
+    fct_reorder(school_ses, mean))
+```
+
+Note that we have reordered the `school_id` factor by the `school_ses` variable. Doing so will make plotting the effects of SES easier.
+
+Let's view our data:
+
+```{r datahead}
+head(d)
+```
+
+# Analysis Plan
+
+-   Modeling Sequence for Time 1 Reading
+    0.  Random Intercepts
+    1.  Mean SES Fixed Effect
+-   Modeling Sequence for Time 2 Reading
+    0.  Random Intercepts
+    1.  Time 1 Reading Fixed Effect
+    2.  Mean SES Fixed Effect
+    3.  Random Slopes for Time 1 Reading
+    4.  Correlation between Random Slopes and Intercepts
+    5.  Time 1 Reading and Mean SES Interaction
+
+Why is the modeling sequence so much more complicated for Reading at Time 2 comparing the modeling sequence for Reading at Time 1? Reading at Time 1 can only have a Level-2 covariate, which does not allow for random slopes. The introduction of a Level-1 covariate for Reading at Time 2 allows for the possibility of random slopes and correlations between slopes and intercepts. Having both a level-1 and level-2 predictor allows for cross-level interaction effects. That is, the effect of a level-1 predictor might depend on the value of a level-2 predictor.
+
+Amazingly enough, this would be considered a fairly simple analysis plan. It seems like a lot, but when there are many predictors, the number of analysis options increases exponentially. In general, I endorse the following sequence:
+
+1.  Random Intercepts
+2.  Level 1 fixed effects
+3.  Level 1 interaction effects
+4.  Level 2 fixed effects
+5.  Level 2 interaction effects
+6.  Level 1 random slopes
+7.  Correlations between slopes and intercepts
+8.  Interactions between level 1 and level 2 variables (cross-level interactions)
+
+This sequence is not sacred. If you have good reasons to alter it, you may do so without raising any eyebrows.
+
+# Predicting Time 1 Reading
+
+If we want to understand how reading at time 1 (reading~1~) affects reading at time 2 (reading~2~), it can be helpful to model reading~1~ first. For example, we might find that after controlling for reading~1~, socioeconomic status (SES) has a direct effect on reading~2~. If we do not model reading~1~, we might not realize that much of SES's effect on reading is obscured because it also has indirect effects via reading~1~.
+
+## Reading~1~ Model 0: Random Intercepts
+
+First we start modeling reading~1~ with our multilevel "null" model: random intercepts. We will the model equations, then a table with a description of all symbols, then a visual representation fo the model in the form of a path diagram.
+
+### Model 0 Equations
+
+$$
+\begin{aligned}
+\textbf{Level 1:}\\
+Reading_{ij1} &= \beta_{0j}+e_{ij}\\
+e_{ij}&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+u_{0j}\\
+u_{0j}&\sim \mathcal{N}(0,\tau_{00})\\
+\textbf{Combined:}\\
+Reading_{ij1} &= \underbrace{\gamma_{00}+u_{0j}}_{\beta_{0j}}+e_{ij}
+\end{aligned}
+$$
+
+### Model 0 Fully Annotated
+
+@tbl-read1 explains the meaning of the symbols in the Model 0 equations. The symbols I do not explain repeatedly are $\sim$ ("is distributed as.") and $\mathcal{N}$ (normal disbribution). Thus, $X\sim\mathcal{N}(\mu, \sigma^2)$ means $X$ is a normally distributed random variable with mean $\mu$ and variance $\sigma^2$.
+
+```{r tbl-read1}
+#| tbl-cap: Random Intercepts Model for Reading at Time 1
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij1}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$u_{0j}$",
+    "$\\tau_{00}$"
+    
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 1",
+    "Random intercept for class $j$. In this model, it represents the classroom mean for class $j$",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is the overall classroom mean for Time 1 Reading",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$. It is the deviation of classroom $j$, from the overall fixed intercept *&gamma;*~00~",
+    "Variance of $u_{0j}$"),
+  level = paste0("Level ", c(1,1,1,1,2,2,2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md("$$\\begin{aligned}
+  \\textbf{Level 2}\\\\
+  \\beta_{0j}&=\\gamma_{00}+u_{0j}\\\\
+  u_{0j}&\\sim \\mathcal{N}(0,\\tau_{00})
+  \\end{aligned}$$"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md("$$\\begin{align*}
+  \\textbf{Level 1}\\\\
+Reading_{ij1} &= \\beta_{0j}+e_{ij}\\\\
+e_{ij}&\\sim \\mathcal{N}(0,\\sigma_e^2)\\end{align*}$$"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md("$$\\begin{align*}
+\\textbf{Combined Model}\\\\
+Reading_{ij1} &= \\underbrace{\\gamma_{00}+u_{0j}}_{\\beta_{0j}}+e_{ij}
+\\end{align*}$$")) %>% 
+gt::tab_stubhead("Level")
+```
+
+### Model 0 Path Diagram
+
+Sometimes equations can be overwhelming, especially for complex models. It can help to visualize a model as a path diagram like @fig-read1.
+
+```{r fig-read1}
+#| fig-cap: Path Diagram for Reading Time 1 Random Intercepts Model
+#| fig-width: 8
+#| fig-height: 4.5
+#| code-fold: true
+
+# ggdiagram is an experimental package that can be installed 
+# remotes::install_github("wjschne/ggdiagram")
+
+my_intercept <- redefault(
+  ob_ngon,
+  radius = .7,
+  angle = 90,
+  fill = NA,
+  color = "black",
+  label = "1~1~",
+  vertex_radius = unit(0.5, "mm")
+)
+
+my_path <- redefault(connect, resect = 2)
+
+
+my_error <- redefault(ob_circle, radius = .5)
+my_error_variance <- redefault(ob_variance,
+    resect = 1,
+    linewidth = .4,
+    theta = 60,
+    looseness = 1.5,
+    where = "right"
+  )
+my_error_variance_label <- redefault(
+  ob_latex,
+  tex = r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})",
+  width = .3,
+  family = myfont,
+  filename = "sigma_e_2",
+  force_recompile = F,
+  delete_files = F
+)
+
+my_path_label <- redefault(ob_label,
+        size = 13,
+        angle = 0,
+        position = .45,
+        label.padding = margin(1, 1, 1, 1)
+      )
+
+my_coefficient <- redefault(ob_circle, radius = .4, fill = "white")
+my_residual <- redefault(ob_circle, radius = .3, fill = "white")
+my_residual_label <- redefault(ob_label, size = 13)
+my_residual_variance <- redefault(
+  ob_variance,
+  resect = 1,
+  linewidth = .4,
+  theta = 60,
+  looseness = 2,
+  where = "right"
+)
+my_residual_variance_label <- redefault(
+  ob_label,
+  size = 13,
+  label.padding = margin(l = 1, r = 1, t = 1, b = 1),
+  position = .5
+)
+my_observed <- redefault(ob_ellipse, m1 = 20)
+my_observed_label <- redefault(ob_label, size = 22, fill = NA)
+
+my_observed_l2 <- redefault(ob_ellipse, m1 = 20, a = .7, b = .7)
+
+
+p_read1 <- ggdiagram(myfont, font_size = 16) +
+  {read_1 <- my_observed(label = my_observed_label("*Reading*~*1ij*~"))} +
+  {i_1 <- my_intercept(label = "1~1~") %>% 
+    place(read_1, "left", 3)} +
+  {i12read1 <- my_path(i_1, read_1)} +
+  {b_0j <- my_coefficient(
+    center = midpoint(i12read1),
+    label = "*&beta;*~0*j*~")} +
+  {i_2 <- my_intercept(label = "1~2~") %>% 
+    place(b_0j, "above", 1.3)} +
+  {i12read1 <- my_path(
+      i_2,
+      b_0j,
+      label = my_path_label("*&gamma;*~00~")
+    )} +
+  {e <- my_error(label = "*e*~*ij*~") %>% 
+    place(read_1, "right", .6)} +
+  my_path(e, read_1) +
+  {e_var <- my_error_variance(e)} +
+  {u_0j <- my_residual(label = my_residual_label("*u*~0*j*~")) %>% 
+    place(b_0j, "below", .6)} +
+  my_residual_variance(
+    u_0j,
+    "below",
+    label = my_residual_variance_label("*&tau;*~00~")
+  ) +
+  my_path(u_0j, b_0j) +
+  my_error_variance_label(center = e_var@midpoint())
+
+p_read1
+```
+
+Path models have these characteristics:
+
+-   Observed variables are squares/rectangles.
+-   Latent variables and residuals are circles/ellipses.
+-   Regression coefficients are single-headed arrows leading from predictor to outcome.
+-   Covariances are double-headed arrows between two variables.
+-   Variances are double-headed arrows leading back to the same variable.
+-   Intercepts/means are triangles with a "1" as a label.
+-   Random coefficients are circles that lie on a path.
+
+The idea of representing random coefficients as latent variables (circles) on paths was proposed by @curran2007.
+
+## Reading~1~ Model 0 in R
+
+The `lmer` function from the lme4 package [@lme4] specifies model formulas with fixed effects listed in the same way as in the `lm` function (ordinary least squares linear model) and random effects listed inside parentheses, with the grouping variable listed after a post symbol (`|`). Consider this model:
+
+`Y ~ 1 + X + (1 + X | group)`
+
+![Annotated formula for `lmer` models](annotatedequation.svg){#fig-annotated width=100%}
+
+
+```{r m10}
+m_read_1_0 <- lmer(reading_1 ~ 1 + (1 | school_id), d)
+```
+
+::: column-margin
+The fixed intercept is optional, but I like to include it for clarity. Omitting the fixed intercept looks like this:
+
+```{r m10alt}
+#| eval: false
+lmer(reading_1 ~ (1 | school_id), d)
+```
+:::
+
+In R, an outcome variable is placed on the left hand side of the tilde `~`. The first `1` means to specify an overall fixed intercept. The parentheses indicate a random effect. The `1` inside the parentheses means that a random intercept should be specified by the grouping variable, `school_id`.
+
+Now we can use various tools to inspect the overall results
+
+### Check Assumptions
+
+```{r fig-m10check, cache=TRUE}
+#| fig-cap: Check assumptions for reading time 1 null model
+check_model(m_read_1_0)
+```
+
+Nothing in the diagnostic plots in @fig-m10check raises concerns.
+
+### Evaluate Model
+
+As always, we can get a quick summary of the model like so:
+
+```{r m10summary}
+summary(m_read_1_0)
+```
+
+An overall automated report:
+
+```{r m10report}
+report(m_read_1_0) 
+```
+
+There is not much to comment on here because this model does not attempt to explain anything. It will be a basis of comparison for the next model.
+
+We can get a quick look at some performance metrics:
+
+```{r m10performance}
+performance(m_read_1_0)
+```
+
+The ICC for this model suggests that schools are highly segregated by reading ability. That is, variation by classroom accounts for `r scales::percent(performance(m_read_1_0)$ICC)` of the variance in reading~1~.
+
+The `sjPlot:tab_model` function can produce a table that is very close to publication-ready:
+
+```{r tbl-m10table}
+#| tbl-cap: Model summary for reading time 1 null model
+tab_model(m_read_1_0)
+```
+
+## Reading~1~ Model 1: L2 Covariate
+
+This model builds upon the previous model by adding the classroom's average socioeconomic status (SES) variable as a covariate. Because average SES varies by classroom instead of by individual, it is a level-2 covariate. It can be thought of as a predictor of the random intercept. Because the random intercept represents the classroom mean, the level 2 equation in this model is sometimes revered to as a *means-as-outcomes* model.
+
+Note that SES's coefficient is *γ*~01~. The subscript of coefficient, 01, has a 0 in the first position, which tells us that this is a predictor of the random intercept (*β*~0*j*~). The 1 in the second position in the subscript tell us that this is the first predictor of the *β*~0*j*~.
+
+$$
+\begin{align}
+\textbf{Level 1:}\\
+Reading_{ij1} &= \beta_{0j}+e_{ij}\\
+e&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+u_{0j}&\sim \mathcal{N}(0,\tau_{00})\\
+\textbf{Combined:}\\
+Reading_{ij1} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+e_{ij}
+\end{align}
+$$
+
+```{r tbl_read1L2}
+#| tbl-cap: "Reading Time 1 Model 1: Model 0 + Level 2 SES"
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij1}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$\\gamma_{01}$",
+    "$u_{0j}$",
+    "$\\tau_{00}$"
+    
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 1",
+    "Random intercept for class $j$. In this model, it represents the classroom mean for class $j$",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is predicted classroom mean for Reading~1~ when SES is 0.",
+    "Fixed Effect for SES. It represents the predicted increase in the classroom mean for Reading~1~ when SES increases by 1.",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$. It is the deviation of classroom $j$, from the overall fixed intercept *&gamma;*~00~",
+    "Variance of $u_{0j}$"),
+  level = paste0("Level ", c(1,1,1,1,2,2,2, 2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md("$$\\begin{aligned}
+  \\textbf{Level 2}\\\\
+  \\beta_{0j}&=\\gamma_{00}+\\gamma_{01}SES_j+u_{0j}\\\\
+  u_{0j}&\\sim \\mathcal{N}(0,\\tau_{00})
+  \\end{aligned}$$"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md("$$\\begin{align*}
+  \\textbf{Level 1}\\\\
+Reading_{ij1} &= \\beta_{0j}+e_{ij}\\\\
+e_{ij}&\\sim \\mathcal{N}(0,\\sigma_e^2)\\end{align*}$$"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md("$$\\begin{align*}
+\\textbf{Combined Model}\\\\
+Reading_{ij1} &= \\underbrace{\\gamma_{00}+\\gamma_{01}SES_j+u_{0j}}_{\\beta_{0j}}+e_{ij}
+\\end{align*}$$")) %>% 
+gt::tab_stubhead("Level")
+
+```
+
+```{r fig-read1L2}
+#| fig-cap: Reading Time 1 Model 0 + Level 2 SES
+#| fig-width: 8
+#| fig-height: 4.5
+#| code-fold: true
+p_read1 +
+  {SES <- my_observed_l2(
+    center = i_2 %-|% i_1,
+    label = my_observed_label("*SES*~*j*~", vjust = .6))} + 
+  my_path(SES@point_at("southeast"), 
+          b_0j, 
+          label = my_path_label("*&gamma;*~01~"))
+```
+
+### Exploratory Plot for Reading~1~
+
+It helps to get a rough plot to see what is happening. Let's create and informal plot of `school_ses` with `reading_1`. We display individual reading scores as little points and the means for each school with big dots and error bars.
+
+```{r fig-m10plot}
+#| fig-cap: Mean SES predicting reading time 1
+d %>%
+  ggplot(aes(school_ses, reading_1, color = school_id)) +
+  geom_point(size = 0.1, alpha = 0.3) +
+  stat_summary(fun.data = mean_se) +
+  geom_smooth(color = "black", method = "lm", formula = "y ~ x") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(x = "School SES", y = "Reading at Time 1")
+```
+
+In @fig-m10plot we see that `school_ses` and `reading_1` are correlated. Why are all the data in columns? Because `school_ses` is the mean SES for each school. Every child in the same school has the same `school_ses`.
+
+### Model Summary
+
+We can create the model from scratch:
+
+```{r m11, eval=FALSE}
+m_read_1_1 <- lmer(reading_1 ~ school_ses + (1 | school_id), d)
+```
+
+Alternately, we can update the previous model, which is usually safer:
+
+```{r m11update}
+m_read_1_1 <- update(m_read_1_0, . ~ . + school_ses)
+```
+
+The model can be summarized in many ways:
+
+```{r m11summary}
+summary(m_read_1_1)
+sjPlot::tab_model(m_read_1_1)
+performance(m_read_1_1)
+parameters(m_read_1_1)
+report(m_read_1_1)
+```
+
+The slope for school_ses is statistically significant and explains significant variance in `reading_1`.
+
+### Compare model fit
+
+We have many options for comparing models:
+
+```{r m11compare}
+compare_models(m_read_1_0, m_read_1_1)
+sjPlot::tab_model(m_read_1_0, m_read_1_1)
+anova(m_read_1_0, m_read_1_1)
+compare_performance(m_read_1_0, m_read_1_1)
+test_performance(m_read_1_0, m_read_1_1)
+lmerTest::ranova(m_read_1_1)
+```
+
+Using `school_ses` as an L2 covariate, Model 1 fits significantly better than Model 0.
+
+When in doubt, the `anova` results are the most common way of comparing models. The comparison only works if you are comparing nested models with exactly the same data. The `anova` function will warn you if you add a predictor with missing data that causes the comparison to be misleading.
+
+The AIC weights are probably your next best option, especially for comparing non-nested models. Here, our models are nested.
+
+### Nested or Non-Nested?
+
+If you create one model from another by adding one or more features, the models are *nested*. If you create one model from another by adding some features AND removing other features, the models are *non-nested*.
+
+#### Nested Models
+
+Model 1: `Y ~ A`\
+Model 2: `Y ~ A + B`
+
+These models are nested because we added predictor `B` to the first model.
+
+These models are also nested because we are adding a random intercept:
+
+Model 1: `Y ~ A`\
+Model 2: `Y ~ A + (1 | id)`
+
+Nested models can differ by more than one feature. For example, the following models are nested because we add predictor `B` and the random slope for `A`:
+
+Model 1: `Y ~ A + (1 | id)`\
+Model 2: `Y ~ A + B + (1 + A | id)`
+
+#### Non-nested Models
+
+Model 1: `Y ~ A`\
+Model 2: `Y ~ B`
+
+These models are non-nested because we add predictor `B` AND remove predictor `A`.
+
+Model 1: `Y ~ A + (1 + A | id)`\
+Model 2: `Y ~ A + B + (1 | id)`
+
+These models are non-nested because we add predictor `B` but remove the random slopes for `A`
+
+### Check Conditional intraclass correlation coefficient and variance explained
+
+```{r m11icc}
+performance::icc(m_read_1_1)
+```
+
+It looks like the conditional ICC is much lower than before.
+
+```{r m11r2}
+performance::r2(m_read_1_1)
+```
+
+It looks like the school SES explained a lot of variance.
+
+How much does the level-2 random intercept variance $(\tau_{00})$ shrink when we compare the two models we have run so far:
+
+$$
+\Delta R_2^2 = \frac{\tau_{00_0}-\tau_{00_1}}{\tau_{00_0}}
+$$
+
+We can also see how much variance was reduced in the level-1 residuals. The level-1 variance reduction is calculated like so:
+
+$$
+\Delta R_1^2 = \frac{\sigma_0^2-\sigma_1^2}{\sigma_0^2}
+$$
+
+I do not want to perform this calculation by hand, so I will make a function that automates the process:
+
+```{r variancereduction}
+# Function to calculate variance reduction for levels 1 and 2
+variance_reduction <- function(m1, m2) {
+  tau_00_1 <- get_variance_random(m1)
+  tau_00_2 <- get_variance_random(m2)
+  level2_reduction <- (tau_00_1 - tau_00_2) / tau_00_1
+
+  sigma_1 <- get_sigma(m1)
+  sigma_2 <- get_sigma(m2)
+  level1_reduction <- (sigma_1 - sigma_2) / sigma_1
+
+  tibble(
+    level = c(1, 2),
+    model_1_variance = c(sigma_1, tau_00_1),
+    model_2_variance = c(sigma_2, tau_00_2),
+    variance_reduction = c(level1_reduction, level2_reduction)
+  )
+}
+
+variance_reduction(m_read_1_0, m_read_1_1)
+```
+
+It looks like school SES explained a good bit of the level-2 intercept variability.
+
+Because the school SES variable is a level-2 covariate, it cannot reduce level-1 residual variance.
+
+## Formal plot for Model 2
+
+The `sjPlot::plot_model` function is a quick and easy way to create models of fixed effects.
+
+```{r m11plot}
+sjPlot::plot_model(m_read_1_1, type = "pred", terms = "school_ses") +
+  coord_fixed(xlim = c(-2, 2),
+              ylim = c(-2, 2))
+```
+
+## Overall interpretation
+
+It appears that schools vary greatly by their average `reading_1` scores. Almost half of this variability is explained by the school's average SES, which is positively associated with `reading_1`.
+
+# Predicting Time 2 Reading
+
+Now we turn our attention to the reading comprehension at Time 2 variable, `reading_2`. We start with random intercepts and, as needed, add level 1 fixed effects, level 2 fixed effects, random slopes, and cross-level interaction effects.
+
+## Reading 2 Model 0: Random Intercepts
+
+$$
+\begin{align}
+\textbf{Level 1:}\\
+Reading_{ij2} &= \beta_{0j}+e_{ij}\\
+e&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+u_{0j}\\
+u_{0j}&\sim \mathcal{N}(0,\tau_{00})\\
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+u_{0j}}_{\beta_{0j}}+e_{ij}
+\end{align}
+$$
+
+```{r tbl-read2}
+#| tbl-cap: "Reading at Time 2 Model 0: Random Intercepts"
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij2}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$u_{0j}$",
+    "$\\tau_{00}$"
+    
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 2",
+    "Random intercept for class $j$. In this model, it represents the reading~2~ classroom mean for class $j$",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is the overall classroom mean for Time 2 Reading",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$. It is the deviation of classroom $j$, from the overall fixed intercept *&gamma;*~00~",
+    "Variance of $u_{0j}$"),
+  level = paste0("Level ", c(1,1,1,1,2,2,2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md("$$\\begin{aligned}
+  \\textbf{Level 2}\\\\
+  \\beta_{0j}&=\\gamma_{00}+u_{0j}\\\\
+  u_{0j}&\\sim \\mathcal{N}(0,\\tau_{00})
+  \\end{aligned}$$"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md("$$\\begin{align*}
+  \\textbf{Level 1}\\\\
+Reading_{ij2} &= \\beta_{0j}+e_{ij}\\\\
+e_{ij}&\\sim \\mathcal{N}(0,\\sigma_e^2)\\end{align*}$$"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md("$$\\begin{align*}
+\\textbf{Combined Model}\\\\
+Reading_{ij2} &= \\underbrace{\\gamma_{00}+u_{0j}}_{\\beta_{0j}}+e_{ij}
+\\end{align*}$$")) %>% 
+gt::tab_stubhead("Level")
+
+```
+
+```{r fig-read2}
+#| fig-cap: Path Diagram for Reading Time 2 Random Intercepts Model
+#| fig-width: 8
+#| fig-height: 4.5
+#| code-fold: true
+p_read1 + 
+  my_observed(label = my_observed_label("*Reading*~*2ij*~"),
+              center = read_1@center, 
+              fill = "white")
+```
+
+```{r m20summary}
+m_read_2_0 <- lmer(reading_2 ~ 1 + (1 | school_id), d)
+summary(m_read_2_0)
+sjPlot::tab_model(m_read_2_0)
+performance(m_read_2_0)
+parameters(m_read_2_0)
+report(m_read_2_0)
+```
+
+### Check model assumptions
+
+```{r m20check, cache=TRUE}
+check_model(m_read_2_0)
+```
+
+All is well.
+
+### Check Intraclass correlation coefficient
+
+```{r m20icc}
+performance::icc(m_read_2_0)
+```
+
+The ICC for this model suggests that schools are highly segregated by reading ability. Because there are no fixed effects in the random intercepts model, the adjusted and conditional ICC are the same.
+
+### Variance Explained
+
+```{r m20r2}
+performance::r2(m_read_2_0)
+```
+
+The conditional $R^2$ tells us the proportion of variance in the outcome variable explained by the grouping structure (i.e., the fact that each class has its own intercept) and the fixed effects. Because random intercepts models have no fixed effects, the conditional $R^2$ and the ICC are the same.
+
+The marginal $R^2$ tells us the proportion of variance in the outcome variable explained by the fixed effects. For random intercepts models, the marginal $R^2$ is 0 because there are no fixed effects.
+
+## Reading 2 Model 1: Level-1 Fixed Effects (Reading~1~)
+
+In the prediction of `reading_2`, we have an important level-1 covariate---`reading_1`.
+
+$$
+\begin{align}
+\textbf{Level 1:}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+u_{0j}\\
+\beta_{1j}&=\gamma_{10}\\
+u_{0j}&\sim \mathcal{N}(0,\tau_{00})\\
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+u_{0j}}_{\beta_{0j}}+\underbrace{\gamma_{10}}_{\beta_{1j}}Reading_{ij1}+e_{ij}\\
+&\text{Fixed vs. Random Effects}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{10}Reading_{ij1}}_{\text{Fixed}}+\underbrace{u_{0j}}_{\text{L2 Random}}+e_{ij}
+\end{align}
+$$
+
+```{r tbl-read2L1}
+#| tbl-cap: "Reading at Time 2 Model 1: Model 0 + L1 Covariate (Reading~1~)"
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij2}$",
+    "$\\beta_{0j}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$\\gamma_{10}$",
+    "$u_{0j}$",
+    "$\\tau_{00}$"
+    
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 2",
+    "Random intercept for class $j$. In this model, it represents the reading~2~ classroom mean for class $j$ when reading~1~ is 0.",
+    "Slope for reading~1~ for class $j$. In this model, however, there are no random slopes. Thus, the slope for every classroom is the same: $\\beta_{1j} = \\gamma_{10}$.",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is the predicted Time 2 Reading when reading~1~ is zero.",
+    "Fixed slope for reading~1~. When reading~1~ increates by 1, reading~2~ is expected to increase by this amount.",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$. It is the deviation of classroom $j$, from the overall fixed intercept *&gamma;*~00~",
+    "Variance of $u_{0j}$"),
+  level = paste0("Level ", c(1,1,1,1,1,2,2,2,2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md("$$\\begin{aligned}
+  \\textbf{Level 2}\\\\
+  \\beta_{0j}&=\\gamma_{00}+u_{0j}\\\\
+  \\beta_{1j}&=\\gamma_{10}\\\\
+  u_{0j}&\\sim \\mathcal{N}(0,\\tau_{00})
+  \\end{aligned}$$"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md("$$\\begin{align*}
+  \\textbf{Level 1}\\\\
+Reading_{ij2} &= \\beta_{0j}+\\beta_{1j}Reading_{ij1}+e_{ij}\\\\
+e_{ij}&\\sim \\mathcal{N}(0,\\sigma_e^2)\\end{align*}$$"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md(r"($$\begin{align*}
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+u_{0j}}_{\beta_{0j}}+\underbrace{\gamma_{10}}_{\beta_{1j}}Reading_{ij1}+e_{ij}\\
+&\text{Fixed vs. Random Effects}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{10}Reading_{ij1}}_{\text{Fixed}}+\underbrace{u_{0j}}_{\text{L2 Random}}+e_{ij}
+\end{align*}$$)")) %>% 
+gt::tab_stubhead("Level")
+
+```
+
+```{r fig-read2L1}
+#| fig-cap: Reading Time 2 Random Intercepts Model + Level 1 Covariate
+#| fig-width: 8
+#| fig-height: 4.5
+#| code-fold: true
+p_read2L1 <- ggdiagram(myfont, font_size = 16) +
+  {read_2 <- my_observed(
+    label = my_observed_label("*Reading*~*2ij*~"))} +
+  {read_1 <- my_observed(
+    label = my_observed_label("*Reading*~*1ij*~")) %>% 
+    place(read_2, "left", 5)} +
+  {i_1 <- my_intercept(label = "1~1~") %>% 
+    place(read_1, "above", 2.9)} +
+  {i12read2 <- my_path(i_1, read_2)} +
+  {r1r2 <- my_path(read_1, read_2)} +
+  {b_0j <- my_coefficient(
+      center = midpoint(i12read2, position = .25),
+      label = "*&beta;*~0*j*~"
+    )} +
+  {b_1j <- my_coefficient(
+      center = midpoint(r1r2, position = .65),
+      label = "*&beta;*~1*j*~"
+    )} +
+  {i_2 <- my_intercept(
+    label = "1~2~", 
+    center = intersection(
+      rotate(i12read2@line, 
+             theta = turn(-.25), 
+             origin = b_0j@center),
+      ob_line(xintercept = b_1j@center@x)))} +
+  {i22b0j <- my_path(
+      i_2,
+      b_0j,
+      label = my_path_label(
+        "*&gamma;*~00~")
+  )} +
+  {i22b1j <- my_path(
+      i_2,
+      b_1j,
+      label = my_path_label(
+        "*&gamma;*~10~")
+    )} +
+  {e <- my_error(label = "*e*~*ij*~", radius = .5) %>% 
+    place(read_2, "right", .6)} +
+  my_path(e, read_2) +
+  {e_var <- my_error_variance(e)} +
+  {u_0j <- my_residual(label = my_residual_label("*u*~0*j*~")) %>% 
+    place(b_0j, i12read2@line@angle - turn(.25), .6)} +
+  my_residual_variance(
+    u_0j,
+    i12read2@line@angle - turn(.25),
+    label = my_residual_variance_label(
+      "*&tau;*~00~")
+  ) +
+  my_path(u_0j, b_0j) +
+  my_error_variance_label(center = e_var@midpoint()) 
+
+p_read2L1
+```
+
+Note that $\beta_{1j}$ could have been random, but it is equal to the constant $\gamma_{10}$ in this model.
+
+### Exploratory Plot for Reading~1~ predicting Reading~2~
+
+It helps to get an exploratory plot to see what is happening. This is not the model 1 plot. I am letting the data speak.
+
+The schools with the lighter (yellower) regression lines have higher SES.
+
+```{r reading2plot}
+d %>%
+  ggplot(aes(reading_1, reading_2, color = school_ses)) +
+  geom_point(size = 0.5,
+             alpha = 0.3,
+             shape = 16) +
+  geom_smooth(
+    aes(color = school_ses, group = school_id),
+    method = "lm",
+    se = F,
+    linewidth = 0.25,
+    alpha = 0.5
+  ) +
+  geom_smooth(color = "black",
+              method = "lm",
+              se = F) +
+  scale_color_viridis_c("School\nSES") +
+  labs(x = "Reading (Time 1)", y = "Reading (Time 2)", caption = "") 
+```
+
+Interesting...
+
+To my eye, it looks like `reading_1` and `reading_2` are correlated, but less so in schools with high SES.
+
+Let's model it formally. First, we add the L1 covariate `reading_1` to our model.
+
+### Model Summary
+
+```{r m21summary}
+m_read_2_1 <- update(m_read_2_0, . ~ . + reading_1)
+summary(m_read_2_1)
+report(m_read_2_1)
+performance(m_read_2_1)
+parameters(m_read_2_1)
+
+```
+
+Clearly, `reading_1` is a significant covariate.
+
+### Compare model fit
+
+```{r m21compare}
+compare_models(m_read_2_0, m_read_2_1)
+compare_performance(m_read_2_0, m_read_2_1)
+test_likelihoodratio(m_read_2_0, m_read_2_1)
+test_performance(m_read_2_0, m_read_2_1)
+```
+
+Using reading_1 as an L1 covariate, the model fits significantly better.
+
+### Check the variance explained
+
+```{r m21r2}
+performance::r2(m_read_2_1)
+```
+
+In this model, the `reading_1` covariate explained `r scales::number(performance::r2(m_read_2_1)$R2_marginal, 0.01)` of variance in `reading_2`.
+
+We can also see how much variance was reduced in the levels 1 and 2 residuals.
+
+```{r m21varreduction}
+variance_reduction(m_read_2_0, m_read_2_1)
+```
+
+It looks like `reading_1` explained substantial amounts of variance in residuals at both levels.
+
+### Formal plot for model 1
+
+Quick plot of fixed effects only:
+
+```{r m21plot}
+sjPlot::plot_model(m_read_2_1, type = "pred", terms = "reading_1")
+```
+
+To see all the data with the separate regression lines:
+
+```{r m21plotfull}
+broom.mixed::augment(m_read_2_1) %>%
+  ggplot(aes(reading_1, reading_2, color = school_id)) +
+  geom_point(size = 0.1, alpha = 0.3) +
+  geom_line(aes(y = .fitted), linewidth = 0.1) +
+  geom_line(aes(y = .fixed), linewidth = 1, color = "black") +
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
+```
+
+Note that all the regression lines are parallel. Why? Because we did not allow them to differ.
+
+## Reading 2 Model 2: Level-2 Fixed Effects
+
+Let's add `school_ses` as a level-2 covariate. In essence, we are trying to explain why the L2 random intercept $(\beta_{0j})$ differs from school to school: $\beta_{0j}=\gamma_{00}+\gamma_{01}SES_j+u_{0j}$
+
+Here is the complete model:
+
+$$
+\begin{align}
+\textbf{Level 1:}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+\beta_{1j}&=\gamma_{10}\\
+u_{0j}&\sim \mathcal{N}(0,\tau_{00})\\
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+\underbrace{\gamma_{10}}_{\beta_{1j}}Reading_{ij1}+e_{ij}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+\gamma_{10}Reading_{ij1}}_{\text{Fixed}}+\underbrace{u_{0j}}_{\text{Random}}+e_{ij}
+\end{align}
+$$
+
+```{r tbl-read2L1L1}
+#| tbl-cap: "Reading at Time 2 Model 1: Model 1 + L2 Covariate (SES)"
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij2}$",
+    "$\\beta_{0j}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$\\gamma_{01}$",
+    "$\\gamma_{10}$",
+    "$u_{0j}$",
+    "$\\tau_{00}$"
+    
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 2",
+    "Random intercept for class $j$. In this model, it represents the reading~2~ classroom mean for class $j$ when reading~1~ is 0.",
+    "Slope for reading~1~ for class $j$. In this model, however, there are no random slopes. Thus, the slope for every classroom is the same: $\\beta_{1j} = \\gamma_{10}$.",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is the predicted Time 2 Reading when reading~1~ is zero.",
+    "Fixed slope for SES. When SES increates by 1, reading~2~ is expected to increase by this amount.",
+    "Fixed slope for reading~1~. When reading~1~ increates by 1, reading~2~ is expected to increase by this amount.",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$. It is the deviation of classroom $j$, from the overall fixed intercept *&gamma;*~00~ when SES is zero.",
+    "Variance of $u_{0j}$"),
+  level = paste0("Level ", c(1,1,1,1,1,2,2,2,2,2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md("$$\\begin{aligned}
+  \\textbf{Level 2}\\\\
+  \\beta_{0j}&=\\gamma_{00}+\\gamma_{01}SES_j+u_{0j}\\\\
+  \\beta_{1j}&=\\gamma_{10}\\\\
+  u_{0j}&\\sim \\mathcal{N}(0,\\tau_{00})
+  \\end{aligned}$$"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md("$$\\begin{align*}
+  \\textbf{Level 1}\\\\
+Reading_{ij2} &= \\beta_{0j}+\\beta_{1j}Reading_{ij1}+e_{ij}\\\\
+e_{ij}&\\sim \\mathcal{N}(0,\\sigma_e^2)\\end{align*}$$"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md(r"($$\begin{align*}
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+\underbrace{\gamma_{10}}_{\beta_{1j}}Reading_{ij1}+e_{ij}\\
+&\text{Fixed vs. Random Effects}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+\gamma_{10}Reading_{ij1}}_{\text{Fixed}}+\underbrace{u_{0j}}_{\text{L2 Random}}+e_{ij}
+\end{align*}$$)")) %>% 
+gt::tab_stubhead("Level")
+
+```
+
+```{r fig-read2L1L2}
+#| fig-cap: Reading Time 2 Model with Level 1 and Level 2 Covariates
+#| fig-width: 8
+#| fig-height: 8
+#| code-fold: true
+p_read2L1L2 <- p_read2L1 +
+  {SES <- my_observed_l2(
+    center = b_0j %-|% read_2,
+    label = my_observed_label("*SES*~*j*~", vjust = .6))} + 
+  my_path(SES, b_0j, label = my_path_label("*&gamma;*~01~", position = .4))
+
+p_read2L1L2
+```
+
+Creating the entire model from scratch:
+
+```{r m22}
+m_read_2_2 <- lmer(reading_2 ~ 1 + school_ses + reading_1 + (1 | school_id), d)
+```
+
+However, updating from a previous model is generally safer:
+
+```{r m22update}
+m_read_2_2 <- update(m_read_2_1, . ~ . + school_ses)
+```
+
+```{r m22summary}
+summary(m_read_2_2)
+performance(m_read_2_2)
+parameters(m_read_2_2)
+report(m_read_2_2)
+```
+
+Compare `m_read_2_1` and `m_read_2_2` with the `anova` function.
+
+```{r m22compare}
+compare_models(m_read_2_1, m_read_2_2)
+anova(m_read_2_1, m_read_2_2)
+compare_performance(m_read_2_1, m_read_2_2)
+test_performance(m_read_2_1, m_read_2_2)
+```
+
+A quick plot of the model's fixed effects form the [sjPlot package](http://www.strengejacke.de/sjPlot/index.html):
+
+```{r m22plot}
+sjPlot::plot_model(m_read_2_2, type = "pred", terms = c("reading_1", "school_ses"))
+```
+
+The first term (`reading_1`) is on the x-axis. The second term (`school_ses`) is plotted at its mean and plus or minus 1 standard deviation.
+
+::: question
+**Question 1**: Is `school_ses` a significant predictor?
+:::
+
+::: question
+**Question 2**: Comparing Models 1 and 2, by how much did `school_ses` reduce L2 variability?
+:::
+
+::: hint
+**Hint**: Use the `variance_reduction` function defined earlier:
+
+```{r variance_reduction, eval=FALSE}
+variance_reduction(m_read_2_1, m_read_2_2)
+```
+:::
+
+## Reading 2 Model 3 = Model 2 + Random slopes uncorrelated with random intercepts
+
+$$
+\begin{align}
+\textbf{Level 1:}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+\beta_{1j}&=\gamma_{10}+u_{1j}\\
+\boldsymbol{u}&=\begin{bmatrix}
+u_{0j}\\
+u_{1j}
+\end{bmatrix}\sim \mathcal{N}\left(\begin{bmatrix}
+0\\
+0
+\end{bmatrix}
+\begin{matrix}
+\\
+,
+\end{matrix}
+\begin{bmatrix}
+\tau_{00} &\\
+0 & \tau_{11}
+\end{bmatrix}\right)\\
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+(\underbrace{\gamma_{10}+u_{1j}}_{\beta_{1j}})Reading_{ij1}+e_{ij}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+\gamma_{10}Reading_{ij1}}_{\text{Fixed Effects}}+\underbrace{u_{0j}+u_{1j}Reading_{ij1}}_{\text{Random Effects}}+e_{ij}
+\end{align}
+$$
+
+In the equations above, how can you tell that the slopes and intercepts are uncorrelated? Look at the *tau* matrix:
+
+$$
+\boldsymbol{\tau}=\begin{bmatrix}\tau_{00}&\\ 0 & \tau_{11}\end{bmatrix}
+$$
+
+Here we see that the lower right corner, the covariance between $u_{0j}$ and $u_{1j}$, $\tau_{10}$, is zero. Because the matrix is symmetric, I omitted the 0 in the upper right position.
+
+```{r tbl-read2L1L1uncorrelated}
+#| tbl-cap: "Reading at Time 2 Model 1: Model 2 + Random Slopes for Reading~1~"
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij2}$",
+    "$\\beta_{0j}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$\\gamma_{01}$",
+    "$\\gamma_{10}$",
+    "$\\boldsymbol{u}$",
+    "$u_{0j}$",
+    "$u_{1j}$",
+    "$\\tau_{00}$",
+    "$\\tau_{11}$"
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 2",
+    "Random intercept for class $j$. In this model, it represents the reading~2~ classroom mean for class $j$ when Reading~1~ is 0.",
+    "Slope for reading~1~ for class $j$.",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is the predicted Time 2 Reading when Reading~1~ is zero.",
+    "Fixed slope for SES. When SES increates by 1, Reading~2~ is expected to increase by this amount.",
+    "Fixed slope for Reading~1~. When Reading~1~ increates by 1, Reading~2~ is expected to increase by this amount.",
+    "Vector of L2 residuals",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$.",
+    "School-level (L2) residual for the random slope $\\beta_{1j}$ for Reading~1~.",
+    "Variance of $u_{0j}$",
+    "Variance of $u_{1j}$"),
+  level = paste0("Level ", c(1,1,1,1,1,2,2, 2,2,2,2,2,2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md(r"($$\begin{aligned}
+  \textbf{Level 2}\\
+  \beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+  \beta_{1j}&=\gamma_{10}\\
+  \boldsymbol{u}&=\begin{bmatrix}
+u_{0j}\\
+u_{1j}
+\end{bmatrix}\sim \mathcal{N}\left(\begin{bmatrix}
+0\\
+0
+\end{bmatrix}
+\begin{matrix}
+\\
+,
+\end{matrix}
+\begin{bmatrix}
+\tau_{00} &\\
+0 & \tau_{11}
+\end{bmatrix}\right)
+  \end{aligned}$$)"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md(r"($$\begin{align*}
+  \textbf{Level 1}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e_{ij}&\sim \mathcal{N}(0,\sigma_e^2)\end{align*}$$)"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md(r"($$\begin{align*}
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+(\underbrace{\gamma_{10}+u_{1j}}_{\beta_{1j}})Reading_{ij1}+e_{ij}\\
+&\text{Fixed vs. Random Effects}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+\gamma_{10}Reading_{ij1}}_{\text{Fixed Effects}}+\underbrace{u_{0j}+u_{1j}Reading_{ij1}}_{\text{Random Effects}}+e_{ij}
+\end{align*}$$)")) %>% 
+gt::tab_stubhead("Level")
+
+```
+
+```{r fig-read2L1L2uncorrelated}
+#| fig-cap: Reading Time 2 Model with Level 1 and Level 2 Covariates with Uncorrelated Random Intercepts and Random Slopes 
+#| fig-width: 8
+#| fig-height: 8
+#| code-fold: true
+
+p_read2L1L2uncorrelated <- p_read2L1L2 +
+  {u_1j <- my_residual(label = my_residual_label("*u*~1*j*~")) %>% 
+    place(b_1j, i12read2@line@angle - turn(.25), .6)} +
+  my_residual_variance(
+    u_1j,
+    i12read2@line@angle - turn(.25),
+    label = my_residual_variance_label(
+      "*&tau;*~11~")) +
+  my_path(u_1j, b_1j) 
+
+p_read2L1L2uncorrelated
+
+```
+
+To specify a model in which `reading_1` has random slopes uncorrelated with random intercepts requires some knowledge of lme4's formula syntax. If $X$ is L1, and $A$ is L2, $X$ has random slopes uncorrelated with random intercepts if
+
+`Y ~ 1 + X + A + (1 + X || cluster_id)`
+
+Note the double bar (`||`). It means uncorrelated slopes.
+
+Another way to specify uncorrelated slopes would be to add the intercept and the slopes separately:
+
+`Y ~ 1 + X + A + (1 | cluster_id) + (0 + X | cluster_id)`
+
+Note the use of the `0` to indicate no intercept.
+
+Here we specify Model 3:
+
+```{r m2_3}
+m_read_2_3 <- lmer(reading_2 ~ 1 + school_ses + reading_1 + (1 + reading_1 || school_id), d)
+```
+
+```{r pplot_m2_3}
+summary(m_read_2_3)
+sjPlot::tab_model(m_read_2_3)
+```
+
+Let's compare the models:
+
+```{r compare23}
+anova(m_read_2_2, m_read_2_3)
+compare_models(m_read_2_2, m_read_2_3)
+sjPlot::tab_model(m_read_2_2, m_read_2_3)
+
+compare_performance(m_read_2_2, m_read_2_3)
+test_performance(m_read_2_2, m_read_2_3)
+```
+
+::: question
+**Question 3**: Does Model 3 fit better than Model 2?
+:::
+
+## Reading 2 Model 4 = Model 3 + Random slopes correlated with random intercepts
+
+$$
+\begin{align}
+\textbf{Level 1:}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+\beta_{1j}&=\gamma_{10}+u_{1j}\\
+\boldsymbol{u}&=\begin{bmatrix}
+u_{0j}\\
+u_{1j}
+\end{bmatrix}\sim \mathcal{N}\left(\begin{bmatrix}
+0\\
+0
+\end{bmatrix}
+\begin{matrix}
+\\
+,
+\end{matrix}
+\begin{bmatrix}
+\tau_{00} & \\
+\tau_{10} & \tau_{11}
+\end{bmatrix}\right)\\
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+(\underbrace{\gamma_{10}+u_{1j}}_{\beta_{1j}})Reading_{ij1}+e_{ij}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+\gamma_{10}Reading_{ij1}}_{\text{Fixed Effects}}+\underbrace{u_{0j}+u_{1j}Reading_{ij1}}_{\text{Random Effects}}+e_{ij}
+\end{align}
+$$
+
+```{r tbl-read2L1L1correlated}
+#| tbl-cap: "Reading at Time 2 Model 1: Model 3 + correlation between random intercepts and random slopes"
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij2}$",
+    "$\\beta_{0j}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$\\gamma_{01}$",
+    "$\\gamma_{10}$",
+    "$u_{0j}$",
+    "$u_{1j}$",
+    "$\\tau_{00}$",
+    "$\\tau_{11}$",
+    "$\\tau_{10}$"
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 2",
+    "Random intercept for class $j$. In this model, it represents the reading~2~ classroom mean for class $j$ when Reading~1~ is 0.",
+    "Slope for reading~1~ for class $j$.",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is the predicted Time 2 Reading when Reading~1~ is zero.",
+    "Fixed slope for SES. When SES increates by 1, Reading~2~ is expected to increase by this amount.",
+    "Fixed slope for Reading~1~. When Reading~1~ increates by 1, Reading~2~ is expected to increase by this amount.",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$.",
+    "School-level (L2) residual for the random slope $\\beta_{1j}$ for Reading~1~.",
+    "Variance of $u_{0j}$",
+    "Variance of $u_{1j}$",
+    "Covariance of $u_{0j}$ and $u_{1j}$"),
+  level = paste0("Level ", c(1,1,1,1,1,2,2,2,2,2,2,2, 2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md(r"($$\begin{aligned}
+  \textbf{Level 2}\\
+  \beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+  \beta_{1j}&=\gamma_{10}+u_{1j}\\
+  \boldsymbol{u}&=\begin{bmatrix}
+u_{0j}\\
+u_{1j}
+\end{bmatrix}\sim \mathcal{N}\left(\begin{bmatrix}
+0\\
+0
+\end{bmatrix}
+\begin{matrix}
+\\
+,
+\end{matrix}
+\begin{bmatrix}
+\tau_{00} &\\
+\tau_{10} & \tau_{11}
+\end{bmatrix}\right)
+  \end{aligned}$$)"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md(r"($$\begin{align*}
+  \textbf{Level 1}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e_{ij}&\sim \mathcal{N}(0,\sigma_e^2)\end{align*}$$)"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md(r"($$\begin{align*}
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+(\underbrace{\gamma_{10}+u_{1j}}_{\beta_{1j}})Reading_{ij1}+e_{ij}\\
+&\text{Fixed vs. Random Effects}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+\gamma_{10}Reading_{ij1}}_{\text{Fixed Effects}}+\underbrace{u_{0j}+u_{1j}Reading_{ij1}}_{\text{Random Effects}}+e_{ij}
+\end{align*}$$)")) %>% 
+gt::tab_stubhead("Level")
+
+```
+
+```{r fig-read2L1L2correlated}
+#| fig-cap: Reading Time 2 Model with Level 1 and Level 2 Covariates with Correlated Random Intercepts and Random Slopes 
+#| fig-width: 8
+#| fig-height: 8
+#| code-fold: true
+p_read_2L1L2correlated <- p_read2L1L2uncorrelated +
+  ob_covariance(
+    u_0j@point_at("east"),
+    u_1j@point_at("north"),
+    label = my_path_label("&tau;~10~", position = .5),
+    length_head = 5,
+    length_fins = 5,
+    size = .5, 
+    looseness = 1,
+    bend = -6,
+    resect = 1
+  ) 
+
+p_read_2L1L2correlated
+```
+
+::: instruction
+Make a model in which `reading_1` has random slopes correlated with random intercepts.
+
+Call your model `m_read_2_4`.
+:::
+
+::: hint
+Hint: If X is L1 and A is L2, X has random slopes correlated with random intercepts if
+
+`Y ~ 1 + X + A + (1 + X | cluster_id )`
+
+Note the single bar (\|).
+:::
+
+::: question
+**Question 4**: Does Model 4 fit better than Model 3?
+:::
+
+## Reading 2 Model 5 = Model 4 + Cross-Level Interaction of Reading~1~ and School SES
+
+$$
+\begin{align}
+\textbf{Level 1:}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e&\sim \mathcal{N}(0,\sigma_e^2)\\
+\textbf{Level 2:}\\
+\beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+\beta_{1j}&=\gamma_{10}+\gamma_{11}SES_j+u_{1j}\\
+\boldsymbol{u}&=\begin{bmatrix}
+u_{0j}\\
+u_{1j}
+\end{bmatrix}\sim \mathcal{N}\left(\begin{bmatrix}
+0\\
+0
+\end{bmatrix}
+\begin{matrix}
+\\
+,
+\end{matrix}
+\begin{bmatrix}
+\tau_{00} & \\
+\tau_{10} & \tau_{11}
+\end{bmatrix}\right)\\
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+(\underbrace{\gamma_{10}+\gamma_{11}SES_j+u_{1j}}_{\beta_{1j}})Reading_{ij1}+e_{ij}\\
+&\text{Fixed vs. Random Effects}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+(\gamma_{10}+\gamma_{11}SES_j)Reading_{ij1}}_{\text{Fixed Effects}}+\underbrace{u_{0j}+u_{1j}Reading_{ij1}}_{\text{L2 Random Effects}}+e_{ij}
+\end{align}
+$$
+
+
+```{r tbl-crosslevel}
+#| tbl-cap: "Reading at Time 2 Model 1: Model 4 + Cross-level Interaction of Reading_1 and School SES"
+#| html-table-processing: none
+#| code-fold: true
+tibble(
+  Symbol = c(
+    "$Reading_{ij2}$",
+    "$\\beta_{0j}$",
+    "$\\beta_{0j}$",
+    "$e_{ij}$",
+    "$\\sigma_e^2$",
+    "$\\gamma_{00}$",
+    "$\\gamma_{01}$",
+    "$\\gamma_{10}$",
+    "$\\gamma_{11}$",
+    "$u_{0j}$",
+    "$u_{1j}$",
+    "$\\tau_{00}$",
+    "$\\tau_{11}$",
+    "$\\tau_{10}$"
+  ),
+  Meaning = c(
+    "Reading score for person $i$ in class $j$ at time 2",
+    "Random intercept for class $j$. In this model, it represents the reading~2~ classroom mean for class $j$ when Reading~1~ is 0.",
+    "Slope for reading~1~ for class $j$.",
+    "Level 1 prediction error for person $i$ in class $j$",
+    "Variance of $e_{ij}$",
+    "Fixed Intercept. In this model, it is the predicted Time 2 Reading when Reading~1~ is zero.",
+    "Fixed slope for SES. When SES increates by 1, Reading~2~ is expected to increase by this amount.",
+    "Fixed slope for Reading~1~. When Reading~1~ increates by 1, Reading~2~ is expected to increase by this amount.",
+    "Fixed cross-level interaction effect of Reading~1~ and SES. When SES increases by 1, the fixed slope for Reading~1~ increates by this amount.",
+    "School-level (L2) residual for the random intercept $\\beta_{0j}$.",
+    "School-level (L2) residual for the random slope $\\beta_{1j}$ for Reading~1~.",
+    "Variance of $u_{0j}$",
+    "Variance of $u_{1j}$",
+    "Covariance of $u_{0j}$ and $u_{1j}$"),
+  level = paste0("Level ", c(1,1,1,1,1,2,2,2,2,2,2,2,2, 2))
+) %>%
+  gt(groupname_col = "level", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  gt::cols_width(Symbol ~ pct(15), level ~ pct(23)) %>% 
+  tab_row_group(label = md(r"($$\begin{aligned}
+  \textbf{Level 2}\\
+  \beta_{0j}&=\gamma_{00}+\gamma_{01}SES_j+u_{0j}\\
+  \beta_{1j}&=\gamma_{10}+\gamma_{11}SES_j+u_{1j}\\
+  \boldsymbol{u}&=\begin{bmatrix}
+u_{0j}\\
+u_{1j}
+\end{bmatrix}\sim \mathcal{N}\left(\begin{bmatrix}
+0\\
+0
+\end{bmatrix}
+\begin{matrix}
+\\
+,
+\end{matrix}
+\begin{bmatrix}
+\tau_{00} &\\
+\tau_{10} & \tau_{11}
+\end{bmatrix}\right)
+  \end{aligned}$$)"), rows = level == "Level 2", id = "l2") %>%  
+  tab_row_group(label = md(r"($$\begin{align*}
+  \textbf{Level 1}\\
+Reading_{ij2} &= \beta_{0j}+\beta_{1j}Reading_{ij1}+e_{ij}\\
+e_{ij}&\sim \mathcal{N}(0,\sigma_e^2)\end{align*}$$)"), rows = level == "Level 1", id = "l1") %>% 
+    fmt_markdown() %>% 
+  gt::cols_align("center", "level") %>% 
+  gt::tab_footnote(footnote = md(r"($$\begin{align*}
+\textbf{Combined:}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+u_{0j}}_{\beta_{0j}}+(\underbrace{\gamma_{10}+\gamma_{11}SES_j+u_{1j}}_{\beta_{1j}})Reading_{ij1}+e_{ij}\\
+&\text{Fixed vs. Random Effects}\\
+Reading_{ij2} &= \underbrace{\gamma_{00}+\gamma_{01}SES_j+(\gamma_{10}+\gamma_{11}SES_j)Reading_{ij1}}_{\text{Fixed Effects}}+\underbrace{u_{0j}+u_{1j}Reading_{ij1}}_{\text{L2 Random Effects}}+e_{ij}
+\end{align*}$$)")) %>% 
+gt::tab_stubhead("Level")
+
+```
+
+```{r fig-crosslevel}
+#| fig-cap: Reading Time 2 Model with Cross-Level Interaction of SES and Reading~1~ 
+#| fig-width: 8
+#| fig-height: 8
+#| code-fold: true
+my_path(SES, 
+          b_1j, 
+          label = my_path_label("*&gamma;*~*11*~"))
+```
+
+::: instruction
+Specify a model in which `reading_1` and `school_ses` interact.
+
+Call your model `m_read_2_5`
+:::
+
+::: hint
+**Hint**: If X is L1 and A is L2, the cross-level interaction is specified like so:
+
+`Y ~ 1 + X * A + (1 + X | cluster_id )`
+:::
+
+::: question
+**Question 5**: Does Model 5 fit better than Model 4?
+:::
+
+::: question
+**Question 6**: Compared to Model 0, by how much is level-2 variance reduced by model 5?
+:::
+
+::: hint
+For this question and the next, use the `variance_reduction` function created earlier.
+:::
+
+::: question
+**Question 7**: Compared to Model 0, by how much is level-1 variance reduced by model 5?
+:::
+
+::: question
+**Question 8**: What is your overall interpretation of these data?
+:::
+
+Some plots that might aid your interpretation:
+
+```{r hints, eval=FALSE}
+# Fixed effects only
+sjPlot::plot_model(m_read_2_5,
+  type = "pred",
+  terms = c("reading_1", "school_ses [-2, -1, 0, 1, 2]")
+) +
+  scale_y_continuous(limits = c(-4, 4))
+
+# Random effects
+augment(m_read_2_5) %>%
+  ggplot(aes(reading_1, reading_2, color = school_ses)) +
+  geom_point(size = 0.2, alpha = 0.3) +
+  geom_line(aes(y = .fitted, group = school_id), size = 0.2) +
+  scale_color_viridis_c() +
+  theme(
+    panel.background = element_rect(fill = "black"),
+    panel.grid = element_line(color = "gray")
+  ) +
+  coord_fixed()
+```

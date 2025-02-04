@@ -1,0 +1,91 @@
+\documentclass[border={35pt 38pt -60pt 42pt}]{standalone}
+%\documentclass{article}
+\usepackage{annotate-equations}
+\usepackage{xcolor}
+\definecolor{myviolet}{HTML}{414487}
+\definecolor{myblue}{HTML}{2F6C8E}
+\definecolor{myblue2}{HTML}{21908C}
+\definecolor{mygreen}{HTML}{2FB47C}
+\definecolor{mygreen2}{HTML}{7AD151}
+\usepackage[sfdefault,condensed]{roboto}
+\begin{document}
+	
+
+	
+$\LARGE
+\eqnmark[myviolet]{nodeY}{\mathtt{y}} 
+\eqnmark[myblue]{sim1}{\mathtt{\sim}}
+\eqnmark[myblue2]{fixedintercept}{\mathtt{1}}
+\eqnmark[black]{plus}{\texttt{+}}
+\eqnmark[myblue2]{nodeX}{\mathtt{x}}
+\eqnmark[black]{plus}{\texttt{+}}\hspace{-3pt}
+\eqnmark[black]{leftparen}{\texttt{(}}\hspace{-6pt}
+\eqnmark[mygreen]{randomintercept}{\mathtt{1}}
+\eqnmark[black]{plus}{\texttt{+}}
+\eqnmark[mygreen]{randomX}{\mathtt{x}}
+\eqnmark[black]{post}{\texttt{|}}
+\eqnmark[mygreen2]{group}{\mathtt{id}}\hspace{-5pt}
+\eqnmark[black]{rightparen}{\texttt{)}}
+$
+
+
+\annotate[
+	yshift=1em, 
+	xshift=1mm, 
+	myviolet]
+	{above, left}
+	{nodeY}
+	{Outcome }
+	
+	
+\annotate[
+	yshift=2.3em, 
+	xshift=1mm, 
+	myblue]
+	{above, left}
+	{sim1}
+	{Predicted By}
+	
+
+	
+\annotate[
+yshift=-.5em, 
+xshift=0mm, 
+myblue2]
+{below, left}
+{fixedintercept}
+{Fixed Intercept}	
+
+\annotate[
+yshift=-2em, 
+xshift=0mm, 
+myblue2]
+{below, left}
+{nodeX}
+{Fixed Effect for x}
+
+\annotate[
+yshift=1em, 
+xshift=0mm, 
+mygreen]
+{above, left}
+{randomintercept}
+{Random Intercept}		
+
+
+\annotate[
+yshift=2.3em, 
+xshift=0mm, 
+mygreen]
+{above, left}
+{randomX}
+{Random Slope for x}	
+
+\annotate[
+yshift=-0.5em, 
+xshift=0mm, 
+mygreen2]
+{below, left}
+{group}
+{Random Effects\\ Grouping Variable}
+\end{document}
