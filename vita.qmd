@@ -58,6 +58,7 @@ library(extrafont)
 loadfonts("win", quiet = TRUE)
 loadfonts(quiet = TRUE)
 library(tidyverse)
+
 knitr::opts_chunk$set(echo = F, cache = F, dev = "svg")
 options(knitr.kable.NA = "")
 # Set table column width
@@ -282,7 +283,6 @@ tibble::tribble(
 
 ```{r scholar, cache=F, warning=FALSE, message=FALSE}
 library(scholar)
-
 id <- "aojOxP4AAAAJ"
 l <- get_profile(id)
 d_pubs <- scholar::get_publications(id)
@@ -338,6 +338,7 @@ ct <- get_citation_history(id) %>%
 
 ```{r scholarplot, dev="svg", fig.height=8, fig.width=8, fig.cap="Google Scholar Citations of My Work", out.width="800px"}
 ## Plot citation trend
+
 ggplot(ct, aes(year, cumulative_citations)) + 
   geom_step(linetype = 1, color = "gray50") + 
   geom_point(color = "gray20") +
@@ -347,7 +348,7 @@ ggplot(ct, aes(year, cumulative_citations)) +
              label.size = 0, 
              label.padding = unit(0,"pt"), 
              family = "Rubik", 
-             size = 4.2, 
+             size = 4.0, 
              color = "gray30", 
              fill = "white") +
   scale_x_continuous("Publication Year", minor_breaks = 2000:2025) +

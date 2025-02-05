@@ -3,7 +3,8 @@ title: "Data Wrangling"
 author: "W. Joel Schneider"
 description: Getting Data into Useable Formats
 date: 2024-03-01
-freeze: false
+execute: 
+  freeze: true
 format: 
   html: 
     fig-height: 8
@@ -12,7 +13,6 @@ format:
     toc: true
     toc-location: left
     lightbox: true
-    df-print: kable
 ---
 
 ```{r}
@@ -30,7 +30,6 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(lubridate)
 library(ggtext)
-library(kableExtra)
 library(broom)
 library(broom.mixed)
 # library(magick)
@@ -490,7 +489,7 @@ d_small
 ```{r displaydsmall}
 #| echo: false
 knitr::kable(d_small) %>% 
-  kableExtra::kable_styling(., bootstrap_options = "striped")
+  head()
 ```
 
 What we need is:
@@ -503,8 +502,7 @@ d_small %>%
                values_to = "on_task",
                names_prefix = "time_") %>% 
   mutate(time = as.integer(time)) %>% 
-  knitr::kable(.) %>% 
-  kableExtra::kable_styling(., bootstrap_options = "striped")
+  head()
 ```
 
 ## Restructuring from wide to long format with `pivot_longer`
