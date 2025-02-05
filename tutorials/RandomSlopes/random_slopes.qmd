@@ -51,86 +51,10 @@ library(ggdiagram)
 library(sjPlot)
 
 options(digits = 4)
-# bg_color <- "#ECE5D3"
-# fore_color <- "#2D2718"
-# line_color <- "#7C4728"
-# area_color <- "#624E3E"
+
 myfont <- "Roboto Condensed"
-#
-# ggplot2::update_geom_defaults("label", list(family =  myfont))
-# ggplot2::update_geom_defaults("text", list(family =  myfont))
-# ggplot2::update_geom_defaults("point", list(colour =  fore_color))
-# ggplot2::update_geom_defaults("line", list(colour =  line_color))
-# ggplot2::update_geom_defaults("smooth", list(colour =  line_color))
-# ggplot2::update_geom_defaults("area", list(fill = area_color))
-# ggplot2::update_geom_defaults("density", list(fill = area_color))
-# ggplot2::theme_set(ggplot2::theme_grey(base_size = 18, base_family = myfont) + ggplot2::theme(
-# panel.background = ggplot2::element_rect(bg_color)))
+
 theme_set(theme_minimal(base_size = 16, base_family = myfont))
-
-
-# ggdiagram is an experimental package that can be installed 
-# remotes::install_github("wjschne/ggdiagram")
-
-my_intercept <- redefault(
-  ob_ngon,
-  radius = .7,
-  angle = 90,
-  fill = NA,
-  color = "black",
-  label = "1~1~",
-  vertex_radius = unit(0.5, "mm")
-)
-
-my_path <- redefault(connect, resect = 2)
-
-
-my_error <- redefault(ob_circle, radius = .5)
-my_error_variance <- redefault(ob_variance,
-    resect = 1,
-    linewidth = .4,
-    theta = 60,
-    looseness = 1.5,
-    where = "right"
-  )
-my_error_variance_label <- redefault(
-  ob_latex,
-  tex = r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})",
-  width = .3,
-  family = myfont,
-  filename = "sigma_e_2",
-  force_recompile = F,
-  delete_files = F
-)
-
-my_path_label <- redefault(ob_label,
-        size = 13,
-        angle = 0,
-        position = .45,
-        label.padding = margin(1, 1, 1, 1)
-      )
-
-my_coefficient <- redefault(ob_circle, radius = .4, fill = "white")
-my_residual <- redefault(ob_circle, radius = .3, fill = "white")
-my_residual_label <- redefault(ob_label, size = 13)
-my_residual_variance <- redefault(
-  ob_variance,
-  resect = 1,
-  linewidth = .4,
-  theta = 60,
-  looseness = 2,
-  where = "right"
-)
-my_residual_variance_label <- redefault(
-  ob_label,
-  size = 13,
-  label.padding = margin(l = 1, r = 1, t = 1, b = 1),
-  position = .5
-)
-my_observed <- redefault(ob_ellipse, m1 = 20)
-my_observed_label <- redefault(ob_label, size = 22, fill = NA)
-
-my_observed_l2 <- redefault(ob_ellipse, m1 = 20, a = .7, b = .7)
 
 ```
 
@@ -138,7 +62,7 @@ This is a long tutorial. Don't let that scare you. Once understood, the analyses
 
 # Load packages
 
-```{r loadlibrary, eval=FALSE}
+```{r loadlibrary}
 library(tidyverse) # Data wrangling and visualization
 library(lme4) # Multilevel modeling
 library(broom.mixed) # Model information
@@ -291,6 +215,75 @@ gt::tab_stubhead("Level")
 ### Model 0 Path Diagram
 
 Sometimes equations can be overwhelming, especially for complex models. It can help to visualize a model as a path diagram like @fig-read1.
+
+```{r ggdiagramcode}
+#| code-fold: true
+myfont <- "Roboto Condensed"
+
+# ggdiagram is an experimental package that can be installed 
+# remotes::install_github("wjschne/ggdiagram")
+
+my_intercept <- redefault(
+  ob_ngon,
+  radius = .7,
+  angle = 90,
+  fill = NA,
+  color = "black",
+  label = "1~1~",
+  vertex_radius = unit(0.5, "mm")
+)
+
+my_path <- redefault(connect, resect = 2)
+
+
+my_error <- redefault(ob_circle, radius = .5)
+my_error_variance <- redefault(ob_variance,
+    resect = 1,
+    linewidth = .4,
+    theta = 60,
+    looseness = 1.5,
+    where = "right"
+  )
+my_error_variance_label <- redefault(
+  ob_latex,
+  tex = r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})",
+  width = .3,
+  family = myfont,
+  filename = "sigma_e_2",
+  force_recompile = F,
+  delete_files = F
+)
+
+my_path_label <- redefault(ob_label,
+        size = 13,
+        angle = 0,
+        position = .45,
+        label.padding = margin(1, 1, 1, 1)
+      )
+
+my_coefficient <- redefault(ob_circle, radius = .4, fill = "white")
+my_residual <- redefault(ob_circle, radius = .3, fill = "white")
+my_residual_label <- redefault(ob_label, size = 13)
+my_residual_variance <- redefault(
+  ob_variance,
+  resect = 1,
+  linewidth = .4,
+  theta = 60,
+  looseness = 2,
+  where = "right"
+)
+my_residual_variance_label <- redefault(
+  ob_label,
+  size = 13,
+  label.padding = margin(l = 1, r = 1, t = 1, b = 1),
+  position = .5
+)
+my_observed <- redefault(ob_ellipse, m1 = 20)
+my_observed_label <- redefault(ob_label, size = 22, fill = NA)
+
+my_observed_l2 <- redefault(ob_ellipse, m1 = 20, a = .7, b = .7)
+```
+
 
 ```{r fig-read1}
 #| fig-cap: Path Diagram for Reading Time 1 Random Intercepts Model
