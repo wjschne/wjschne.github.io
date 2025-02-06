@@ -2,13 +2,15 @@
 title: "Random Slopes"
 author: "W. Joel Schneider"
 subtitle: "Advanced Data Analysis (EDUC 8825)"
+data: '2025-02-06'
 engine: knitr
+execute: 
+  freeze: true
 knitr: 
   opts_chunk: 
     warning: false
     message: false
     echo: true
-    cache: true
     dev: ragg_png
       
 format: 
@@ -31,14 +33,8 @@ bibliography:
 csl: "https://www.zotero.org/styles/apa"
 ---
 
-```{r setup, include=FALSE, cache=FALSE}
-# knitr::opts_chunk$set(
-#   warning = F,
-#   message = F,
-#   echo = TRUE,
-#   cache = T,
-#   dev = "ragg_png"
-# )
+```{r setup}
+#| include: false
 options(digits = 3, knitr.kable.NA = "")
 
 library(tidyverse) # Data wrangling and visualization
@@ -94,7 +90,8 @@ tibble::tribble(
 
 # Import data
 
-```{r importdata, warning=FALSE, cache=TRUE}
+```{r importdata}
+#| warning: true
 d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/dhw4.csv") %>%
   mutate(school_id = factor(school_id) %>%
     fct_reorder(school_ses, mean))
@@ -363,7 +360,7 @@ Now we can use various tools to inspect the overall results
 
 ### Check Assumptions
 
-```{r fig-m10check, cache=TRUE}
+```{r fig-m10check}
 #| fig-cap: Check assumptions for reading time 1 null model
 check_model(m_read_1_0)
 ```
@@ -392,7 +389,7 @@ We can get a quick look at some performance metrics:
 performance(m_read_1_0)
 ```
 
-The ICC for this model suggests that schools are highly segregated by reading ability. That is, variation by classroom accounts for `r scales::percent(performance(m_read_1_0)$ICC)` of the variance in reading~1~.
+The ICC for this model suggests that schools are highly segregated by reading ability. That is, variation by classroom accounts for `r scales::percent(performance::performance(m_read_1_0)$ICC)` of the variance in reading~1~.
 
 The `sjPlot:tab_model` function can produce a table that is very close to publication-ready:
 
@@ -741,7 +738,7 @@ report(m_read_2_0)
 
 ### Check model assumptions
 
-```{r m20check, cache=TRUE}
+```{r m20check}
 check_model(m_read_2_0)
 ```
 
@@ -1614,6 +1611,7 @@ gt::tab_stubhead("Level")
 #| fig-width: 8
 #| fig-height: 8
 #| code-fold: true
+#| classes: preview-image
 p_read_2L1L2correlated + 
   my_path(SES, 
           b_1j, 

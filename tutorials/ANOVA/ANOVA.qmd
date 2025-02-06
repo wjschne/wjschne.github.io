@@ -3,10 +3,16 @@ title: "ANOVA in R"
 author: "W. Joel Schneider"
 date: 2024-03-05
 description: "Plot group means and test to see if their differences are statistically significant."
+knitr: 
+  opts_chunk: 
+    dev: "ragg_png"
+    out-width: "100%"
+execute:
+  freeze: true
+  echo: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(easystats)
 library(haven)
@@ -315,9 +321,11 @@ report(fit)
 We would like to compare all means but control for family-wise error.
 
 ```{r contrasts, fig.height=8}
-estimate_contrasts(fit)
-estimate_contrasts(fit) |> 
-  report()
+fit_contrast <- estimate_contrasts(fit, 
+                   contrast = "Attachment", 
+                   backend = "emmeans")
+fit_contrast 
+report(fit_contrast)
 ```
 
 

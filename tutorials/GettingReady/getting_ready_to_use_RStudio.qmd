@@ -4,7 +4,9 @@ author: "W. Joel Schneider"
 affiliation: Temple University
 date: 2024-01-20
 description: Tips for Installation and Configuration
-freeze: true
+execute:
+  freeze: true
+  echo: true
 format: 
   html: 
     code-fold: true
@@ -14,16 +16,16 @@ format:
     toc: true
     toc-location: left
     toc-float: true
+engine: knitr
 knitr: 
   opts_chunk: 
     warning: false
     message: false
-    echo: true
-    cache: true
     dev: ragg_png
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
+#| include: false
 library(tidyverse)
 library(lubridate)
 library(magick)
@@ -295,14 +297,11 @@ RStudio's "projects" are useful for making sure that all your analyses are in th
 
 Without projects, we would need to write out the entire file name like so:
 
-::: {.column-margin}
-Technically, there are other ways around this problem, but they are not recommended.
-:::
-
 ```{r readcsv}
 #| eval: false
 #| code-fold: false
-read_csv("C:/Users/my_user_name/Research/My_Project/my_data.csv")
+
+# read_csv("C:/Users/my_user_name/Research/My_Project/my_data.csv")
 ```
 
 With projects, we can import data with just the bare file name, like so:
@@ -310,20 +309,18 @@ With projects, we can import data with just the bare file name, like so:
 ```{r readshortname}
 #| eval: false
 #| code-fold: false
+
 read_csv("my_data.csv")
 ```
-
-
-
 
 
 Much better!
 
 Okay, let's get to it.
 
-**Steps to create a project**
+:::{.callout-note}
 
-<div class="instruction">
+# Steps to create a project
 
 1.  In your operating system, create a folder for this course on your computer (e.g., "EDUC8825" or "Longitudinal Data Analysis").
 
@@ -338,7 +335,7 @@ Okay, let's get to it.
     -   Click **Open**
     -   Click **Create Project**
 
-</span>
+:::
 
 # Be Kind to Future-You
 
@@ -393,7 +390,7 @@ Avoid including in file names characters that have special meanings in many prog
 
 ## Separate dates with hyphens using ISO format
 
-::: {align="center"}
+:::{align="center"}
 ![from [XKCD](https://xkcd.com/1179/)](https://imgs.xkcd.com/comics/iso_8601.png)
 :::
 
@@ -407,6 +404,7 @@ One of the benefits of using dates in the ISO format is that they sort chronolog
 
 ```{r datetable}
 #| echo: false
+
 k <- 8
 iso <- (ymd(20060201) + days(sample(1:360, k, replace = T)) + years(sample(1:k, replace = T))) 
 
@@ -423,7 +421,5 @@ iso_file <- paste0(iso,"_District_",district,".csv") %>%
 tibble(`Sorted Traditional Dates` = trad_file, 
        `Sorted ISO Dates` = iso_file) %>% 
   knitr::kable()
-
-
 
 ```

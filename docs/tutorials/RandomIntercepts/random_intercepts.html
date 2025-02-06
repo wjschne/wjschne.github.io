@@ -644,11 +644,17 @@ Figure&nbsp;4: Checking the homoscedasticity assumption
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(m_0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for outliers</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(m_0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="random_intercepts_files/figure-html/Checking for outliers-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored" height="100%" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-checkoutlier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="random_intercepts_files/figure-html/fig-checkoutlier-1.png" id="fig-checkoutlier" style="width:100.0%;height:100.0%" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-checkoutlier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5
+</figcaption>
 </figure>
 </div>
 </div>
@@ -894,7 +900,7 @@ Parameter        | Coefficient |   SE |           95% CI
 (Intercept) [2]  |       31.81 | 3.66 | [ 24.64,  38.98]</code></pre>
 </div>
 </div>
-<p>Why would you want the estimated values? Maybe you want to make a plot of the random intercepts like in <a href="#fig-plotgroupcoef" class="quarto-xref">Figure&nbsp;5</a>.</p>
+<p>Why would you want the estimated values? Maybe you want to make a plot of the random intercepts like in <a href="#fig-plotgroupcoef" class="quarto-xref">Figure&nbsp;6</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m_0, <span class="at">effects =</span> <span class="st">"random"</span>, <span class="at">group_level =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Level =</span> <span class="fu">fct_inorder</span>(Level)) <span class="sc">%&gt;%</span>  <span class="co"># Reorder classroom id</span></span>
@@ -910,7 +916,7 @@ Parameter        | Coefficient |   SE |           95% CI
 <img src="random_intercepts_files/figure-html/fig-plotgroupcoef-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plotgroupcoef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: Group coefficients
+Figure&nbsp;6: Group coefficients
 </figcaption>
 </figure>
 </div>
@@ -937,7 +943,7 @@ Figure&nbsp;5: Group coefficients
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="random_intercepts_files/figure-html/unnamed-chunk-2-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+<p><img src="random_intercepts_files/figure-html/m0plot-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -998,7 +1004,7 @@ Figure&nbsp;5: Group coefficients
 <img src="random_intercepts_files/figure-html/fig-model0-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-model0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Model 0 Group intercepts
+Figure&nbsp;7: Model 0 Group intercepts
 </figcaption>
 </figure>
 </div>
@@ -1057,7 +1063,7 @@ e_{ij} &amp;\sim N(0,\sigma_e^2)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="random_intercepts_files/figure-html/unnamed-chunk-5-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+<p><img src="random_intercepts_files/figure-html/m1checkmodel-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1073,22 +1079,22 @@ e_{ij} &amp;\sim N(0,\sigma_e^2)
 Formula: reading_comprehension ~ (1 | classroom_id) + treatment
    Data: d
 
-REML criterion at convergence: 8053
+REML criterion at convergence: 8053.1
 
 Scaled residuals: 
-   Min     1Q Median     3Q    Max 
--3.580 -0.679  0.042  0.649  3.003 
+    Min      1Q  Median      3Q     Max 
+-3.5797 -0.6787  0.0420  0.6488  3.0029 
 
 Random effects:
  Groups       Name        Variance Std.Dev.
- classroom_id (Intercept) 149      12.2    
- Residual                 420      20.5    
+ classroom_id (Intercept) 149.4    12.22   
+ Residual                 419.8    20.49   
 Number of obs: 900, groups:  classroom_id, 30
 
 Fixed effects:
                    Estimate Std. Error t value
-(Intercept)           45.42       3.20   14.21
-treatmentTreatment    24.91       4.68    5.32
+(Intercept)          45.416      3.196  14.212
+treatmentTreatment   24.908      4.678   5.325
 
 Correlation of Fixed Effects:
             (Intr)
@@ -1122,7 +1128,7 @@ computed using a Wald t-distribution approximation.</code></pre>
 </section>
 <section id="plot-model" class="level2">
 <h2 class="anchored" data-anchor-id="plot-model">Plot Model</h2>
-<p>From <a href="#fig-plot2" class="quarto-xref">Figure&nbsp;7</a>, it is easy to see that the treatment group has higher reading comprehension, on average, than the control group.</p>
+<p>From <a href="#fig-plot2" class="quarto-xref">Figure&nbsp;8</a>, it is easy to see that the treatment group has higher reading comprehension, on average, than the control group.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_relation</span>(m_1) <span class="sc">%&gt;%</span> </span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>() <span class="sc">+</span> </span>
@@ -1134,7 +1140,7 @@ computed using a Wald t-distribution approximation.</code></pre>
 <img src="random_intercepts_files/figure-html/fig-plot2-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Model-based estimate of the relationship between treatment and reading comprehension
+Figure&nbsp;8: Model-based estimate of the relationship between treatment and reading comprehension
 </figcaption>
 </figure>
 </div>
@@ -1358,7 +1364,7 @@ classroom_id) model (the least supported model).</code></pre>
 </section>
 <section id="not-so-basic-plot" class="level2">
 <h2 class="anchored" data-anchor-id="not-so-basic-plot">Not-So Basic Plot</h2>
-<p><a href="#fig-notbasic" class="quarto-xref">Figure&nbsp;8</a> makes it quite clear that the treatment is associated with higher overall scores.</p>
+<p><a href="#fig-notbasic" class="quarto-xref">Figure&nbsp;9</a> makes it quite clear that the treatment is associated with higher overall scores.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1398,7 +1404,7 @@ classroom_id) model (the least supported model).</code></pre>
 <img src="random_intercepts_files/figure-html/fig-notbasic-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-notbasic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Treatment effects for Model 1
+Figure&nbsp;9: Treatment effects for Model 1
 </figcaption>
 </figure>
 </div>

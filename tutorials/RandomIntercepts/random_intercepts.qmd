@@ -4,13 +4,16 @@ author: "W. Joel Schneider"
 subtitle: "Advanced Data Analysis (EDUC 8825)"
 date: 2025-01-27
 engine: knitr
+execute: 
+  freeze: true
 knitr: 
   opts_chunk: 
     warning: false
     message: false
     echo: true
-    cache: true
     dev: ragg_png
+    out-width: 100%
+    out-height: 100%
 format: 
   html: 
     # css: tutorial.css
@@ -25,14 +28,7 @@ format:
 
 ```{r setup}
 #| include: false
-#| cache: false
-knitr::opts_chunk$set(
-  out.width = '100%',
-  out.height = '100%'
-)
 options(digits = 3, knitr.kable.NA = '')
-
-
 library(tidyverse)
 library(lubridate)
 library(lme4)
@@ -55,77 +51,9 @@ inc_num <- function() {
 show_answer <- FALSE
 ```
 
-```{r datageneralation, echo = F}
-# make_groups <- function(
-#   n_samples,
-#   sample_size_function = rnorm,
-#   .id = "id",
-#   .group_id = "group_id",
-#   ...) {
-#   arglist <- c(list(n = n_samples), list(...))
-#   group_id <- 1:n_samples
-#   sample_sizes <-
-#     as.integer(round(do.call(sample_size_function, arglist)))
-#   if (any(sample_sizes < 1))
-#     stop("Some sample sizes are less than zero.")
-# 
-#   tibble(group_id = 1:n_samples, group_n = sample_sizes) %>%
-#     pmap_df(function(group_id, group_n)
-#       tibble(group_id = rep(group_id, group_n))) %>%
-#     mutate(id = seq(1, nrow(.) )) %>% 
-#     rename(!!sym(.id) := id,
-#            !!sym(.group_id) := group_id)
-# }
-
-# random_3 <- tibble::tribble(
-#   ~coefficients, ~b_00k, ~b_10k,
-#         "b_00k",     3L,     2L,
-#         "b_10k",     2L,     3L
-#   ) %>% 
-#   WJSmisc::df2matrix()
-# 
-# fixed_3 <- c(u_00k = 50, 
-#              u_10k = 5)
-# 
-# 
-# mvtnorm::rmvnorm(k_school, mean = c(u_00k = 0, u_10k = 0), sigma = random_3) %>%
-# as.tibble() %>% 
-#   rowid_to_column("school_id")
-# 
-# tibble(school_id = 1:k_school) %>% 
-#   mutate(
-#     b_000 = 50,
-#     b_100 = 5) %>% 
-#   bind_cols(mvtnorm::rmvnorm(k_school, mean = c(u_00k = 0, u_10k = 0), sigma = random_3) %>% as_tibble()) 
-#     
-#     k_class = rpois(nrow(.), lambda = 20)) %>% 
-#   make_groups(.cluster_size = "k_class", .cluster_id = "school_id")
-# 
-# 
-# 
-# data = d
-# sigma <- 10
-# make_groups(30, rpois, lambda = 30,  .id = "student_id", .group_id = "class_id") %>% 
-#   mutate(e_ij = rnorm(nrow(.), mean = 0, sd = sigma ^ 0.5))
-# 
-#  get_sample_size <- function(id, mu = 20, sigma = 8) {
-#   n <- as.integer(round(rnorm(1,mu, sigma)))
-#   tibble(id_order = 1:n)
-# }
-# 
-# d_classroom <- tibble(classroom_id = factor(1:k), class_e = rnorm(k, 0, 10), treatment = factor(sample(c("Treatment", "Control"), k, replace = T))) %>%
-#   mutate(class_mean = overall_mean + b_treatment * (treatment == "Treatment") + class_e)
-# 
-# d_student <- crossing(student_id = 1:30, classroom_id = 1:k) %>%
-#   mutate_all(factor) %>%
-#   left_join(d_classroom, by = "classroom_id") %>%
-#   mutate(e = rnorm(n * k, 0, sd = 20),
-#          reading_comprehension = class_mean + e) %>%
-#   mutate(classroom_id = fct_reorder(classroom_id, reading_comprehension) %>% fct_rev)
-```
-
-
-```{r make_data, eval=F, echo=F}
+```{r make_data}
+#| eval: false
+#| echo: false
 set.seed(18)
 k <- 30
 n <- 30
@@ -236,13 +164,14 @@ The [easystats](https://easystats.github.io/easystats/) package, like the tidyve
 * [![see](https://easystats.github.io/see/logo.png){width=100px}](https://easystats.github.io/see/) [see](https://easystats.github.io/see/) makes publication-ready data visualizations.
 * [![report](https://easystats.github.io/report/logo.png){width=100px}](https://easystats.github.io/report/) [report](https://easystats.github.io/report/) automates model interpretation.
 
-```{r installpackages, eval = F}
+```{r installpackages}
+#| eval: false
+
 # Install packages, if needed.
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("lme4")) install.packages("lme4")
 if (!require("easystats")) install.packages("easystats")
 if (!require("marginaleffects")) install.packages("marginaleffects")
-
 ```
 
 
@@ -276,7 +205,8 @@ The `readr::read_csv` function will make sensible guesses about each variable's 
 If we import a file with defaults, we can ask readr which guesses it made like so:
 
 
-```{r readspecs, comment=""}
+```{r readspecs}
+#| comment: ""
 readr::spec(d)
 ```
 
@@ -462,7 +392,7 @@ check_outliers(m_0)
 
 
 ```{r fig-checkoutlier}
-#| Checking for outliers
+# Checking for outliers
 plot(check_outliers(m_0))
 ```
 
@@ -689,7 +619,7 @@ parameters(m_0, effects = "random", group_level = TRUE) %>%
 Suppose we want the predicted value for each classroom. There are a variety of ways to do this. We are going to get case-level predictions from the marginaleffects package's `predictions` function. A nice feature of his function is that it will average the predictions over any variable. In this case, the prediction is the same for all 30 groups, so instead of 900 predictions (one for each person), we only need 30 predictions (one for each classroom).
 
 
-```{r}
+```{r m0predictions}
 d_predicted <- marginaleffects::predictions(
   m_0, 
   by = "classroom_id") 
@@ -699,7 +629,7 @@ d_predicted <- marginaleffects::predictions(
 
 
 
-```{r}
+```{r m0plot}
 # plot distributions and predicted values
 d %>%
   ggplot(aes(x = classroom_id,
@@ -801,14 +731,14 @@ Where:
 
 Representing the fixed intercept, the initial `1` is optional. I included it to be explicit, but most of the time it is omitted.
 
-```{r}
+```{r m_1}
 m_1 <- lmer(reading_comprehension ~ 1 + treatment + (1 | classroom_id), 
               data = d)
 ```
 
 Sometimes these models can become large and unwieldy, making you vulnerable to coding errors. A safer way to create a nested model is to use the `update` function that only changes the part you specify. In this syntax, a `.` means that everything is the same.
 
-```{r}
+```{r m1_update}
 m_1 <- update(m_0, . ~ . + treatment)
 ```
 
@@ -819,7 +749,7 @@ It is best practice to use the `update` function wherever possible, because it r
 
 ## Assumption Checks
 
-```{r}
+```{r m1checkmodel}
 check_model(m_1)
 ```
 
@@ -827,17 +757,18 @@ Still no problems.
 
 ## Summary
 
-```{r}
+```{r m1summary}
 summary(m_1)
 ```
 
-With a *t* value of `r round(tidy(m_1)$statistic[2], 2)`, the effect of `treatment` is surely significant. 
+With a *t* value of `r round(broom.mixed::tidy(m_1)$statistic[2], 2)`, the effect of `treatment` is surely significant. 
 
 Note that `lmer` displays the `treatment` variable as `treatmentTreatment`. This means that it is how much the Treatment group differs from the reference group, which in this case the control group. R is not smart enough to know in advance that the control group is the reference group. Instead, it assumes that the first factor level listed is the reference group. In this case, the control group is listed first. If you want a different reference group, you need to change the order of the factor levels. The base R way is to use the `relevel` function, but see the [forcats package](https://forcats.tidyverse.org/) for other useful ways to do this.
 
 The report package has an automated interpretation function. Note that unlike the `summary` function, the `report` function includes *p*-values for the fixed effects.
 
-```{r, warning=FALSE}
+```{r m1report}
+#| warning: false
 # Overall report
 report(m_1)
 ```
@@ -858,7 +789,7 @@ modelbased::estimate_relation(m_1) %>%
 
 ## Fixed and Random Coefficients
 
-```{r, parameters1}
+```{r m1parameters}
 parameters(m_1)
 ```
 

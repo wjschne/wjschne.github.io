@@ -257,6 +257,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#installing-and-updating-packages" id="toc-installing-and-updating-packages" class="nav-link" data-scroll-target="#installing-and-updating-packages">Installing and Updating Packages</a></li>
   <li><a href="#create-a-new-project" id="toc-create-a-new-project" class="nav-link" data-scroll-target="#create-a-new-project">Create a New Project</a></li>
+  <li><a href="#be-kind-to-future-you" id="toc-be-kind-to-future-you" class="nav-link" data-scroll-target="#be-kind-to-future-you">Be Kind to Future-You</a></li>
+  <li><a href="#folder-organization" id="toc-folder-organization" class="nav-link" data-scroll-target="#folder-organization">Folder Organization</a></li>
+  <li><a href="#file-name-guidance" id="toc-file-name-guidance" class="nav-link" data-scroll-target="#file-name-guidance">File Name Guidance</a>
+  <ul class="collapse">
+  <li><a href="#give-your-files-long-descriptive-names." id="toc-give-your-files-long-descriptive-names." class="nav-link" data-scroll-target="#give-your-files-long-descriptive-names.">Give your files long, descriptive names.</a></li>
+  <li><a href="#separate-words-with-underscores-not-spaces." id="toc-separate-words-with-underscores-not-spaces." class="nav-link" data-scroll-target="#separate-words-with-underscores-not-spaces.">Separate words with underscores, not spaces.</a></li>
+  <li><a href="#no-special-characters-in-file-names" id="toc-no-special-characters-in-file-names" class="nav-link" data-scroll-target="#no-special-characters-in-file-names">No special characters in file names:</a></li>
+  <li><a href="#separate-dates-with-hyphens-using-iso-format" id="toc-separate-dates-with-hyphens-using-iso-format" class="nav-link" data-scroll-target="#separate-dates-with-hyphens-using-iso-format">Separate dates with hyphens using ISO format</a></li>
+  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -563,16 +572,13 @@ Figure&nbsp;1: Different Learning Curves for Different Tasks
 <p>You might have to wait a while, but now many new packages have been installed on your machine.</p>
 <p>You do not need to install packages again. However, I update all my packages each time I use RStudio to make sure I have the best and most up-to-date versions of the packages available.</p>
 </section>
-<section id="create-a-new-project" class="level1 page-columns page-full">
+<section id="create-a-new-project" class="level1">
 <h1>Create a New Project</h1>
 <p>When you take on a new data-analysis task, you will want to keep your files organized in a particular folder. You want to make sure that this folder is the first place that R will look when you specify a file name. Otherwise we will have to write out the entire file name, which will be likely different if we need to run the same analysis on a different computer.</p>
 <p>RStudio’s “projects” are useful for making sure that all your analyses are in the same folder and that your analyses will work no matter which machine runs it.</p>
 <p>Without projects, we would need to write out the entire file name like so:</p>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Technically, there are other ways around this problem, but they are not recommended.</p>
-</div></div><div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(<span class="st">"C:/Users/my_user_name/Research/My_Project/my_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read_csv("C:/Users/my_user_name/Research/My_Project/my_data.csv")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With projects, we can import data with just the bare file name, like so:</p>
 <div class="cell">
@@ -580,8 +586,16 @@ Figure&nbsp;1: Different Learning Curves for Different Tasks
 </div>
 <p>Much better!</p>
 <p>Okay, let’s get to it.</p>
-<p><strong>Steps to create a project</strong></p>
-<div class="instruction">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Steps to create a project
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ol type="1">
 <li><p>In your operating system, create a folder for this course on your computer (e.g., “EDUC8825” or “Longitudinal Data Analysis”).</p></li>
 <li><p>Open RStudio.</p></li>
@@ -595,7 +609,9 @@ Figure&nbsp;1: Different Learning Curves for Different Tasks
 <li>Click <strong>Create Project</strong></li>
 </ul></li>
 </ol>
-<p></p>
+</div>
+</div>
+</section>
 <section id="be-kind-to-future-you" class="level1">
 <h1>Be Kind to Future-You</h1>
 <p>Hadley Wickham reminds us that the most important person to write code for is <em>future-you</em>.</p>
@@ -671,36 +687,36 @@ Figure&nbsp;1: Different Learning Curves for Different Tasks
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">August 20, 2014_District_Y.csv</td>
-<td style="text-align: left;">2007-05-07_District_I.csv</td>
+<td style="text-align: left;">December 02, 2009_District_J.csv</td>
+<td style="text-align: left;">2007-07-05_District_K.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">July 13, 2011_District_S.csv</td>
-<td style="text-align: left;">2007-06-12_District_N.csv</td>
+<td style="text-align: left;">February 06, 2011_District_M.csv</td>
+<td style="text-align: left;">2007-10-14_District_X.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">June 12, 2007_District_N.csv</td>
-<td style="text-align: left;">2008-05-22_District_F.csv</td>
+<td style="text-align: left;">July 05, 2007_District_K.csv</td>
+<td style="text-align: left;">2009-12-02_District_J.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">May 07, 2007_District_I.csv</td>
-<td style="text-align: left;">2010-10-12_District_U.csv</td>
+<td style="text-align: left;">July 13, 2012_District_W.csv</td>
+<td style="text-align: left;">2011-02-06_District_M.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">May 22, 2008_District_F.csv</td>
-<td style="text-align: left;">2011-07-13_District_S.csv</td>
+<td style="text-align: left;">June 03, 2011_District_A.csv</td>
+<td style="text-align: left;">2011-06-03_District_A.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">October 08, 2013_District_J.csv</td>
-<td style="text-align: left;">2013-10-08_District_J.csv</td>
+<td style="text-align: left;">October 14, 2007_District_X.csv</td>
+<td style="text-align: left;">2012-07-13_District_W.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">October 12, 2010_District_U.csv</td>
-<td style="text-align: left;">2014-08-20_District_Y.csv</td>
+<td style="text-align: left;">September 23, 2014_District_T.csv</td>
+<td style="text-align: left;">2014-09-23_District_T.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">September 09, 2014_District_B.csv</td>
-<td style="text-align: left;">2014-09-09_District_B.csv</td>
+<td style="text-align: left;">September 24, 2014_District_G.csv</td>
+<td style="text-align: left;">2014-09-24_District_G.csv</td>
 </tr>
 </tbody>
 </table>
@@ -709,8 +725,6 @@ Figure&nbsp;1: Different Learning Curves for Different Tasks
 
 
 </section>
-</section>
-</div>
 </section>
 
 </main> <!-- /main -->

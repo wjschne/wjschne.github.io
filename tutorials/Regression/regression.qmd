@@ -6,20 +6,19 @@ date: 2024-03-07
 format: 
   html: 
     df-print: kable
+execute: 
+  freeze: true
 knitr:
   opts_chunk: 
     out-width: 100%
     fig-height: 7
     fig-width: 7
     dev: "ragg_png"
-    cache: true
 ---
 
 ```{r}
 #| label: setup
 #| include: false
-#| cache: false
-
 library(tidyverse)
 library(easystats)
 library(rempsyc)
@@ -86,7 +85,7 @@ This code reaches across the web to the file in quotes, "reads" it into our sess
 
 The `head` function, by default, displays the first 6 rows of a `data.frame` (a collection of variables in which all columns have the same number of rows) or `tibble` (a `data.frame` with various enhancements for printing and data creation).
 
-```{r}
+```{r headd}
 head(d)
 ```
 
@@ -274,7 +273,7 @@ If the residuals were perfectly normal, the blue dots would fall exactly on the 
 
 If we suspect that the residuals are generated from a different distribution, the `check_distribution` function will estimate the probability that the residuals (and response/outcome variable) come from 12 major distribution families:
 
-```{r}
+```{r m1checkdistribution}
 check_distribution(m1) 
 plot(check_distribution(m1))
 ```
@@ -328,7 +327,7 @@ performance(m1)
 
 
 
-*R*^2^ is the percentage of variance in the outcome variable (i.e., Height) explained by the predictor variables (i.e., Average Parent Height). In @fig-r2, the black line toggles between the best fitting regression line and the horizontal line running through the outcome variable's mean. The vertical line segments running from each point to the black line are, on average, smaller for the best fitting regression line. Their squared distances shrink, on average, by `r round(100 * r2(m1)$R2, 0)`%. Thus, we say that the predictor variance "explains" `r round(100 * r2(m1)$R2, 0)`% of the variance in the outcome variable.
+*R*^2^ is the percentage of variance in the outcome variable (i.e., Height) explained by the predictor variables (i.e., Average Parent Height). In @fig-r2, the black line toggles between the best fitting regression line and the horizontal line running through the outcome variable's mean. The vertical line segments running from each point to the black line are, on average, smaller for the best fitting regression line. Their squared distances shrink, on average, by `r round(100 * performance::r2(m1)$R2, 0)`%. Thus, we say that the predictor variance "explains" `r round(100 * performance::r2(m1)$R2, 0)`% of the variance in the outcome variable.
 
 ```{r fig-r2}
 #| fig-cap: "Percentage of Variance Explained"
@@ -402,7 +401,7 @@ The model explains `{{r}} round(100 * r2(m1)$R2, 0)`% of the variance.
 
 Which, when rendered, produces the correct output:
 
-> The model explains `r round(100 * r2(m1)$R2, 0)`% of the variance.
+> The model explains `r round(100 * performance::r2(m1)$R2, 0)`% of the variance.
 
 That seems like a lot of extra work, right? Yes, it is---unless there is a possibility that your underlying data might change or that you might copy your numbers incorrectly. If you are imperfect, the extra time and effort is worth it. It makes it easy for other scholars to see exactly where each number came from. Hard-coded results are harder to trust.
 
@@ -489,13 +488,13 @@ summary(m2)
 
 Model-level statistics:
 
-```{r}
+```{r m2performance}
 performance(m2)
 ```
 
 Coefficient-level statistics:
 
-```{r}
+```{r m2parameters}
 parameters(m2)
 ```
 
@@ -525,7 +524,7 @@ test_wald(m1, m2)
 
 The Wald test can also be conducted in base R with the `anova` function:
 
-```{r}
+```{r m1m2anova}
 anova(m1, m2)
 ```
 
@@ -533,11 +532,11 @@ Either way, the p-value is significant, meaning that `m2` explains more variance
 
 The semi-partial correlation coefficient squared tells us how much incremental variance each predictor has over the other:
 
-```{r}
+```{r m2semipartial}
 r2_semipartial(m2)
 ```
 
-Thus, `gender` explains `r round(100 * r2_semipartial(m2)$r2_semipartial[2], 0)`% variance beyond `avgphgt`. Likewise, `avgphgt` explains `r round(100 * r2_semipartial(m2)$r2_semipartial[1], 0)`% variance beyond `gender`.
+Thus, `gender` explains `r round(100 * effectsize::r2_semipartial(m2)$r2_semipartial[2], 0)`% variance beyond `avgphgt`. Likewise, `avgphgt` explains `r round(100 * effectsize::r2_semipartial(m2)$r2_semipartial[1], 0)`% variance beyond `gender`.
 
 ### Bayes Factors
 

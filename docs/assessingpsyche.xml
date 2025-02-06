@@ -1561,7 +1561,7 @@ of CHC Constructs. <em>AssessingPsyche</em>. <a href="https://wjschne.github.io/
 <item>
   <title>Reliability coefficients are for squares</title>
   <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/AssessingPsyche/2014-01-16-rereliability-is-for-squares/</link>
+  <link>https://wjschne.github.io/AssessingPsyche/2014-01-16-reliability-is-for-squares/</link>
   <description><![CDATA[ 
 
 
@@ -1577,105 +1577,6 @@ of CHC Constructs. <em>AssessingPsyche</em>. <a href="https://wjschne.github.io/
 <p>Such guidelines seem reasonable to me, but I do not find reliability coefficients to be intuitively easy to understand. How much uncertainty is associated with a reliability coefficient of .80? The value of the coefficient (.80) is not directly informative about individual scores. Instead, it refers to the correlation the scores have with a repeated measurement.</p>
 <p>Another way to think about the reliability coefficient is that it is a ratio of true score variance to observed score variance. In classical test theory, an observed score (<em>X</em>) is influenced by a reliable component, the true score (<em>T</em>), and also by measurement error (<em>e</em>). That is</p>
 <p><img src="https://latex.codecogs.com/png.latex?X=T+e"></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">rxx <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span></span>
-<span id="cb1-2">sigma <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span></span>
-<span id="cb1-3">mu <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span></span>
-<span id="cb1-4">sigma_ts <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> sigma <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> rxx</span>
-<span id="cb1-5">sigma_e <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> sigma <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> rxx)</span>
-<span id="cb1-6"></span>
-<span id="cb1-7">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(mu <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> sigma, mu <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> sigma, sigma <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>)</span>
-<span id="cb1-8">y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dnorm</span>(x,mu, sigma_ts)</span>
-<span id="cb1-9">ts <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">120</span></span>
-<span id="cb1-10"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ts =</span> ts) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb1-11">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb1-12">  ggnormalviolin<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_normalviolin</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> ts, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mu =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sigma =</span> sigma_ts))</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/AssessingPsyche/2014-01-16-rereliability-is-for-squares/index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
 <p>The true score is static for each person, and the error fluctuates randomly.</p>
 <p>Because the true score and error are uncorrelated, the variance of <em>X</em> is the sum of the variance of <em>T</em> and the variance fo <em>e</em>:</p>
 <p><img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2_X=%5Csigma%5E2_T+%5Csigma%5E2_e"></p>
@@ -1694,8 +1595,8 @@ font-style: inherit;">sigma =</span> sigma_ts))</span></code></pre></div>
 <p><img src="https://latex.codecogs.com/png.latex?%5Ctext%7BCI%7D%20=%20%5Chat%7BT%7D%20%5Cpm%20z%5Csigma_x%5Csqrt%7Br_%7Bxx%7D-r%5E2_%7Bxx%7D%7D"></p>
 <p>The interactive app in Figure&nbsp;1 graph below shows the non-linear relationship between reliability and 95% confidence interval widths for different observed index scores. The confidence interval width is widest when the reliability coefficient is .5 and tapers to 0 when the reliability coefficient is 0 or 1.</p>
 <p>The idea that the confidence interval width is zero when reliability is perfect makes sense. However, it might be counterintuitive that the confidence interval width is also zero when the reliability coefficient is zero.</p>
-<p>How is this possible? To make sense of this, we have to remember what the true score is. It is the long term average score after repeated measurements (assuming no carryover effects). If a score has no reliable component, it is pure error. When <img src="https://latex.codecogs.com/png.latex?r_%7BXX%7D=0">, the score is <img src="https://latex.codecogs.com/png.latex?X=T+e">, where <img src="https://latex.codecogs.com/png.latex?%5Csigma_T%5E2=0"> and <img src="https://latex.codecogs.com/png.latex?%5Csigma_e%5E2=%5Csigma_X%5E2">. So the true has no variance, meaning that its mean is exactly the mean of <img src="https://latex.codecogs.com/png.latex?X"> for everyone.</p>
-<p>The reason that this is true is that the true score for a variable with no reliability is a constant.</p>
+<p>How is this possible? To make sense of this, we have to remember what the true score is. It is the long term average score after repeated measurements (assuming no carryover effects). If a score has no reliable component, it is pure error. When <img src="https://latex.codecogs.com/png.latex?r_%7BXX%7D=0">, the score is <img src="https://latex.codecogs.com/png.latex?X=T+e">, where <img src="https://latex.codecogs.com/png.latex?%5Csigma_T%5E2=0"> and <img src="https://latex.codecogs.com/png.latex?%5Csigma_e%5E2=%5Csigma_X%5E2">. So the true score has no variance, meaning that its mean is exactly the mean of <img src="https://latex.codecogs.com/png.latex?X"> for everyone.</p>
+<p>The reason for this is that when reliability is zero, the true score is a constant.</p>
 <div id="fig-ci" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1867,17 +1768,17 @@ Figure&nbsp;1: The relationship of reliability coefficients and confidence inter
   author = {Schneider, W. Joel},
   title = {Reliability Coefficients Are for Squares},
   date = {2014-01-16},
-  url = {https://wjschne.github.io/AssessingPsyche/2014-01-16-rereliability-is-for-squares/},
+  url = {https://wjschne.github.io/AssessingPsyche/2014-01-16-reliability-is-for-squares/},
   langid = {en}
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2014" class="csl-entry quarto-appendix-citeas">
 Schneider, W. J. (2014, January 16). Reliability coefficients are for
-squares. <em>AssessingPsyche</em>. <a href="https://wjschne.github.io/AssessingPsyche/2014-01-16-rereliability-is-for-squares/">https://wjschne.github.io/AssessingPsyche/2014-01-16-rereliability-is-for-squares/</a>
+squares. <em>AssessingPsyche</em>. <a href="https://wjschne.github.io/AssessingPsyche/2014-01-16-reliability-is-for-squares/">https://wjschne.github.io/AssessingPsyche/2014-01-16-reliability-is-for-squares/</a>
 </div></div></section></div> ]]></description>
   <category>psychometrics</category>
   <category>reliability</category>
   <category>confidence intervals</category>
-  <guid>https://wjschne.github.io/AssessingPsyche/2014-01-16-rereliability-is-for-squares/</guid>
+  <guid>https://wjschne.github.io/AssessingPsyche/2014-01-16-reliability-is-for-squares/</guid>
   <pubDate>Thu, 16 Jan 2014 05:00:00 GMT</pubDate>
 </item>
 <item>
