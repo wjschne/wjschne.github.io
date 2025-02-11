@@ -1,0 +1,1197 @@
+---
+title: "Multilevel Models with Three Levels"
+author: "W. Joel Schneider"
+subtitle: "Advanced Data Analysis (EDUC 8825)"
+date: "2025-02-11"
+engine: knitr
+execute: 
+  freeze: true
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
+      
+format: 
+  html: 
+    html-math-method: mathjax
+    fig-height: 8
+    fig-width: 8
+    theme: journal
+    toc: true
+    toc-float: true
+    toc-location: left
+    tbl-cap-location: margin
+    fig-cap-location: margin
+    # css: tutorial.css
+
+csl: "https://www.zotero.org/styles/apa"
+---
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(lme4)
+library(broom.mixed)
+library(performance)
+library(kableExtra)
+library(sjPlot)
+library(ggdiagram)
+# library(reghelper)
+options(digits = 3)
+```
+
+
+```{r sim}
+#| eval: false
+#| echo: false
+
+set.seed(1234)
+n3 <- 100
+m_n2 <- 20
+m_n1 <- 25
+tau_3_00 <- 10 ^ 2
+tau_3_BB <- 1 ^ 2
+tau_3_AA <- 0
+tau_3_AB.AB <- 0
+rho_3_0A <- 0
+rho_3_0B <- .2
+
+tau_2_00 <- 5 ^ 2
+tau_2_AA <- 0.5 ^ 2
+rho_2_0A <- 0.3
+gamma_0 <- 100
+gamma_C <- 1.2
+gamma_B <- 2
+gamma_BC <- 0.2
+gamma_A <- 3
+gamma_AC <- 0
+gamma_AB <- 0.5
+gamma_ABC <- 0
+
+sigma_e <- 15
+
+tau_3 <- c(1,
+           rho_3_0B, 1,
+           rho_3_0A, 0, 1,
+           0, 0, 0, 1) %>% 
+  lavaan::lav_matrix_lower2full(.) %>% 
+  lavaan::cor2cov(R = ., sds = sqrt(c(tau_3_00, tau_3_BB, tau_3_AA, tau_3_AB.AB)))
+
+
+
+tau_2 <- c(1,
+           rho_2_0A, 1) %>% 
+  lavaan::lav_matrix_lower2full(.) %>% 
+  lavaan::cor2cov(R = ., sds = sqrt(c(tau_2_00, tau_2_AA)))
+
+u3 <- mvtnorm::rmvnorm(
+  n3, 
+  mean = c(e_k = 0, e_Bk = 0, e_Ak = 0, e_ABk = 0), 
+  sigma = tau_3) %>% 
+  as_tibble()
+
+d3 <- tibble(id3 = factor(1:n3), 
+       n2 = rpois(n3, m_n2),
+       C_k = rgamma(n3, shape = 1, scale = 2)) %>% 
+  bind_cols(u3) %>% 
+  mutate(b_k = gamma_0 + gamma_C * C_k + e_k,
+         b_Bk = gamma_B + gamma_BC * C_k + e_Bk,
+         b_Ak = gamma_A + gamma_AC * C_k + e_Ak,
+         b_ABk = gamma_AB + gamma_ABC * C_k + e_ABk) 
+
+d2 <- d3 %>% 
+  uncount(n2) %>% 
+  mutate(id2 = factor(seq(1,nrow(.))),
+         n1 = rpois(nrow(.), m_n1),
+         B_jk = rgamma(nrow(.), shape = 1, scale = 2)) %>% 
+  bind_cols(
+    mvtnorm::rmvnorm(nrow(.), mean = c(e_jk = 0, e_Ajk = 0), sigma = tau_2) %>% 
+      as_tibble()
+  ) %>% 
+  mutate(b_jk = b_k + b_Bk * B_jk + e_jk,
+         b_Ajk = b_Ak + b_ABk * B_jk + e_Ajk)
+
+
+d1 <- d2 %>% 
+  uncount(n1) %>% 
+  mutate(id1 = factor(seq(1,nrow(.))),
+         A_ijk = rgamma(nrow(.), shape = 1, scale = 2),
+         e_ijk = rnorm(nrow(.), sd = sigma_e),
+         Y_ijk = b_jk + b_Ajk * A_ijk + e_ijk)
+
+# 
+# d1 %>% 
+#   mutate(id2 = fct_reorder(id2, B_jk)) %>% 
+#   ggplot(aes(A_ijk, Y_ijk)) +
+#   # geom_point(aes(color = id2)) +
+#   geom_smooth(method = "lm", aes(color = id2, group = id2), se = F, linewidth = 0.1) +
+#   theme(legend.position = "none")
+
+d <- select(
+  d1,
+  id1,
+  id_classroom = id2,
+  id_school = id3,
+  reading = Y_ijk,
+  engagement_student = A_ijk,
+  engagement_teacher = B_jk,
+  engagement_principal = C_k
+) 
+#   mutate(id_classroom = fct_reorder(id_classroom, engagement_teacher),
+#        id_school = fct_reorder(id_school, engagement_principal),
+#        engagement_student = (engagement_student - mean(engagement_student)) / sd(engagement_student),
+#        engagement_teacher = (engagement_teacher - mean(engagement_teacher)) / sd(engagement_teacher),
+#        engagement_principal = (engagement_principal - mean(engagement_principal)) / sd(engagement_principal))
+# # 
+# d <- select(d1,  id1, id2, id3, Y_ijk, A_ijk, B_jk, C_k) %>% 
+#   rename(reading = Y_ijk,
+#          S = A_ijk,
+#          `T` = B_jk, 
+#          P = C_k,
+#          id_school = id3,
+#          id_classroom = id2) 
+
+# d <- read_csv("hw5_three_level.csv")
+# write_csv(d, "hw6_three_level.csv")
+fit <- lmer(reading ~ 1 + engagement_student * engagement_teacher + engagement_teacher * engagement_principal + (1 + engagement_student | id_classroom) + (1 + engagement_teacher | id_school), data = d %>% 
+              mutate(engagement_student = WJSmisc::x2z(engagement_student),
+                     engagement_teacher = WJSmisc::x2z(engagement_teacher),
+                     engagement_principal = WJSmisc::x2z(engagement_principal)))
+options(scipen = 999, digits = 2)
+summary(fit)
+
+# as.data.frame(VarCorr(fit)) %>% 
+#   group_by(grp) %>% 
+#   nest()
+# 
+# as.data.frame(VarCorr(fit), order = "lower.tri") %>% 
+#   select(-sdcor) %>% 
+#   group_by(grp) %>% 
+#   nest() %>% 
+#   mutate(tau = map(data, "vcov") %>% map(lavaan::lav_matrix_upper2full)) %>% 
+#   pull(tau) %>% 
+#   map(cov2cor)
+
+
+```
+
+# Load Packages
+
+```{r loadpackages}
+# Load packages, installing them if needed
+library(tidyverse)
+library(lme4)
+library(broom.mixed)
+library(easystats)
+library(sjPlot)
+library(gt)
+```
+
+# Study
+
+We are evaluating the effects of a school-wide reading intervention in which principals helped teachers implement an innovative reading curriculum that helps students to read for pleasure at home and at school. Some principals were more engaged in this intervention than others. That is, some took this task seriously, spending many hours on it. Some did not. Some teachers likewise spend many classroom hours implementing the intervention whereas some teacher spent minimal time. Not surprisingly, some students were highly engaged in the intervention, spending many hours reading, and some were not.
+
+Our outcome variable is a reading comprehension score on a standardized test. The predictor variables are principal engagement (hours per month on intervention-related activity), teaching engagement (hours per month on intervention-related activity), and student engagement (hours per week reading).
+
+# Hypotheses
+
+* Principal, teacher, and student engagement all contribute to reading scores
+* The effect on reading is particularly high when teachers and students are both highly engaged. That is, the effect of student engagement is stronger with a high-engagement teacher than with a low-engagement teacher.
+* The effect on reading is also particularly high when principals and teachers are both highly engaged. That is, the effect of teacher engagement is higher when the principal is highly engaged than when the principal is not highly engaged.
+
+
+# Complete Model with all possible effects
+
+The `lmer` formula in its most compact form will be:
+
+`Reading ~ S * T * P + (S | id2) + (S * T | id3)`
+
+That is not so bad, right? We have masked some of the model's complexity by omitting the intercepts and using the `*` operator, which specifies an interaction effect along with all its lower-order terms.
+
+In its least compact form, including the intercepts and all the lower-order terms specified with the `:` operator, the formula would be:
+
+`Reading ~ 1 + S + T + P + S:T + S:P + T:P + S:T:P + (1 + S | id_classroom) + (1 + S + T + S:T | id_school)`
+
+This model has
+
+* Eight fixed coefficients:
+  - 1 fixed intercept: `1`
+  - 3 fixed conditional slopes: `S`, `T`, and `P`
+  - 3 fixed conditional two-way interactions: `S:T`, `S:P`, and `T:P`
+  - 1 fixed three-way interaction: `S:T:P`
+* One L1 random effect (not shown in formula)
+* Two L2 random effects
+  - 1 random intercept: `(1 | id_classroom)`
+  - 1 random slope: `(S | id_classroom)`
+* Four L3 random effects
+  - 1 random intercept: `(1 | id_school)`
+  - 2 random conditional slopes: `(S | id_school)` and `(T | id_school)`
+  - 1 random two-way interaction: `(S:T | id_school)`
+* A 2 &times; 2 L2 residual covariance matrix 
+  - 2 variances (for `1` and `S`)
+  - 1 covariance of L2 intercept and slope (between `1` and `S`)
+* A 4 &times; 4 L3 residual covariance matrix 
+  - 4 variances (for `1`, `S`, `T`, and `S:T`)
+  - 6 covariances (among `1`, `S`, `T`, and `S:T`)
+  
+How realistic is this model? Not very! It allows every possible fixed and random effect. It allows for every possible interaction effect and every possible correlation among random effects. The probability is quite remote that everything matters and everything interacts with everything.
+
+Not only is the model unrealistic, it is likely to have convergence problems, as well. With real data sets, the algorithms sometimes have a hard time finding the besting fitting model when many complex effects are specified. We are much better off starting with a simple model and building from there.
+
+Nevertheless, let's look at the complete model to help us understand what kinds of effects are possible.
+
+## Level 1 Equation
+
+:::{.callout-note}
+# Notation Change
+
+In this tutorial, I am going to use $b$ for both fixed and random coefficients instead of the tradition of using $\gamma$ for fixed coefficients and $\beta$ for random coefficients. Any coefficient that has numbers only in its subscript is fixed (e.g., $b_{010}$). Any coefficient that has one or more letters in its subscript is random (e.g., $b_{0jk}$).
+
+In addition, I am going to further simplify the notation for residuals and variances. All residuals will be $e$ and all variances will be $\tau$. Their levels can be inferred from their subscripts. For example, $\tau_1$ is the variance of the level 1 residual. 
+:::
+
+If you can ignore the subscripts, this is a simple model in which student engagement predicts reading ability:
+
+$$
+\begin{aligned}
+Reading_{ijk}&=b_{0jk}+b_{1jk}S_{ijk}+e_{ijk}\\
+e_{ijk}&\sim\mathcal{N}(0,\tau_1)
+\end{aligned}
+$$
+
+
+
+```{r L1table}
+#| html-table-processing: none
+#| echo: false
+tibble::tribble(
+  ~ Symbol, ~ Interpretation,
+  "$Reading_{ijk}$",                                                                                        "The reading comprehension score for student $i$ in classroom $j$ in school $k$.",
+         "$S_{ijk}$", "*Student Engagement* (L1 predictor). The number of hours per week spent reading for student $i$ in classroom $j$ in school $k$.",
+    "$b_{0jk}$", "*L2 random intercept*. In this model, $b_{0jk}$ refers to the predicted reading score for a student in classroom $j$ in school $k$ who spent 0 hours per week reading.",
+    "$b_{1jk}$",                         "*L2 random slope of L1 predictor*. In this model, $b_{1jk}$ refers to the predicted effect of student engagement for a student in classroom $j$ in school $k$.",
+         "$e_{ijk}$",           "*L1 residual*. In this model, $e_{ijk}$ refers to how much the reading comprehension score for student $i$ in classroom $j$ in school $k$ differs from expectations.",
+  "$\\tau_1$",           "*L1 residual variance*. The variance of $e_{ijk}$"
+  ) %>% 
+  mutate(groups = c(rep("Variables",2), rep("Random Coefficients", 2), "Residuals", "Residual Variance")) %>% 
+  gt(groupname_col = "groups", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  fmt_markdown() %>% 
+  gt::tab_stubhead("Type")
+```
+
+
+
+
+## Level 2 Equations 
+
+The L2 predictor, teacher engagement $T_{jk}$, can have an effect on the L2 random intercept $b_{0jk}$ and on the L2 random slope $b_{1jk}$:
+
+$$
+\begin{aligned}
+b_{0jk}&=b_{00k} + b_{01k}T_{jk}+e_{0jk}\\
+b_{1jk}&=b_{10k} + b_{11k}T_{jk}+e_{1jk}\\
+\boldsymbol{e_2}&=\begin{bmatrix}e_{0jk}\\ e_{1jk}\end{bmatrix}\\
+\boldsymbol{\tau_2}&=\begin{bmatrix}\tau_{2.00} & \\ \tau_{2.10} & \tau_{2.11}\end{bmatrix}\\
+\boldsymbol{e_2}&\sim \mathcal{N}\left(\boldsymbol{0},\boldsymbol{\tau_2}\right)
+\end{aligned}
+$$ 
+
+
+
+```{r L2table}
+#| html-table-processing: none
+#| echo: false
+tibble::tribble(
+  ~ Symbol, ~ Interpretation,
+    "$T_{jk}$", "*Teacher engagement* (L2 predictor). Number of hours teacher $j$ in school $k$ spend on intervention-related activities.",
+      "$b_{0jk}$", "*L2 random intercept*. In this model, $b_{0jk}$ refers to the predicted reading score for a student in classroom $j$ in school $k$ who spent 0 hours per week reading.",
+      "$b_{1jk}$", "*L2 random slope for L1 predictor*. In this model, $b_{1jk}$ refers to the predicted effect of student engagement for a student in classroom $j$ in school $k$.",
+  "$b_{00k}$", "*L3 random intercept*. In this model, $b_{00k}$ refers to the predicted reading score for classroom $j$ in school $k$ whose teacher spent 0 hours per month on intervention-related activitoes.",
+    "$b_{01k}$", "*L3 random conditional slope for L2 predictor*. In this model, $b_{01k}$ refers to the effect of teacher engagement in school $k$ when the student engagement is 0.",
+    "$b_{10k}$", "*L3 random conditional slope for L1 predictor*. In this model, $b_{10k}$ refers to the effect of student engagement in school $k$ when the teacher spends 0 hours per month on intervention-related activitoes.",
+    "$b_{11k}$", "*L3 random interaction effect for L1 and L2 predictors *. In this model, $b_{11k}$ refers to the interaction of student and teacher engagement in school $k$.",
+  "$\\boldsymbol{e_2}$", "The vector of L2 residuals, $\\{e_{0jk},e_{1jk} \\}$",
+         "$e_{0jk}$",           "*Residual for L2 random intercept*. In this model, $e_{0jk}$ refers to how much the reading comprehension score for classroom $j$ in school $k$ differs from expectations when the teacher spent 0 hours per month on intervention-related activities.",
+  "$e_{1jk}$",           "*Residual for L2 random slope of L1 predictor*. In this model, $e_{1jk}$ allows the effect of student engagement to vary from class to class after accounting for teacher engagement.",
+  "$\\boldsymbol{\\tau_2}$", "2 &times; 2 covariance matrix for L2 residuals",
+  "$\\tau_{2.00}$", "Variance of the L2 random intercept residual, $e_{0jk}$",
+  "$\\tau_{2.11}$", "Variance of the L2 slope residual, $e_{1jk}$",
+  "$\\tau_{2.10}$", "Covariance of the L2 intercept and slope residuals, $e_{0jk}$ and $e_{1jk}$"
+  ) %>% 
+  mutate(groups = c(rep("Variables",1), rep("Random Coefficients", 6), rep("Residuals",3), rep("Residual Variance", 4))) %>% 
+  gt(groupname_col = "groups", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  fmt_markdown() %>% 
+  gt::tab_stubhead("Type")
+
+```
+
+
+
+## Level 3 Equations 
+
+The L3 predictor, principal engagement $P_{jk}$, can have have an effect on all four L3 random coefficients:
+
+$$
+\begin{aligned}
+b_{00k}&=b_{000} + b_{001}P_{k}+e_{00k}\\
+b_{01k}&=b_{010} + b_{011}P_{k}+e_{01k}\\
+b_{10k}&=b_{100} + b_{101}P_{k}+e_{10k}\\
+b_{11k}&=b_{110} + b_{111}P_{k}+e_{11k}\\
+\boldsymbol{e_3}&=\begin{bmatrix}e_{00k}\\ e_{01k}\\ e_{10k}\\ e_{11k}\end{bmatrix}\\
+\boldsymbol{\tau_3}&=\begin{bmatrix}
+\tau_{3.00} & \\ 
+\tau_{3.10} & \tau_{3.11}\\ 
+\tau_{3.20} & \tau_{3.21} &  \tau_{3.22}\\
+\tau_{3.30} & \tau_{3.31} &  \tau_{3.32} &  \tau_{3.33}
+\end{bmatrix}\\
+\boldsymbol{e_3}&\sim \mathcal{N}\left(\boldsymbol{0},\boldsymbol{\tau_3}\right)
+\end{aligned}
+$$ 
+
+
+
+```{r L3table}
+#| html-table-processing: none
+#| echo: false
+tibble::tribble(
+  ~ Symbol, ~ Interpretation,
+    "$P_{k}$", "*Principal engagement* (L3 predictor). Number of hours the principal in school $k$ spend on intervention-related activities.",
+    "$b_{00k}$", "*L3 random intercept*. In this model, $b_{00k}$ refers to the predicted reading score for classroom $j$ in school $k$ whose teacher spent 0 hours per month on intervention-related activitoes.",
+    "$b_{01k}$", "*L3 random conditional slope of L2 predictor*. In this model, $b_{01k}$ refers to the effect of teacher engagement in school $k$ when the student engagement is 0.",
+    "$b_{10k}$", "*L3 random conditional slope of L1 predictor*. In this model, $b_{10k}$ refers to the effect of student engagement in school $k$ when the teacher spends 0 hours per month on intervention-related activitoes.",
+    "$b_{11k}$", "*L3 random interaction effect*. In this model, $b_{11k}$ refers to the interaction of student and teacher engagement in school $k$.",
+    "$b_{000}$", "*Fixed Intercept*. In this model, $b_{000}$ refers to the predicted reading score when student, teacher, and principal engagement is 0.",  
+    "$b_{001}$", "*Fixed Conditional Slope of L3 predictor*. In this model, $b_{001}$ refers to the effect of principal engagement when student and teacher engagement is 0.",  
+    "$b_{010}$", "*Fixed Conditional Slope of L2 predictor*. In this model, $b_{010}$ refers to the effect of teacher engagement when student and principal engagement is 0.",  
+    "$b_{011}$", "*Fixed L2-L3 Conditional Interaction*. In this model, $b_{011}$ refers to the interaction of teacher and principal engagement when student engagement is 0.",  
+    "$b_{100}$", "*Fixed Conditional Slope of L1 predictor*. In this model, $b_{100}$ refers to the effect of student engagement when teacher and principal engagement is 0.",  
+    "$b_{101}$", "*Fixed L1-L3 Conditional Interaction*. In this model, $b_{101}$ refers to the interaction of student and principal engagement when teacher engagement is 0.",  
+    "$b_{110}$", "*Fixed L1-L2 Conditional Interaction*. In this model, $b_{110}$ refers to the interaction of student and principal engagement when teacher engagement is 0.",  
+    "$b_{111}$", "*Fixed L1-L2-L3 Interaction*. In this model, $b_{111}$ refers to the interaction of student, teacher, and principal engagement.",
+          "$\\boldsymbol{e_3}$", "The vector of L3 residuals, $\\{e_{00k},e_{01k},e_{10k},e_{11k} \\}$",
+         "$e_{00k}$",           "*Residual for L3 intercept*. In this model, $e_{00k}$ refers to how much the reading comprehension score for school $k$ differs from expectations when student, teacher, and principal engagement is 0.",
+  "$e_{01k}$",           "*Residual for random L3 conditional slope of L2 predictor*. In this model, $e_{01k}$ refers how much the conditional effect of teacher engagement (when student and principal engagement is 0) differs from expectations in school $k$.",
+  "$e_{10k}$",           "*Residual for random L3 conditional slope of the L1 predictor*. In this model, $e_{10k}$ refers how much the conditional effect of student engagement (when teacher and principal engagement is 0) differs from expectations in school $k$.",
+    "$e_{11k}$",           "*Residual for random L3 interaction of L1 and L2 predictors*. In this model, $e_{11k}$ refers how much the interaction of student and teacher engagement differs from expectations in school $k$.",
+    "$\\boldsymbol{\\tau_3}$", "4 &times; 4 covariance matrix for L3 residuals",
+  "$\\tau_{3.00}$", "Variance of $e_{00k}$. After controling for the L3 predictor (principal engagement), how much does the L3 intercept vary?",
+  "$\\tau_{3.11}$", "Variance of $e_{01k}$. After controling for the L3 predictor (principal engagement), how much does the L3 slope of the L2 predictor (teacher engagement) vary?",
+  "$\\tau_{3.22}$", "Variance of $e_{10k}$. After controling for the L3 predictor (principal engagement), how much does the L3 slope of the L1 predictor (student engagement) vary?",
+  "$\\tau_{3.33}$", "Variance of $e_{11k}$. After controling for the L3 predictor (principal engagement), how much does the L3 interaction of the L1--L2 predictors (student and teacher engagement) vary?",
+  "$\\tau_{3.10}$", "Covariance of the $e_{00k}$ and $e_{01k}$.",
+  "$\\tau_{3.20}$", "Covariance of the $e_{00k}$ and $e_{10k}$",
+  "$\\tau_{3.30}$", "Covariance of the $e_{00k}$ and $e_{11k}$",
+  "$\\tau_{3.10}$", "Covariance of the $e_{01k}$ and $e_{10k}$",
+  "$\\tau_{3.10}$", "Covariance of the $e_{01k}$ and $e_{11k}$",
+  "$\\tau_{3.10}$", "Covariance of the $e_{10k}$ and $e_{10k}$"
+  ) %>% 
+  mutate(groups = c(rep("Variables",1), rep("Random Coefficients", 4), rep("Fixed Coefficients", 8), rep("Residuals",5), rep("Residual Variance", 11))) %>% 
+  gt(groupname_col = "groups", row_group_as_column = T) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    column_labels.font.size = 20,
+    footnotes.font.size = 16, table.border.bottom.color = "white") %>% 
+  fmt_markdown() %>% 
+  gt::tab_stubhead("Type")
+  
+
+
+```
+
+
+
+
+## Combined Equation
+
+$$
+\begin{multline}
+Reading_{ijk}=\underbrace{\underbrace{b_{000} + b_{001}P_{k}+e_{00k}}_{b_{00k}} + \underbrace{(b_{010} + b_{011}P_{k}+e_{01k})}_{b_{01k}}T_{jk}+e_{0jk}}_{b_{0jk}}+\\
+\underbrace{(\underbrace{b_{100}+b_{101}P_k+e_{10k}}_{b_{10k}} + (\underbrace{b_{110}+b_{111}P_k+e_{11k}}_{b_{11k}})T_{jk}+e_{1jk})}_{b_{1jk}}S_{ijk}+e_{ijk}\\
+~
+\end{multline}
+$$
+
+## Combined Fixed vs. Random Effects Equation
+
+$$
+\begin{aligned}
+Reading_{ijk}&=
+\underbrace{b_{000}}_{\text{Fixed Intercept}} +\\ &\underbrace{b_{001}P_{k}+b_{010}T_{jk} + b_{100}S_{ijk}}_{\text{Fixed Conditional Slopes}} +\\
+&\underbrace{b_{110}S_{ijk}T_{jk}+b_{101}S_{ijk}P_{k}+b_{011}T_{jk}P_{k}}_{\text{Fixed Conditional 2-Way Interactions}}+\\ 
+&\underbrace{b_{111}S_{ijk}T_{jk}P_{k}}_{\text{Fixed L1-L2-L3 Interaction}}+\\
+&\underbrace{e_{00k}+e_{01k}T_{jk}+e_{10k}S_{ijk}+e_{11k}S_{ijk}T_{jk}}_{\text{L3 Random Effects}}+\\
+&\underbrace{e_{0jk}+e_{1jk}S_{ijk}}_{\text{L2 Random Effects}}+\\
+&\underbrace{e_{ijk}}_{\text{L1 Random Effect}}
+\end{aligned}
+$$
+
+This last equation is equivalent to this model in R:
+
+```
+Reading ~ 
+  1 + 
+  P + T + S + 
+  S:T + T:P + 
+  S:T:P +
+  (1 + T + S + S:T | id_school) +
+  (1 + S | id_classrom)
+```
+
+Some helpful hints about notation:
+
+* Terms with letters in the subscripts are random. These include variables (e.g., $Reading_{ijk}, S_{ijk}, T_{jk}, P_k$), residuals (e.g., $e_{ijk}, e_{0jk}, e_{10k}$), and random coefficients (e.g., $b_{0jk}, b_{10k}$).
+* Random coefficients have a mix of numbers and letters in the subscripts (e.g., $b_{0jk}, b_{10k}$).
+* Fixed coefficients have numbers only in the subscripts (e.g., $b_{000}, b_{110}$).
+* Coefficients with numbers that are exclusively 0 are intercepts (e.g., $b_{000}, b_{0jk}, b_{00k}$).
+* Coefficients with only 1 non-zero number are slopes (e.g., $b_{001}, b_{010}, b_{100}, b_{1jk}, b_{01k}$). If interaction effects involving the same variable are present in the model, these slopes are conditional slopes (AKA simple slopes).
+* Coefficients with multiple non-zero numbers are interaction effects (e.g., $b_{011}, b_{110}, b_{101},b_{111}, b_{11k}$). 
+
+To determine the level of the variable:
+
+* All fixed coefficients are specified at the highest level (i.e., 3 in this model)
+* All variables, random coefficients, and error terms belong to the level that corresponds to the number of letters like so:
+
+$$
+\text{Level}=1+\text{Highest Level}-\text{Number of Letters in Subscript}
+$$
+
+Thus, in this model, any symbol with $ijk$ in the subscript is a level-1 variable (e.g., $Reading_{ijk}, S_{ijk}, e_{ijk}$). 
+
+Otherwise, any symbol with $jk$ in the subscript belongs to level 2 . Otherwise, any symbol with $k$ in the subscript belongs to level 3. Fixed coefficients are included in the highest level's equations (i.e., 3).
+
+Predictors are paired with coefficients from the next highest level or with fixed coefficients if no higher level exists. Thus, 
+
+* Level-1 predictors are paired with level-2 coefficients (e.g., $b_{1jk}S_{ijk}$).
+* Level-2 predictors are paired with level-3 coefficients (e.g., $b_{01k}T_{jk}$ and $b_{11k}T_{jk}$).
+* Level-3 predictors (highest level) are paired with fixed coefficients (e.g., $b_{001}P_{k}$, $b_{011}P_{k}$, $b_{101}P_{k}$, and $b_{111}P_{k}$).
+
+
+# Path Diagram
+
+```{r ggdiagramcode}
+#| code-fold: true
+myfont <- "Roboto Condensed"
+library(ggdiagram)
+# ggdiagram is an experimental package that can be installed 
+# remotes::install_github("wjschne/ggdiagram")
+
+my_hue <- viridis::viridis(3, begin = .2, end = .7) 
+
+my_color_dark <- my_hue %>%
+  map2_chr(c(.2,.25, .3), tinter::darken)
+
+
+my_color_light <- my_hue %>%
+  tinter::lighten(.4)
+
+my_color <- my_hue %>%
+  tinter::lighten(.8)
+
+line_color <- "gray30"
+my_intercept <- redefault(
+  ob_ngon,
+  radius = .7,
+  angle = 90,
+  fill = my_color_light[1],
+  color = NA,
+  label = "1~1~",
+  vertex_radius = unit(0.5, "mm")
+)
+my_path <- redefault(connect, resect = 2, color = my_color_light[3])
+my_error <- redefault(ob_circle,
+                      radius = .5,
+                      color = NA,
+                      fill = my_color_light[1])
+my_error_variance <- redefault(
+  ob_variance,
+  resect = 1,
+  linewidth = .4,
+  theta = 60,
+  looseness = 1.5,
+  where = "right",
+  color =  my_color[3]
+)
+my_path_label <- redefault(
+  ob_label,
+  size = 13,
+  angle = 0,
+  position = .45,
+  label.padding = margin(1, 1, 1, 1),
+  color = my_color[3]
+)
+my_coefficient <- redefault(ob_circle,
+                            radius = .45,
+                            fill = my_color_light[3],
+                            color = NA)
+my_coefficient_label <- redefault(ob_label, fill = NA, color = my_color_dark[3], size = 15)
+
+my_residual <- redefault(ob_circle,
+                         radius = .35,
+                         fill = my_color_light[3],
+                         color = NA)
+my_residual_label <- redefault(ob_label, size = 13, fill = NA, color = my_color_dark[3])
+my_residual_variance <- redefault(
+  ob_variance,
+  resect = 1,
+  linewidth = .4,
+  theta = 60,
+  looseness = 2,
+  where = "right",
+  color = my_color_light[3]
+)
+
+my_residual_variance_label <- redefault(
+  ob_label,
+  size = 13,
+  label.padding = margin(l = 1, r = 1, t = 1, b = 1),
+  position = .5,
+  color = my_color[3]
+)
+my_observed <- redefault(
+  ob_ellipse, 
+  m1 = 18, 
+  color = NA, 
+  fill = my_color_light[1])
+
+my_observed_label <- redefault(ob_label, 
+                               size = 18, 
+                               fill = NA, 
+                               color = my_color_dark[1])
+
+ggdiagram(myfont, font_size = 16) +
+  {read <- my_observed(label = my_observed_label("*Reading*~*ijk*~"))} + 
+  {S <- my_observed(label = my_observed_label("*Student*~*ijk*~")) %>% 
+    place(read, "left", 5)} + 
+  {S2read <- my_path(S, read, color = my_color_light[1])} +
+  {b_1jk <- my_coefficient(
+    fill = my_color_light[2],
+    center = midpoint(S2read, position = .6),
+    label = my_coefficient_label("*b*~1*jk*~", color = my_color_dark[2]))} +
+  {i_1 <- my_intercept(label = ob_label(
+    "1~1~", 
+    fill = NA,
+    color = my_color_dark[1])) %>% 
+    place(S, "above", 3.5)} +
+  {i12read <- my_path(i_1@vertices[3], read, color = my_color_light[1])} +
+  {b_0jk <- my_coefficient(
+    fill = my_color_light[2],
+    center = midpoint(i12read, position = .15),
+    label =  my_coefficient_label("*b*~0*jk*~", color = my_color_dark[2]))} +
+  {i_2 <- my_intercept(
+    fill = my_color_light[2],
+    label = ob_label(
+    "1~2~",
+    fill = NA,
+    color = my_color_dark[2])) %>% 
+    place(b_1jk, degree(90), 9)} +
+  {i22b0jk <- my_path(
+      i_2,
+      b_0jk,
+      color = my_color_light[2])} +
+  {b_00k <- my_coefficient(center = midpoint(i22b0jk, position = .39),
+                  label = my_coefficient_label("*b*~00*k*~"))} +
+  {i22b0jk <- my_path(
+      i_2,
+      b_1jk,
+      color = my_color_light[2])} +
+  {T_jk <- my_observed(label = my_observed_label("*Teacher*~jk~", color = my_color_dark[2]), fill = my_color_light[2]) %>% place(b_0jk, "right", 7.5) } +
+  {T2b0jk <- my_path(T_jk, b_0jk, color = my_color_light[2])} +
+  {T2b1jk <- my_path(T_jk, b_1jk, color = my_color_light[2])} +
+  {b_11k <- my_coefficient(
+    center = midpoint(T2b1jk, position = .25), 
+    label = my_coefficient_label("*b*~11*k*~"))} +
+  {b_01k <- my_coefficient(center = intersection(T2b0jk, ob_segment(b_00k@center, b_11k@center)),
+                  label = my_coefficient_label("*b*~01*k*~"))} +
+  {b_10k <- my_coefficient(center = intersection(i22b0jk, ob_segment(b_00k@center, b_11k@center)),
+                  label = my_coefficient_label("*b*~10*k*~"))} +
+  {P_k <- my_observed(label = my_observed_label("*Principal*~k~", color = my_color_dark[3]), fill = my_color_light[3]) %>% place(b_10k, "right", 4.5) } +
+  {i_3 <- my_intercept(
+    fill = my_color_light[3],
+    label = ob_label(
+    "1~3~", 
+    fill = NA,
+    color = my_color_dark[3])) %>% 
+    place(P_k, degree(120), 2)} +
+  {i32b00k <- my_path(
+    i_3, 
+    b_00k, 
+    label = my_path_label("*b*~000~", position = .35))} +
+  {i32b10k <- my_path(
+    i_3, 
+    b_10k, 
+    label = my_path_label("*b*~100~", position = .33))} +
+  {i32b01k <- my_path(
+    i_3, 
+    b_01k, 
+    label = my_path_label("*b*~010~", position = .32))} +
+  {i32b11k <- my_path(
+    i_3, 
+    b_11k, 
+    label = my_path_label("*b*~110~", position = .31))} +
+  {Pk2b00k <- my_path(
+    P_k, 
+    b_00k, 
+    label = my_path_label("*b*~001~", position = .5))} +
+  {Pk2b10k <- my_path(
+    P_k, 
+    b_10k, 
+    label = my_path_label("*b*~101~", position = .62))} +
+  {Pk2b01k <- my_path(
+    P_k,
+    b_01k, 
+    label = my_path_label("*b*~011~", position = .65))} +
+  {Pk2b11k <- my_path(
+    P_k, 
+    b_11k, 
+    label = my_path_label("*b*~111~", position = .45))} +
+  {e_ijk <- my_error(label = ob_label("*e*~*ijk*~", color = my_color_dark[1], fill = NA)) %>% 
+    place(read, "right", .6)} +
+  my_path(e_ijk, read, color = my_color_light[1]) +
+  {e_ijk_var <- my_error_variance(e_ijk, color = my_color_light[1], label = my_residual_variance_label("&tau;~1~", color = my_color_light[1]))} +
+  {e_0jk <- my_residual(label = my_residual_label("*e*~0*jk*~", color = my_color_dark[2]), fill = my_color_light[2]) %>% 
+    place(b_0jk, degree(225), .6)} +
+  my_residual_variance(
+    e_0jk,
+    degree(225),
+    color = my_color_light[2],
+    label = my_residual_variance_label("*&tau;*<sub>2.00</sub>", color = my_color[2])
+  ) +
+  my_path(e_0jk, b_0jk, color = my_color_light[2]) +
+  {e_1jk <- my_residual(label = my_residual_label("*e*~1*jk*~", color = my_color_dark[2]), fill = my_color_light[2]) %>% 
+    place(b_1jk, degree(225), .6)} +
+  my_residual_variance(
+    e_1jk,
+    degree(225),
+    color = my_color_light[2],
+    label = my_residual_variance_label("*&tau;*<sub>2.11</sub>", color = my_color[2])
+  ) +
+  my_path(e_1jk, b_1jk, color = my_color_light[2]) +
+  {e_00k <- my_residual(label = my_residual_label("*e*~00*k*~")) %>% 
+    place(b_00k, degree(135), .6)} +
+  my_residual_variance(
+    e_00k,
+    degree(135),
+    label = my_residual_variance_label("*&tau;*<sub>3.00</sub>")
+  ) +
+  my_path(e_00k, b_00k) +
+  {e_10k <- my_residual(label = my_residual_label("*e*~10*k*~")) %>% 
+    place(b_10k, degree(225), .6)} +
+  my_residual_variance(
+    e_10k,
+    degree(225),
+    label = my_residual_variance_label("*&tau;*<sub>3.22</sub>")
+  ) +
+  my_path(e_10k, b_10k) +
+  {e_01k <- my_residual(label = my_residual_label("*e*~01*k*~")) %>% 
+    place(b_01k, degree(225), .6)} +
+  my_residual_variance(
+    e_01k,
+    degree(225),
+    label = my_residual_variance_label("*&tau;*<sub>3.11</sub>")
+  ) +
+  my_path(e_01k, b_01k) +
+  {e_11k <- my_residual(label = my_residual_label("*e*~11*k*~")) %>% 
+    place(b_11k, degree(-45), .6)} +
+  my_residual_variance(
+    e_11k,
+    degree(-45),
+    label = my_residual_variance_label("*&tau;*<sub>3.33</sub>")
+  ) +
+  my_path(e_11k, b_11k) +
+  ob_covariance(
+    e_0jk@point_at("east"),
+    e_1jk@point_at("north"),
+    label = my_path_label("*&tau;*<sub>2.10</sub>", position = .5),
+    length_head = 5,
+    length_fins = 5,
+    size = .5, 
+    looseness = 1,
+    bend = -6,
+    resect = 1,
+    color = my_color_light[2]
+  ) +
+  ob_covariance(
+    e_01k@point_at("west"),
+    e_00k@point_at(265),
+    label = my_path_label("*&tau;*<sub>3.10</sub>", position = .75),
+    length_head = 5,
+    length_fins = 5,
+    size = .5, 
+    looseness = 1,
+    bend = 6,
+    resect = 1,
+    color = my_color_light[3]
+  ) 
+
+```
+
+
+
+
+# Import Data and Transform Variables
+
+Here we import the data using `read_csv`, then we convert the L2 identifier variable `id_classroom` and the L3 identifier variable `id_school` into factors. At this point we would normally center our predictors. However, our engagement predictors are measured in hours, which is a ratio-level variable. In ratio variables, 0 indicates the absence of the quantity being measured. The whole point of centering variables is, if you can forgive the pun, to make zero *mean*ingful (i.e., 0 = mean). Here, the 0 already has a clear meaning (0 = no engagement), and thus we need not transform the predictors. 
+
+```{r import}
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/hw5_three_level.csv") %>% 
+  mutate(id_classroom = factor(id_classroom),
+         id_school = factor(id_school))
+```
+
+# Null Models
+
+# 1-Level Fixed Intercept Model
+
+This is not much of a model. We use this model solely as a null hypothesis against which to contrast the next model. It posits an overall fixed intercept, $b_{000}$, and every person deviates from it. 
+
+$$
+Reading_{ijk}=\underbrace{\underbrace{b_{000}}_{b_{00k}}}_{b_{0jk}}+e_{ijk}
+$$
+
+# 2-Level Random Intercept Model
+
+In this model, each class has an intercept, $b_{0jk}$. It posits an overall fixed intercept, $b_{000}$, and every person deviates from it. 
+
+$$
+Reading_{ijk}=\underbrace{\underbrace{b_{000}}_{b_{00k}}+e_{0jk}}_{b_{0jk}}+e_{ijk}
+$$
+
+
+# 3-Level Random Intercept Model
+
+$$
+Reading_{ijk}=\underbrace{\underbrace{b_{000}+e_{00k}}_{b_{00k}}+e_{0jk}}_{b_{0jk}}+e_{ijk}
+$$
+
+We can test to see if there is sufficient variability in Reading at level 2 and at level three to justify a level-2 and/or level-3 model.
+
+In the code below, we create a level-1 null model with the `lm` function, specifying just a a fixed intercept. Then we specify a level-2 null model with just classroom intercepts and a level-3 null model with classroom and school intercepts.
+
+```{r nullmodels}
+# Level-1 null model
+m_null_1 <- lm(reading ~ 1, data = d)
+
+# Level-2 null model
+m_null_2 <- lmer(reading ~ 1 + (1 | id_classroom), data = d)
+summary(m_null_2)
+
+# Level-2 null model
+m_null_3 <- lmer(reading ~ 1 + (1 | id_classroom) + (1 | id_school), d)
+summary(m_null_3)
+
+# Compare both null models
+# This will fail if m_null_1 is listed first.
+# Set refit to FALSE because we are comparing models with different random effects
+anova(m_null_3, m_null_2, m_null_1, refit = FALSE)
+
+```
+
+
+We can see in the `Pr(>Chisq)` column that the difference is significant for both comparisons, meaning that the level-2 and level-3 models are justified.
+
+## Check Assumptions
+
+The normality assumption holds at all levels. That is, all random variables, at all levels, should be normal.
+
+
+First, let's just look at the density plot:
+
+```{r checknull}
+#| fig-height: 8
+check_model(m_null_3)
+```
+
+The level-2 and level-3 intercepts look a little positively skewed. However, this level of non-normality is not usually fatal to the model.
+
+
+Lets check the assumptions again after we have added our fixed effects to the model.
+
+
+# Fixed-Effects Models
+
+## Level 1 Predictors
+
+Let's add our L1 predictor first.
+
+```{r m1}
+m_1_L1fixed <- update(m_null_3, . ~ .  + engagement_student)
+```
+
+
+
+
+First, we need a new function that will compute variance reduction.
+
+:::{.callout-warning}
+
+# Warning!
+
+Variance reduction does not always behave as it does in ordinary least squares. Think carefully about what is happening. Sometimes the variance reduction will be negative, meaning that the new variances are larger than the old variances. This does not necessarily mean that the new model is worse.
+
+In general, do not interpret variance reduction when models have different random slopes structure [@mccoachMultilevelModelSelection2022, 70]. 
+
+:::
+
+```{r varreduction}
+
+# Let's make a function that automates the process of computing variance reduction
+# This function will find which random components the 2 models have in common and compares them.
+# Any non-shared variance components will be omitted.
+variance_reduction <- function(model_new, model_old) {
+  
+    bind_rows(
+      as.data.frame(VarCorr(model_new), order = "lower.tri") %>% 
+        mutate(model = "New Model"),
+      as.data.frame(VarCorr(model_old), order = "lower.tri") %>% 
+        mutate(model = "Old Model")) %>% 
+    select(-sdcor) %>% 
+    mutate(model = factor(model, levels = c("New Model", "Old Model"))) %>% 
+    arrange(grp, var1, var2, model) %>% 
+    group_by(grp, var1, var2) %>% 
+    mutate(n = n()) %>% 
+    filter(n > 1) %>% 
+    ungroup() %>% 
+    select(-n) %>% 
+    pivot_wider(names_from = model, values_from = vcov) %>% 
+    unite(term, var1, var2, na.rm = T) %>% 
+    mutate(`Variance Reduction` = (`Old Model` - `New Model`) / `Old Model`,
+           term = ifelse(grp == "Residual", "Level 1 Variance", term) %>% 
+             str_replace("\\(Intercept\\)", "Intercept")) 
+    
+}
+
+
+```
+
+We are going to want a bunch of things every time we get a new model. 
+
+1. An assumption check plot (optional)
+2. An automatic interpretation report
+3. A summary of the model, preferably in a nice table
+4. A plot of the fixed effects
+5. A test of conditional slopes, if the model has interactions.
+6. A statistical test of difference of the new model with a previous model
+7. A statistical comparison of performance metrics from the new and previous models
+8. Variance reduction statistics for the new model compared to a previous model
+
+
+The easiest way to get all this with only minimal fussing with code is to specify the old and new models each time like this:
+
+```{r oldnew}
+m_old <- m_null_3
+m_new <- m_1_L1fixed
+checkassumptions = FALSE # Set to TRUE if you want the check assumptions.
+```
+
+Then run the following code:
+
+```{r compare2models}
+#| eval: false
+# Check assumptions if checkassumptions is TRUE
+if (checkassumptions) {
+  performance::check_model(m_new)
+  }
+
+# Tabular display of new model
+sjPlot::tab_model(m_new, show.std = TRUE)
+
+# Automated report of new model
+report::report(m_new, include_effectsize = T) 
+
+
+
+# Plot fixed effects in new model
+if (!is.null(insight::find_predictors(m_new)$conditional)) {
+  sjPlot::plot_model(m_new, 
+           type = "pred", 
+           title = deparse1(as.formula(m_new)), 
+           terms = insight::find_predictors(m_new)$conditional
+           )
+}
+
+
+
+# Test simple slopes, if interactions are present
+if (!is.null(insight::find_interactions(m_new))) {
+  reghelper::reghelper(m_new)
+}
+
+# Test comparison
+anova(m_old, m_new) %>% 
+  gt::gt(caption = "Test Model difference") %>% 
+  gt::fmt_number() %>% 
+  gt::sub_missing(missing_text = "")
+
+# Compare fixed parameters with unstandardized (b) and standardized (beta) coefficients
+tab_model(m_old, m_new, 
+          title = "Model Comparison", 
+          show.std = TRUE, 
+          show.ci = FALSE, 
+          show.aic = TRUE, 
+          string.est = "b", 
+          string.std = "&beta;")
+
+  
+# Variance reduction
+variance_reduction(m_new, m_old) %>% 
+    gt(caption = "Variance Reduction") 
+```
+
+If you want an easy way to run a lot of code repeatedly without making a function, you can "re-use" a previous code chunk. This way, if you make changes, you do so in one location only. The chunk with re-usable code was called `compare2models`. We can run it again by enclosing the code chunk name in brackets like so: 
+
+```
+m_old <- m_null_3
+m_new <- m_1_L1fixed
+<<compare2models>>
+```
+
+When rendered, this chunk will expand to have the `compare2models` code copied into the chunk like so:
+
+```{r L1fixed, eval=FALSE}
+m_old <- m_null_3
+m_new <- m_1_L1fixed
+<<compare2models>>
+```
+
+
+However, this will give you a ton of output at once, which is fine for a rendered document but is cumbersome for interactive sessions. When you are first running the analyses, I recommend just copying the code and running the parts you want to see. Later, you can run the whole `compare2models` chunk for the rendered document, if desired. 
+
+Now let's run the code and see what happens:
+
+```{r L1fixedagain}
+m_old <- m_null_3
+m_new <- m_1_L1fixed
+<<compare2models>>
+```
+
+
+$$
+\begin{aligned}
+  \operatorname{reading}_{i}  &\sim N \left(\alpha_{j[i],k[i]}, \sigma^2 \right) \\
+    \alpha_{j}  &\sim N \left(\mu_{\alpha_{j}}, \sigma^2_{\alpha_{j}} \right)
+    \text{, for id\_classroom j = 1,} \dots \text{,J} \\
+    \alpha_{k}  &\sim N \left(\mu_{\alpha_{k}}, \sigma^2_{\alpha_{k}} \right)
+    \text{, for id\_school k = 1,} \dots \text{,K}
+\end{aligned}
+$$
+
+There was a lot going on in that output, but it is clear that `engagement_student` is a significant predictor of reading. 
+
+## Level 2 Predictors
+
+Now let's add the L2 predictor, `engagement_teacher`:
+
+```{r L2fixed}
+m_2_L2fixed <- update(m_1_L1fixed, . ~ . + engagement_teacher)
+m_old <- m_1_L1fixed
+m_new <- m_2_L2fixed
+<<compare2models>>
+```
+
+Again, that is a lot of output to wade through, but it is clear that `engagement_teacher` is a significant predictor of reading.
+
+## Level 3 Predictors
+
+Let's add the L3 predictor, `engagement_principal`:
+
+```{r L3fixed}
+m_3_L3fixed <- update(m_2_L2fixed, . ~ . + engagement_principal)
+m_old <- m_2_L2fixed
+m_new <- m_3_L3fixed
+<<compare2models>>
+```
+
+Now we see that all three engagement variables are significant preductors. 
+
+
+Let's see how much variance our fixed effects explain compared to our null model:
+
+```{r L3fixedvnull}
+compare_performance(m_3_L3fixed, m_null_3)
+variance_reduction(m_3_L3fixed, m_null_3)
+```
+
+Not bad!
+
+# Level-2 Random Slopes
+
+## Uncorrelated slopes and intercepts at L2
+
+We are going to fit two models with random slopes for student engagement. First, we will make the L2 slopes uncorrelated with the L2 intercepts. Then we will allow them to correlate.
+
+Although I normally use the `update` function to specify new models, my experience is that updating random components gets messy very fast. It seems safer to just specify the models by hand (but carefully!). 
+
+
+```{r L2uncorrelated}
+m_4_L2_uncorrelated_slopes <- lmer(reading ~ engagement_student  + engagement_teacher + engagement_principal + (1 + engagement_student || id_classroom) + (1 | id_school), data = d)
+
+m_old <- m_3_L3fixed
+m_new <- m_4_L2_uncorrelated_slopes
+<<compare2models>>
+```
+
+**Interpretation**: We need to include the L2 random slopes for `student engagment` in our model. Why? The comparison using the `anova` function was significant. Also, the `AIC-wt` from the `compare_performance` function tells us we should prefer the random slopes model over the fixed effects model.
+
+
+## Correlated slopes and intercepts at L2
+
+For the sake of completeness, we can let the random slopes and intercepts correlate.
+
+```{r L2correlated}
+m_5_L2_correlated_slopes <- lmer(reading ~ engagement_student  + engagement_teacher + engagement_principal + (1 + engagement_student | id_classroom) + (1 | id_school), data = d)
+
+m_old <- m_4_L2_uncorrelated_slopes
+m_new <- m_5_L2_correlated_slopes
+<<compare2models>>
+```
+
+
+::: {.callout-note}
+# Question 1
+
+
+Of the models we have seen so far, which should we prefer, fixed effects only (`m_3_L3fixed`), uncorrelated L2 random effects (`m_4_L2_uncorrelated_slopes`), or correlated L2 random effects (`m_5_L2_correlated_slopes`)?
+:::
+
+
+:::{.callout-tip collapse=true}
+# Hint (click to see)
+
+Look at the output of these functions:
+
+```{r q1hint, eval=FALSE}
+anova(m_3_L3fixed, m_4_L2_uncorrelated_slopes, m_5_L2_correlated_slopes)
+compare_performance(m_3_L3fixed, m_4_L2_uncorrelated_slopes, m_5_L2_correlated_slopes)
+```
+
+:::
+
+
+# Level-3 Random Slopes
+
+To the model that you decided on in the previous question, add random slopes for teacher engagement at level 3. Just as with level 3, create a version with uncorrelated slopes and intercepts (call it `m_6_L3_uncorrelated_slopes`) and a model with correlated slopes and intercepts (call it `m_7_L3_correlated_slopes`). Compare the models with previous model and with each other. 
+
+For now, pay no attention to the convergence warnings. We will deal with that later.
+
+
+::: {.callout-note}
+# Question 2
+
+
+Concerning L3 random effects, with model should you prefer?
+
+:::
+
+```{r L3slopes, eval=F, echo = F}
+
+m_6_L3_uncorrelated_slopes <- lmer(reading ~ engagement_student  + engagement_teacher + engagement_principal + (1  | id_classroom) + (1 + engagement_teacher  || id_school), data = d)
+
+
+m_7_L3_correlated_slopes <- lmer(reading ~ engagement_student  + engagement_teacher + engagement_principal + (1 + engagement_student | id_classroom) + (1 + engagement_teacher  || id_school), data = d)
+
+anova(m_l2_correlated_slopes, m_l3_uncorrelated_slopes, m_l3_correlated_slopes, refit = F)
+
+
+```
+
+# L1--L2 Interaction
+
+::: {.callout-note}
+# Question 3
+
+Is there evidence of an interaction effect of student and teacher engagement?
+
+:::
+
+
+:::{.callout-tip collapse=true}
+# Hint (click to see)
+
+Specify `engagement_student * engagement_teacher` instead of `engagement_student + engagement_teacher` in your model.</span>
+
+If you want to know if the conditional effects (AKA simple slopes) of `engagement_student` are significant at particular values of `engagement_teacher`, try `reghelper::simple_slopes`.
+
+For example:
+
+```{r simpleslopes}
+m_L1L2 <- lmer(reading ~ engagement_student  * engagement_teacher + engagement_principal + (1 + engagement_student || id_classroom) + (1 + engagement_teacher  | id_school), data = d)
+# Default values are at -1SD, mean, +1SD
+reghelper::simple_slopes(m_L1L2)
+
+# Specify specific values:
+reghelper::simple_slopes(m_L1L2, levels = list(engagement_teacher = c(0, 1, 2, "sstest"), 
+                                    engagement_student = c(0, 1, 2, "sstest")))
+
+```
+
+
+:::
+
+
+
+
+```{r L1L2code, eval=F, echo = F}
+
+m_l1l2 <- lmer(reading ~ engagement_student  * engagement_teacher + engagement_principal + (1 + engagement_student | id_classroom) + (1 + engagement_teacher  | id_school), data = d)
+
+
+plot_model(m_l1l2, type = "pred", terms = c("engagement_student", "engagement_teacher"))
+
+anova(m_l3_correlated_slopes, m_l1l2, refit = T)
+
+performance::compare_performance(m_l3_correlated_slopes, 
+                                 m_l1l2, rank = T)
+
+performance::compare_performance(m_l3_correlated_slopes, 
+                                 m_l1l2, rank = T) %>% 
+  plot()
+```
+
+# L2--L3 Interaction
+
+::: {.callout-note}
+# Question 4
+
+According to the `anova` comparison, is there evidence of an interaction of principal and teacher engagement?
+
+:::
+
+:::{.callout-tip collapse=true}
+# Hint (click to see)
+
+Specify `engagement_teacher * engagement_principal` instead of `engagement_teacher + engagement_principal` in your model.
+
+:::
+
+
+```{r L2L3, eval=F, echo = F}
+
+m_l2l3 <- lmer(reading ~ engagement_student  * engagement_teacher + engagement_teacher * engagement_principal + (1 + engagement_student | id_classroom) + (1 + engagement_teacher  | id_school), data = d)
+
+anova(m_l2l3, m_l1l2, refit = T)
+
+performance::compare_performance(m_l3_correlated_slopes, 
+                                 m_l1l2,
+                                 m_l2l3, rank = T)
+
+performance::compare_performance(m_l3_correlated_slopes, 
+                                 m_l1l2,
+                                 m_l2l3, rank = T) %>% 
+  plot()
+```
+
+
+# More Hypotheses?
+
+Could we specify an L1--L3 interaction? A L1--L2--L3 interaction? A random L1-L2 interaction? Yes, we could. However, we did not hypothesize any of those effects. I would have a hard time coming up with a plausible reason that they should be present. Thus any "test" of those effects should be thought of as exploratory. Even if the results are statistically significant, we should not have the same faith in the findings as we would with tests we planned.
