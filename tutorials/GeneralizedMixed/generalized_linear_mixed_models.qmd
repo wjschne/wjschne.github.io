@@ -1,0 +1,242 @@
+---
+title: "Generalized Linear Mixed Models"
+author: "W. Joel Schneider"
+subtitle: "Advanced Data Analysis (EDUC 8825)"
+date: "2025-02-18"
+engine: knitr
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
+      
+format: 
+  html: 
+    html-math-method: mathjax
+    fig-height: 8
+    fig-width: 8
+    theme: journal
+    toc: true
+    toc-float: true
+    toc-location: left
+    tbl-cap-location: margin
+    fig-cap-location: margin
+    # css: tutorial.css
+
+
+csl: "https://www.zotero.org/styles/apa"
+---
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(lme4)
+library(easystats)
+library(kableExtra)
+library(sjPlot)
+
+options(digits = 3)
+
+bs_options <- c("striped", "hover", "condensed", "responsive", "bordered")
+
+library(lavaan)
+
+pacman::p_load(tidyverse, mvtnorm, lavaan, ggExtra, hrbrthemes, lme4, update = F, install = F)
+
+bg_color <- "#ECE5D3"
+fore_color <- "#2D2718"
+line_color <- "#7C4728"
+area_color <- "#624E3E"
+myfont <- "Roboto Condensed"
+
+
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 18, base_family = myfont)) 
+```
+
+
+
+Some outcome variables are incompatible with the general linear model's normality assumption. Binary outcomes cannot possibly have normally distributed error terms. Generalized linear models allow us to predict outcomes that have non-normal errors. If you know how to analyze linear mixed models, and you understand generalized linear models, generalized linear mixed models require very little additional learning to get started. 
+
+
+A generalized linear model has one or more random response (outcome) variables $(\boldsymbol{Y})$, one or predictor variables $X$ that are combined optimally using a set of coefficients $B$, and a link function, $g$, that specifies the relationship between the predictors and the expected value of the response variables conditioned on the predictor variables:
+
+$$
+g\left(\mathcal{E}\left(\boldsymbol{Y}|\boldsymbol{XB}\right)\right)=\boldsymbol{XB}
+$$
+The inverse of the link function $g$ (i.e., $g^{-1}$) is called the *mean function* because it transforms the linear combination of the predictors to the expected value (i.e., the mean) of the response variable.
+
+$$
+\mathcal{E}\left(\boldsymbol{Y}|\boldsymbol{XB}\right)=g^{-1}\left(\boldsymbol{XB}\right)
+$$
+
+
+
+The generalized linear mixed model is very similar to the generalized linear model, except that it adds a random component:
+
+$$
+\mathcal{E}\left(\boldsymbol{Y}|\boldsymbol{XB}\right)=g^{-1}\left(\boldsymbol{XB}+\boldsymbol{Zv\left(u\right)}\right)
+$$
+
+Where $Z$ is the model matrix for random effects, $u$ is a random component following a distribution conjugate to a generalized linear model family of distributions with parameters $\lambda$, and $v()$ is a monotone function. 
+
+
+Let's imagine we are predicting student dropout rates using student absences and student GPA as predictors. Suppose in 200 schools we conduct an intervention study to see if a school-wide intervention prevents dropout. Schools were randomly assigned to a treatment or control condition. We want to know if our intervention has succeeded, controlling for student absence and GPA.
+
+# Import data
+
+```{r import}
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/hw7_dropout.csv")
+```
+
+# Exploratory Analyses
+
+The `skim` function from the skimr package gives a great overview of what the data looks like. It is fantastic for making sure the data look like they are supposed to. Unfortunately, it does not print well to rmarkdown. The `describe` function from the psych package is also great.
+
+```{r}
+#| label: skimr
+skimr::skim(d)
+```
+
+
+```{r}
+#| label: describe
+psych::describe(d)
+```
+
+What is the distribution of GPA?
+
+```{r}
+#| label: gpa
+d %>% 
+  ggplot(aes(GPA)) + 
+  geom_density(fill = "dodgerblue", color = NA, alpha = 0.5)
+
+```
+
+What is the distribution of Absences?
+
+```{r}
+#| label: Absences
+d %>% 
+  count(Absences) %>% 
+  ggplot(aes(Absences, n)) + 
+  geom_col(fill = "dodgerblue", color = NA) +
+  geom_text(aes(label = n), vjust = -.1)
+
+```
+
+Dropout Rates Across Schools
+
+```{r}
+#| label: DropoutRates
+d %>% 
+  group_by(school_id, Intervention) %>% 
+  summarise(Dropout = mean(Dropout)) %>% 
+  ggplot(aes(Dropout)) +
+  geom_density(aes(fill = Intervention), color = NA, alpha = 0.5) +
+  labs(x = "School Dropout Rate")
+
+```
+
+Let's use the "glm" method in `geom_smooth` to get a rough sense of what a proper analysis is likely to show.
+
+```{r}
+#| label: smooth
+ggplot(d, aes(Absences, Dropout)) + 
+  geom_jitter(aes(color = Intervention), 
+              size = 0.3, 
+              width = 0.2, 
+              height = .015, 
+              alpha = 0.5, 
+              pch = 16) + 
+  geom_smooth(aes(color = Intervention), 
+              method = "glm", 
+              method.args = list(family = "binomial"))
+
+```
+
+To me, that looks like a successful intervention! However, we did not do a proper analysis that accounted for the multilevel nature of the data.
+
+
+# Null model
+
+The `glmer` function works exactly like `lmer` except that we must tell it which kind of generalized model we want. With binary outcomes, specify the binomial family. By default, it will do a logistic regression. You can specify probit regression with `binomial(link = "probit")`, if needed.
+
+```{r m0}
+m0 <- glmer(Dropout ~ 1 + (1 | school_id), d, family = binomial())
+summary(m0)
+performance(m0)
+tab_model(m0)
+# If you want the raw coefficients (log-odds) instead of odds ratios
+tab_model(m0, transform = NULL)
+```
+
+We can see from the ICC (or conditional R^2^) that `r round(icc(m0)$ICC_adjusted, 3) * 100`% of the variance in dropout rate is explained by the grouping variable, `school_id`.
+
+# First L1 predictor: Absences
+
+Let's add to the null model using the update function. 
+
+```{r m1}
+m1 <- update(m0, . ~ . + Absences)
+# Does this model fit better than the null model?
+anova(m0,m1)
+# Overall numbers
+summary(m1)
+# Performance metrics
+performance(m1)
+# Automated report
+report(m1)
+# Nice table
+tab_model(m1)
+# Fixed effect plot
+sjPlot::plot_model(m1, type = "pred", terms = "Absences")
+```
+
+# Second L1 predictor: GPA
+
+:::{.callout-note}
+# Question 1
+
+Add the `GPA` variable as a predictor to a model called `m2`. Conduct and interpret your analyses, documenting whether the GPA is a significant predictor of dropout rate.
+:::
+
+This plot might aid interpretation.
+
+```{r m2, eval=FALSE}
+sjPlot::plot_model(m2, 
+                   type = "pred", 
+                   terms = c("Absences", 
+                             "GPA [0,2,4]"))
+```
+
+
+
+# L2 predictor: Intervention
+
+
+:::{.callout-note}
+# Question 2
+Add the `Intervention` variable as a predictor to a model called `m3`. Conduct and interpret your analyses, documenting whether the intervention succeeded in reducing the dropout rate.
+:::
+
+
+This plot might aid interpretation.
+
+```{r}
+#| label: interpretation
+#| eval: false
+sjPlot::plot_model(m3, 
+                   type = "pred", 
+                   terms = c("Absences", 
+                             "GPA [0,2,4]", 
+                             "Intervention"))
+```
+
+
+:::{.callout-note}
+# Question 3
+What additional analyses might you conduct with these data? Try testing at least one more model that makes sense to you and write your conclusions.
+:::

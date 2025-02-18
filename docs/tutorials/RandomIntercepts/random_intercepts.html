@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.37">
+<meta name="generator" content="quarto-1.7.3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-631ba835d2ed936bea42e94baaadd92e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-8324e2080287992c21ba0f6d539105a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -581,7 +581,7 @@ Predicted Distribution of Response
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_distribution</span>(m_0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored" height="100%" width="100%">
+<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-checkdistribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="random_intercepts_files/figure-html/fig-checkdistribution-1.png" id="fig-checkdistribution" style="width:100.0%;height:100.0%" class="figure-img">
@@ -601,7 +601,7 @@ Figure&nbsp;3
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_autocorrelation</span>(m_0) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.242).</code></pre>
+<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.240).</code></pre>
 </div>
 </div>
 <p>Fortunately, there is no evidence of autocorrelation here.</p>
@@ -647,7 +647,7 @@ Figure&nbsp;4: Checking the homoscedasticity assumption
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for outliers</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(m_0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored" height="100%" width="100%">
+<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-checkoutlier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="random_intercepts_files/figure-html/fig-checkoutlier-1.png" id="fig-checkoutlier" style="width:100.0%;height:100.0%" class="figure-img">
@@ -1079,22 +1079,22 @@ e_{ij} &amp;\sim N(0,\sigma_e^2)
 Formula: reading_comprehension ~ (1 | classroom_id) + treatment
    Data: d
 
-REML criterion at convergence: 8053.1
+REML criterion at convergence: 8053
 
 Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--3.5797 -0.6787  0.0420  0.6488  3.0029 
+   Min     1Q Median     3Q    Max 
+-3.580 -0.679  0.042  0.649  3.003 
 
 Random effects:
  Groups       Name        Variance Std.Dev.
- classroom_id (Intercept) 149.4    12.22   
- Residual                 419.8    20.49   
+ classroom_id (Intercept) 149      12.2    
+ Residual                 420      20.5    
 Number of obs: 900, groups:  classroom_id, 30
 
 Fixed effects:
                    Estimate Std. Error t value
-(Intercept)          45.416      3.196  14.212
-treatmentTreatment   24.908      4.678   5.325
+(Intercept)           45.42       3.20   14.21
+treatmentTreatment    24.91       4.68    5.32
 
 Correlation of Fixed Effects:
             (Intr)
@@ -1174,12 +1174,14 @@ SD (Residual)                |       20.49</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Estimated Marginal Means
 
-treatment |  Mean |   SE |         95% CI
------------------------------------------
-Control   | 45.42 | 3.20 | [38.87, 51.96]
-Treatment | 70.32 | 3.42 | [63.33, 77.32]
+treatment |  Mean |   SE |         95% CI | t(896)
+--------------------------------------------------
+Control   | 45.42 | 3.20 | [39.14, 51.69] |  14.21
+Treatment | 70.32 | 3.42 | [63.62, 77.03] |  20.58
 
-Marginal means estimated at treatment</code></pre>
+Variable predicted: reading_comprehension
+Predictors modulated: treatment
+Predictors averaged: classroom_id</code></pre>
 </div>
 </div>
 </section>
