@@ -174,7 +174,7 @@ tab_model(m0)
 tab_model(m0, transform = NULL)
 ```
 
-We can see from the ICC (or conditional R^2^) that `r round(icc(m0)$ICC_adjusted, 3) * 100`% of the variance in dropout rate is explained by the grouping variable, `school_id`.
+We can see from the ICC (or conditional R^2^) that `r round(performance::icc(m0)$ICC_adjusted, 3) * 100`% of the variance in dropout rate is explained by the grouping variable, `school_id`.
 
 # First L1 predictor: Absences
 

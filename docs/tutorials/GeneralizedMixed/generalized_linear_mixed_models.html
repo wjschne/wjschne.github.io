@@ -137,7 +137,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="W. Joel Schneider">
 <meta property="og:description" content="Advanced Data Analysis (EDUC 8825)">
-<meta property="og:image" content="https://wjschne.github.io/tutorials/GeneralizedMixed/generalized_linear_mixed_models_files/figure-html/gpa-1.png">
+<meta property="og:image" content="https://wjschne.github.io/tutorials/GeneralizedMixed/generalized_linear_mixed_models_files/figure-html/smooth-1.png">
 <meta property="og:site_name" content="W. Joel Schneider">
 <meta property="og:image:height" content="1536">
 <meta property="og:image:width" content="1536">
@@ -522,7 +522,7 @@ Dropout          16.41 0.00</code></pre>
 </div>
 </div>
 <p>Let’s use the “glm” method in <code>geom_smooth</code> to get a rough sense of what a proper analysis is likely to show.</p>
-<div class="cell">
+<div class="cell preview-image">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(Absences, Dropout)) <span class="sc">+</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color =</span> Intervention), </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="fl">0.3</span>, </span>
