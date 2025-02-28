@@ -9,7 +9,7 @@
 <link>https://wjschne.github.io/tutorials.html</link>
 <atom:link href="https://wjschne.github.io/tutorials.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.7.3</generator>
+<generator>quarto-1.7.13</generator>
 <lastBuildDate>Tue, 25 Feb 2025 05:00:00 GMT</lastBuildDate>
 <item>
   <title>Data Simulation for Multilevel Models</title>
@@ -17362,7 +17362,7 @@ Table&nbsp;3: Model summary for reading time 1 null model
 <p>This model builds upon the previous model by adding the classroom’s average socioeconomic status (SES) variable as a covariate. Because average SES varies by classroom instead of by individual, it is a level-2 covariate. It can be thought of as a predictor of the random intercept. Because the random intercept represents the classroom mean, the level 2 equation in this model is sometimes revered to as a <em>means-as-outcomes</em> model.</p>
 <p>Note that SES’s coefficient is <em>γ</em><sub>01</sub>. The subscript of coefficient, 01, has a 0 in the first position, which tells us that this is a predictor of the random intercept (<em>β</em><sub>0<em>j</em></sub>). The 1 in the second position in the subscript tell us that this is the first predictor of the <em>β</em><sub>0<em>j</em></sub>.</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Ctextbf%7BLevel%201:%7D%5C%5C%0AReading_%7Bij1%7D%20&amp;=%20%5Cbeta_%7B0j%7D+e_%7Bij%7D%5C%5C%0Ae&amp;%5Csim%20%5Cmathcal%7BN%7D(0,%5Csigma_e%5E2)%5C%5C%0A%5Ctextbf%7BLevel%202:%7D%5C%5C%0A%5Cbeta_%7B0j%7D&amp;=%5Cgamma_%7B00%7D+%5Cgamma_%7B01%7DSES_j+u_%7B0j%7D%5C%5C%0Au_%7B0j%7D&amp;%5Csim%20%5Cmathcal%7BN%7D(0,%5Ctau_%7B00%7D)%5C%5C%0A%5Ctextbf%7BCombined:%7D%5C%5C%0AReading_%7Bij1%7D%20&amp;=%20%5Cunderbrace%7B%5Cgamma_%7B00%7D+%5Cgamma_%7B01%7DSES_j+u_%7B0j%7D%7D_%7B%5Cbeta_%7B0j%7D%7D+e_%7Bij%7D%0A%5Cend%7Balign%7D%0A"></p>
-<div class="cell page-columns page-full">
+<div class="cell page-columns page-full" data-tbl-cap="Reading Time 1 Model 1: Model 0 + Level 2 SES">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
@@ -27272,7 +27272,7 @@ font-style: inherit;">plot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">check_distribution</span>(m_0))</span></code></pre></div>
 <div class="cell-output-display">
-<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored" height="100%" width="100%">
+<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-checkdistribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://wjschne.github.io/tutorials/RandomIntercepts/random_intercepts_files/figure-html/fig-checkdistribution-1.png" id="fig-checkdistribution" style="width:100.0%;height:100.0%" class="figure-img">
@@ -27354,7 +27354,7 @@ font-style: inherit;">plot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">check_outliers</span>(m_0))</span></code></pre></div>
 <div class="cell-output-display">
-<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored" height="100%" width="100%">
+<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-checkoutlier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://wjschne.github.io/tutorials/RandomIntercepts/random_intercepts_files/figure-html/fig-checkoutlier-1.png" id="fig-checkoutlier" style="width:100.0%;height:100.0%" class="figure-img">
@@ -28851,6 +28851,7 @@ Table&nbsp;1: Big Five Inventory Personality Items
 <div aria-describedby="tbl-bfi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="table table-striped do-not-create-environment cell caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Big Five Inventory Personality Items</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Items</th>
@@ -39221,7 +39222,7 @@ Figure&nbsp;4: Effect on Intervention on Time on Task for Eight Children
 <h1>A point-and-click alternative to RStudio</h1>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.jamovi.org"><img src="https://www.jamovi.org/assets/header-logo.svg" class="img-fluid figure-img" alt="jamovi"></a></p>
+<p><a href="https://www.jamovi.org"><img src="https://www.jamovi.org/assets/header-logo.svg" class="img-fluid figure-img"></a></p>
 <figcaption>jamovi</figcaption>
 </figure>
 </div>
@@ -39586,7 +39587,7 @@ Figure&nbsp;1: Different Learning Curves for Different Tasks
 <p><span class="instruction">Click <a href="https://cloud.r-project.org/bin/windows/base/" target="_blank">here</a> and download the latest version of R for Windows. Open the file and follow installation instructions.</span></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://cloud.r-project.org/bin/windows/base/"><img src="https://wjschne.github.io/tutorials/GettingReady/WindowsInstall.png" class="img-fluid figure-img" alt="Screenshot of Windows Installation Link"></a></p>
+<p><a href="https://cloud.r-project.org/bin/windows/base/"><img src="https://wjschne.github.io/tutorials/GettingReady/WindowsInstall.png" class="img-fluid figure-img"></a></p>
 <figcaption>Screenshot of Windows Installation Link</figcaption>
 </figure>
 </div>
@@ -39597,7 +39598,7 @@ Figure&nbsp;1: Different Learning Curves for Different Tasks
 <p>The instructions can be overwhelming to newcomers so I have included a picture with the download link highlighted:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://cloud.r-project.org/bin/macosx/"><img src="https://wjschne.github.io/tutorials/GettingReady/MacInstall.png" class="img-fluid figure-img" alt="Screenshot of Mac Installation Link"></a></p>
+<p><a href="https://cloud.r-project.org/bin/macosx/"><img src="https://wjschne.github.io/tutorials/GettingReady/MacInstall.png" class="img-fluid figure-img"></a></p>
 <figcaption>Screenshot of Mac Installation Link</figcaption>
 </figure>
 </div>
@@ -39622,7 +39623,7 @@ font-style: inherit;">sudo</span> apt-get install r-base </span></code></pre></d
 <p>The version recommended for your operation system (I’m using Windows) will appear here:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://rstudio.com/products/rstudio/download/#download"><img src="https://wjschne.github.io/tutorials/GettingReady/RStudioInstall.png" class="img-fluid figure-img" alt="Screenshot of RStudio Installation Link"></a></p>
+<p><a href="https://rstudio.com/products/rstudio/download/#download"><img src="https://wjschne.github.io/tutorials/GettingReady/RStudioInstall.png" class="img-fluid figure-img"></a></p>
 <figcaption>Screenshot of RStudio Installation Link</figcaption>
 </figure>
 </div>
@@ -39832,36 +39833,36 @@ Steps to create a project
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">April 24, 2014_District_T.csv</td>
-<td style="text-align: left;">2009-07-29_District_A.csv</td>
+<td style="text-align: left;">April 01, 2012_District_I.csv</td>
+<td style="text-align: left;">2008-02-24_District_K.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">August 29, 2013_District_O.csv</td>
-<td style="text-align: left;">2012-05-16_District_E.csv</td>
+<td style="text-align: left;">August 11, 2013_District_M.csv</td>
+<td style="text-align: left;">2009-10-10_District_B.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">December 12, 2012_District_W.csv</td>
-<td style="text-align: left;">2012-12-12_District_W.csv</td>
+<td style="text-align: left;">December 05, 2013_District_T.csv</td>
+<td style="text-align: left;">2012-01-12_District_J.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">January 10, 2015_District_N.csv</td>
-<td style="text-align: left;">2013-08-29_District_O.csv</td>
+<td style="text-align: left;">February 06, 2013_District_G.csv</td>
+<td style="text-align: left;">2012-04-01_District_I.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">July 29, 2009_District_A.csv</td>
-<td style="text-align: left;">2014-04-24_District_T.csv</td>
+<td style="text-align: left;">February 24, 2008_District_K.csv</td>
+<td style="text-align: left;">2012-07-11_District_S.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">May 16, 2012_District_E.csv</td>
-<td style="text-align: left;">2014-05-16_District_S.csv</td>
+<td style="text-align: left;">January 12, 2012_District_J.csv</td>
+<td style="text-align: left;">2013-02-06_District_G.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">May 16, 2014_District_S.csv</td>
-<td style="text-align: left;">2014-10-21_District_O.csv</td>
+<td style="text-align: left;">July 11, 2012_District_S.csv</td>
+<td style="text-align: left;">2013-08-11_District_M.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">October 21, 2014_District_O.csv</td>
-<td style="text-align: left;">2015-01-10_District_N.csv</td>
+<td style="text-align: left;">October 10, 2009_District_B.csv</td>
+<td style="text-align: left;">2013-12-05_District_T.csv</td>
 </tr>
 </tbody>
 </table>
@@ -39892,7 +39893,7 @@ Steps to create a project
 
  ]]></description>
   <guid>https://wjschne.github.io/tutorials/GeneralizedMixed/asdf.html</guid>
-  <pubDate>Tue, 25 Feb 2025 22:27:46 GMT</pubDate>
+  <pubDate>Fri, 28 Feb 2025 12:26:02 GMT</pubDate>
 </item>
 </channel>
 </rss>
