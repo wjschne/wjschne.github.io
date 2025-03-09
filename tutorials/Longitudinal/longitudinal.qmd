@@ -1,0 +1,797 @@
+---
+title: "Multilevel Modeling of Longitudinal Data in R"
+subtitle: "Advanced Data Analysis (EDUC 8825)"
+date: "2025-03-11"
+engine: knitr
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
+      
+format: 
+  html: 
+    html-math-method: katex
+    fig-height: 8
+    fig-width: 8
+    theme: journal
+    toc: true
+    toc-float: true
+    toc-location: left
+    tbl-cap-location: margin
+    fig-cap-location: margin
+    # css: tutorial.css
+csl: "https://www.zotero.org/styles/apa"
+---
+
+```{r setup, include=FALSE}
+
+options(digits = 4, knitr.kable.NA = '')
+
+library(tidyverse)
+library(lme4)
+
+my_font <- "Roboto Condensed"
+
+```
+
+
+
+Longitudinal data analysis refers to the examination of how variables change over time, typically within individuals. Multilevel modeling allows us to study "unbalanced" longitudinal data in which not everyone has the same number of measurements.
+
+In clustered data, the lowest level is typically a person, with higher levels referring to groups of people. With longitudinal data, the person is typically level 2, and level 1 is a measurement occasion associated with a specific instance in time.
+
+With multilevel approaches to longitudinal data, data for each person fits on multiple rows with each measurement instance on its own row as seen in @tbl-data.
+
+
+person_id | time | x | y
+:-------:|:----:|:-:|:-:
+1  | 0 | 6 | 5
+1  | 1 | 7 | 6
+1  | 2 | 10 | 7
+... | ... | ... | ...
+2  | 0 | 14 | 2
+2  | 1 | 18 | 3
+2  | 2 | 20 | 5
+... | ... | ... | ...
+
+: Longitudinal data with multiple rows per person {#tbl-data}
+
+Specifying when the time variable equals 0 becomes increasingly important with complex longitudinal model because it influences the interpretation of other coefficients in the model. If there are interaction effects or polynomial effects, the lower-order effects refer to the effect of the variable when all other predictors are 0. Thus, we try to mark time such that *T*~0~ (when time = 0) is meaningful. For example, *T*~0~ is often simply the first measurement occasion. *T*~0~ could be the point at which an important event occurs, such as the onset of an intervention. In such cases, measurements before the intervention are marked as negative (*Time* = &minus;3, &minus;2, &minus;1, 0, 1, 2, ...). 
+
+Time does not have to be marked as integers, not everyone needs to be measured at the same times, and measurements do not necessarily need to occur at exactly *T*~0~. For person 1, the measurements could be at *Time* = &minus;2.1 minutes, +5.3 minutes, and +44.2 minutes. For person 2, the measurements could be at *Time* = &minus;8.8 minutes, &minus;6.0 minutes, +10.1 minutes, and +10.5 minutes.
+
+# Hypothetical Longitudinal Study of Reading Comprehension
+
+Suppose we are measuring how schoolchildren's reading comprehension changes over time. We believe that reading comprehension (understanding of the text's meaning) is influenced by Reading Decoding skills (correct identification of words). If we measure Reading Decoding skill at each occasion, it is a time-varying covariate at level 1. 
+
+Suppose we believe that children's working memory capacity also is an important influence on reading comprehension. If we only measure working memory capacity once (typically at the beginning of the study), working memory capacity is a person-level covariate at level 2. Of course, if we had measured working memory capacity at each measurement occasion, it would be an additional time-varying covariate at level 1.
+
+For the sake of demonstration, I am going to present a model in which Working Memory Capacity not only influences the initial level of Reading Comprehension, but it also has every possible cross-level interaction effect. In a real analysis, we would only investigate such effects if we had good theoretical reasons for doing so. Testing for every possible effect just because we can will dramatically increase our risk of "finding" spurious effects.
+
+## Level 1: Measurement Occasion
+
+Every time a person is measured, we will call this a *measurement occasion*. In longitudinal studies, each measurement occasion is placed in its own data row. 
+
+$$
+\begin{align*}
+Y_{ti}&=b_{0i}+b_{1i}T_{ti}+b_{2i}RD_{ti}+e_{ti}\\
+e_{ti}&\sim\mathcal{N}(0, \tau_1^2)
+\end{align*}
+$$
+
+Variable | Interpretation
+--------------------:|:---------------------------------------------------------
+$Y_{ti}$ | The measure of Reading Comprehension for person $i$ at occasion (time) $t$.
+$RD_{ti}$ | The measure of Reading Decoding at occasion $t$ for person $i$.
+$T_{ti}$ | How much time has elapsed at occasion $t$ for person $i$.
+$b_{0i}$ | The random intercept: The predicted Reading Comprehension for person $i$ at time 0 (*T*~0~) if Reading Decoding = 0.
+$b_{1i}$ | The random slope of Time: The rate of increase in Reading Comprehension for person $i$ if Reading Decoding is held constant at 0.
+$b_{2i}$ | The size of Reading Decoding's association with Reading Comprehension for person $i$.
+$e_{ti}$ | The deviation from expectations for Reading Comprehension at occasion $t$ for person $i$. It represents the model's failure to accurately predict Reading Comprehension at each measurement occasion.
+$\tau_1$ | The variance of $e_{ti}$
+
+## Level 2: Person
+
+### Predicting the Random Intercept $(b_{0i})$: <br> What Determines the Conditions at *T*~0~?
+
+If Time and Reading Decoding = 0, what determines our prediction of Reading Comprehension?
+
+$$
+b_{0i}=b_{00}+b_{01}WM_i+e_{0i}
+$$
+
+Variable | Interpretation
+--------------------:|:---------------------------------------------------------
+$b_{0i}$ | The random intercept: The predicted Reading Comprehension for person $i$ at time 0 (*T*~0~) if Reading Decoding = 0.
+$WM_i$ | The measurement of Working Memory Capacity for person $i$.
+$b_{00}$ | The predicted value of Reading Comprehension when Time, Reading Decoding, and Working Memory = 0.
+$b_{01}$ | Working Memory's association with Reading Comprehension at *T*~0~ when Reading Decoding is 0.
+$e_{0i}$ | Person $i$'s deviation from expectations for the random intercept. It represents the model's failure to predict each person's random intercept.
+
+### Predicting Time's Random Slope: <br> What determines the effect of time (Grade)?
+
+Suppose we believe that Reading Comprehension will, on average, increase over time for everyone, but the rate of increase will be faster for children with greater working memory capacity. 
+
+$$
+b_{1i}=b_{10}+b_{11}WM_i+e_{1i}
+$$
+
+Variable | Interpretation
+--------------------:|:---------------------------------------------------------
+$b_{1i}$ | The random slope of Time: The rate of increase in Reading Comprehension for person $i$ if Reading Decoding is held constant at 0.
+$b_{10}$ | The rate at which Reading Comprehension increases for each unit of time if both Reading Decoding and Working Memory are held constant at 0.
+$b_{11}$ | Working Memory's effect on the rate of Reading Comprehension's change over time, after controlling for Reading Decoding (i.e., if Reading Decoding were held constant at  0). If positive, students with higher working memory should improve their Reading Comprehension ability faster than students with lower working memory.
+$e_{1i}$ | Person $i$'s the deviation from expectations for the random slope for time. It represents the model's failure to predict each person's rate of increase in Reading Comprehension over time (after controlling for Reading Decoding).
+
+### Predicting Reading Decoding's Random Slope: <br> What determines the effect of Reading Decoding?
+
+Suppose that the effect of Reading Decoding on Reading Comprehension differs from person to person. Obviously, to comprehend text a person needs at least some ability to decode words. However, there is evidence that working memory helps a person make inferences in reading comprehension such that one can work around unfamiliar words and still derive meaning from the text. Thus, we might predict that higher Working Memory Capacity makes Reading Decoding a less important predictor of Reading Comprehension. 
+
+$$
+b_{2i}=b_{20}+b_{21}WM_i+e_{2i}
+$$
+
+Variable | Interpretation
+--------------------:|:---------------------------------------------------------
+$b_{2i}$ | The size of Reading Decoding's association with Reading Comprehension for person $i$.
+$b_{20}$ | The size of the association of Reading Decoding and Reading Comprehension when Working Memory is 0.
+$b_{21}$ | The interaction effect of Working Memory and Reading Decoding.  It represents how much the effect of Reading Decoding on Reading Comprehension changes for each unit of increase in Working Memory.
+$e_{2i}$ | Person $i$'s the deviation from expectations for the random slope for Reading Decoding. It represents the model's failure to predict the person-specific relationship between Reading Decoding and Reading Comprehension.
+
+### Level-2 Random Effects
+
+The error terms at level 2 ($e_{0i}, e_{1i}, \&~e_{2i}$) have variances, and possibly covariances.
+
+$$
+\begin{align*}
+\boldsymbol{e}_2&=
+\begin{bmatrix}
+e_{0i}\\
+e_{1i}\\
+e_{2i}
+\end{bmatrix}\\
+\boldsymbol{e}_2&\sim\mathcal{N}\left(\boldsymbol{0},\boldsymbol{\tau}_2\right)\\
+\boldsymbol{\tau}_2&=
+\begin{bmatrix}
+\tau_{2.00}\\
+\tau_{2.10} & \tau_{2.11}\\
+\tau_{2.20} & \tau_{2.21} & \tau_{2.22} 
+\end{bmatrix}
+\end{align*}
+$$
+
+## Combined Equations
+
+$$
+\begin{align}
+Y_{ti}&=
+\underbrace{b_{00}+b_{01}WM_i+u_{0i}}_{b_{0i}~\text{(Random Intercept)}}\\
+&+(\underbrace{b_{10}+b_{11}WM_i+u_{1i}}_{b_{1i}~\text{(Random Slope for Time)}})T_{ti}\\
+&+(\underbrace{b_{20}+b_{21}WM_i+u_{2i}}_{b_{2i}~\text{(Random Slope for RD)}})RD_{ti}\\
+&+e_{ti}
+\end{align}
+$$
+
+An equation aligned to the lmer formula:
+
+$$
+\begin{align}
+Y_{ti}&=b_{00}\\
+&+\underbrace{b_{01}WM_i+b_{10}T_{ti}+b_{20}RD_{ti}}_{\text{Simple Slopes (when other predictors = 0)}}\\
+&+\underbrace{b_{11}T_{ti}WM_i+b_{21}RD_{ti}WM_i}_{\text{Interactions}}\\
+&+\underbrace{e_{0i}+e_{1i}T_{ti}+e_{2i}RD_{ti}}_{\text{L2 Random Effects}}\\
+&+e_{ti}
+\end{align}
+$$
+
+Here is the model as a `lmer` formula:
+
+```
+reading_comprehension~1+
+working_memory+time+reading_decoding+
+time:working_memory+reading_decoding:working_memory+
+(1+time+reading_decoding | person_id)
+```
+
+A simplified version would look like this:
+
+```
+reading_comprehension~
+working_memory * time + 
+working_memory * reading_decoding +
+(time+reading_decoding | person_id)
+```
+
+
+## Simulate longitudinal data
+
+I am going to simulate a longitudinal observational study of these three variables.
+
+To make things simple, suppose that Reading Decoding also grows over time like so:
+
+$$
+RD_{ti}=6+2T_{ti}+.5WM_{ti}+e_{ti}\\
+e\sim\mathcal{N}(0, 1^2)
+$$
+
+### Simulate Level-2 Data (Person Level)
+
+We begin at level 2 by setting the sample size, the fixed effects, the level-2 random effect covariance matrix $(\boldsymbol{\tau})$, and
+
+We can simulate Working Memory Capacity as a standard normal variable.
+
+
+```{r l2sim}
+library(tidyverse)
+library(lme4)
+library(sjPlot)
+set.seed(123456)
+# Sample size
+n_person <- 2000
+
+# Number of occasions
+n_occasions <- 6
+
+# Fixed effects
+b_00 <- 60 # Fixed intercept
+b_01 <- 10 # simple main effect of working memory
+b_10 <- 50 # simple main effect of time (Grade)
+b_11 <- 5 # time * working memory interaction
+b_20 <- 8 # simple main effect of reading decoding
+b_21 <- -0.9 # reading decoding * working memory interaction
+
+# Standard deviations of level-2 random effects
+e_sd <- c(e0i = 50, # sd of random intercept
+          e1i = 1.7, # sd of random slope for time
+          e2i = 1.8) # sd of random slope for reading decoding
+
+# Correlations among level-2 random effects
+e_cor <- c(1,
+           0, 1,
+           0, 0, 1) %>% 
+  lavaan::lav_matrix_lower2full(.)
+
+# level-2 random effects covariance matrix
+tau_2 <- lavaan::cor2cov(R = e_cor, 
+                       sds = e_sd, 
+                       names = names(e_sd))
+
+# simulate level-2 random effects
+e_2 <- mvtnorm::rmvnorm(n_person, 
+                      mean = c(e0i = 0, e1i = 0, e2i = 0), 
+                      sigma = tau_2) %>% 
+  as_tibble()
+
+# Simulate level-2 data and coefficients
+d_level2 <- tibble(person_id = factor(1:n_person),
+                   n_occasions = n_occasions,
+               working_memory = rnorm(n_person)) %>% 
+  bind_cols(e_2) %>% 
+  mutate(b_0i = b_00 + b_01 * working_memory + e0i,
+         b_1i = b_10 + b_11 * working_memory + e1i,
+         b_2i = b_20 + b_21 * working_memory + e2i)
+
+d_level2
+```
+
+### Simulate Level-1 Data (Occasion Level)
+
+Let's say that our measurement of our level-1 variables occurs at the beginning of each Grade starting in Kindergarten (i.e., Grade 0) and continues every year until fifth grade. Our measurement of working memory capacity occurs once---at the beginning of Kindergarten.
+
+
+
+
+
+```{r l1sim}
+# level-1 sd
+tau_1 <- 15 ^ 2
+
+d_level1 <- d_level2 %>% 
+  uncount(n_occasions) %>% 
+  group_by(person_id) %>% 
+  mutate(Grade = row_number() - 1) %>% 
+  ungroup() %>% 
+  mutate(reading_decoding = 6 + 2 * Grade + .5 * working_memory + rnorm(nrow(.)),
+         e_ti = rnorm(nrow(.), 0, sd = sqrt(tau_1)), 
+         reading_comprehension = b_0i + b_1i * Grade + b_2i * reading_decoding + e_ti) %>% 
+  arrange(Grade, reading_comprehension) %>% 
+  mutate(person_id = fct_inorder(person_id)) %>% 
+  arrange(person_id, Grade)
+
+d_level1
+
+```
+
+Notes on the code from above:
+
+Code | Interpretation
+------------------------------------:|:---------------------------------------------------
+`uncount(n_occasions)` | Make copies of each row in `d_level2` according to what value is in `n_occasions`, which in this case is 6 in every row. Thus, the 6 copies of each row `d_level2` are made.
+`group_by(person_id)` | "I'm about to do something to groups of rows defined by `person_id`."
+`mutate(Grade = row_number() - 1)` | Create a variable called `Grade` by taking the row number of each group defined by `person_id` and subtract 1. Because there are 6 rows per person, the values within each person will be 0, 1, 2, 3, 4, 5
+`ungroup()` | Stop computing things by group and compute variables the same way for the whole tibble.
+
+If the data were real, and I wanted to test the hypothesized model, I would run this code:
+
+
+```{r testmodel}
+library(lme4)
+fit <- lmer(reading_comprehension ~ 1 + Grade * working_memory  + reading_decoding*working_memory + (1 + Grade + reading_decoding || person_id), data = d_level1 ) 
+summary(fit)
+```
+
+@fig-plotmodel plots the observed data, in which we can see that both reading decoding and reading comprehension increase across grade and that high working memory is associated with higher levels of the reading variables.
+
+```{r fig-plotmodel}
+#| fig-cap: Reading Decoding Predicting 
+ggplot(d_level1, aes(reading_decoding, reading_comprehension, color = working_memory)) + 
+  geom_point(pch = 16, size = .75) + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  facet_grid(rows = vars(Grade), as.table = F, labeller = label_both) +
+  scale_color_gradient2("Working\nMemory\nCapacity", mid = "gray80", low = "royalblue", high = "firebrick") + 
+  labs(x = "Reading Decoding", y = "Reading Comprehension")
+
+```
+
+These effects might be easier to see in an animated plot like @fig-plotmodel2.
+
+```{r fig-plotmodel2}
+#| fig-cap: Reading Decoding Predicting 
+library(gganimate)
+ggplot(d_level1 %>% mutate(Grade = factor(Grade)), aes(reading_decoding, reading_comprehension, color = working_memory)) + 
+  geom_point(pch = 16, size = .75) + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  # facet_grid(rows = vars(Grade), as.table = F, labeller = label_both) +
+  scale_color_gradient2("Working\nMemory\nCapacity", mid = "gray80", low = "royalblue", high = "firebrick") + 
+  scale_x_continuous("Reading Decoding", limits = c(0,20)) +
+  scale_y_continuous("Reading Comprehension") + 
+  transition_states(Grade) + 
+  labs(title = 'Grade: {closest_state}') +
+  coord_fixed(1 / 40)
+
+```
+
+If you need to plot interaction effects, and you want to make your life much, much easier, use the [`plot_model` function from the sjPlot package](https://strengejacke.github.io/sjPlot/articles/plot_interactions.html). 
+
+In the `terms` parameter of the `plot_model` function, the first term is what goes on the x-axis. The second term is the moderator variable that shows up as lines with different colors. By default, it plots values at plus or minus 1 standard deviation, but you can specify any values you wish. 
+
+In @fig-wm, it can be seen that reading decoding is related to reading comprehension but the strength of that relation depends on working memory. The effects of reading decoding are increasingly strong as  working memory decreases. 
+
+```{r}
+#| label: fig-wm
+#| fig-cap: The Effects of Reading Decoding Are Moderated by Working Memory
+library(sjPlot)
+# Simple slopes of reading decoding at different levels of working memory (collapsing across grade)
+plot_model(fit, 
+           type = "pred", 
+           terms = c("reading_decoding", "working_memory [-1, 0, 1]")) 
+```
+
+
+Another way to think about the interaction is to say that for poor decoders working memory strongly predicts reading comprehension. By contrast, for strong decoders, working memory is a weak predictor. In @fig-dc, we are viewing the same interaction seen @fig-wm but we have flipped the x-axis and the color-facet. There is no new information here, but it helps to see the finding from different vantage points.
+
+```{r}
+#| label: fig-dc
+#| fig-cap: The Effects of Working Memory Depend on Reading Decoding
+library(sjPlot)
+# Simple slopes of working memory at different levels of reading decoding (collapsing across grade)
+plot_model(fit, 
+           type = "pred", 
+           terms = c("working_memory", "reading_decoding [0, 10, 20]")) 
+```
+
+In @fig-gradedc, we can view the simple slopes of reading decoding at different levels of grade (collapsing across working memory). Because the simple slopes are parallel, it appears that the effect of reading decoding is constant across grades.
+
+```{r}
+#| label: fig-gradedc
+#| fig-cap: The Effects of Reading Decoding at Different Grades
+plot_model(fit, 
+           type = "pred", 
+           terms = c("reading_decoding", "Grade"))
+```
+
+
+In @fig-gradewm, we see that reading comprehension grows faster for students with higher working memory than for students with lower working memory.
+
+```{r}
+#| label: fig-gradewm
+#| fig-cap: The Growth of Reading Comprehension Across Grade at Different Levels of Working Memory
+
+plot_model(fit, 
+           type = "pred", 
+           terms = c("Grade", "working_memory [-1, 0, 1]"))
+
+```
+
+In @fig-dcwmgrade, we see the effects of reading decoding, working memory, and grade simultaneously. It appears that reading decoding's effect is stronger for students with lower working memory but that the effect of working memory becomes increasingly strong across grades.
+
+
+```{r}
+#| label: fig-dcwmgrade
+#| fig-cap: The Effect of Reading Decoding on Reading Comprehension\n at Different Levels of Working Memory and Grade
+# Show simple slopes of reading decoding at different levels of grade and working memory
+plot_model(fit, 
+           type = "pred", 
+           terms = c("reading_decoding", "working_memory [-1, 0, 1]", "Grade [0:5]"))
+```
+
+I can't tell you how much trouble functions like `plot_model` will save you. I don't care to admit how many hours of my life have been spent making interaction plots. Of course, ggplot2 made my coding experience much simpler than it used to to be. I mainly use sjPlot to make quick plots. If I needed to make a publication-ready plot, I would probably use code like @fig-pubworthy. 
+
+
+
+```{r}
+#| label: fig-pubworthy
+#| fig-cap: The Effects of Reading Decoding on Reading Comprehension by Working Memory Capacity Across Grades
+# Make predicted values at each unique combination of predictor variables
+d_predicted <- crossing(Grade = 0:5,
+                        working_memory = c(-1, 0, 1),
+                        reading_decoding = c(0, 20)) %>%
+  mutate(reading_comprehension = predict(fit, newdata = ., re.form = NA),
+         working_memory = factor(working_memory,
+                                 levels = c(1, 0,-1),
+                                 labels = c("High (+1 SD)",
+                                            "Mean",
+                                            "Low (-1 SD)")))
+
+ggplot(d_predicted,
+       aes(x = reading_decoding, 
+           y = reading_comprehension, 
+           color = working_memory)) +
+  geom_line(aes(group = working_memory), size = 1) +
+  facet_grid(cols = vars(Grade), 
+             labeller = label_bquote(cols = Grade ~ .(Grade))) +
+  scale_color_manual("Working Memory", 
+                     values = c("firebrick4", "gray30", "royalblue4")) +
+  theme(legend.position = c(1, 0),
+        legend.justification = c(1, 0)) +
+  labs(x = "Reading Decoding", 
+       y = "Reading Comprehension") + 
+  ggtitle(label = "Predicted Values of Reading Comprehension")
+```
+
+
+Also from the sjPlot package, an attractive table:
+
+```{r}
+sjPlot::tab_model(fit)
+```
+
+# Complete Analysis Walkthrough
+
+Okay, suppose that we had no idea how the simulated data were generated. Imagine that we are researchers who collected the data rather than the people who simulated it. However, we hypothesized the model with which the data were simulated. Of course, we can go straight to testing the hypothesized model, but generally we start with the null model and build from there.
+
+## Model Building Plan
+
+The sequence of model building is the same but at every step, start with the time variable (Grade in this case). This sequence is a suggestion only.
+
+* Null Model (Random Intercepts)
+* Level 1 Fixed Effects
+    - Time (as many polynomial terms as you hypothesized you would need)
+        + Linear (Time)
+        + Quadratic (Time + Time ^ 2)
+        + Cubic (Time + Time ^ 2 + Time ^ 3)
+        + Quartic (Time + Time ^ 2 + Time ^ 3 + Time ^ 4)
+        + You can keep going but consider alternatives to polynomials like [Generalized Additive Mixed Models](https://people.maths.bris.ac.uk/~sw15190/mgcv/).
+    - Other level-1 time-varying covariates
+    - Interactions of time-varying covariates with Time
+    - Interactions of time-varying covariates with each other
+* Level-2 Fixed Effects
+    - Main effects of level-2 covariates
+    - Interactions among level-2 covariates
+* Level 1 Random Slopes
+    - Time's random slope
+        + Uncorrelated with random intercepts
+        + Correlated with random intercepts
+    - Other level-1 random slopes
+        + Uncorrelated with random intercepts
+        + Correlated with random intercepts
+    - Interactions of random slopes
+        + These models are pretty unlikely to converge, but it is up to you.
+* Cross-Level Interactions
+    - Interaction of level-2 covariates with Time
+    - Interaction of level-2 covariates with level-1 time-varying covariates
+
+
+
+## Load Packages
+
+```{r loadpackages}
+library(tidyverse)
+library(lme4)
+library(broom.mixed)
+library(performance)
+library(report)
+library(sjPlot)
+```
+
+
+## Null Model
+
+Let's start where we always start, with no predictors except the random intercept variable. In this case it refers to the person-level intercept.
+
+```{r fit_null}
+fit_null <- lmer(reading_comprehension ~ 1 + (1 | person_id), data = d_level1)
+
+summary(fit_null)
+sjPlot::tab_model(fit_null)
+performance::model_performance(fit_null)
+
+```
+
+Here we see that the R2-conditional is `r round(performance::r2(fit_null)$R2_conditional, 2)`, which is the proportion of variance explained by the entire model. Because the model has only the random intercept as a predictor, it represents the proportion of variance explained by the random intercept (i.e., between-persons variance).
+
+## Linear Effect of Time (Grade)
+
+```{r fit_time}
+fit_time <- lmer(reading_comprehension ~ 1 + Grade + (1 | person_id), data = d_level1)
+summary(fit_time)
+sjPlot::tab_model(fit_time)
+performance::model_performance(fit_time)
+report::report(fit_time)
+```
+
+The effect of time (Grade) is very large. The R2_marginal is `r round(performance::r2(fit_null)$R2_marginal, 2)`, which is the proportion of variance explained by all the fixed effects, which in this case is `Grade`.
+
+It is easy to predict that `fit_time` will be a better model than `fit_null`, but let's run the code anyway:
+
+```{r fit_timeanova}
+anova(fit_null, fit_time)
+performance::compare_performance(fit_null, fit_time, rank = T)
+```
+
+As expected, the `fit_time` model fits better than the `fit_null` model.
+
+## Quadratic effect of Time
+
+We did not have a hypothesis about whether time (Grade) would have a linear effect. Let's see if we need a quadratic effect. We can construct a quadratic effect by using the `poly` function with a degree of 2. By default, it creates orthogonal polynomials (i.e., uncorrelated). Often raw polynomials are so highly correlated that they cannot be in the same regression formula. If you need raw polynomials (i.e., Grade and Grade squared), then specify `poly(Grade, 2, raw = T)`.
+
+```{r fit_time_quadratic}
+fit_time_quadratic <- lmer(reading_comprehension ~ 1 + poly(Grade, 2) + (1 | person_id), data = d_level1)
+summary(fit_time_quadratic)
+sjPlot::tab_model(fit_time_quadratic)
+performance::model_performance(fit_time_quadratic)
+report::report(fit_time_quadratic)
+
+# Compare linear and quadratic models
+anova(fit_time, fit_time_quadratic)
+
+```
+
+No effect! We could add a third-order polynomial (i.e., the effect of Grade to the third power), but we did not hypothesize such an effect. Let's stick with the linear effect of time.
+
+If we plot our data, we get this:
+
+```{r plottime}
+ggplot(d_level1, aes(Grade, reading_comprehension, color = person_id)) +
+  geom_line(aes(group = person_id), alpha = 0.2) +
+  theme(legend.position = "none")
+```
+
+It looks like the effect of time really is linear.
+
+## Fixed effect of reading decoding (level 1 time-varying covariate)
+
+Unsurprisingly, reading decoding is a predictor of reading comprehension:
+
+```{r fit_decoding}
+fit_decoding <- lmer(reading_comprehension ~ 1 + Grade + reading_decoding + (1 | person_id), data = d_level1)
+summary(fit_decoding)
+sjPlot::tab_model(fit_decoding)
+performance::model_performance(fit_decoding)
+report::report(fit_decoding)
+# Compare with linear effect of time
+anova(fit_time, fit_decoding)
+performance::compare_performance(fit_time, fit_decoding, rank = T)
+```
+
+The *t* value of the fixed effect of reading_decoding is huge. It is significant. The model comparisons with `fit_time` suggests that `fit_decoding` is clearly preferred.
+
+```{r reportfit_decoding}
+report::report(fit_decoding)
+```
+
+```{r plotfit_decoding}
+plot_model(fit_decoding, 
+           type = "pred", 
+           terms = c("reading_decoding", "Grade [0:5]"),
+           title = "The Effect of Reading Decoding on Reading Comprehension\n at Different Grades")
+```
+
+## Level-1 interaction effects
+
+Let's see if the effect of reading decoding depends on Grade.
+
+```{r fit_decoding_x_Grade}
+fit_decoding_x_Grade <- lmer(reading_comprehension ~ 1 + Grade * reading_decoding + (1 | person_id), data = d_level1)
+summary(fit_decoding_x_Grade)
+sjPlot::tab_model(fit_decoding_x_Grade)
+performance::model_performance(fit_decoding_x_Grade)
+report::report(fit_decoding_x_Grade)
+# compare with main effects model
+anova(fit_decoding, fit_decoding_x_Grade)
+performance::compare_performance(fit_decoding, fit_decoding_x_Grade, rank = T)
+
+```
+
+```{r plotfit_decoding_x_Grade}
+plot_model(fit_decoding_x_Grade, 
+           type = "pred", 
+           terms = c("Grade [0:5]", "reading_decoding"))
+```
+
+So the interaction effect is present, but tiny.
+
+## Level-2 covariate: working memory 
+
+As seen below, the effect of working memory is statistically significant, meaning that students with higher working memory tend to have better reading comprehension.
+
+```{r fit_working}
+fit_working <- lmer(reading_comprehension ~ 1 + Grade * reading_decoding + working_memory + (1 | person_id), data = d_level1)
+summary(fit_working)
+sjPlot::tab_model(fit_working)
+performance::model_performance(fit_working)
+report::report(fit_working)
+# compare with main effects model
+anova(fit_decoding_x_Grade, fit_working)
+performance::compare_performance(fit_decoding_x_Grade, fit_working, rank = T)
+
+plot_model(fit_working, 
+           type = "pred", 
+           terms = c("working_memory [-2, 2]", "reading_decoding", "Grade [0:5]"))
+
+```
+
+## Level-1 random slope: Grade
+
+As seen below, letting the slope of Grade be random improves the fit of the model:
+
+```{r fit_grade_random_uncorrelated}
+fit_grade_random_uncorrelated <- lmer(reading_comprehension ~ 1 + Grade * reading_decoding + working_memory + (1 + Grade || person_id), data = d_level1)
+summary(fit_grade_random_uncorrelated)
+sjPlot::tab_model(fit_grade_random_uncorrelated)
+performance::model_performance(fit_grade_random_uncorrelated)
+report::report(fit_grade_random_uncorrelated)
+# compare with main effects model (note refit = F because we are comparing random effects)
+anova(fit_working, fit_grade_random_uncorrelated, refit = F)
+
+performance::compare_performance(fit_working, fit_grade_random_uncorrelated, rank = T)
+
+```
+
+## Level-1 random slope: reading_decoding
+
+We run into a model convergence problem when we add the random slope for reading decoding.
+
+```{r fit_decoding_random_uncorrelated}
+fit_decoding_random_uncorrelated <- lmer(reading_comprehension ~ 1 + Grade * reading_decoding + working_memory + (1 + Grade + reading_decoding || person_id), data = d_level1)
+```
+
+We can try a different optimizer to see if that helps. The `lmer` function's previous default optimizer (`Nelder_Mead`) sometimes finds a good solution when the current default optimizer (`bobyqa`) does not.
+
+```{r fit_decoding_random_uncorrelated2}
+fit_decoding_random_uncorrelated <- lmer(reading_comprehension ~ 1 + Grade * reading_decoding + working_memory + (1 + Grade + reading_decoding || person_id), data = d_level1, control = lmerControl(optimizer="Nelder_Mead"))
+```
+
+It worked!
+
+```{r performancefit_decoding_random_uncorrelated}
+
+summary(fit_decoding_random_uncorrelated)
+sjPlot::tab_model(fit_decoding_random_uncorrelated)
+performance::model_performance(fit_decoding_random_uncorrelated)
+report::report(fit_decoding_random_uncorrelated)
+# compare with main effects model (note refit = F because we are comparing random effects)
+anova(fit_grade_random_uncorrelated, fit_decoding_random_uncorrelated, refit = F)
+
+performance::compare_performance(fit_grade_random_uncorrelated, fit_decoding_random_uncorrelated, rank = T)
+```
+
+
+
+
+## Level-1 random intercept-slope correlations
+
+Do the intercepts and slopes correlate?
+
+```{r fit_correlated_intercept_slopes}
+fit_correlated_intercept_slopes <- lmer(reading_comprehension ~ 1 + Grade * reading_decoding + working_memory + (1 + Grade + reading_decoding | person_id), data = d_level1 %>% mutate_at(vars(reading_decoding, working_memory), scale, center = T, scale = F), control = lmerControl(optimizer="Nelder_Mead"))
+summary(fit_correlated_intercept_slopes)
+```
+
+The model did not converge. I checked various solutions (different optimizers, more iterations, centering variables), but none worked for me. Do the slopes and intercepts correlate? From various attempts, the answer seems to be that they do not, but it is hard to be sure. The random slopes for reading decoding and Grade might be negatively correlated, but I am reluctant to trust the results of a non-convergent model, especially when I have no theoretical reason to expect such a correlation. Therefore, I am going to go with the uncorrelated slopes and intercepts model.
+
+## Cross-level interaction: Working Memory &times; Grade
+
+As seen below, working memory has a positive interaction with Grade, meaning that the growth of reading comprehension (i.e., the effect of Grade) is faster with students with higher working memory capacity.
+
+Note that the cross-level interaction is significant---and the level-1 interaction between Reading Decoding and Grade is no longer significant. What happened? Usually we would have to be pretty clever to figure out the reason, but we happen to know how the data were simulated: Working Memory and Grade really do interact, and Reading Decoding and Grade really do not. However, Working Memory and Grade are correlated (i.e., Working Memory increases over time). When Grade was not allowed to interact with Working Memory, Reading Decoding interacted with Grade, a correlate of Working Memory. Now that the true interaction has been included in the model, the false interaction is no longer significant. We can leave it in for now, but we can get rid of it at the end.
+
+
+```{r fit_wm_x_grade}
+fit_wm_x_grade <- lmer(reading_comprehension ~ 1 + working_memory * Grade + Grade * reading_decoding +  (1 + Grade + reading_decoding || person_id), data = d_level1)
+
+summary(fit_wm_x_grade)
+sjPlot::tab_model(fit_wm_x_grade)
+performance::model_performance(fit_wm_x_grade)
+report::report(fit_wm_x_grade)
+# compare with main effects model (note refit = F because we are comparing random effects)
+anova(fit_grade_random_uncorrelated, fit_wm_x_grade, refit = F)
+
+performance::compare_performance(fit_grade_random_uncorrelated, fit_wm_x_grade, rank = T)
+```
+
+
+
+## Cross-level interaction: Working Memory &times; Reading Decoding
+
+The interaction of working memory and reading decoding is negative, meaning that reading decoding is a weaker predictor of reading comprehension among students with higher working memory.
+
+```{r fit_wm_x_decoding, warning=FALSE}
+
+fit_wm_x_decoding <- lmer(reading_comprehension ~ 1 + working_memory * reading_decoding + working_memory * Grade  +  reading_decoding*Grade + (1 + Grade + reading_decoding || person_id), data = d_level1)
+summary(fit_wm_x_decoding)
+sjPlot::tab_model(fit_wm_x_decoding)
+performance::model_performance(fit_wm_x_decoding)
+report::report(fit_wm_x_decoding)
+# compare with main effects model (note refit = F because we are comparing random effects)
+anova(fit_wm_x_grade, fit_wm_x_decoding, refit = F)
+
+performance::compare_performance(fit_wm_x_grade, fit_wm_x_decoding, rank = T)
+```
+
+
+
+## Final model
+
+Let's remove the now non-significant level-1 interaction, which brings us to the true model we simulated.
+
+```{r fit_final}
+fit_final <- lmer(reading_comprehension ~ 1 + working_memory * reading_decoding + working_memory * Grade +  (1 + Grade + reading_decoding || person_id), data = d_level1)
+summary(fit_final)
+sjPlot::tab_model(fit_final)
+performance::model_performance(fit_final)
+report::report(fit_final)
+# compare with main effects model (note refit = F because we are comparing random effects)
+anova(fit_wm_x_decoding, fit_final, refit = F)
+
+performance::compare_performance(fit_wm_x_decoding, fit_final, rank = T)
+```
+
+In this plot, we can see that Reading Decoding's effect is steeper for individuals with lower working memory:
+
+```{r fit_finalplot}
+plot_model(fit_final, 
+           type = "pred", 
+           terms = c("reading_decoding", "working_memory [-1, 0, 1]", "Grade [0:5]"),
+           title = "The Effect of Reading Decoding on Reading Comprehension\n at Different Levels of Working Memory and Grade")
+
+
+```
+
+An alternate view of the same model suggests that the effect of working memory on reading comprehension is minimal in Kindergarten (Grade 0) and 1st grade when the focus is more on reading letters, single words, and very short sentences. However as the focus moves to longer, more complex sentences and paragraphs, the effect of Working Memory on Reading Comprehension increases.
+
+```{r plotwmbygradefinal}
+plot_model(fit_final, 
+           type = "pred", 
+           terms = c("working_memory [-2, 2]", "reading_decoding [5, 10, 15]", "Grade [0:5]"),
+           title = "The Effect of Working Memory on Reading Comprehension\n at Different Levels of Reading Decoding and Grade")
+```
+
+Another view of the same model suggests that students with higher Working Memory have faster Reading Comprehension growth rates, even after controlling for Reading Decoding.
+
+```{r plotwmbygradefinal2}
+plot_model(fit_final, 
+           type = "pred", 
+           terms = c("Grade [0:5]", "working_memory [-1, 0, 1]", "reading_decoding [5, 10, 15]"),
+           title = "The Effect of Working Memory on Reading Comprehension\n at Different Levels of Reading Decoding and Grade") + 
+  theme(legend.position = c(1,0), legend.justification = c(1,0))
+
+```
+
+:::{.callout-info title = "Reflect"}
+How this method could be used in your own research?
+:::
+
