@@ -9,7 +9,7 @@
 <link>https://wjschne.github.io/blog.html</link>
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.7.13</generator>
+<generator>quarto-1.6.42</generator>
 <lastBuildDate>Fri, 15 Mar 2024 04:00:00 GMT</lastBuildDate>
 <item>
   <title>My lua filters</title>
@@ -1993,6 +1993,19 @@ ggplot2 using ggarrow and arrowheadr. <em>Schneirographs</em>. <a href="https://
 
 
 
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <a href="https://www.stat.auckland.ac.nz/~paul/Reports/dvir/xdvir/xdvir.html">xdvir package</a>, which inserts <img src="https://latex.codecogs.com/png.latex?%5CLaTeX"> equations into grid-based plots (including ggplot2) is now on CRAN. I recommend xdvir over the older methods presented in this post. Other than this message, I have left this post “as is.”</p>
+</div>
+</div>
 <p>R has a mathematical annotation system via <a href="https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html">plotmath</a>, but I like the look of true <img src="https://latex.codecogs.com/png.latex?%5CLaTeX"> equations better.</p>
 <p>Getting <img src="https://latex.codecogs.com/png.latex?%5CLaTeX"> equations into ggplot2 plots has never been easy. The <a href="https://cran.r-project.org/package=tikzDevice">tikzdevice</a> package is great if you are generating a .pdf document. If you are not, then you might want to consider other options.</p>
 <p>The easiest, hassle-free option that I know of is to create the equation in a <img src="https://latex.codecogs.com/png.latex?%5CTeX"> editor and then import the resulting .pdf using <a href="https://github.com/GuangchuangYu/ggimage">ggimage</a>. If I need the best possible image quality, I convert the .pdf to .svg using <code>dvisvgm</code> (see example below).</p>
