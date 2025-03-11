@@ -9,7 +9,7 @@
 <link>https://wjschne.github.io/tutorials.html</link>
 <atom:link href="https://wjschne.github.io/tutorials.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.6.42</generator>
+<generator>quarto-1.7.3</generator>
 <lastBuildDate>Tue, 11 Mar 2025 04:00:00 GMT</lastBuildDate>
 <item>
   <title>Multilevel Modeling of Longitudinal Data in R</title>
@@ -1443,12 +1443,15 @@ Figure&nbsp;8: The Effects of Reading Decoding on Reading Comprehension by Worki
 </div>
 </div>
 <p>Also from the sjPlot package, an attractive table:</p>
-<div class="cell">
+<div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">sjPlot<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tab_model</span>(fit)</span></code></pre></div>
+<div id="tbl-fit" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-fit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table style="border-collapse:collapse; border:none;">
 <tbody><tr>
@@ -1544,6 +1547,12 @@ font-style: inherit;">tab_model</span>(fit)</span></code></pre></div>
 
 </tbody></table>
 
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-fit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Model Results
+</figcaption>
+</figure>
 </div>
 </div>
 </section>
@@ -4510,8 +4519,1507 @@ font-style: inherit;">0</span>))</span></code></pre></div>
 </div>
 </div>
 </div>
-<div class="callout-info" title="Reflect">
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Reflect">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Reflect
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>How this method could be used in your own research?</p>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise" class="level1 page-columns page-full">
+<h1>Exercise</h1>
+<p>Imagine that <em>n</em> = 1000 participants with anxiety disorders were in a 10-week study of meditation’s effect on reducing anxiety over time. Each participant was assigned to a student therapist who taught the meditation techniques to the participants. Transcriptions of the instruction session were rated for levels of therapist support.</p>
+<p>Variables:</p>
+<ul>
+<li><code>person_id</code>: The identifier for each person</li>
+<li><code>Week</code> : The week on which data were collected, starting with Week 0 and ending on Week 4.</li>
+<li><code>Anxiety</code>: The overall level of Anxiety participants reported for the Week (level 1).</li>
+<li><code>therapist_support</code> A person-level (level 2) rating of overall therapist support.</li>
+<li><code>minutes_meditating</code> The total hours spent meditating each week.</li>
+</ul>
+<p>Predictions:</p>
+<ul>
+<li>The more time spent each week in meditation, the more anxiety will reduce over time. Note that this is <strong>NOT</strong> a prediction that the simple effect of meditation will be positive. It is instead a prediction that meditation will interact (negatively) with the time variable <code>Week</code>.</li>
+<li>The therapist’s overall level of support is predicted to interact with time (i.e., <code>Week</code>) such that participants with more supportive therapists will improve more quickly than participants with less support therapists.</li>
+<li>The therapist’s overall level of support is predicted to increase the potency of meditation’s effect over time. That is, a negative value is predicted for the 3-way interaction between therapist support, minutes meditated, and time (<code>Week</code>).</li>
+</ul>
+<section id="load-data-and-packages" class="level2">
+<h2 class="anchored" data-anchor-id="load-data-and-packages">Load Data and Packages</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb145" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb145-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(lme4)</span>
+<span id="cb145-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(easystats)</span>
+<span id="cb145-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(sjPlot)</span>
+<span id="cb145-5"></span>
+<span id="cb145-6">d <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/wjschne/EDUC5529/raw/master/hw7_meditation.csv"</span>, </span>
+<span id="cb145-7">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col_types =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cols</span>(</span>
+<span id="cb145-8">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">person_id =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">col_factor</span>(),</span>
+<span id="cb145-9">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Week =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">col_integer</span>(),</span>
+<span id="cb145-10">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Anxiety =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">col_double</span>(),</span>
+<span id="cb145-11">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">meditation_hours =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">col_integer</span>(),</span>
+<span id="cb145-12">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">therapist_support =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">col_double</span>())) </span></code></pre></div>
+</div>
+</section>
+<section id="fit-random-intercept-model" class="level2">
+<h2 class="anchored" data-anchor-id="fit-random-intercept-model">Fit random intercept model</h2>
+<p>Try setting up the code yourself. Call the model <code>fit_0</code></p>
+<p>Run the <code>summary</code> function and the <code>model_performance</code> function on the model.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint (Click)">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hint (Click)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1">fit_0 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb146-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_0)</span>
+<span id="cb146-3">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_0)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<section id="between-person-proportion-of-variance" class="level3">
+<h3 class="anchored" data-anchor-id="between-person-proportion-of-variance">Between-Person Proportion of Variance</h3>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Question 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Where would you look in the output for <code>summary(fit_0)</code> to find the average level of Anxiety across the entire data set?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Question 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In model <code>fit_0</code>, what proportion of variance in Anxiety is between persons?</p>
+</div>
+</div>
+</section>
+</section>
+<section id="lets-make-a-nice-table" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="lets-make-a-nice-table">Let’s make a nice table</h2>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb147" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1">sjPlot<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_model</span>(fit_0)</span></code></pre></div>
+<div id="tbl-fit0" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-fit0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Anxiety</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">65.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">64.62&nbsp;–&nbsp;65.38</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">69.71</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">30.32</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.30</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">1000</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">11000</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.000 / 0.303</td>
+</tr>
+
+</tbody></table>
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-fit0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Null Model Results
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="fit-the-linear-effect-of-time-i.e.-week" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="fit-the-linear-effect-of-time-i.e.-week">Fit the linear effect of time (i.e., <code>Week</code>)</h2>
+<p>Estimate the linear effect of <code>Week</code>. Try setting up the code yourself. Call the model <code>fit_week</code></p>
+<p>Run <code>summary</code>, <code>model_performance</code>, and <code>report</code> on the model.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to see code">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click to see code
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb148" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1">fit_week <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb148-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_week)</span>
+<span id="cb148-3">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_week)</span>
+<span id="cb148-4">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(fit_week)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>Let’s compare the fit of both models:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb149" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_0, fit_week)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: d
+Models:
+fit_0: Anxiety ~ 1 + (1 | person_id)
+fit_week: Anxiety ~ 1 + Week + (1 | person_id)
+         npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)    
+fit_0       3 79664 79686 -39829    79658                         
+fit_week    4 77765 77794 -38878    77757 1901.6  1  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb151" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">compare_performance</span>(fit_0, fit_week)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name     |   Model |   AIC (weights) |  AICc (weights) |   BIC (weights)
+------------------------------------------------------------------------
+fit_0    | lmerMod | 79664.4 (&lt;.001) | 79664.4 (&lt;.001) | 79686.3 (&lt;.001)
+fit_week | lmerMod | 77764.8 (&gt;.999) | 77764.8 (&gt;.999) | 77794.0 (&gt;.999)
+
+Name     | R2 (cond.) | R2 (marg.) |   ICC |  RMSE | Sigma
+----------------------------------------------------------
+fit_0    |      0.303 |      0.000 | 0.303 | 8.029 | 8.349
+fit_week |      0.424 |      0.110 | 0.353 | 7.290 | 7.592</code></pre>
+</div>
+</div>
+<p>By every criterion, <code>fit_week</code> fits better than <code>fit_0</code>. Thus, there is a significant association with <code>Week</code> and <code>Anxiety</code>. Because the slope of <code>Week</code> is negative, people’s anxiety decreased over time by about -1.05 points per week.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Question 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In model <code>fit_week</code>, what proportion of variance in Anxiety is explained by <code>Week</code>?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint (Click)">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hint (Click)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Look at the R2_marginal column in the <code>performance::model_performance(fit_week)</code> output.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Question 4">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 4
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the output of <code>summary(fit_week)</code>, where would you look to see how much anxiety is changing from week to week, on average?</p>
+</div>
+</div>
+<section id="plot-the-model-and-make-a-nice-table" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="plot-the-model-and-make-a-nice-table">Plot the Model and Make a Nice Table</h3>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb153" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_model</span>(fit_week, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pred"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">terms =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Week"</span>)</span></code></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-fitweek" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-fitweek-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-fitweek-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fitweek-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Predicted Effects of Week
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb154" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_model</span>(fit_0, fit_week, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">dv.labels =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Null Model"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Week"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">show.ci =</span> F)</span></code></pre></div>
+<div id="tbl-fitweek" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-fitweek-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Null Model</th>
+<th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Week</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">65.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">70.24</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Week</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.05</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td colspan="5" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">69.71</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">57.64</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">30.32 <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">31.42 <sub>person_id</sub></td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">0.30</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">0.35</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">1000 <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">1000 <sub>person_id</sub></td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="2">11000</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="2">11000</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">0.000 / 0.303</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">0.110 / 0.424</td>
+</tr>
+
+</tbody></table>
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-fitweek-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: The Linear Effect of Week
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="add-the-quadratic-effect-of-week." class="level2">
+<h2 class="anchored" data-anchor-id="add-the-quadratic-effect-of-week.">Add the quadratic effect of <code>Week</code>.</h2>
+<p>We did not predict non-linear effects of time, but it is good idea to check. Usually you include enough polynomial degrees to be consistent with your models. If you have no prediction, add them one at a time, but be conservative in doing so.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb155" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1">fit_week_2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">poly</span>(Week, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb155-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_week_2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: Anxiety ~ 1 + poly(Week, 2) + (1 | person_id)
+   Data: d
+
+REML criterion at convergence: 77745.6
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.9612 -0.4497  0.1040  0.6023  2.8793 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ person_id (Intercept) 31.42    5.605   
+ Residual              57.64    7.592   
+Number of obs: 11000, groups:  person_id, 1000
+
+Fixed effects:
+                Estimate Std. Error t value
+(Intercept)      65.0000     0.1915 339.502
+poly(Week, 2)1 -347.4464     7.5924 -45.763
+poly(Week, 2)2   -6.9694     7.5924  -0.918
+
+Correlation of Fixed Effects:
+            (Intr) p(W,2)1
+poly(Wk,2)1 0.000         
+poly(Wk,2)2 0.000  0.000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb157" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_week, fit_week_2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: d
+Models:
+fit_week: Anxiety ~ 1 + Week + (1 | person_id)
+fit_week_2: Anxiety ~ 1 + poly(Week, 2) + (1 | person_id)
+           npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)
+fit_week      4 77765 77794 -38878    77757                     
+fit_week_2    5 77766 77802 -38878    77756 0.8428  1     0.3586</code></pre>
+</div>
+</div>
+<p>Here we see that the quadratic effect of <code>Week</code> is not significant, so we need not continue adding polynomial degrees. If we did, it would look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb159" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1">fit_week_3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">poly</span>(Week, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb159-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_week_3)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: Anxiety ~ 1 + poly(Week, 3) + (1 | person_id)
+   Data: d
+
+REML criterion at convergence: 77737.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.9654 -0.4497  0.1032  0.6000  2.8946 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ person_id (Intercept) 31.42    5.605   
+ Residual              57.64    7.592   
+Number of obs: 11000, groups:  person_id, 1000
+
+Fixed effects:
+                Estimate Std. Error t value
+(Intercept)      65.0000     0.1915 339.502
+poly(Week, 3)1 -347.4464     7.5920 -45.765
+poly(Week, 3)2   -6.9694     7.5920  -0.918
+poly(Week, 3)3  -10.3752     7.5920  -1.367
+
+Correlation of Fixed Effects:
+            (Intr) p(W,3)1 p(W,3)2
+poly(Wk,3)1 0.000                 
+poly(Wk,3)2 0.000  0.000          
+poly(Wk,3)3 0.000  0.000   0.000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb161" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb161-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_week, fit_week_2, fit_week_3)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: d
+Models:
+fit_week: Anxiety ~ 1 + Week + (1 | person_id)
+fit_week_2: Anxiety ~ 1 + poly(Week, 2) + (1 | person_id)
+fit_week_3: Anxiety ~ 1 + poly(Week, 3) + (1 | person_id)
+           npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)
+fit_week      4 77765 77794 -38878    77757                     
+fit_week_2    5 77766 77802 -38878    77756 0.8428  1     0.3586
+fit_week_3    6 77766 77810 -38877    77754 1.8679  1     0.1717</code></pre>
+</div>
+</div>
+<p>Given the lack of polynomial effects, we will stick with just the linear effect in <code>fit_week</code>.</p>
+</section>
+<section id="add-the-l1-time-covarying-predictor-meditation_hours-to-the-model" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="add-the-l1-time-covarying-predictor-meditation_hours-to-the-model">Add the L1 time-covarying predictor, <code>meditation_hours</code> to the model</h2>
+<p>Try setting up the code yourself. Call the model <code>fit_meditation</code></p>
+<p>Run <code>summary</code>, <code>model_performance</code>, and <code>report</code> on the model. Compare <code>fit_meditation</code> with the previous model, <code>fit_week</code>.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint (Click)">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hint (Click)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb163" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb163-1">fit_meditation <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb163-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_meditation)</span>
+<span id="cb163-3">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_meditation)</span>
+<span id="cb163-4">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(fit_meditation)</span>
+<span id="cb163-5"></span>
+<span id="cb163-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_week, fit_meditation)</span>
+<span id="cb163-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">compare_performance</span>(fit_week, fit_meditation)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>When you the output, you will see that the effect of <code>meditation_hours</code> is significant. From the <code>report</code> function, the standardized beta (the effect if all variables were standardized) for <code>meditation_hours</code> is larger than the effect of <code>Week</code>. Theoretically, this result makes sense. Anxiety should decrease because of the intervention, not just because of time passing. Still, the effect of <code>Week</code> is significant, perhaps because of therapist contact and/or regression to the mean.</p>
+<p>Nice plot and table:</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb164" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_model</span>(fit_meditation, </span>
+<span id="cb164-2">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pred"</span>, </span>
+<span id="cb164-3">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">terms =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Week"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"meditation_hours [0, 5, 10]"</span>))</span></code></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-meditation" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-meditation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-meditation-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-meditation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: The Predicted Effects of Week by Meditation Hours
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb165" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_model</span>(fit_meditation)</span></code></pre></div>
+<div id="tbl-mediation" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-mediation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Anxiety</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">76.96</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">76.57&nbsp;–&nbsp;77.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Week</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.07</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.09&nbsp;–&nbsp;-1.04</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">meditation hours</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.11</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.12&nbsp;–&nbsp;-1.09</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">20.60</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">29.20</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.59</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">1000</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">11000</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.497 / 0.792</td>
+</tr>
+
+</tbody></table>
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-mediation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Model for the Combined Effects of Week and Meditation
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="add-the-predicted-interaction-of-week-and-meditation_hours." class="level2">
+<h2 class="anchored" data-anchor-id="add-the-predicted-interaction-of-week-and-meditation_hours.">Add the predicted interaction of <code>Week</code> and <code>meditation_hours</code>.</h2>
+<p>Call the model <code>fit_week_x_meditation</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb166" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb166-1">fit_week_x_meditation <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb166-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_week_x_meditation)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: Anxiety ~ 1 + Week * meditation_hours + (1 | person_id)
+   Data: d
+
+REML criterion at convergence: 61358.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.0746 -0.6355  0.0015  0.6369  4.4524 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ person_id (Intercept) 29.50    5.431   
+ Residual              11.36    3.370   
+Number of obs: 11000, groups:  person_id, 1000
+
+Fixed effects:
+                       Estimate Std. Error t value
+(Intercept)           71.866534   0.194086 370.281
+Week                  -0.041797   0.015228  -2.745
+meditation_hours      -0.267135   0.011141 -23.978
+Week:meditation_hours -0.170020   0.001884 -90.265
+
+Correlation of Fixed Effects:
+            (Intr) Week   mdttn_
+Week        -0.392              
+medittn_hrs -0.348  0.626       
+Wk:mdttn_hr  0.290 -0.745 -0.836</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb168" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb168-1">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_week_x_meditation)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC       |      AICc |       BIC | R2 (cond.) | R2 (marg.) |   ICC |  RMSE | Sigma
+-----------------------------------------------------------------------------------
+61370.252 | 61370.260 | 61414.086 |      0.885 |      0.588 | 0.722 | 3.219 | 3.370</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb170" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb170-1">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(fit_week_x_meditation)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>We fitted a linear mixed model (estimated using REML and nloptwrap optimizer)
+to predict Anxiety with Week and meditation_hours (formula: Anxiety ~ 1 + Week
+* meditation_hours). The model included person_id as random effect (formula: ~1
+| person_id). The model's total explanatory power is substantial (conditional
+R2 = 0.89) and the part related to the fixed effects alone (marginal R2) is of
+0.59. The model's intercept, corresponding to Week = 0 and meditation_hours =
+0, is at 71.87 (95% CI [71.49, 72.25], t(10994) = 370.28, p &lt; .001). Within
+this model:
+
+  - The effect of Week is statistically significant and negative (beta = -0.04,
+95% CI [-0.07, -0.01], t(10994) = -2.74, p = 0.006; Std. beta = -0.33, 95% CI
+[-0.34, -0.33])
+  - The effect of meditation hours is statistically significant and negative
+(beta = -0.27, 95% CI [-0.29, -0.25], t(10994) = -23.98, p &lt; .001; Std. beta =
+-0.62, 95% CI [-0.63, -0.62])
+  - The effect of Week × meditation hours is statistically significant and
+negative (beta = -0.17, 95% CI [-0.17, -0.17], t(10994) = -90.26, p &lt; .001;
+Std. beta = -0.30, 95% CI [-0.31, -0.29])
+
+Standardized parameters were obtained by fitting the model on a standardized
+version of the dataset. 95% Confidence Intervals (CIs) and p-values were
+computed using a Wald t-distribution approximation.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb172" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_meditation, fit_week_x_meditation)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: d
+Models:
+fit_meditation: Anxiety ~ 1 + Week + meditation_hours + (1 | person_id)
+fit_week_x_meditation: Anxiety ~ 1 + Week * meditation_hours + (1 | person_id)
+                      npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)    
+fit_meditation           5 67309 67345 -33649    67299                         
+fit_week_x_meditation    6 61342 61386 -30665    61330 5968.7  1  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb174" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">compare_performance</span>(fit_meditation, fit_week_x_meditation)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name                  |   Model |   AIC (weights) |  AICc (weights)
+-------------------------------------------------------------------
+fit_meditation        | lmerMod | 67308.9 (&lt;.001) | 67308.9 (&lt;.001)
+fit_week_x_meditation | lmerMod | 61342.2 (&gt;.999) | 61342.2 (&gt;.999)
+
+Name                  |   BIC (weights) | R2 (cond.) | R2 (marg.) |   ICC
+-------------------------------------------------------------------------
+fit_meditation        | 67345.4 (&lt;.001) |      0.792 |      0.497 | 0.586
+fit_week_x_meditation | 61386.0 (&gt;.999) |      0.885 |      0.588 | 0.722
+
+Name                  |  RMSE | Sigma
+-------------------------------------
+fit_meditation        | 4.340 | 4.538
+fit_week_x_meditation | 3.219 | 3.370</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb176" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb176-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_model</span>(fit_week_x_meditation, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pred"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">terms =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Week"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"meditation_hours [0, 5, 10]"</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fitweekbymeditation-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb177" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_model</span>(fit_week_x_meditation)</span></code></pre></div>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Anxiety</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">71.87</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">71.49&nbsp;–&nbsp;72.25</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Week</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.04</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.07&nbsp;–&nbsp;-0.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.006</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">meditation hours</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.27</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.29&nbsp;–&nbsp;-0.25</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Week × meditation hours</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.17</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.17&nbsp;–&nbsp;-0.17</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">11.36</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">29.50</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.72</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>person_id</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">1000</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">11000</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.588 / 0.885</td>
+</tr>
+
+</tbody></table>
+
+</div>
+</div>
+<p>We see that the hypothesized interaction is significant, meaning that the effect of <code>Week</code> depends on <code>meditation_hours</code>. In the plot, you can see that the reduction of Anxiety over time is larger for people who meditation more.</p>
+<p>Note that in the output the fixed effects of <code>Week</code> and <code>meditation_hours</code> are simple slopes. They tell us what the slope of the variable is when the other predictors in the interaction are 0. For statistical significance of simple slopes, you can look in the output of <code>report</code>.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Question 5">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 5
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In model <code>fit_week_x_meditation</code>, when <code>meditation_hours</code> is 0, is the slope of <code>Week</code> statistically significant?</p>
+</div>
+</div>
+</section>
+<section id="add-the-l2-predictor" class="level2">
+<h2 class="anchored" data-anchor-id="add-the-l2-predictor">Add the L2 predictor</h2>
+<p>Add <code>therapist_support</code> to the previous model. Call the model <code>fit_support</code>. Run <code>summary</code>, <code>model_performance</code>, and <code>report</code> on the model. Compare <code>fit_support</code> with the previous model, <code>fit_meditation</code>.</p>
+<section id="set-up-the-code" class="level3 tabset tabset-fade tabset-pills">
+<h3 class="tabset tabset-fade tabset-pills anchored" data-anchor-id="set-up-the-code">Set up the Code</h3>
+<p>Try setting up the code yourself.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint (Click)">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hint (Click)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb178" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb178-1">fit_support <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> therapist_support <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb178-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_support)</span>
+<span id="cb178-3">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_support)</span>
+<span id="cb178-4">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(fit_support)</span>
+<span id="cb178-5"></span>
+<span id="cb178-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_meditation, fit_support)</span>
+<span id="cb178-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">compare_performance</span>(fit_meditation, fit_support, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rank =</span> T)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>After running the code, you can see that the therapist support is associated with lower levels of anxiety.</p>
+</section>
+</section>
+<section id="add-random-slopes-for-level-1-predictors." class="level2">
+<h2 class="anchored" data-anchor-id="add-random-slopes-for-level-1-predictors.">Add random slopes for Level 1 predictors.</h2>
+<p>In general, be conservative about adding random slopes to your model. They often cause convergence problems and long computation times.</p>
+<p>Let’s see if we need <code>Week</code> to have a random slope.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb179" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1">fit_week_random <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> therapist_support <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">||</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb179-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_week_random)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: Anxiety ~ Week * meditation_hours + therapist_support + ((1 |  
+    person_id) + (0 + Week | person_id))
+   Data: d
+
+REML criterion at convergence: 61325.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.0529 -0.6342  0.0016  0.6357  4.4314 
+
+Random effects:
+ Groups      Name        Variance  Std.Dev.
+ person_id   (Intercept) 28.414902 5.33056 
+ person_id.1 Week         0.005105 0.07145 
+ Residual                11.303273 3.36203 
+Number of obs: 11000, groups:  person_id, 1000
+
+Fixed effects:
+                       Estimate Std. Error t value
+(Intercept)           71.847112   0.191278 375.616
+Week                  -0.041067   0.015396  -2.667
+meditation_hours      -0.265533   0.011158 -23.797
+therapist_support     -1.011291   0.173201  -5.839
+Week:meditation_hours -0.170138   0.001888 -90.134
+
+Correlation of Fixed Effects:
+            (Intr) Week   mdttn_ thrps_
+Week        -0.394                     
+medittn_hrs -0.354  0.621              
+thrpst_sppr  0.016 -0.004 -0.022       
+Wk:mdttn_hr  0.295 -0.738 -0.836  0.004</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb181" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb181-1">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_week_random)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC       |      AICc |       BIC | R2 (cond.) | R2 (marg.) |   ICC |  RMSE | Sigma
+-----------------------------------------------------------------------------------
+61341.222 | 61341.235 | 61399.668 |      0.888 |      0.607 | 0.715 | 3.203 | 3.362</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb183" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb183-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_support, fit_week_random, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">refit =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: d
+Models:
+fit_support: Anxiety ~ Week * meditation_hours + therapist_support + (1 | person_id)
+fit_week_random: Anxiety ~ Week * meditation_hours + therapist_support + ((1 | person_id) + (0 + Week | person_id))
+                npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)
+fit_support        7 61340 61392 -30663    61326                     
+fit_week_random    8 61341 61400 -30663    61325 1.2712  1     0.2595</code></pre>
+</div>
+</div>
+<p>There is not a significant effect here. Note the use of <code>refit = FALSE</code> in the <code>anova</code> function. This is good practice when comparing models that differ only in their random effects.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb185" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb185-1">fit_meditation_random <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> therapist_support <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">||</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb185-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_meditation_random)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: Anxiety ~ Week * meditation_hours + therapist_support + ((1 |  
+    person_id) + (0 + meditation_hours | person_id))
+   Data: d
+
+REML criterion at convergence: 61323.8
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.0732 -0.6349  0.0008  0.6351  4.4356 
+
+Random effects:
+ Groups      Name             Variance  Std.Dev.
+ person_id   (Intercept)      28.580662 5.34609 
+ person_id.1 meditation_hours  0.002205 0.04696 
+ Residual                     11.287908 3.35975 
+Number of obs: 11000, groups:  person_id, 1000
+
+Fixed effects:
+                       Estimate Std. Error t value
+(Intercept)           71.847721   0.191808 374.581
+Week                  -0.041972   0.015251  -2.752
+meditation_hours      -0.265514   0.011376 -23.339
+therapist_support     -0.999116   0.173555  -5.757
+Week:meditation_hours -0.169966   0.001904 -89.250
+
+Correlation of Fixed Effects:
+            (Intr) Week   mdttn_ thrps_
+Week        -0.398                     
+medittn_hrs -0.350  0.621              
+thrpst_sppr  0.016 -0.002 -0.019       
+Wk:mdttn_hr  0.295 -0.746 -0.829  0.002
+optimizer (nloptwrap) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.00610441 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb187" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb187-1">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_meditation_random)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC       |      AICc |       BIC | R2 (cond.) | R2 (marg.) |   ICC |  RMSE | Sigma
+-----------------------------------------------------------------------------------
+61339.774 | 61339.787 | 61398.220 |      0.888 |      0.605 | 0.717 | 3.200 | 3.360</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb189" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb189-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_support, fit_meditation_random, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">refit =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: d
+Models:
+fit_support: Anxiety ~ Week * meditation_hours + therapist_support + (1 | person_id)
+fit_meditation_random: Anxiety ~ Week * meditation_hours + therapist_support + ((1 | person_id) + (0 + meditation_hours | person_id))
+                      npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)  
+fit_support              7 61340 61392 -30663    61326                       
+fit_meditation_random    8 61340 61398 -30662    61324 2.7192  1    0.09915 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Again, no significant effect here. We are not really sure, however, because the model did not converge. However, we did not predict a random slope, so to be conservative, we revert back to <code>fit_support</code> as our comparison model.</p>
+</section>
+<section id="add-hypothesized-interaction-terms" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="add-hypothesized-interaction-terms">Add hypothesized interaction terms</h2>
+<p>We hypothesized a 3-way interaction of <code>Week</code>, <code>meditation_hours</code>, and <code>therapist_support</code>. Add it to the <code>fit_support</code> model.</p>
+<p>Try setting up the code yourself. Call the model <code>fit_3_way_interaction</code>.</p>
+<p>Pretend that the warning (<code>boundary (singular) fit: see ?isSingular</code>) is not there.</p>
+<p>Run <code>summary</code>, <code>model_performance</code>, and <code>report</code> on the model.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint (Click)">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hint (Click)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb191" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb191-1">fit_3_way_interaction <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> therapist_support <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb191-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_3_way_interaction)</span>
+<span id="cb191-3">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_3_way_interaction)</span>
+<span id="cb191-4">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(fit_3_way_interaction)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>Let’s compare the fit of both models:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb192" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb192-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">anova</span>(fit_support, fit_3_way_interaction)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: d
+Models:
+fit_support: Anxiety ~ Week * meditation_hours + therapist_support + (1 | person_id)
+fit_3_way_interaction: Anxiety ~ Week * meditation_hours * therapist_support + (1 | person_id)
+                      npar   AIC   BIC logLik deviance  Chisq Df Pr(&gt;Chisq)    
+fit_support              7 61311 61362 -30648    61297                         
+fit_3_way_interaction   10 61296 61369 -30638    61276 20.502  3  0.0001336 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb194" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb194-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">compare_performance</span>(fit_support, fit_3_way_interaction, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rank =</span> T)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name                  |   Model | R2 (cond.) | R2 (marg.) |   ICC |  RMSE
+-------------------------------------------------------------------------
+fit_3_way_interaction | lmerMod |      0.888 |      0.606 | 0.715 | 3.216
+fit_support           | lmerMod |      0.888 |      0.605 | 0.715 | 3.219
+
+Name                  | Sigma | AIC weights | AICc weights | BIC weights | Performance-Score
+--------------------------------------------------------------------------------------------
+fit_3_way_interaction | 3.368 |       0.999 |        0.999 |       0.024 |            87.50%
+fit_support           | 3.370 |    7.09e-04 |     7.12e-04 |       0.976 |            12.50%</code></pre>
+</div>
+</div>
+<p>The results of the <code>anova</code> model comparison is significant, but we can see that the three-way interaction is not. Let’s plot the model and see what is going on.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb196" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb196-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_model</span>(fit_3_way_interaction, </span>
+<span id="cb196-2">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pred"</span>, </span>
+<span id="cb196-3">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">terms =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Week"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"meditation_hours [0, 5, 10]"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"therapist_support [-1, 0, 1]"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb196-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"top"</span>)</span></code></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-3interaction" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-3interaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-3interaction-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-3interaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Interaction of Week, Meditation, and Therapist Support
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>From the plot and the summary output, the significant effect appears to be in the 2-way interaction of <code>meditation_hours</code> and <code>therapist_support</code>. You cannot be sure about that until you run the model.</p>
+</section>
+<section id="add-2-way-interaction" class="level2">
+<h2 class="anchored" data-anchor-id="add-2-way-interaction">Add 2-way interaction</h2>
+<p>Add the interaction of <code>therapist_support</code> and <code>meditation_hours</code>to the <code>fit_support</code> model</p>
+<p>Try setting up the code yourself. Call the model <code>fit_support_x_meditation</code>.</p>
+<p>Run <code>summary</code>, <code>model_performance</code>, and <code>report</code> on the model.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint (Click)">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hint (Click)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb197" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb197-1">fit_support_x_meditation <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lmer</span>(Anxiety <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Week <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> meditation_hours <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> therapist_support <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> person_id), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb197-2"></span>
+<span id="cb197-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(fit_support_x_meditation)</span>
+<span id="cb197-4"></span>
+<span id="cb197-5">performance<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model_performance</span>(fit_support_x_meditation)</span>
+<span id="cb197-6">report<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">report</span>(fit_support_x_meditation)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Question 6">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 6
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the <code>fit_support_x_meditation</code> model, is the interaction of <code>meditation_hours</code> and <code>therapist_support</code> significant?</p>
+</div>
 </div>
 
 
@@ -44404,7 +45912,7 @@ Steps to create a project
 
  ]]></description>
   <guid>https://wjschne.github.io/tutorials/GeneralizedMixed/asdf.html</guid>
-  <pubDate>Sun, 09 Mar 2025 15:03:19 GMT</pubDate>
+  <pubDate>Tue, 11 Mar 2025 10:05:13 GMT</pubDate>
 </item>
 </channel>
 </rss>

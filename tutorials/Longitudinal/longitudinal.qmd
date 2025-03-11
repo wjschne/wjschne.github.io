@@ -455,7 +455,8 @@ ggplot(d_predicted,
 
 Also from the sjPlot package, an attractive table:
 
-```{r}
+```{r tbl-fit}
+#| tbl-cap: Model Results
 sjPlot::tab_model(fit)
 ```
 
@@ -791,7 +792,372 @@ plot_model(fit_final,
 
 ```
 
-:::{.callout-info title = "Reflect"}
+:::{.callout-note icon=false title = "Reflect"}
 How this method could be used in your own research?
+:::
+
+
+# Exercise
+
+
+
+```{r setup2, include=FALSE}
+
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/hw7_meditation.csv", 
+              col_types = cols(
+                person_id = col_factor(),
+                Week = col_integer(),
+                Anxiety = col_double(),
+                meditation_hours = col_integer(),
+                therapist_support = col_double())) 
+n <- d$person_id %>% unique %>% length()
+n_weeks <- d$Week %>% unique() %>% length - 1
+```
+
+Imagine that *n* = `r n` participants with anxiety disorders were in a `r n_weeks`-week study of meditation's effect on reducing anxiety over time. Each participant was assigned to a student therapist who taught the meditation techniques to the participants. Transcriptions of the instruction session were rated for levels of therapist support.
+
+Variables:
+
+* `person_id`: The identifier for each person
+* `Week` : The week on which data were collected, starting with Week 0 and ending on Week 4.
+* `Anxiety`: The overall level of Anxiety participants reported for the Week (level 1).
+* `therapist_support` A person-level (level 2) rating of overall therapist support.
+* `minutes_meditating` The total hours spent meditating each week.
+
+Predictions:
+
+* The more time spent each week in meditation, the more anxiety will reduce over time. Note that this is **NOT** a prediction that the simple effect of meditation will be positive. It is instead a prediction that meditation will interact (negatively) with the time variable `Week`.
+* The therapist's overall level of support is predicted to interact with time (i.e., `Week`) such that participants with more supportive therapists will improve more quickly than participants with less support therapists.
+* The therapist's overall level of support is predicted to increase the potency of meditation's effect over time. That is, a negative value is predicted for the 3-way interaction between therapist support, minutes meditated, and time (`Week`). 
+
+## Load Data and Packages
+
+```{r}
+#| label: exercisedata
+#| message: false
+library(tidyverse)
+library(lme4)
+library(easystats)
+library(sjPlot)
+
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/hw7_meditation.csv", 
+              col_types = cols(
+                person_id = col_factor(),
+                Week = col_integer(),
+                Anxiety = col_double(),
+                meditation_hours = col_integer(),
+                therapist_support = col_double())) 
+
+```
+
+## Fit random intercept model 
+
+Try setting up the code yourself. Call the model `fit_0`
+
+Run the `summary` function and the `model_performance` function on the model.
+
+:::{.callout-tip title='Hint (Click)' collapse="true"}
+
+```{r fit0}
+#| results: hide
+#| echo: true
+fit_0 <- lmer(Anxiety ~ 1 + (1 | person_id), data = d)
+summary(fit_0)
+performance::model_performance(fit_0)
+```
+
+:::
+
+### Between-Person Proportion of Variance
+
+:::{.callout-note icon=false title="Question 1"}
+Where would you look in the output for `summary(fit_0)` to find the average level of Anxiety across the entire data set?
+:::
+
+:::{.callout-note icon=false title="Question 2"}
+In model `fit_0`, what proportion of variance in Anxiety is between persons?
+:::
+
+## Let's make a nice table
+
+```{r tbl-fit0}
+#| tbl-cap: Null Model Results
+sjPlot::tab_model(fit_0)
+```
+
+
+## Fit the linear effect of time (i.e., `Week`)
+
+Estimate the linear effect of `Week`. Try setting up the code yourself. Call the model `fit_week`
+
+Run `summary`, `model_performance`, and `report` on the model.
+
+:::{.callout-tip title='Click to see code' collapse="true"}
+
+```{r fitweek}
+#| results: hide
+#| echo: true
+fit_week <- lmer(Anxiety ~ 1 + Week + (1 | person_id), data = d)
+summary(fit_week)
+performance::model_performance(fit_week)
+report::report(fit_week)
+
+```
+
+:::
+
+Let's compare the fit of both models:
+
+```{r compare0fitweek}
+anova(fit_0, fit_week)
+compare_performance(fit_0, fit_week)
+```
+
+
+By every criterion, `fit_week` fits better than `fit_0`. Thus, there is a significant association with `Week` and `Anxiety`. Because the slope of `Week` is negative, people's anxiety decreased over time by about `r round(lme4::fixef(fit_week)[2],2)` points per week.
+
+
+:::{.callout-note icon=false title='Question 3'}
+In model `fit_week`, what proportion of variance in Anxiety is explained by `Week`?
+:::
+
+:::{.callout-tip title='Hint (Click)' collapse="true"}
+Look at the R2_marginal column in the `performance::model_performance(fit_week)` output.
+:::
+
+
+:::{.callout-note icon=false title="Question 4"}
+In the output of  `summary(fit_week)`, where would you look to see how much anxiety is changing from week to week, on average?
+:::
+
+
+### Plot the Model and Make a Nice Table
+
+```{r fig-fitweek}
+#| fig-cap: Predicted Effects of Week
+plot_model(fit_week, type = "pred", terms = "Week")
+
+
+```
+
+
+```{r tbl-fitweek}
+#| tbl-cap: The Linear Effect of Week
+tab_model(fit_0, fit_week, dv.labels = c("Null Model", "Week"), show.ci = F)
+```
+
+
+## Add the quadratic effect of `Week`.
+
+We did not predict non-linear effects of time, but it is good idea to check. Usually you include enough polynomial degrees to be consistent with your models. If you have no prediction, add them one at a time, but be conservative in doing so. 
+
+```{r fitweek2}
+fit_week_2 <- lmer(Anxiety ~ 1 + poly(Week, 2) + (1 | person_id), data = d)
+summary(fit_week_2)
+anova(fit_week, fit_week_2)
+```
+
+Here we see that the quadratic effect of `Week` is not significant, so we need not continue adding polynomial degrees. If we did, it would look like this:
+
+```{r fitweek3}
+fit_week_3 <- lmer(Anxiety ~ 1 + poly(Week, 3) + (1 | person_id), data = d)
+summary(fit_week_3)
+anova(fit_week, fit_week_2, fit_week_3)
+```
+
+Given the lack of polynomial effects, we will stick with just the linear effect in `fit_week`.
+
+## Add the L1 time-covarying predictor, `meditation_hours` to the model
+
+Try setting up the code yourself. Call the model `fit_meditation`
+
+Run `summary`, `model_performance`, and `report` on the model. Compare `fit_meditation` with the previous model, `fit_week`.
+
+:::{.callout-tip title='Hint (Click)' collapse="true"}
+
+```{r fitmeditation}
+#| results: hide
+#| echo: true
+fit_meditation <- lmer(Anxiety ~ 1 + Week + meditation_hours + (1 | person_id), data = d)
+summary(fit_meditation)
+performance::model_performance(fit_meditation)
+report::report(fit_meditation)
+
+anova(fit_week, fit_meditation)
+compare_performance(fit_week, fit_meditation)
+```
+
+:::
+
+When you the output, you will see that the effect of `meditation_hours` is significant. From the `report` function, the standardized beta (the effect if all variables were standardized) for `meditation_hours` is larger than the effect of `Week`. Theoretically, this result makes sense. Anxiety should decrease because of the intervention, not just because of time passing. Still, the effect of `Week` is significant, perhaps because of therapist contact and/or regression to the mean.
+
+Nice plot and table:
+
+```{r fig-meditation}
+#| fig-cap: The Predicted Effects of Week by Meditation Hours
+
+plot_model(fit_meditation, 
+           type = "pred", 
+           terms = c("Week", "meditation_hours [0, 5, 10]"))
+
+```
+
+
+```{r tbl-mediation}
+#| tbl-cap: Model for the Combined Effects of Week and Meditation
+tab_model(fit_meditation)
+
+```
+
+## Add the predicted interaction of `Week` and `meditation_hours`.
+
+Call the model `fit_week_x_meditation`
+
+```{r fitweekbymeditation}
+fit_week_x_meditation <- lmer(Anxiety ~ 1 + Week * meditation_hours + (1 | person_id), data = d)
+summary(fit_week_x_meditation)
+performance::model_performance(fit_week_x_meditation)
+report::report(fit_week_x_meditation)
+
+anova(fit_meditation, fit_week_x_meditation)
+compare_performance(fit_meditation, fit_week_x_meditation)
+
+plot_model(fit_week_x_meditation, type = "pred", terms = c("Week", "meditation_hours [0, 5, 10]"))
+tab_model(fit_week_x_meditation)
+```
+
+We see that the hypothesized interaction is significant, meaning that the effect of `Week` depends on `meditation_hours`. In the plot, you can see that the reduction of Anxiety over time is larger for people who meditation more.
+
+Note that in the output the fixed effects of `Week` and `meditation_hours` are simple slopes. They tell us what the slope of the variable is when the other predictors in the interaction are 0. For statistical significance of simple slopes, you can look in the output of `report`.
+
+:::{.callout-note icon=false title="Question 5"}
+In model `fit_week_x_meditation`, when `meditation_hours` is 0, is the slope of `Week` statistically significant?
+:::
+
+## Add the L2 predictor
+
+Add `therapist_support` to the previous model. Call the model `fit_support`. Run `summary`, `model_performance`, and `report` on the model. Compare `fit_support` with the previous model, `fit_meditation`.
+
+### Set up the Code {.tabset .tabset-fade .tabset-pills}
+
+Try setting up the code yourself. 
+
+:::{.callout-tip title='Hint (Click)' collapse="true"}
+
+
+```{r fitsupport}
+#| results: hide
+#| echo: true
+fit_support <- lmer(Anxiety ~ Week * meditation_hours + therapist_support + (1 | person_id), data = d)
+summary(fit_support)
+performance::model_performance(fit_support)
+report::report(fit_support)
+
+anova(fit_meditation, fit_support)
+compare_performance(fit_meditation, fit_support, rank = T)
+```
+
+:::
+
+After running the code, you can see that the therapist support is associated with lower levels of  anxiety.
+
+## Add random slopes for Level 1 predictors.
+
+In general, be conservative about adding random slopes to your model. They often cause convergence problems and long computation times.
+
+Let's see if we need `Week` to have a random slope. 
+
+```{r fitweekrandom}
+fit_week_random <- lmer(Anxiety ~ Week * meditation_hours + therapist_support + (1 + Week || person_id), data = d)
+summary(fit_week_random)
+performance::model_performance(fit_week_random)
+anova(fit_support, fit_week_random, refit = FALSE)
+```
+
+There is not a significant effect here. Note the use of `refit = FALSE` in the `anova` function. This is good practice when comparing models that differ only in their random effects.
+
+```{r fitmediationrandom}
+fit_meditation_random <- lmer(Anxiety ~ Week * meditation_hours + therapist_support + (1 + meditation_hours || person_id), data = d)
+summary(fit_meditation_random)
+performance::model_performance(fit_meditation_random)
+anova(fit_support, fit_meditation_random, refit = FALSE)
+```
+
+Again, no significant effect here. We are not really sure, however, because the model did not converge. However, we did not predict a random slope, so to be conservative, we revert back to `fit_support` as our comparison model.
+
+
+
+## Add hypothesized interaction terms
+
+We hypothesized a 3-way interaction of `Week`, `meditation_hours`, and `therapist_support`. Add it to the  `fit_support` model.
+
+
+Try setting up the code yourself. Call the model `fit_3_way_interaction`.
+
+Pretend that the warning (`boundary (singular) fit: see ?isSingular`) is not there.
+
+Run `summary`, `model_performance`, and `report` on the model.
+
+:::{.callout-tip title='Hint (Click)' collapse="true"}
+
+```{r fit3wayinteraction}
+#| results: hide
+#| echo: true
+fit_3_way_interaction <- lmer(Anxiety ~ Week * meditation_hours * therapist_support + (1 | person_id), data = d)
+summary(fit_3_way_interaction)
+performance::model_performance(fit_3_way_interaction)
+report::report(fit_3_way_interaction)
+```
+
+:::
+
+Let's compare the fit of both models:
+
+```{r comparesupportinteraction}
+anova(fit_support, fit_3_way_interaction)
+compare_performance(fit_support, fit_3_way_interaction, rank = T)
+```
+
+The results of the `anova` model comparison is significant, but we can see that the three-way interaction is not. Let's plot the model and see what is going on. 
+
+```{r fig-3interaction}
+#| fig-cap: Interaction of Week, Meditation, and Therapist Support
+plot_model(fit_3_way_interaction, 
+           type = "pred", 
+           terms = c("Week", "meditation_hours [0, 5, 10]", "therapist_support [-1, 0, 1]")) + 
+  theme(legend.position = "top")
+
+
+```
+
+
+From the plot and the summary output, the significant effect appears to be in the 2-way interaction of `meditation_hours` and `therapist_support`. You cannot be sure about that until you run the model.
+
+## Add 2-way interaction 
+
+Add the  interaction of `therapist_support` and `meditation_hours`to the `fit_support` model
+
+Try setting up the code yourself. Call the model `fit_support_x_meditation`.
+
+
+Run `summary`, `model_performance`, and `report` on the model.
+
+:::{.callout-tip title='Hint (Click)' collapse="true"}
+
+```{r fitsupportbymeditation}
+#| results: hide
+#| echo: true
+fit_support_x_meditation <- lmer(Anxiety ~ Week * meditation_hours + meditation_hours * therapist_support + (1 | person_id), data = d)
+
+summary(fit_support_x_meditation)
+
+performance::model_performance(fit_support_x_meditation)
+report::report(fit_support_x_meditation)
+```
+
+:::
+
+:::{.callout-note icon=false title="Question 6"}
+In the  `fit_support_x_meditation` model, is the interaction of `meditation_hours` and `therapist_support` significant?
 :::
 
