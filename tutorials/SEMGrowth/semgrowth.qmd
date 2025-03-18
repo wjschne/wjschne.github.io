@@ -1,0 +1,2501 @@
+---
+title: "Latent Growth Models"
+subtitle: "Advanced Data Analysis (EDUC 8825)"
+date: "2025-03-11"
+engine: knitr
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
+language:
+  callout-note-title: "Hint"
+format: 
+  html: 
+    # html-math-method: katex
+    fig-height: 8
+    fig-width: 8
+    theme: journal
+    toc: true
+    toc-float: true
+    toc-location: left
+    tbl-cap-location: margin
+    fig-cap-location: margin
+    reference-location: margin
+    citation-location: margin
+    # css: tutorial.css
+csl: "https://www.zotero.org/styles/apa"
+bibliography: "../../bibliography.bib"
+---
+
+```{r setup}
+#| include: false
+options(digits = 4, knitr.kable.NA = '')
+
+library(tidyverse)
+library(lme4)
+library(lavaan)
+library(ggdiagram)
+library(gt)
+library(geomtextpath)
+library(sjPlot)
+library(easystats)
+
+my_font <- "Roboto Condensed"
+
+my_apa <- function(tb) {
+  # amended from https://benediktclaus.github.io/benelib/reference/theme_gt_apa.html
+  tb %>% 
+    cols_align(columns = 1, align = "left") %>% 
+    opt_table_lines(extent = "none") %>% 
+    tab_options(table.border.top.style = "solid",
+                table.border.top.color = "black", 
+                table.border.top.width = 1,
+                table_body.border.bottom.style = "solid", 
+                table_body.border.bottom.color = "black",
+                table_body.border.bottom.width = 1, 
+                column_labels.border.bottom.style = "solid", column_labels.border.bottom.color = "black", 
+            column_labels.border.bottom.width = 1)
+}
+
+```
+
+```{r setup2}
+#| code-fold: true
+#| code-summary: "Setup Code"
+<<setup>>
+```
+
+# Latent Variable Models
+
+Latent growth modeling is a specific instance of a more general approach to creating models with a mix of observed and latent variables. This approach goes by many names, including *latent variable modeling*, *structural equation modeling*, *covariance structure analysis*, and many other similar terms. 
+
+Latent variables are not observed directly but are inferred from the patterns of relationships among observed variables. For example, suppose we see that three different vocabulary tests, *v1*, *v2*, *v3*, have the correlations in @tbl-vcor. 
+
+```{r tbl-vcor}
+#| tbl-cap: Correlations Among Three Vocabulary Tests
+#| code-fold: true
+m <- "V =~ .7 * v_1 + .8 * v_2 + .9 * v_3"
+simstandard::get_model_implied_correlations(m) %>% 
+  corrr::as_cordf(diagonal = 1) %>% 
+  mutate(term = paste0(str_replace(paste0("*", toupper(term), "*"), "_", "~"), "~")) %>% 
+  rename(` ` = term) %>% 
+  mutate(across(where(is.numeric), round_probability)) %>% 
+  gt::gt() %>% 
+  my_apa() %>% 
+  gt::fmt_markdown() %>% 
+  gt::cols_label(v_1 = md("*V*~1~"),
+                 v_2 = md("*V*~2~"),
+                 v_3 = md("*V*~3~")
+                 ) %>% 
+  gt::cols_width(` ` ~ px(50),
+    everything() ~ px(70)) %>% 
+  gt::cols_align(columns = 2:4, "center") 
+```
+
+
+What underlying model would create these correlations? Unfortunately, any set of observed correlations could be generated from an infinite number of models. Of the infinite number of models that *could* generate these correlations, most of them have no theoretical basis and are stuffed with unnecessary complications. When deciding among alternatives, a good place to start is to imagine the simplest theoretically plausible explanation. As [Einstein is reputed to have said](https://quoteinvestigator.com/2011/05/13/einstein-simple/), 
+
+> "Everything should be made as simple as possible, but not simpler."
+
+
+
+
+
+
+
+```{r fig-vmodel}
+#| fig-cap: Latent Variable Model for Three Vocabulary Tests
+#| code-fold: true
+#| fig-column: margin
+#| fig-width: 5
+#| fig-height: 8
+
+ggdiagram(font_size = 24, font_family = my_font) +
+  {v <- ob_circle(label = "*Vocabulary*", 
+                  radius = sqrt(pi))} +
+  {v3 <- ob_ellipse(m1 = 15) %>%
+      place(v, "below", sep = 2) %>%
+      ob_array(k = 3,
+               sep = .25,
+               label = paste0("*V*~", 1:3, "~"))} +
+  {l <- connect(v, v3, resect = 2)} +
+  ob_label(
+    label = round_probability(seq(.7, .9, .1), 
+                              phantom_text = "."),
+    center = l@line@point_at_y(l[2]@midpoint(.47)@y),
+    size = 20,
+    label.padding = margin(t = 4, b = 0)) +
+  {e3 <- ob_circle(label = paste0("*e*~", 1:3, "~"), 
+                   radius = .75) %>%
+      place(v3, "below", sep = .75)} +
+  connect(e3, v3, resect = 2) +
+  ob_variance(
+    x = e3,
+    where = "below",
+    looseness = 1.25,
+    label = ob_label(
+      label = round_probability(1 - seq(.7, .9, .1)^2), 
+      size = 18)) +
+  ob_variance(
+    v,
+    label = ob_label("1", size = 18),
+    theta = 40,
+    looseness = .8)
+
+```
+
+In this case, the simplest theoretically plausible model I can imagine is that people have an overall fund of knowledge about words in a particular language and that each vocabulary test score samples this knowledge imperfectly. In @fig-vmodel, the circle labeled *Vocabulary* is a latent variable that represents the influence of an overall knowledge of words. [**Sidenote**: Is the true model that generated the correlation matrix in @tbl-vcor more complex than the simple model in @fig-vmodel? Undoubtedly. We generate simple models as a starting point in our investigation, as a basis of comparison for subsequent models.]{.aside} It is *latent* because there is no practical way to measure a person's overall knowledge of words. At best, we create tests that sample this overall knowledge with a subset of words we believe are representative of the overall word knowledge. Observed variables are represented in @fig-vmodel as squares. People with a large overall vocabulary are likely to score well on the three measures of vocabulary we have created. People with a small vocabulary will likely score lower on the three tests. 
+
+The influence of the latent variable on the observed indicator variable is symbolized by a straight arrow. The strength of the influence is called a *loading*. Observed variables with stronger loadings are better indicators of the latent variable. Because the loadings are standardized (i.e., all observed and latent variables have a variance of 1), the loadings in this context equal the correlation between the latent variable and each observed variable.^[Standardized loadings are actually standardized regression coefficients from latent variables to observed variables. When an observed variable has only one loading and no other influences (other than the error term), the standardized regression coefficient equals the correlation between the latent variable and the observed indicator.]
+
+Although the three tests are influenced by a common cause, in @fig-vmodel, each tests has a unique set of influences, *e*~1~, *e*~2~, *e*~3~. The variances of the unique influences are symbolized by curved double-headed arrows. Because they are standardized, they represent the proportion of variance in the observed variables that is not explained by the latent variable.
+
+The model in @fig-vmodel has 1 latent variable, 3 observed variables, and 3 error/residual terms. Any variable that has an incoming straight arrow from another variable is said to be *endogenous*, meaning "created from within" the model. That is, endogenous variables are determined entirely be variables within the model. A variable without incoming straight arrows is said to be *exogenous*, meaning "created from without."^[In some latent variable models, means of exogneous variables and intercepts of endogenous variables are symbolized by paths originating from a triangle. Thus, exogenous variables can have incoming arrows from triangles and still be considered exogenous because such arrows simply specify the mean of the variable and do not determine their variability.] That is, exogenous variables are random variables that are determined by influences not specified by the model. 
+In @fig-vmodel, the three observed variables $V_1, V_2, V_3$ each have two incoming straight arrows, thus they are endogenous. The latent variable $\text{Vocabulary}$ and the three error terms $e_1, e_2, e_3$ have no incoming straight arrows from other variables, thus they are exogenous. 
+
+
+
+We can specify latent variable models in a variety of ways, but simplest method, the Reticular Action Model [@mcardleAlgebraicPropertiesReticular1984], uses two matrices $\boldsymbol{A}$ (Asymmetric) and $\boldsymbol{S}$ (Symmetric). The $\boldsymbol{A}$ matrix contains the asymmetric paths (i.e., single-headed straight arrows). These paths quantify how much latent and observed variables influence each other. In the current model, the only straight arrows are from the latent variable to the observed variables.
+
+```{r tbl-asymmetric}
+#| tbl-cap: "$\\boldsymbol{A}$ Matrix::Asymmetric Paths from Causes to Effect in @fig-vmodel"
+#| code-fold: true
+tibble(Effects = c("*Vocabulary*", "*V*~1~", "*V*~2~", "*V*~3~"),
+       V = c("0", ".7", ".8", ".9"),
+       v1 = c(0, 0, 0, 0),
+       v2 = c(0, 0, 0, 0),
+       v3 = c(0, 0, 0, 0)
+       ) %>% 
+  gt::gt() %>% 
+  my_apa() %>% 
+  gt::fmt_markdown() %>% 
+  gt::cols_label(v1 = md("*V*~1~"),
+                 v2 = md("*V*~2~"),
+                 v3 = md("*V*~3~"),
+                 V = md("*Vocabulary*"),
+                 Effects = md("**Effects**")
+                 ) %>% 
+  gt::cols_align(align = "right", columns = 1) %>% 
+  gt::cols_align(align = "center", columns = 2:5) %>% 
+  gt::tab_spanner(columns = starts_with("v"), label = md("**Causes**")) 
+
+```
+
+
+The $\boldsymbol{S}$ matrix contains the symmetric paths (i.e., double-headed curved arrows). These quantify the variances of the exogenous variables and the covariances between them. In this case, all the covariances among the exogenous variables are zero. The variances were standardized such that the latent variable has a variance of 1 and the variances of the error terms were selected to cause the variances of the observed variances to be exactly 1.
+
+```{r tbl-symmetric}
+#| tbl-cap: "$\\boldsymbol{S}$ Matrix: Symmetric Paths Among Exogenous Varibles in @fig-vmodel"
+#| code-fold: true
+tibble(` ` = c("*Vocabulary*", "*e*~1~", "*e*~2~", "*e*~3~"),
+       `Vocabulary` = c(1, 0, 0, 0),
+       e1 = c(0, ".51", 0, 0),
+       e2 = c(0, 0, ".36", 0),
+       e3 = c(0, 0, 0, ".19")) %>% 
+  gt::gt() %>% 
+  my_apa() %>% 
+  gt::fmt_markdown() %>% 
+  gt::cols_label(
+    e1 = md("*e*~1~"),
+    e2 = md("*e*~2~"),
+    e3 = md("*e*~3~"),
+    Vocabulary = md("*Vocabulary*")) %>% 
+  gt::cols_align(align = "right", columns = 1) %>% 
+  gt::cols_align(align = "center", columns = 2:5) %>% 
+  gt::cols_width(everything() ~ px(100)) %>% 
+  gt::tab_spanner(columns = starts_with("e"), label = md("**Errors**")) %>% 
+  gt::tab_spanner(columns = "Vocabulary", label = md("**Latent**")) 
+```
+
+The two matrices, $\boldsymbol{A}$ and $\boldsymbol{S}$ jointly determine the model-implied covariance matrix $\boldsymbol{\Sigma}$. If the latent and observed variables are collected in a vector $v=\{Vocabulary, v_1, v_2, v_3\}$, and the exogenous variables are collected in a vector $u=\{Vocabulary, e_1, e_2, e_3\}$, then we can specify how the variables in $v$ influence each other like so:
+
+$$
+\begin{aligned}
+v&=\boldsymbol{A}v+u\\[3ex]
+\begin{bmatrix}
+Vocabulary\\ V_1\\ V_2\\ V_3
+\end{bmatrix}&=
+\begin{bmatrix}
+0&0&0&0\\
+.7&0&0&0\\
+.8&0&0&0\\
+.9&0&0&0
+\end{bmatrix}\begin{bmatrix}
+Vocabulary\\ V_1\\ V_2\\ V_3
+\end{bmatrix}+\begin{bmatrix}
+Vocabulary\\ e_1\\ e_2\\ e_3
+\end{bmatrix}
+\end{aligned} 
+$$
+
+It might feel strange to have the $v$ variable on both sides of the equation. Remember that it is not a single variable, but a vector of variables. The $\boldsymbol{A}$ matrix specifies how the causes in $v$ influence the effects in $v$. Even so, it helps to isolate $v$ on one side of the equation. We will make use of an *identity matrix* **I** in which the diagonal values are ones and the off-diagonal values are zeroes. 
+
+$$
+I=\begin{bmatrix}
+1&0&0&0\\
+0&1&0&0\\
+0&0&1&0\\
+0&0&0&1
+\end{bmatrix}
+$$
+
+::: {.column-margin}
+
+An *identity matrix* is so-named because any matrix multiplied by a compatible identity matrix equals itself.
+
+$$
+\boldsymbol{A}\boldsymbol{I}=\boldsymbol{A}
+$$
+
+To be compatible when post-multiplied, $\boldsymbol{I}$ would need to have the same size as the number of columns in A.
+
+$$
+\boldsymbol{I}\boldsymbol{A}=\boldsymbol{A}
+$$
+
+To be compatible when pre-multiplied, $\boldsymbol{I}$ would need to have the same size as the number of rows in A.
+:::
+
+We will also use an inverse matrix. A matrix multiplied by its inverse matrix will equal a same-sized identity matrix.
+
+$$
+\boldsymbol{A}\boldsymbol{A}^{-1}=\boldsymbol{I}
+$$
+
+So, starting with the original equation:
+
+$$
+\begin{aligned}
+v&=\boldsymbol{A}v +u\\
+v-\boldsymbol{A}v&=u\\
+\boldsymbol{I}v-\boldsymbol{A}v&=u\\
+(\boldsymbol{I}-\boldsymbol{A})v&=u\\
+(\boldsymbol{I}-\boldsymbol{A})^{-1}(\boldsymbol{I}-\boldsymbol{A})v&=(\boldsymbol{I}-\boldsymbol{A})^{-1}u\\
+ \boldsymbol{I}v&=(\boldsymbol{I}-\boldsymbol{A})^{-1}u\\
+v&=(\boldsymbol{I}-\boldsymbol{A})^{-1}u\\[3ex]
+\begin{bmatrix}
+Vocabulary\\ V_1\\ V_2\\ V_3
+\end{bmatrix}&=
+\begin{bmatrix}
+1&0&0&0\\
+.7&1&0&0\\
+.8&0&1&0\\
+.9&0&0&1
+\end{bmatrix}\begin{bmatrix}
+Vocabulary\\ e_1\\ e_2\\ e_3
+\end{bmatrix}
+\end{aligned}
+$$
+So, the variables in $v$ are determined by exogenous variables in $u$ pre-multiplied by the inverse of $(\boldsymbol{I}-\boldsymbol{A})$. This matrix equation equals this in univariate equations:
+
+$$
+\begin{aligned}
+Vocabulary &= Vocabulary\\
+V_1 &= .7Vocabulary+e_1\\
+V_2 &= .8Vocabulary+e_2\\
+V_2 &= .9Vocabulary+e_2\\
+\end{aligned}
+$$
+
+
+The $\boldsymbol{S}$ matrix is the model-implied variance-covariance matrix of $u$:
+
+$$
+\begin{aligned}\
+\boldsymbol{S}&=\mathcal{E}\left(uu'\right)\\
+&=\mathrm{Cov}(u)
+\end{aligned}
+$$
+
+
+The $\boldsymbol{\Sigma}$ matrix is the model-implied variance-covariance matrix of $v$:
+
+$$
+\begin{aligned}\
+\boldsymbol{\Sigma} &=\mathcal{E}\left(vv'\right)\\
+&= \mathrm{Cov}\left(v\right)\\
+&=\mathrm{Cov}\left(\left(\boldsymbol{I}-\boldsymbol{A}\right)^{-1}u\right)\\
+&=\left(\boldsymbol{I}-\boldsymbol{A}\right)^{-1}\boldsymbol{S}\left(\left(\boldsymbol{I}-\boldsymbol{A}\right)^{-1}\right)'
+\end{aligned}
+$$
+
+If we have the values of matrices $\boldsymbol{A}$ and $\boldsymbol{S}$, then the model-implied covariance matrix $\boldsymbol{\Sigma}$ can be calculated directly:
+
+```{r modelimpliedcov}
+# factor loadings
+loadings <- c(.7, .8, .9)
+
+# Asymmetric
+A <- matrix(0, nrow = 4, ncol = 4)
+A[2:4,1] <- loadings
+
+# Symmetric, diag makes a diagonal matrix
+S <- diag(c(1, 1 - loadings ^ 2))
+
+# Identity, diag(4) makes a 4 by 4 identity matrix
+I <- diag(4)
+
+# Inverse matrix, solve inverts matrices
+iA <- solve(I - A)
+
+# Model-implied correlations, %*% is matrix multiplication
+Sigma <- iA %*% S %*% t(iA)
+
+
+```
+
+```{r tbl-modelimplied}
+#| tbl-cap: The model-implied correlation matrix
+#| code-fold: true
+Sigma %>% 
+  `colnames<-`(c("Vocabulary", "v1", "v2", "v3")) %>% 
+  `rownames<-`(c("Vocabulary", "*V*~1~", "*V*~2~", "*V*~3~")) %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column(" ") |>
+  mutate(across(where(is.numeric), ggdiagram::round_probability)) %>% 
+  gt::gt() %>% 
+  my_apa() %>% 
+  gt::fmt_markdown() %>% 
+  gt::cols_label(v1 = md("*V*~1~"),
+                 v2 = md("*V*~2~"),
+                 v3 = md("*V*~3~")) %>% 
+  gt::cols_align(align = "center") %>% 
+  gt::cols_align("right", 1) %>% 
+  gt::cols_width(everything() ~ gt::px(100)) %>% 
+  gt::tab_spanner(columns = paste0("v", 1:3), label = md("**Observed**")) %>% 
+  gt::tab_spanner(columns = "Vocabulary", label = md("**Latent**")) 
+```
+
+Most of the time, we do not know the values of $\boldsymbol{A}$ and $\boldsymbol{S}$. We have instead the means, standard deviations, and correlations of the observed variables. Using specialized syntax to specify a model, the lavaan package can estimate the values of $\boldsymbol{A}$ and $\boldsymbol{S}$ of that model that have a model-implied covariance matrix is as close to the observed covariance matrix as possible. 
+
+If the estimated values of $\boldsymbol{A}$ and $\boldsymbol{S}$ can closely duplicate the observed covariances, then the model is not necessarily correct, but is more plausible than a model that cannot closely duplicate the observed covariances. Researchers try to find the simplest theory-based model that "fits" the data. In this context, the model "fits" the data when the model-implied covariance matrix closely resembles the observed covariances.
+
+# lavaan Syntax Overview
+
+We will be using the [lavaan](https://lavaan.ugent.be/) (**LA**tent **VA**riable **AN**alysis) package to conduct latent growth modeling analyses. To have lavaan evaluate a model, you need to tell it which model you want to test. The lavaan package has a special syntax for specifying models ([basic syntax](https://lavaan.ugent.be/tutorial/syntax1.html), [advanced syntax](https://lavaan.ugent.be/tutorial/syntax2.html)). The aspects of lavaan syntax relevant to this tutorial are in @tbl-syntax.
+
+Symbol | Example | Meaning
+:-----:|:--------------------------|:--------------------
+`=~` | `A =~ A1 + A2` | Latent variable `A` has observed indicators `A1` and `A2`.
+`~` | `Y ~ X1 + X2` | `Y` is predicted by `X1` and `X2`.
+&nbsp; | `Y ~ a * X1 + a * X2` | Make `X1` and `X2` coefficients equal. 
+&nbsp; | `Y ~ 1 * X1 + X2` | Set the regression coefficient of `X1` to 1.
+`~~` | `X1 ~~ X2` | Estimate the covariance between `X1` and `X2`.
+&nbsp; | `X1 ~~ 0.5 * X2` | Set the covariance between `X1` and `X2` to 0.5.
+&nbsp; | `X1 ~~ 1 * X1` | Set `X1`'s variance to 1.
+
+: Syntax for lavaan models {#tbl-syntax tbl-colwidths="[10,30,60]"}
+
+In lavaan, latent variable indicators are specified with the `=~` operator, which means *is indicated by*. Consider this lavaan model:
+
+```{r latentindicators}
+m1 <- '
+  A =~ A1 + A2 + A3  
+  B =~ B1 + B2 + B3
+'
+```
+
+This model means there are 3 observed variables `A1`, `A2`, and `A3` that are indicators of latent variable `A` and 3 observed variables  `B1`, `B2`, and `B3` that are indicators of latent variable `B`. The model hypothesizes that latent variable A explains the correlations among A1, A2, and A3 and that latent variable B explains the correlations among B1, B2, and B3. The corresponding path model is in @fig-AB. Note that the latent variables `A` and `B` are uncorrelated because there is nothing to connect them, which means that `A1`, `A2`, and `A3` are uncorrelated with `B1`, `B2`, and `B3`.
+
+
+```{r fig-AB}
+#| fig-cap: Path diagram of latent variables A and B, each of which have three observed indicator variables
+#| code-fold: true
+cA <- class_color("orchid4")@lighten(.7)
+cB <- class_color("forestgreen")@lighten(.6)
+cC <- class_color("dodgerblue4")@lighten(.6)
+cD <- "#b5bdc7"
+left <- 7
+
+
+my_colors <- c(cA, cB, cC)
+my_observed <- redefault(ob_ellipse, 
+                         m1 = 15, 
+                         color = NA, 
+                         fill = cA)
+
+my_latent <- redefault(ob_circle, 
+                       radius = sqrt(pi), 
+                       color = NA, 
+                       fill = cA)
+
+my_error <- redefault(ob_circle, 
+                       radius = 1 / sqrt(pi), 
+                       color = NA, 
+                       fill = cA)
+
+my_connect <- redefault(connect, color = cA, resect = 2)
+
+my_observed_label <- redefault(ob_label, color = "white",
+        fill = NA, size = 20, vjust = .60)
+
+my_latent_label <- redefault(ob_label, color = "white",
+        fill = NA, size = 36, vjust = .55)
+
+my_error_label <- redefault(ob_label,
+                            fill = NA,
+                            color = "white",
+                            size = 16)
+
+mAB <- ggdiagram(font_family = my_font, font_size = 20) +
+  {A3 <- my_observed() %>%
+      ob_array(k = 3,
+               label = my_observed_label(paste0("*A*~", 1:3, "~")),
+               sep = .25)} +
+  {B3 <- my_observed(fill = cB) %>%
+      place(A3[3], sep = 0) %>%
+      ob_array(3,
+               anchor = "west",
+               label = my_observed_label(
+                 paste0("*B*~", 1:3, "~")
+               ),
+               sep = .25)} +
+  {A <- my_latent(label = my_latent_label("*A*")) %>% 
+      place(A3[2], "above", 3)} +
+  {B <- my_latent(
+      fill = cB,
+      label = my_latent_label("*B*")
+    ) %>%
+      place(B3[2], "above", 3)} +
+  {load_A <- my_connect(A, A3)} +
+  {load_B <- my_connect(B, B3, color = cB)} + 
+  {vA <- ob_variance(A, color = cA)} + 
+  {vB <- ob_variance(B, color = cB)} +
+  {eA3 <- my_error() %>% ob_array(3) %>% place(A3, "below", sep = .75) } +
+  {eB3 <- my_error(fill = cB) %>% place(B3, "below", sep = .75)} +
+  ob_variance(eA3, color = cA, where = "below", theta = 60, looseness = 2) + 
+  ob_variance(eB3, color = cB, where = "below", theta = 60, looseness = 2) + 
+  my_connect(eA3, A3) +
+  my_connect(eB3, B3, color = cB)
+
+mAB
+```
+
+To specify that an indicator has a specific (fixed) loading, do so by placing the numeric loading in front of the variable with the `*` operator in between. Here we set the loadings for A1 and B1 to 1:
+
+```{r pathcoefficient}
+Model <- '
+  A =~ 1 * A1 + A2 + A3
+  B =~ 1 * B1 + B2 + B3
+'
+```
+
+The corresponding path model is in @fig-fixedpath.
+
+```{r fig-fixedpath}
+#| fig-cap: "Fixed Loadings on the first indicators of *A* and *B*"
+#| code-fold: true
+mAB + 
+  ob_label("1", center = midpoint(A, A3[1]), color = cA) + 
+  ob_label("1", center = midpoint(B, B3[1]), color = cB)
+
+```
+
+
+To specify a direct path from A to B as in @fig-directpath, use the `~` operator, which means "is predicted by."
+
+```{r directpath}
+Model <- '
+  A =~ A1 + A2 + A3
+  B =~ B1 + B2 + B3
+  B ~ A
+'
+```
+
+
+
+```{r fig-directpath}
+#| fig-cap: A latent variable model with a direct path between latent variable *A* and latent variable *B*
+#| code-fold: true
+mAB + 
+  connect(A, B, resect = 2, color = cA)
+
+```
+
+To specify that A and B are related as in @fig-covariancelatent, use the covariance operator: `~~`
+
+```{r covariancelatent}
+Model <- '
+  A =~ A1 + A2 + A3
+  B =~ B1 + B2 + B3
+  B ~~ A
+'
+```
+
+```{r fig-covariancelatent}
+#| fig-cap: A latent variable model with a covariance between latent variable *A* and latent variable *B*
+#| code-fold: true
+mAB + 
+  ob_covariance(A, B, resect = 2, color = "gray60", looseness = .9)
+
+```
+
+To force the covariance between A and B to be exactly 0.5 as in @fig-covariancelatent0plot:
+
+```{r covariancelatent0}
+Model <- '
+  A =~ A1 + A2 + A3
+  B =~ B1 + B2 + B3
+  B ~~ 0.5 * A
+'
+```
+
+```{r fig-covariancelatent0plot}
+#| fig-cap: A latent variable model with a covariance between latent variable *A* and latent variable *B* forced to equal 0
+#| code-fold: true
+mAB + 
+  ob_covariance(A, B, resect = 2, color = "gray60", looseness = .9, label = ob_label(".5", family = my_font, size = 16), linewidth = .5)
+
+```
+
+
+The `~~` operator is also used to specify the variance of a variable. For example, to force the variance of B to be 1 as in @fig-variance1:
+
+```{r variance1}
+Model <- '
+  A =~ A1 + A2 + A3
+  B =~ B1 + B2 + B3
+  B ~~ 1 * B
+'
+```
+
+```{r fig-variance1}
+#| fig-cap: Latent variable *B*'s variance is fixed to equal 1.
+#| code-fold: true
+mAB + 
+  ob_label("1", vB@midpoint(), color = cB)
+```
+
+To specify that A1 and B1 have correlated residuals as in @fig-corresid, do so like so:
+
+```{r corresid}
+Model <- '
+  A =~ A1 + A2 + A3
+  B =~ B1 + B2 + B3
+  A1 ~~ B1
+'
+```
+
+```{r fig-corresid}
+#| fig-cap: The residuals of *A*~1~ and *B*~1~ are allowed to covary.
+#| code-fold: true
+mAB + 
+  ob_covariance(eB3[1], eA3[1], resect = 2, color = "gray60", looseness = .9, linewidth = .5)
+```
+
+You can give any loading or covariance a variable name instead of a specific value. To force indicators to have the same loading as in @fig-equalityconstraints, give them the same variable name:
+
+```{r equalityconstraints}
+Model <- '
+  A =~ A1 + A2 + A3
+  B =~ b * B1 + b * B2 + b * B3
+'
+```
+
+```{r fig-equalityconstraints}
+#| fig-cap: "A latent variable model with all indicators of latent variable *B* forced to have equal loadings with value of *b*"
+#| code-fold: true
+mAB + 
+  ob_label("*b*", 
+           center = load_B[2]@midpoint()@y %>%
+             load_B@line@point_at_y())
+```
+
+
+
+# Vocabulary Study
+
+We are going to apply hierarchical linear modeling and latent growth analysis to the same longitudinal study of vocabulary growth in toddlers.
+
+Participants are toddlers identified as having vocabulary levels lower than expected for their age. Vocabulary levels were measured 6 times: time 0 to time 5. Half the participants were randomly assigned to a vocabulary-enhancing intervention and half were assigned to a condition in which the same amount of time was spent watching Sesame Street. In the `intervention` variable, control = 0, treatment = 1.
+
+# Import data
+
+```{r import}
+library(tidyverse)
+library(lme4)
+library(sjPlot)
+library(performance)
+library(report)
+library(lavaan)
+
+
+d <- read_csv(
+  "https://github.com/wjschne/EDUC5529/raw/master/vocabulary.csv",
+  show_col_types = F
+) %>%
+  arrange(person_id, time) 
+```
+
+
+The authors hypothesized that vocabulary would grow quickly at first and slower later on. The intervention was hypothesized to put the children on a faster learning trajectory. 
+
+At time 0, before the intervention, the treatment groups were assumed to have the same intercept because of random assignment.
+
+
+# Hierarchical Linear Model
+
+
+
+## Level 1 (Measurement Occasion)
+
+$$
+Vocabulary_{ti} = b_{0i}+b_{1i}Time_{ti} +b_{2i}Time_{ti}^2+e_{ti}
+$$
+
+## Level 2 (Person)
+
+$$
+\begin{aligned}
+b_{0i}&=b_{00} + b_{01}Intervention_{i} + u_{0i}\\
+b_{1i}&=b_{10} + b_{11}Intervention_{i} + u_{1i}\\
+b_{2i}&=b_{20} + b_{21}Intervention_{i}
+\end{aligned}
+$$
+
+## Combined Model
+
+$$
+\begin{aligned}
+Vocabulary_{ti} &= 
+\underbrace{b_{00} + b_{01}Intervention_{i} + u_{0i}}_{b_{0i}} +\\
+&(\underbrace{b_{10} + b_{11}Intervention_{i} + u_{1i}}_{b_{1i}})Time_{ti} +\\
+&(\underbrace{b_{20}+ b_{21}Intervention_{i}}_{b_{2i}})Time_{ti}^2 + e_{ti}
+\end{aligned}
+$$
+
+```{r tbl-hlmsymbols}
+#| tbl-cap: "Symbols and Meanings of HLM Model"
+#| code-fold: true
+
+tibble::tribble(
+     ~Symbol,                                                            ~Meaning,
+  "$b_{00}$", "Intercept (Predicted Vocabulary when Intervention and Time are 0)",
+  "$b_{01}$",                                  "Slope for Intervention at Time 0",
+  "$b_{10}$",            "Linear Slope for Time when Intervention and Time are 0",
+  "$b_{11}$",                    "Interaction of Intervention and Time at Time 0",
+  "$b_{20}$",                   "Quadratic Effect of Time when Intervention is 0",
+  "$b_{21}$",          "Interaction of Intervention and Quadratic Effect of Time",
+  "$b_{0i}$",                     "Predicted Vocabulary at Time 0 for Person *i*",
+  "$b_{1i}$",                    "Linear Effect of Time at Time 0 for Person *i*",
+  "$b_{2i}$",                           "Quadratic Effect of Time for Person *i*",
+  "$u_{0i}$",                                             "Residual for $b_{0i}$",
+  "$u_{1i}$",                                             "Residual for $b_{1i}$",
+  "$e_{ti}$",                               "Residual for Person *i* at Time *t*"
+  ) %>% 
+  knitr::kable(align = "cl")
+
+```
+
+## Analysis
+
+I am going straight to my hypothesized model. In a real analysis, I might have gone through the series of steps we have seen elsewhere in the course. However, I want save time so that I can show how this model is the same as the latent growth model. When I walk through all the latent growth models in sequence, I will show the comparable hierarchical linear models one at a time.
+
+```{r lme4model}
+m <- lmer(vocabulary ~ 1 + time * intervention + 
+            I(time ^ 2) * intervention + 
+            (1 + time | person_id), 
+          data = d, 
+          REML = FALSE)
+
+tab_model(m)
+report(m)
+```
+
+Don't be fooled by the non-significant effect of the intervention! It is a conditional effect at *Time 0*---before the intervention began.
+
+It is the interaction of time and the intervention that matters.
+
+Let's plot the model using sjPlot::plot_model:
+
+```{r sjplot}
+plot_model(m, type = "pred", terms = c("time [all]", "intervention"))
+```
+
+
+Interpretation: As hypothesized, the effect of time has diminishing returns, and the time by interaction interaction effect is evident. The two groups were comparable before the intervention, but the treatment group's vocabulary grew faster over time. If I needed to publish a plot showing these results, it would look like @fig-pubworthy.
+
+:::{.column-margin}
+**Sidenote:** I love the `sjPlot::plot_model` function. With almost no effort, I can get a plot that helps me see what is going on with my fixed effects. It used to take me so much more code to arrive at where sjPlot::plot_model lands. However, if you want a publication-worthy plot, `sjPlot::plot_model` tends to impose too much control. Fortunately, the same person who made sjPlot is involved with another easystats package called [modelbased](https://easystats.github.io/modelbased/) that allows for greater flexibility but still reduces what would otherwise be onerous coding. 
+
+:::
+
+```{r fig-pubworthy}
+#| warning: false
+#| fig-width: 8
+#| fig-height: 8
+#| fig-cap: "The Growth of Vocabulary by Treatment Group"
+#| code-fold: true
+
+
+m_fixed <- fixef(m)
+
+my_coefs <- tibble(b00 = c(m_fixed["(Intercept)"],
+                          m_fixed["(Intercept)"] + m_fixed["intervention"]),
+                   b10 = c(m_fixed["time"],
+                           m_fixed["time"] + m_fixed["time:intervention"]),
+                   b20 = c(m_fixed["I(time^2)"],
+                           m_fixed["I(time^2)"] + m_fixed["intervention:I(time^2)"])) %>% 
+  mutate(across(.fns = \(x) formatC(x, 2, format = "f"))) %>% 
+  mutate(intervention = factor(c("Control", "Treatment")),
+         eq = glue::glue('{intervention}: {b00} + {b10}Time + {b20}Time<sup>2</sup>')
+                   )
+
+
+
+# Predicted Data
+d_pred <- modelbased::estimate_relation(m, data = crossing(time = 0:5, intervention = c(0,1))) %>% 
+  as_tibble() %>% 
+  mutate(intervention = factor(intervention, levels = c(0,1), labels = c("Control", "Treatment"))) %>% 
+  mutate(vocabulary = Predicted, 
+         hjust = ifelse(intervention == "Treatment", .93, .91)) %>% 
+  left_join(my_coefs, by = join_by(intervention)) 
+
+d %>% 
+  mutate(intervention = factor(intervention, levels = c(0,1), labels = c("Control", "Treatment")),
+         person_id = factor(person_id)) %>% 
+  ggplot(aes(time, vocabulary, color = intervention)) +
+  geom_line(aes(group = person_id,
+                x = time + (intervention == "Treatment") * 0.2 - 0.1),
+            size = .1, 
+            alpha = .5) + 
+  ggbeeswarm::geom_quasirandom(
+    aes(x = time + (intervention == "Treatment") * 0.2 - 0.1), 
+    width = .075, 
+    pch = 16, 
+    size = .75) +
+  geom_line(data = d_pred,
+            linewidth = 1) +
+  geom_labelline(aes(label = eq,
+                     hjust = hjust),
+                 data = d_pred, 
+                 text_only = T,
+                 alpha = .8, size = 5,
+                 # linewidth = 4.25,
+                 linecolour = NA,
+                 vjust = -0.2,
+                 label.padding = unit(0, units = "pt"),
+                 family = "Roboto Condensed", 
+                 rich = TRUE) +
+  scale_x_continuous("Time", 
+                     breaks = 0:5, 
+                     minor_breaks = NULL) + 
+  scale_y_continuous("Vocabulary") +
+  theme_minimal(base_size = 16, 
+                base_family = "Roboto Condensed") + 
+  theme(legend.position = "none") + 
+  scale_color_brewer(type = "qual", palette = 1)
+  
+```
+
+
+
+
+
+# Latent Growth Model
+
+
+@fig-latentgrowth displays the path model for the latent growth model we are aiming for.
+
+```{r fig-latentgrowth}
+#| fig-cap: "Path Diagram Latent Growth Model"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+ggdiagram(font_family = my_font, font_size = 14) +
+  {v <- my_observed() %>%
+      ob_array(
+        6,
+        where = "south",
+        label = my_observed_label(paste0("*V*~", 0:5, "~")),
+        sep = 1.5,
+        fill = class_color(cD)@lighten(seq(0.7, 1, length.out = 6))
+      )} +
+  my_connect(
+    v[1:5],
+    v[2:6],
+    color = v@fill[-6],
+    label = ob_label(
+      "*r*",
+      angle = 0,
+      position = .4,
+      size = 14,
+      label.padding = margin()
+    ),
+    resect = 1
+  ) +
+  {e <- my_error(fill = v@fill, label = my_error_label(paste0("*e*~", 0:5, "~"))) %>%
+      place(v, "right")} +
+  ob_variance(
+    e,
+    "right",
+    label = ob_label(
+      "*&tau;*~1~",
+      color = cD,
+      label.padding = margin(t = 1)
+    ),
+    color = cD,
+    looseness = 3.15,
+    theta = degree(60)
+  ) +
+  my_connect(e, v, color = v@fill) +
+  {i <- my_latent(
+      label = my_latent_label(
+        "*i*<br><span style='font-size: 18pt'>Intercept</span><br>*b*~0*i*~",
+        lineheight = 1,
+        size = 20
+      )
+    ) %>% place(midpoint(v[1], v[2]), "left", left)} +
+  {li <- my_connect(i, v@point_at(180 + seq(0, -10, -2)))} +
+  {s <- my_latent(
+      label = my_latent_label(
+        "*s*<br><span style='font-size: 18pt'>Slope</span><br>*b*~1*i*~",
+        lineheight = 1,
+        size = 20
+      ),
+      fill = cB
+    ) %>%
+      place(midpoint(v[3], v[4]), "left", left)} +
+  {ls <- my_connect(s, v@point_at("west"), color = cB)} +
+  {q <- my_latent(
+      label = my_latent_label(
+        "*q*<br><span style='font-size: 18pt'>Slope^2^</span><br>*b*~2*i*~",
+        lineheight = 1,
+        size = 20
+      ),
+      fill = cC
+    ) %>%
+      place(midpoint(v[5], v[6]), "left", left)} +
+  {lq <- my_connect(q, v@point_at(180 + seq(10, 0, -2)), color = cC)} +
+  ob_label(
+    1,
+    center = map_ob(li, \(x) intersection(x, ls[1]@nudge(y = 1.1))),
+    label.padding = margin(1, 0, 0, 0),
+    color = cA
+  ) +
+  ob_label(
+    0:5,
+    center = map_ob(ls, \(x) intersection(
+      x, ob_circle(s@center, radius = s@radius + .65)
+    )),
+    label.padding = margin(1, 0, 0, 0),
+    color = cB
+  ) +
+  ob_label((0:5)^2,
+           center = map_ob(lq, \(x) intersection(x, ls[6]@nudge(y = -1.1))),
+           label.padding = margin(1, 0, 0, 0),
+           color = cC
+  ) +
+  {u_0i <- my_error(radius = 1, label = my_error_label("*u*~0*i*~")) %>% place(i, "left", left)} +
+  {u_1i <- my_error(radius = 1,
+                     label = my_error_label("*u*~1*i*~"),
+                     fill = cB) %>% place(s, "left", left)} +
+  {u_2i <- my_error(radius = 1,
+                     label = my_error_label("*u*~2*i*~"),
+                     fill = cC) %>% place(q, "left", left)} +
+  my_connect(u_0i, i) +
+  my_connect(u_1i, s, color = cB) +
+  my_connect(u_2i, q, color = cC) +
+  {t1 <- ob_intercept(
+      intersection(connect(u_0i, s), connect(u_1i, i)) + ob_point(-1.85, 0),
+      width = 3,
+      fill = cD,
+      color = NA,
+      vertex_radius = .004,
+      label = my_observed_label("1", vjust = .4)
+    )} +
+  {lt0 <- bind(c(
+      my_connect(t1, i),
+      my_connect(t1, s, color = cB),
+      my_connect(t1, q, color = cC)
+    ))} +
+  {intervention <- my_observed(
+      intersection(connect(u_2i, s), connect(u_1i, q)) + ob_point(-1.85, 0),
+      a = 1.75,
+      b = 1.75,
+      fill = cD,
+      label = my_observed_label("Intervention", size = 15)
+    )}  +
+  {lt1 <- my_connect(intervention, bind(c(i, s, q)), 
+                     color = my_colors)} +
+  {vl <- ob_segment(my_connect(u_0i, i)@midpoint(.87),
+                     my_connect(u_2i, q)@midpoint(.87))
+    b0 <- ob_label(
+      paste0("*b*~", 0:2, "0~"),
+      intersection(lt0, vl),
+      label.padding = margin(2),
+      color = my_colors
+    )} +
+  ob_label(
+    paste0("*b*~", 0:2, "1~"),
+    intersection(lt1, vl),
+    label.padding = margin(2),
+    color = my_colors
+  ) +
+  ob_variance(
+    bind(c(u_0i, u_1i, u_2i)),
+    where = "west",
+    color = my_colors,
+    looseness = 1.75,
+    label = ob_label(paste0("*&tau;*~", 0:2, 0:2, "~"), 
+                     color = my_colors)
+  ) +
+  ob_covariance(bind(c(u_1i, u_2i, u_2i)),
+                bind(c(u_0i, u_0i, u_1i)),
+                color = cD,
+                label = ob_label(paste0("*&tau;*~", c(0, 0, 1), c(1, 2, 2), "~"), color = cD))
+```
+
+
+
+ 
+
+
+## Restructure from Long to Wide Data
+
+SEM analyses usually need wide data with each participant's data on 1 row. We learned how to do so in a [previous tutorial](https://wjschne.github.io/tutorials/DataWrangling/data_wrangling.html#restructuring-from-long-to-wide-format-with-pivot_wider).
+
+Use the [`pivot_wider`](https://tidyr.tidyverse.org/reference/pivot_wider.html) function to restructure your data so that the data set `d` is restructured to look like this:
+
+```{r restructured}
+#| echo: false
+d %>% 
+  pivot_wider(names_from = time, 
+              values_from = vocabulary, 
+              names_prefix = "voc_")
+```
+
+See if you can figure out how to restructure the data using `pivot_wider`. If it takes more than a minute or two, check out the hints.
+
+Call the new data frame `d_wide`.
+
+::: {.callout-note collapse=true title='Hint'}
+
+Set the `values` parameter equal to `vocabulary`.
+
+```
+values = vocabulary
+```
+
+::: {.callout-note collapse=true title='Hint 2'}
+
+The `names` come from `time`.
+
+```
+names = time
+```
+
+::: {.callout-note collapse=true title='Hint 3'}
+
+Specify `voc_` as the names prefix.
+
+```
+names_prefix = "voc_"
+```
+
+
+::: {.callout-note collapse=true title='Hint 4'}
+
+Here is how I would do it:
+
+```{r showhint}
+d_wide <- d %>% 
+  pivot_wider(names_from = time, 
+              values_from = vocabulary, 
+              names_prefix = "voc_") 
+```
+
+:::
+
+:::
+
+:::
+
+:::
+
+
+
+
+
+
+
+
+
+## Model Specification
+
+In general, setting up a latent growth curve model requires much more typing than the corresponding hierarchical linear model. In this model, for all this extra work we get nothing that we did not already have. However, the latent growth modeling approach is extremely flexible, particularly with respect to modeling the simultaneous effects of many other variables. In more complex models, we can evaluate hypotheses that are difficult, if not impossible, in hierarchical linear models.
+
+[Note that intercepts are symbolized with the symbol `1` when it is alone or precided by a coefficient (e.g., `b_00 ~ 1`)]{.aside}
+
+```{r latentmodel}
+latent_model <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Predicting intercept, slope, and quadratic effects
+i ~ b_00 * 1 + b_01 * intervention
+s ~ b_10 * 1 + b_11 * intervention
+q ~ b_20 * 1 + b_21 * intervention
+# Variances and covariances
+i ~~ tau_00 * i + tau_01 * s
+s ~~ tau_11 * s
+q ~~ 0 * q + 0 * s + 0 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+```
+
+In the hierarchical model, we did not make $b_{2i}$ (the quadratic effect of time) random. Thus, we will set the $\tau_{22}$ variance to 0, and also the covariances involving $u_{2i}$ residual (i.e., $\tau_{02}$ and $\tau_{12}$).
+
+You can see from the summary output that the parameters are same as before. 
+
+```{r latentgrowthfit}
+fit_latentgrowth <- growth(latent_model, data = d_wide)
+
+summary(fit_latentgrowth, 
+        fit.measures = T, 
+        standardized = T)
+```
+
+
+
+Notice that we went straight to the final model. We could have done a sequence of steps identical to the hierarchical linear model. 
+
+I will show the sequence of models and compare them.
+
+## Model 0: Random Intercepts
+
+```{r fig-path0}
+#| fig-cap: "Path Diagram for Model 0"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+pd0 <- ggdiagram(font_family = my_font, font_size = 14) +
+  {v <- my_observed() %>%
+      ob_array(
+        6,
+        where = "south",
+        label = my_observed_label(paste0("*V*~", 0:5, "~")),
+        sep = 1.5,
+        fill = class_color(cD)@lighten(seq(0.7, 1, length.out = 6))
+      )} +
+  {e <- my_error(fill = v@fill, label = my_error_label(paste0("*e*~", 0:5, "~"))) %>%
+      place(v, "right")} +
+  ob_variance(
+    e,
+    "right",
+    label = ob_label(
+      "*&tau;*~1~",
+      color = cD,
+      label.padding = margin(t = 1)
+    ),
+    color = cD,
+    looseness = 3.15,
+    theta = degree(60)
+  ) +
+  my_connect(e, v, color = v@fill) +
+  {i <- my_latent(
+      label = my_latent_label(
+        "*i*<br><span style='font-size: 18pt'>Intercept</span><br>*b*~0*i*~",
+        lineheight = 1,
+        size = 20
+      )
+    ) %>% place(midpoint(v[1], v[2]), "left", left)} +
+  {li <- my_connect(i, v@point_at(180 + seq(0, -10, -2)))} +
+  ob_label(
+    1,
+    center = map_ob(li, \(x) intersection(x, ls[1]@nudge(y = 1.1))),
+    label.padding = margin(1, 0, 0, 0),
+    color = cA
+  ) +
+  {u_0i <- my_error(radius = 1, label = my_error_label("*u*~0*i*~")) %>% place(i, "left", left)} +
+  my_connect(u_0i, i) +
+  {t1 <- ob_intercept(
+      intersection(connect(u_0i, s), connect(u_1i, i)) + ob_point(-1.85, 0),
+      width = 3,
+      fill = cD,
+      color = NA,
+      vertex_radius = .004,
+      label = my_observed_label("1", vjust = .4)
+    )} +
+  {b00 <- my_connect(t1, i)} +
+  {vl <- ob_segment(my_connect(u_0i, i)@midpoint(.87),
+                     my_connect(u_2i, q)@midpoint(.87), alpha = 0)} +
+     ob_label(
+      "*b*~00~",
+      intersection(b00, vl),
+      label.padding = margin(2),
+      color = cA
+    ) +
+  ob_variance(
+    u_0i,
+    where = "west",
+    color = cA,
+    looseness = 1.75,
+    label = ob_label(paste0("*&tau;*~00~"), color = cA))
+pd0
+```
+
+As usual, we start with a simple model with random intercepts. Time is not yet included in the model. The latent variable $i$ has a mean of $b_{00}$ and a variance of $\tau_{00}$. The variances of error terms for each observed variable are constrained to be equal $(\tau_1)$. The intercepts of the observed variables are not modeled here, so they are assumbed to be 0.
+
+```{r m0}
+m_0 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 
+# Variances and covariances
+i ~~ tau_00 * i 
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_0 <- growth(m_0, data = d_wide)
+# The standard way to get output from lavaan
+summary(fit_0, fit.measures = T, standardized = T)
+# The easystats way
+parameters(fit_0, component = "all")
+# There are many fit indices. https://easystats.github.io/performance/reference/model_performance.lavaan.html
+# Here are some common indices:
+my_metrics <- c("CFI", "NNFI", "AGFI", "RMSEA", "AIC", "BIC")
+performance(fit_0, metrics = my_metrics)
+```
+
+Not surprisingly, the fit statistics of our null model indicate poor fit. The CFI (Comparative Fit Index), NNFI (Non-Normed Fit Index), and AGFI (Adjusted Goodness of Fit) approach 1 when the fit is good. There are no absolute standards for these fit indices, and good values can vary from model to model, but in general look for values better than .90. The RMSEA (Root Mean Squared Error of Approximation) approaches 0 when fit is good. Again, there is no absolute standard for the RMSEA but in general look for values below .10 and be pleased when values are below .05.
+
+The reason that the data fit poorly can be seen clearly in @fig-m0. Although vocabulary clearly increases over time, Model 0 constrains the prediction to not grow---to be the same for each person across time.
+
+```{r fig-m0}
+#| fig-cap: "Model 0: Random Intercepts)"
+#| code-fold: true
+my_predictions <- function(fit) {
+  lavPredict(fit, type = "ov") %>%
+    as_tibble() %>%
+    mutate(across(everything(), .fns = as.numeric)) %>%
+    mutate(person_id = dplyr::row_number()) %>%
+    pivot_longer(
+      starts_with("voc_"),
+      values_to = "vocabulary",
+      names_to = "time",
+      names_prefix = "voc_",
+      names_transform = list(time = as.integer)
+    ) %>%
+    mutate(person_id = factor(person_id) %>% fct_reorder(vocabulary))
+}
+
+ggplot(d, aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(width = .2, size = .5, alpha = .5) +
+  geom_line(
+    data = predict(fit_0) %>%
+      as_tibble() %>%
+      mutate(across(everything(), .fns = as.numeric)) %>%
+      mutate(person_id = dplyr::row_number()) %>%
+      crossing(time = 0:5) %>%
+      mutate(vocabulary = i ),
+    aes(group = person_id),
+    alpha = .25,
+  ) +
+  stat_function(
+    data = tibble(x = 0:5),
+    geom = "line",
+    fun = \(x) coef(fit_0)["b_00"] ,
+    inherit.aes = F,
+    color = "dodgerblue3",
+    linewidth = 2
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  labs(x = "Time", y = "Vocabulary") 
+```
+
+As seen in @tbl-hlm0, the various parameters of the analogous hierarchical linear model are nearly identical---if maximum likelihood is used instead of restricted maximum likelihood (i.e., `REML = FALSE`)
+
+```{r tbl-hlm0}
+#| tbl-cap: HLM Model Analogous to Model 0
+lmer(vocabulary ~ 1  + (1 | person_id), data = d, REML = FALSE) %>%
+  tab_model()
+```
+
+
+
+## Model 1: Model 0 + Fixed Linear Effect of Time
+
+```{r fig-path1}
+#| fig-cap: "Path Diagram for Model 1"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+pd1 <- pd0 +
+  {s <- my_latent(
+      label = my_latent_label(
+        "*s*<br><span style='font-size: 18pt'>Slope</span><br>*b*~1*i*~",
+        lineheight = 1,
+        size = 20
+      ),
+      fill = cB
+    ) %>%
+      place(midpoint(v[3], v[4]), "left", left)} +
+  {ls <- my_connect(s, v@point_at("west"), color = cB)} +
+  {b10 <- my_connect(t1, s, color = cB)} +
+       ob_label(
+      "*b*~10~",
+      intersection(b10, vl),
+      label.padding = margin(2),
+      color = cB
+    ) +
+  ob_label(
+    0:5,
+    center = map_ob(ls, \(x) intersection(
+      x, ob_circle(s@center, radius = s@radius + .65)
+    )),
+    label.padding = margin(1, 0, 0, 0),
+    color = cB
+  ) 
+pd1
+```
+
+We add a fixed slope for time (latent variable *s*), setting the residual variance of *s* and its covariance with the intercept *i* to 0.
+
+```{r m1}
+m_1 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 
+s ~ b_10 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ 0 * s + 0 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_1 <- growth(m_1, data = d_wide)
+parameters(fit_1, component = "all")
+```
+
+
+
+
+Let's see if adding the linear effect of time improved model fit:
+
+```{r comparem0m1}
+# Compare new model with the previous model
+test_likelihoodratio(fit_0, fit_1)
+compare_performance(fit_0, fit_1, metrics = my_metrics)
+```
+
+Because the p-value is significant, adding the linear effect of time improved the model fit.
+
+```{r fig-m1}
+#| fig-cap: "Model 1: Predicted Vocabulary Over Time (Model 0 + Linear Effect of Time)"
+#| code-fold: true
+ggplot(d, aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(width = .2, size = .5, alpha = .5) +
+  geom_line(
+    data = predict(fit_1) %>%
+      as_tibble() %>%
+      mutate(across(everything(), .fns = as.numeric)) %>%
+      mutate(person_id = dplyr::row_number()) %>%
+      crossing(time = 0:5) %>%
+      mutate(vocabulary = i + s * time),
+    aes(group = person_id),
+    alpha = .25,
+  ) +
+  stat_function(
+    data = tibble(x = 0:5),
+    geom = "line",
+    fun = \(x) coef(fit_1)["b_00"] + coef(fit_1)["b_10"] * x ,
+    inherit.aes = F,
+    color = "dodgerblue3",
+    linewidth = 2
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  labs(x = "Time", y = "Vocabulary") 
+```
+
+As seen in @tbl-hlm1, the various parameters of the analogous hierarchical linear model are nearly identical.
+
+```{r tbl-hlm1}
+#| tbl-cap: HLM Model Analogous to Model 1
+lmer(vocabulary ~ 1 + time + (1 | person_id), 
+               data = d, 
+               REML = FALSE) %>% 
+  tab_model()
+```
+
+
+## Model 2: Model 1 + Quadratic Effect of Time
+
+```{r fig-path2}
+#| fig-cap: "Path Diagram for Model 2"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+pd2 <- pd1 +
+  {q <- my_latent(
+      label = my_latent_label(
+        "*q*<br><span style='font-size: 18pt'>Slope^2^</span><br>*b*~2*i*~",
+        lineheight = 1,
+        size = 20
+      ),
+      fill = cC
+    ) %>%
+      place(midpoint(v[5], v[6]), "left", left)} +
+  {lq <- my_connect(q, v@point_at(180 + seq(10, 0, -2)), color = cC)} +
+  ob_label((0:5)^2,
+           center = map_ob(lq, \(x) intersection(x, ls[6]@nudge(y = -1.1))),
+           label.padding = margin(1, 0, 0, 0),
+           color = cC
+  ) +
+  {b20 <- my_connect(t1, q, color = cC)} +
+     ob_label(
+      "*b*~20~",
+      intersection(b20, vl),
+      label.padding = margin(2),
+      color = cC
+    ) 
+pd2
+```
+
+We set a fixed quadratic effect for time, with the residual variance set to 0.
+
+```{r m2}
+m_2 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ 0 * s + 0 * i
+q ~~ 0 * q + 0 * s + 0 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_2 <- growth(m_2, data = d_wide)
+parameters(fit_2, component = "all")
+
+# Compare new model with the previous models
+test_likelihoodratio(fit_0, fit_1, fit_2)
+compare_performance(fit_0, fit_1, fit_2, 
+                    metrics = my_metrics,
+                    verbose = F)
+
+```
+
+The quadratic effect improves fit.
+
+```{r fig-m2}
+#| fig-cap: "Model 2: Predicted Vocabulary by Intervention Group Over Time (Model 1 + Quadratic Effect of Time)"
+#| code-fold: true
+ggplot(d, aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(width = .2, size = .5, alpha = .5) +
+  geom_line(
+    data = predict(fit_2) %>%
+      as_tibble() %>%
+      mutate(across(everything(), .fns = as.numeric)) %>%
+      mutate(person_id = dplyr::row_number()) %>%
+      crossing(time = 0:5) %>%
+      mutate(vocabulary = i + s * time + q * time^2),
+    aes(group = person_id),
+    alpha = .25,
+  ) +
+  stat_function(
+    data = tibble(x = 0:5),
+    geom = "line",
+    fun = \(x) coef(fit_2)["b_00"] + coef(fit_2)["b_10"] * x + coef(fit_2)["b_20"] * (x^2),
+    inherit.aes = F,
+    color = "dodgerblue3",
+    linewidth = 2
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  labs(x = "Time", y = "Vocabulary") 
+```
+
+Again, @tbl-hlm2 shows that the same results would have been found with the analogous HLM model---and with much less typing! Why are we torturing ourselves like this? There will a payoff to latent growth modeling, just not yet.
+
+```{r tbl-hlm2}
+#| tbl-cap: HLM Model Analogous to Model 2
+lmer(vocabulary ~ 1 + time + I(time^2) + (1 | person_id),
+     data = d,
+     REML = FALSE) %>%
+  tab_model()
+```
+
+## Model 3: Model 2 + Random Linear Time Effect
+
+```{r fig-path3}
+#| fig-cap: "Path Diagram for Model 3"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+pd3 <- pd2 + 
+  {u_1i <- my_error(radius = 1,
+                     label = my_error_label("*u*~1*i*~"),
+                     fill = cB) %>% place(s, "left", left)} +
+    my_connect(u_1i, s, color = cB) +
+  ob_variance(
+    u_1i,
+    where = "west",
+    color = cB,
+    looseness = 1.75,
+    label = ob_label(paste0("*&tau;*~11~"), color = cB))
+pd3
+```
+
+
+```{r m3}
+m_3 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + 0 * i
+q ~~ 0 * q + 0 * s + 0 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_3 <- growth(m_3, data = d_wide)
+parameters(fit_3, component = "all")
+
+# Compare new model with the previous models
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3)
+compare_performance(fit_0, fit_1, fit_2, fit_3, metrics = my_metrics) 
+
+```
+
+Including the random linear effect of time improves model fit.
+
+Model 3 plot
+
+```{r fig-m3}
+#| fig-cap: "Model 3: Predicted Vocabulary by Intervention Group Over Time (Model 2 + Random Linear Effect of Time)"
+#| code-fold: true
+ggplot(d, aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(width = .2, size = .5, alpha = .5) +
+  geom_line(
+    data = predict(fit_3) %>%
+      as_tibble() %>%
+      mutate(across(everything(), .fns = as.numeric)) %>%
+      mutate(person_id = dplyr::row_number()) %>%
+      crossing(time = 0:5) %>%
+      mutate(vocabulary = i + s * time + q * time^2),
+    aes(group = person_id),
+    alpha = .25,
+  ) +
+  stat_function(
+    data = tibble(x = 0:5),
+    geom = "line",
+    fun = \(x) coef(fit_3)["b_00"] + coef(fit_3)["b_10"] * x + coef(fit_3)["b_20"] * (x^2),
+    inherit.aes = F,
+    color = "dodgerblue3",
+    linewidth = 2
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  labs(x = "Time", y = "Vocabulary") 
+```
+
+```{r tbl-hlm3}
+#| tbl-cap: HLM Model Analogous to Model 3
+lmer(vocabulary ~ 1 + time + I(time ^ 2) + (1 + time || person_id), 
+     data = d, 
+     REML = FALSE) %>% 
+  tab_model()
+```
+
+## Model 4: Model 3 + Covariance between Random Intercepts and Slopes
+
+```{r fig-path4}
+#| fig-cap: "Path Diagram for Model 4"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+
+pd4 <- pd3 +
+    ob_covariance(u_1i,
+                u_0i,
+                color = cD,
+                label = ob_label("*&tau;*~01~", color = cD)) 
+pd4
+```
+
+
+```{r m4}
+m_4 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ 0 * q + 0 * s + 0 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_4 <- growth(m_4, data = d_wide)
+parameters(fit_4, component = "all")
+
+# Compare new model with the previous models
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3, fit_4)
+compare_performance(fit_0, fit_1, fit_2, fit_3, fit_4, metrics = my_metrics)
+```
+
+The covariance is not significantly different from 0. I am going to leave it in for now because I want to test the random quadratic effect.
+
+```{r fig-m4}
+#| fig-cap: "Model 4: Predicted Vocabulary Over Time (Model 3 + Correlated Slopes and Intercepts)"
+#| code-fold: true
+ggplot(d, aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(width = .2, size = .5, alpha = .5) +
+  geom_line(
+    data = predict(fit_4) %>%
+      as_tibble() %>%
+      mutate(across(everything(), .fns = as.numeric)) %>%
+      mutate(person_id = dplyr::row_number()) %>%
+      crossing(time = 0:5) %>%
+      mutate(vocabulary = i + s * time + q * time^2),
+    aes(group = person_id),
+    alpha = .25,
+  ) +
+  stat_function(
+    data = tibble(x = 0:5),
+    geom = "line",
+    fun = \(x) coef(fit_4)["b_00"] + coef(fit_4)["b_10"] * x + coef(fit_4)["b_20"] * (x^2),
+    inherit.aes = F,
+    color = "dodgerblue3",
+    linewidth = 2
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  labs(x = "Time", y = "Vocabulary") 
+```
+
+```{r tbl-hlm4}
+#| tbl-cap: HLM Model Analogous to Model 4
+lmer(vocabulary ~ 1 + time + I(time ^ 2) + (1 + time | person_id), 
+     data = d, 
+     REML = FALSE) %>% 
+  tab_model()
+```
+
+## Model 5: Model 4 + Random Quadratic Effect
+
+```{r fig-path5}
+#| fig-cap: "Path Diagram for Model 5"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+
+pd5 <- pd4 +
+  {u_2i <- my_error(radius = 1,
+                     label = my_error_label("*u*~2*i*~"),
+                     fill = cC) %>% place(q, "left", left)} +
+  my_connect(u_2i, q, color = cC) +
+      ob_variance(
+    u_2i,
+    where = "west",
+    color = cC,
+    looseness = 1.75,
+    label = ob_label(paste0("*&tau;*~22~"), color = cC)
+  ) 
+pd5
+```
+
+
+
+
+```{r m5}
+m_5 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ tau_22 * q + 0 * s + 0 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_5 <- growth(m_5, data = d_wide)
+parameters(fit_5, component = "all")
+
+# Compare new model with the previous models
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5)
+compare_performance(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5, metrics = c())
+```
+
+Let's keep the random quadratic effect.
+
+```{r fig-m5}
+#| fig-cap: "Model 5: Predicted Vocabulary Over Time (Model 4 + Random Quadratic Effect of Time)"
+#| code-fold: true
+ggplot(d, aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(width = .2, size = .5, alpha = .5) +
+  geom_line(
+    data = predict(fit_5) %>%
+      as_tibble() %>%
+      mutate(across(everything(), .fns = as.numeric)) %>%
+      mutate(person_id = dplyr::row_number()) %>%
+      crossing(time = 0:5) %>%
+      mutate(vocabulary = i + s * time + q * time^2),
+    aes(group = person_id),
+    alpha = .25,
+  ) +
+  stat_function(
+    data = tibble(x = 0:5),
+    geom = "line",
+    fun = \(x) coef(fit_5)["b_00"] + coef(fit_5)["b_10"] * x + coef(fit_5)["b_20"] * (x^2),
+    inherit.aes = F,
+    color = "dodgerblue3",
+    linewidth = 2
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  labs(x = "Time", y = "Vocabulary")
+```
+
+```{r tbl-hlm5}
+#| tbl-cap: HLM Model Analogous to Model 5
+lmer(vocabulary ~ 1 + time + I(time ^ 2) + 
+       (1 + time | person_id) + 
+       (0 + I(time ^ 2) | person_id), 
+     data = d, 
+     REML = FALSE) %>% 
+  tab_model()
+```
+
+## Model 6: Model 5 + Correlations with Random Quadratic Effects
+
+```{r fig-path6}
+#| fig-cap: "Path Diagram for Model 6"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+
+pd6 <- pd5 +
+  ob_covariance(bind(c(u_2i, u_2i)),
+                bind(c(u_0i, u_1i)),
+                color = cD,
+                label = ob_label(paste0("*&tau;*~", c(0, 1), c(2, 2), "~"), color = cD))
+pd6
+```
+
+Now lets allow the covariance between the quadratic effect and the linear and intercept to be non-zero:
+
+```{r m6}
+m_6 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ tau_22 * q + tau_12 * s + tau_02 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_6 <- growth(m_6, data = d_wide)
+parameters(fit_6, component = "all")
+
+
+
+# Compare new model with the previous models
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5, fit_6)
+compare_performance(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5, fit_6, metrics = my_metrics)
+```
+
+These effects are not needed. We have the option of trimming them now, but I am going to wait a little longer.
+
+```{r fig-m6}
+#| fig-cap: "Model 6: Predicted Vocabulary Over Time (Model 5 + All Random Effects Correlated)"
+#| code-fold: true
+ggplot(d, aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(width = .2, size = .5, alpha = .5) +
+  geom_line(
+    data = predict(fit_6) %>%
+      as_tibble() %>%
+      mutate(across(everything(), .fns = as.numeric)) %>%
+      mutate(person_id = dplyr::row_number()) %>%
+      crossing(time = 0:5) %>%
+      mutate(vocabulary = i + s * time + q * time^2),
+    aes(group = person_id),
+    alpha = .25,
+  ) +
+  stat_function(
+    data = tibble(x = 0:5),
+    geom = "line",
+    fun = \(x) coef(fit_6)["b_00"] + coef(fit_6)["b_10"] * x + coef(fit_6)["b_20"] * (x^2),
+    inherit.aes = F,
+    color = "dodgerblue3",
+    linewidth = 2
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  labs(x = "Time", y = "Vocabulary")
+```
+
+```{r tbl-hlm6}
+#| tbl-cap: HLM Model Analogous to Model 6
+lmer(vocabulary ~ 1 + time + I(time ^ 2) + 
+       (1 + time + I(time ^ 2) | person_id), 
+     data = d, 
+     REML = FALSE) %>% 
+  tab_model()
+```
+
+## Model 7: Model 6 + Treatment Effects
+
+```{r fig-path7}
+#| fig-cap: "Path Diagram for Model 7"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+
+pd7 <- pd6 +
+  {intervention <- my_observed(
+      intersection(connect(u_2i, s), connect(u_1i, q)) + ob_point(-1.85, 0),
+      a = 1.75,
+      b = 1.75,
+      fill = cD,
+      label = my_observed_label("Intervention", size = 15)
+    )}  +
+  {lt1 <- my_connect(intervention, bind(c(i, s, q)), color = my_colors)} +
+  ob_label(
+    paste0("*b*~", 0:2, "1~"),
+    intersection(lt1, vl),
+    label.padding = margin(2),
+    color = my_colors
+  ) 
+pd7
+```
+
+I am going to add all three treatment effects at the same time. We could do them one-at-a-time, but no important theoretical question would be answered by doing so. I am mostly interested in the interactions of treatment and the time variables.
+
+
+```{r m7}
+m_7 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 + b_01 * intervention
+s ~ b_10 * 1 + b_11 * intervention
+q ~ b_20 * 1 + b_21 * intervention
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ tau_22 * q + tau_12 * s + tau_02 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+"
+
+fit_7 <- growth(m_7, data = d_wide)
+parameters(fit_7, component = "all")
+
+# Compare new model with the previous models
+test_likelihoodratio(fit_6, fit_7)
+compare_performance(fit_6, fit_7, metrics = my_metrics)
+```
+
+
+So the intervention effects improve the model fit. Specifically, the intervention predicts the slope such that the slope is steeper for the treatment group.
+
+```{r fig-m7}
+#| fig-cap: "Model 7: Predicted Vocabulary by Intervention Group Over Time (Model 6 + Effects of Intervention on Intercept, Linear Effect of Time, and Quadratic Effect of Time)"
+#| code-fold: true
+pred_7 <- lavPredictY(
+  fit_7,
+  ynames = d_wide %>% select(starts_with("voc_")) %>%  colnames(),
+  xnames = "intervention",
+  newdata = tibble(
+    intervention = c(0, 1),
+    voc_0 = 0,
+    voc_1 = 0,
+    voc_2 = 0,
+    voc_3 = 0,
+    voc_4 = 0,
+    voc_5 = 0
+  )
+) %>%
+  as_tibble() %>%
+  mutate(intervention = factor(c(0, 1), 
+                               labels = c("Control", "Treatment"))) %>%
+  pivot_longer(
+    starts_with("voc_"),
+    names_to = "time",
+    names_prefix = "voc_",
+    names_transform = list(time = as.integer),
+    values_to = "vocabulary"
+  )
+
+
+
+ggplot(
+  data = d %>% 
+    mutate(intervention = factor(
+      intervention, 
+      labels = c("Control", "Treatment"))), 
+  aes(time, vocabulary)) +
+  ggbeeswarm::geom_quasirandom(
+    aes(color = intervention, group = intervention),
+    width = .05,
+    data = . %>% 
+      mutate(time = time + (as.numeric(intervention) - 1.5) / 6),
+    size = .5,
+    alpha = .5
+  ) +
+  geom_line(
+    data = my_predictions(fit_7) %>% 
+      mutate(intervention = factor(
+        intervention, 
+        labels = c("Control", "Treatment")
+    )),
+    aes(group = person_id, color = intervention),
+    alpha = .3,
+    linewidth = .5
+  ) +
+  geom_line(
+    data = pred_7,
+    aes(group = intervention, color = intervention),
+    linewidth = 3
+  ) +
+  geomtextpath::geom_labelline(
+    data = pred_7,
+    aes(
+      color = intervention,
+      group = intervention,
+      label = intervention
+    ),
+    vjust = -.3,
+    size = 6,
+    family = my_font,
+    fill = "#FFFFFFBB",
+    text_only = T,
+    linewidth = 0,
+    label.padding = margin(1, 1, 1, 1),
+    hjust = .95
+  ) +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  theme(legend.position = "none") +
+  scale_color_manual(values = c(
+    Control = "dodgerblue4",
+    Treatment = "forestgreen"
+  )) + 
+  labs(x = "Time", y = "Vocabulary")
+```
+
+```{r tbl-hlm7}
+#| tbl-cap: HLM Model Analogous to Model 7
+lmer(vocabulary ~ 1 + time*intervention + I(time ^ 2) * intervention + 
+       (1 + time + I(time ^ 2) | person_id), 
+     data = d, 
+     REML = FALSE) %>% 
+  tab_model()
+```
+
+## Model 8: Model 7 + Autoregression Effect
+
+```{r fig-path8}
+#| fig-cap: "Path Diagram for Model 8"
+#| fig-width: 11
+#| fig-height: 8
+#| code-fold: true
+#| out-width: 100%
+
+
+pd8 <- pd7 +
+    my_connect(
+    v[1:5],
+    v[2:6],
+    color = v@fill[-6],
+    label = ob_label(
+      "*r*",
+      angle = 0,
+      position = .4,
+      size = 14,
+      label.padding = margin()
+    ),
+    resect = 1
+  ) 
+
+pd8
+
+```
+
+
+Suppose that we want to add an autoregression effect to our latent growth model. 
+
+An autoregression allows for the residuals of earlier observed variables to have lasting effects on subsequent variables. 
+
+```{r m8}
+m_8 <- "
+# Intercept
+i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
+# Linear slope of time
+s =~ 0 * voc_0 + 1 * voc_1 + 2 * voc_2 + 3 * voc_3 + 4 * voc_4 + 5 * voc_5
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * voc_0 + 1 * voc_1 + 4 * voc_2 + 9 * voc_3 + 16 * voc_4 + 25 * voc_5
+# Intercept, slope, and quadratic effects
+i ~ b_00 * 1 + b_01 * intervention
+s ~ b_10 * 1 + b_11 * intervention
+q ~ b_20 * 1 + b_21 * intervention
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ tau_22 * q + tau_12 * s + tau_02 * i
+voc_0 ~~ e * voc_0
+voc_1 ~~ e * voc_1
+voc_2 ~~ e * voc_2
+voc_3 ~~ e * voc_3
+voc_4 ~~ e * voc_4
+voc_5 ~~ e * voc_5
+# Autoregression
+voc_1 ~ r * voc_0
+voc_2 ~ r * voc_1
+voc_3 ~ r * voc_2
+voc_4 ~ r * voc_3
+voc_5 ~ r * voc_4
+"
+
+fit_8 <- growth(m_8, data = d_wide)
+
+summary(fit_8, fit.measures = T, standardized = T)
+parameters(fit_8, component = "all")
+
+# Compare models
+test_likelihoodratio(fit_7, fit_8)
+```
+
+The autoregression parameter was not statistically significant. Comparing the two models revealed no difference in model fit. Thus, there appears to be no need of the autoregression parameter, once we have accounted for the latent growth.
+
+# Exercise
+
+After a series of painful incidents in which several middle-schoolers were severely harassed and bullied by peers, the school principal decided to implement a school-wide social-emotional learning intervention that aims to give students verbal self-defense skills, encourage bystanders to become "upstanders" that defend bullied peers, and to create an overall sense of solidarity and belonging at the school. Each student's sense of school belonging was measured before the intervention and for each of the 8 weeks of the intervention. Your task is to how school belonging increases in general and specifically for students who self-identify as having been bullied.
+
+
+
+```{r makebelongingdata}
+#| include: false
+#| eval: false
+b_00 <- 100
+b_01 <- -17
+b_10 <- 9
+b_11 <- -6
+b_20 <- -.3
+b_21 <- .9
+tau_1 <- 10 ^ 2
+tau_00 <- 5 ^ 2
+tau_11 <- 1 ^ 2
+tau_22 <- 0 ^ 2
+tau_01 <- .3 * sqrt(tau_00 * tau_11)
+tau_02 <- .3 * sqrt(tau_00 * tau_22)
+tau_12 <- .3 * sqrt(tau_11 * tau_22)
+
+m_belong <- glue::glue("
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Linear slope of time
+s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8
+# Acceleration effect of time (quadratic effect)
+q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
+# Intercept, slope, and quadratic effects
+i ~ {b_00} * 1 + {b_01} * bullied
+s ~ {b_10} * 1 + {b_11} * bullied
+q ~ {b_20} * 1 + {b_21} * bullied
+# Variances and covariances
+i ~~ {tau_00} * i 
+s ~~ {tau_11} * s + {tau_01} * i
+q ~~ {tau_22} * q + {tau_12} * s + {tau_02} * i
+sb_0 ~~ {tau_1} * sb_0
+sb_1 ~~ {tau_1} * sb_1
+sb_2 ~~ {tau_1} * sb_2
+sb_3 ~~ {tau_1} * sb_3
+sb_4 ~~ {tau_1} * sb_4
+sb_5 ~~ {tau_1} * sb_5
+sb_6 ~~ {tau_1} * sb_6
+sb_7 ~~ {tau_1} * sb_7
+sb_8 ~~ {tau_1} * sb_8
+bullied | 1.5 * t1
+")
+set.seed(2)
+d_belong <- simulateData(m_belong, sample.nobs = 500) %>% 
+  as_tibble() %>% 
+  mutate(bullied = factor(bullied, levels = c(1,2), labels = c("No", "Yes")),
+         id = factor(dplyr::row_number())) %>% 
+  select(id, bullied, everything())
+write_csv(d_belong, "belonging.csv")
+
+
+
+```
+
+
+The data can be imported like so:
+
+```{r importbelong}
+d_belong <- read_csv(
+  "https://github.com/wjschne/EDUC8825/raw/main/belonging.csv",
+  show_col_types = F
+) 
+```
+
+The data should look like this:
+
+```{r displaybelong}
+head(d_belong)
+```
+
+
+First let's plot the data to see what we are looking at in @fig-bullied.
+
+```{r fig-bullied}
+#| fig-cap: Trajectory of change in self-rated sense of school belonging for bullied and non-bullied student during 8 weeks of an anti-bullying intervention.
+d_belong %>%
+  pivot_longer(
+    -c(id, bullied),
+    names_prefix = "sb_",
+    names_to = "time",
+    values_to = "belonging"
+  ) %>%
+  mutate(time = as.numeric(time)) %>%
+  ggplot(aes(time, belonging)) +
+  geom_line(aes(group = id, color = bullied), alpha = .3) +
+  ggplot2::geom_smooth(
+    aes(color = bullied),
+    linewidth = 2,
+    method = "lm",
+    formula = "y ~ poly(x,2)"
+  )
+```
+
+It looks like both groups felt increasing levels of belonging, but that their trajectories of change differed. Let's test this idea formally.
+
+Using latent growth models, conduct the following tests:
+
+1. Create a plain random intercept model. Call the intercept latent variable `i`, its intercept parameter `b_00`, and its variance `tau_00`. Set the observed variable's variances equal using the parameter name `tau_1`.
+
+::: {.callout-note collapse=true title="Hint"}
+
+```{r bm0}
+#| eval: false
+m_0 <- "
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Regression effects on latent variables
+i ~ b_00 * 1 
+# Variances and covariances
+i ~~ tau_00 * i 
+sb_0 ~~ tau_1 * sb_0
+sb_1 ~~ tau_1 * sb_1
+sb_2 ~~ tau_1 * sb_2
+sb_3 ~~ tau_1 * sb_3
+sb_4 ~~ tau_1 * sb_4
+sb_5 ~~ tau_1 * sb_5
+sb_6 ~~ tau_1 * sb_6
+sb_7 ~~ tau_1 * sb_7
+sb_8 ~~ tau_1 * sb_8
+"
+
+fit_0 <- growth(m_0, data = d_belong)
+parameters(fit_0, component = "all")
+
+my_metrics <- c("CFI", "NNFI", "AGFI", "RMSEA", "AIC", "BIC")
+performance(fit_0, metrics = my_metrics)
+```
+
+:::
+
+2. Evaluate whether adding a fixed linear effect of time is significant. Call the slope latent variable `s`, its intercept parameter `b_10`. Set `s`'s variance to 0, as well as its covariance with `i`.
+
+::: {.callout-note collapse=true title="Hint"}
+
+```{r bm1}
+#| eval: false
+m_1 <- "
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Linear slope of time
+s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8
+# Regression effects on latent variables
+i ~ b_00 * 1 
+s ~ b_10 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ 0 * s + 0 * i
+sb_0 ~~ tau_1 * sb_0
+sb_1 ~~ tau_1 * sb_1
+sb_2 ~~ tau_1 * sb_2
+sb_3 ~~ tau_1 * sb_3
+sb_4 ~~ tau_1 * sb_4
+sb_5 ~~ tau_1 * sb_5
+sb_6 ~~ tau_1 * sb_6
+sb_7 ~~ tau_1 * sb_7
+sb_8 ~~ tau_1 * sb_8
+"
+
+fit_1 <- growth(m_1, data = d_belong)
+parameters(fit_1, component = "all")
+
+test_likelihoodratio(fit_0, fit_1)
+compare_performance(fit_0, fit_1, metrics = my_metrics)
+```
+
+:::
+
+
+3. Evaluate whether adding a fixed quadratic effect of time `q` is significant. Set `q`'s intercept to parameter name to `b_20`. Set `q`'s variance to 0 as well as its covariances with `i` and `s`.
+
+::: {.callout-note collapse=true title="Hint"}
+
+Add these three lines to your model:
+
+```
+q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
+q ~ b_20 * 1
+q ~~ 0 * q + 0 * i + 0 * s
+```
+
+```{r bm2}
+#| include: false
+#| eval: false
+m_2 <- "
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Linear slope of time
+s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8
+# Quadratic slope of time
+q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
+# Regression effects on latent variables
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ 0 * s + 0 * i 
+q ~~ 0 * q + 0 * i + 0 * s
+sb_0 ~~ tau_1 * sb_0
+sb_1 ~~ tau_1 * sb_1
+sb_2 ~~ tau_1 * sb_2
+sb_3 ~~ tau_1 * sb_3
+sb_4 ~~ tau_1 * sb_4
+sb_5 ~~ tau_1 * sb_5
+sb_6 ~~ tau_1 * sb_6
+sb_7 ~~ tau_1 * sb_7
+sb_8 ~~ tau_1 * sb_8
+"
+
+fit_2 <- growth(m_2, data = d_belong)
+parameters(fit_2, component = "all")
+
+test_likelihoodratio(fit_0, fit_1, fit_2)
+compare_performance(fit_0, fit_1, fit_2, metrics = my_metrics)
+```
+
+:::
+
+
+
+4. Evaluate whether adding a random linear effect of time is significant. Set `s`'s variance to parameter name to `tau_11`.
+
+::: {.callout-note collapse=true title="Hint"}
+
+Replace the 0 in with `tau_11` in your model like so:
+
+```
+s ~~ tau_11 * s + 0 * i
+```
+
+:::
+
+```{r bm3}
+#| include: false
+#| eval: false
+m_3 <- "
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Linear slope of time
+s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8
+# Quadratic effect of time
+q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
+# Regression effects on latent variables
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + 0 * i
+q ~~ 0 * q + 0 * i + 0 * s
+sb_0 ~~ tau_1 * sb_0
+sb_1 ~~ tau_1 * sb_1
+sb_2 ~~ tau_1 * sb_2
+sb_3 ~~ tau_1 * sb_3
+sb_4 ~~ tau_1 * sb_4
+sb_5 ~~ tau_1 * sb_5
+sb_6 ~~ tau_1 * sb_6
+sb_7 ~~ tau_1 * sb_7
+sb_8 ~~ tau_1 * sb_8
+"
+
+fit_3 <- growth(m_3, data = d_belong)
+parameters(fit_3, component = "all")
+
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3)
+compare_performance(fit_0, fit_1, fit_2, fit_3, metrics = my_metrics)
+```
+
+
+
+
+5. Evaluate whether adding a random quadratic effect of time is significant. Set `q`'s variance to parameter name to `tau_22`.
+
+::: {.callout-note collapse=true title="Hint"}
+
+Replace the 0 in with `tau_22` in your model like so:
+
+```
+q ~~ tau_22 * q + 0 * i + 0 * s
+```
+
+:::
+
+```{r bm4}
+#| include: false
+#| eval: false
+m_4 <- "
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Linear slope of time
+s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8
+# Quadratic effect of time
+q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
+# Regression effects on latent variables
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + 0 * i
+q ~~ tau_22 * q + 0 * i + 0 * s
+sb_0 ~~ tau_1 * sb_0
+sb_1 ~~ tau_1 * sb_1
+sb_2 ~~ tau_1 * sb_2
+sb_3 ~~ tau_1 * sb_3
+sb_4 ~~ tau_1 * sb_4
+sb_5 ~~ tau_1 * sb_5
+sb_6 ~~ tau_1 * sb_6
+sb_7 ~~ tau_1 * sb_7
+sb_8 ~~ tau_1 * sb_8
+"
+
+fit_4 <- growth(m_4, data = d_belong)
+parameters(fit_4, component = "all")
+
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3, fit_4)
+compare_performance(fit_0, fit_1, fit_2, fit_3, fit_4, metrics = my_metrics)
+```
+
+6. Evaluate whether the random effects should correlate. Set the covariance between `i` and `s` to `tau_01`, the covariance between `i` and `q` to `tau_02` and the covariance between `s` and `q` to `tau_12`.  
+
+::: {.callout-note collapse=true title="Hint"}
+
+The variances and covariances should look like this:
+
+```
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ tau_22 * q + tau_12 * s + tau_02 * i
+```
+
+:::
+
+```{r bm5}
+#| include: false
+#| eval: false
+m_5 <- "
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Linear slope of time
+s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8
+# Quadratic effect of time
+q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
+# Regression effects on latent variables
+i ~ b_00 * 1 
+s ~ b_10 * 1
+q ~ b_20 * 1
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ tau_22 * q + tau_12 * s + tau_02 * i
+sb_0 ~~ tau_1 * sb_0
+sb_1 ~~ tau_1 * sb_1
+sb_2 ~~ tau_1 * sb_2
+sb_3 ~~ tau_1 * sb_3
+sb_4 ~~ tau_1 * sb_4
+sb_5 ~~ tau_1 * sb_5
+sb_6 ~~ tau_1 * sb_6
+sb_7 ~~ tau_1 * sb_7
+sb_8 ~~ tau_1 * sb_8
+"
+
+fit_5 <- growth(m_5, data = d_belong)
+parameters(fit_5, component = "all")
+
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5)
+compare_performance(fit_0, fit_1, fit_2, fit_3, fit_4,  fit_5, metrics = my_metrics)
+```
+
+7. Evaluate whether `bullied` has effects on `i`, `s`, and `q`. Call the regression parameters `b_01` for `i`, `b_11` for `s`, and `b_21` for `q`. Is the trajectory of change different for students who identify as having been bullied?
+
+::: {.callout-note collapse=true title="Hint"}
+
+The regression effects should look like this:
+
+```
+# Regression effects on latent variables
+i ~ b_00 * 1 + b_01 * bullied
+s ~ b_10 * 1 + b_11 * bullied
+q ~ b_20 * 1 + b_21 * bullied
+```
+
+:::
+
+```{r bm6}
+#| include: false
+#| eval: false
+m_6 <- "
+# Intercept
+i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
+# Linear slope of time
+s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8
+# Quadratic effect of time
+q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
+# Regression effects on latent variables
+i ~ b_00 * 1 + b_01 * bullied
+s ~ b_10 * 1 + b_11 * bullied
+q ~ b_20 * 1 + b_21 * bullied
+# Variances and covariances
+i ~~ tau_00 * i 
+s ~~ tau_11 * s + tau_01 * i
+q ~~ tau_22 * q + tau_12 * s + tau_02 * i
+sb_0 ~~ tau_1 * sb_0
+sb_1 ~~ tau_1 * sb_1
+sb_2 ~~ tau_1 * sb_2
+sb_3 ~~ tau_1 * sb_3
+sb_4 ~~ tau_1 * sb_4
+sb_5 ~~ tau_1 * sb_5
+sb_6 ~~ tau_1 * sb_6
+sb_7 ~~ tau_1 * sb_7
+sb_8 ~~ tau_1 * sb_8
+"
+
+fit_6 <- growth(m_6, data = d_belong)
+parameters(fit_5, component = "all")
+
+test_likelihoodratio(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5, fit_6)
+compare_performance(fit_0, fit_1, fit_2, fit_3, fit_4,  fit_5, fit_6, metrics = my_metrics)
+```
+
+
+8. What is your overall interpretation of the results?
+

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.13">
+<meta name="generator" content="quarto-1.7.3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -67,13 +67,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../..//images/favicon.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-66ab7fd5e73b7f0a764e0d49b3e29ab1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-8324e2080287992c21ba0f6d539105a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -138,7 +137,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="W. Joel Schneider">
 <meta property="og:description" content="Advanced Data Analysis (EDUC 8825)">
-<meta property="og:image" content="https://wjschne.github.io/tutorials/DataSimulation/data_simulation_files/figure-html/unnamed-chunk-3-1.png">
+<meta property="og:image" content="https://wjschne.github.io/tutorials/DataSimulation/data_simulation_files/figure-html/ggplotdensity-1.png">
 <meta property="og:site_name" content="W. Joel Schneider">
 <meta property="og:image:height" content="1536">
 <meta property="og:image:width" content="1536">
@@ -312,14 +311,14 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 67.30920 41.82210 43.08040 46.17178 54.89969</code></pre>
+<pre><code>[1] 58.71856 49.46555 47.94691 62.39124 34.61092</code></pre>
 </div>
 </div>
 <p>Of course, as long as the order of your parameters is what R expects, you can write this code more succinctly like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 64.82466 30.79626 60.79281 49.26028 38.71159</code></pre>
+<pre><code>[1] 45.33785 55.12266 64.42480 55.87030 68.25846</code></pre>
 </div>
 </div>
 <p>Let’s generate many cases and see if the plot looks normal. We need to put the variable in a tibble because ggplot needs its input to be in a data.frame or tibble.</p>
@@ -330,7 +329,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/ggplotdensity-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -434,16 +433,16 @@ window.Quarto = {
 <pre><code># A tibble: 1,000 × 3
        x     y     z
    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1  47.0  65.7  84.6
- 2  62.1  87.7  91.5
- 3  44.6  72.0  82.5
- 4  45.9  77.2  80.3
- 5  58.4  80.2  87.2
- 6  52.2  78.7  71.5
- 7  55.0  86.7  91.4
- 8  49.5  72.4  70.5
- 9  48.0  56.3  62.3
-10  46.5  68.5  74.9
+ 1  38.0  61.5  58.8
+ 2  49.6  80.1  80.9
+ 3  43.8  73.3  70.2
+ 4  55.2  66.1  79.4
+ 5  47.9  67.2  81.3
+ 6  49.4  84.9  76.1
+ 7  52.0  77.6  81.6
+ 8  46.8  82.8  90.1
+ 9  48.1  73.9  78.8
+10  40.0  58.9  53.5
 # ℹ 990 more rows</code></pre>
 </div>
 </div>
@@ -454,7 +453,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/displaypoint-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -470,7 +469,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/ggmarginal-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -506,14 +505,14 @@ window.Quarto = {
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 15
-      A1     A2      A3      B1      B2     B3       A      B   e_A1   e_A2
-   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1  0.621  1.10   0.0201 -0.916   0.484  -0.750  0.275  -0.769  0.429 0.885 
-2  0.383  0.916  0.464   0.574  -0.0765  0.349  1.05    0.175 -0.353 0.0734
-3  0.366  2.00   1.75    1.04    0.181   0.640  1.73    1.57  -0.844 0.616 
-4  0.107 -0.332 -0.602  -0.0403 -0.312  -0.869 -0.513  -0.198  0.466 0.0780
-5 -0.383  0.535  0.463   0.672  -0.488  -0.866  0.265  -0.188 -0.568 0.323 
-6  0.618  0.131 -0.507   0.304   1.05    0.413 -0.0974  0.932  0.686 0.209 
+       A1     A2     A3     B1       B2     B3       A      B   e_A1    e_A2
+    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+1  0.155  -0.799  0.148 -0.865 -1.45    -0.955 -0.975  -1.32   0.837 -0.0190
+2 -0.233   0.419 -0.434  0.499 -0.464    0.701 -0.0118  0.589 -0.225  0.428 
+3 -0.981  -0.728 -0.625 -1.47  -2.66    -2.74  -0.801  -1.92  -0.420 -0.0870
+4 -2.09   -2.52  -1.90  -1.66   0.00704 -1.34  -2.41   -1.01  -0.403 -0.595 
+5 -0.0760  0.412  0.114  0.182 -0.960   -0.698  0.429  -0.475 -0.376  0.0691
+6  0.171  -1.31  -0.529 -0.838 -0.244    0.285 -1.40   -0.608  1.15  -0.192 
 # ℹ 5 more variables: e_A3 &lt;dbl&gt;, e_B1 &lt;dbl&gt;, e_B2 &lt;dbl&gt;, e_B3 &lt;dbl&gt;, d_B &lt;dbl&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display complete model with variances</span></span>
@@ -553,7 +552,7 @@ B =~ B1 + B2 + B3</code></pre>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sem</span>(<span class="at">model =</span> m_free)</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit, <span class="at">standardized =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>lavaan 0.6-19 ended normally after 28 iterations
+<pre><code>lavaan 0.6-19 ended normally after 27 iterations
 
   Estimator                                         ML
   Optimization method                           NLMINB
@@ -563,9 +562,9 @@ B =~ B1 + B2 + B3</code></pre>
 
 Model Test User Model:
                                                       
-  Test statistic                                 4.977
+  Test statistic                                13.110
   Degrees of freedom                                 7
-  P-value (Chi-square)                           0.663
+  P-value (Chi-square)                           0.069
 
 Parameter Estimates:
 
@@ -576,36 +575,36 @@ Parameter Estimates:
 Latent Variables:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
   A =~                                                                  
-    A1                1.000                               0.698    0.698
-    A2                1.147    0.005  229.433    0.000    0.801    0.801
-    A3                1.293    0.005  245.285    0.000    0.903    0.901
-    B1                0.430    0.004  114.446    0.000    0.300    0.300
+    A1                1.000                               0.700    0.700
+    A2                1.145    0.005  229.868    0.000    0.801    0.800
+    A3                1.291    0.005  246.069    0.000    0.903    0.900
+    B1                0.427    0.004  113.474    0.000    0.299    0.298
   B =~                                                                  
-    B1                1.000                               0.703    0.701
-    B2                1.144    0.005  239.772    0.000    0.804    0.801
-    B3                1.285    0.005  249.032    0.000    0.903    0.901
+    B1                1.000                               0.702    0.701
+    B2                1.141    0.005  238.328    0.000    0.801    0.801
+    B3                1.285    0.005  247.303    0.000    0.902    0.900
 
 Regressions:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
   B ~                                                                   
-    A                 0.606    0.004  141.482    0.000    0.602    0.602
+    A                 0.605    0.004  141.578    0.000    0.603    0.603
 
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .A1                0.512    0.003  195.297    0.000    0.512    0.513
-   .A2                0.357    0.002  165.301    0.000    0.357    0.358
-   .A3                0.190    0.002   97.715    0.000    0.190    0.189
-   .B1                0.167    0.001  130.319    0.000    0.167    0.166
-   .B2                0.360    0.002  178.343    0.000    0.360    0.358
-   .B3                0.190    0.002  108.212    0.000    0.190    0.189
-    A                 0.487    0.004  120.445    0.000    1.000    1.000
-   .B                 0.315    0.003  124.590    0.000    0.638    0.638</code></pre>
+   .A1                0.509    0.003  194.880    0.000    0.509    0.510
+   .A2                0.360    0.002  165.697    0.000    0.360    0.359
+   .A3                0.190    0.002   97.808    0.000    0.190    0.189
+   .B1                0.169    0.001  130.844    0.000    0.169    0.168
+   .B2                0.359    0.002  178.355    0.000    0.359    0.359
+   .B3                0.190    0.002  107.926    0.000    0.190    0.189
+    A                 0.489    0.004  120.878    0.000    1.000    1.000
+   .B                 0.313    0.003  123.981    0.000    0.636    0.636</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(fit, <span class="at">what =</span> <span class="st">"std"</span>, <span class="at">layout =</span> <span class="st">"circle"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/evaluatefit-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -763,7 +762,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/d2bar-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -782,7 +781,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -801,7 +800,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -841,7 +840,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -872,7 +871,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -893,18 +892,18 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>u</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 100 × 2
-     e_0j   e_1j
-    &lt;dbl&gt;  &lt;dbl&gt;
- 1 -10.8  -0.255
- 2  36.7  -0.375
- 3 -36.0   0.600
- 4  40.4  -0.617
- 5  49.8  -0.148
- 6  17.8  -0.369
- 7  15.6   0.448
- 8  24.1  -0.304
- 9   7.26  0.374
-10 -12.6   0.256
+       e_0j    e_1j
+      &lt;dbl&gt;   &lt;dbl&gt;
+ 1  25.0    -0.855 
+ 2 -27.3     0.539 
+ 3   0.194   0.120 
+ 4  57.3    -1.15  
+ 5 -46.0     0.0632
+ 6  -0.0923  0.210 
+ 7 -61.5     0.264 
+ 8 -17.4     0.625 
+ 9  52.0    -0.587 
+10   8.15    0.0914
 # ℹ 90 more rows</code></pre>
 </div>
 </div>
@@ -929,18 +928,18 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>d2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 100 × 7
-   cluster_id cluster_size     C_j   e_0j   e_1j  b_0j  b_1j
-        &lt;int&gt;        &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1          1           30  1.45   -10.8  -0.255  518.  23.9
- 2          2           30 -0.889   36.7  -0.375  519.  33.2
- 3          3           28 -0.0361 -36.0   0.600  463.  30.7
- 4          4           36 -0.615   40.4  -0.617  528.  31.8
- 5          5           34 -0.332   49.8  -0.148  543.  31.2
- 6          6           26  0.434   17.8  -0.369  526.  27.9
- 7          7           29 -2.40    15.6   0.448  468.  40.1
- 8          8           25 -0.379   24.1  -0.304  516.  31.2
- 9          9           25  1.42     7.26  0.374  536.  24.7
-10         10           25  0.288  -12.6   0.256  493.  29.1
+   cluster_id cluster_size    C_j     e_0j    e_1j  b_0j  b_1j
+        &lt;int&gt;        &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1          1           25  0.226  25.0    -0.855   530.  28.2
+ 2          2           26 -0.831 -27.3     0.539   456.  33.9
+ 3          3           45 -0.354   0.194   0.120   493.  31.5
+ 4          4           21 -0.351  57.3    -1.15    550.  30.3
+ 5          5           29 -0.301 -46.0     0.0632  448.  31.3
+ 6          6           31 -1.32   -0.0923  0.210   474.  35.5
+ 7          7           19 -0.760 -61.5     0.264   423.  33.3
+ 8          8           16  1.36  -17.4     0.625   510.  25.2
+ 9          9           33 -0.401  52.0    -0.587   544.  31.0
+10         10           31 -0.237   8.15    0.0914  503.  31.0
 # ℹ 90 more rows</code></pre>
 </div>
 </div>
@@ -957,20 +956,20 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>d1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2,842 × 6
+<pre><code># A tibble: 2,832 × 6
    cluster_id   C_j  e_0j   e_1j  b_0j  b_1j
         &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1          1  1.45 -10.8 -0.255  518.  23.9
- 2          1  1.45 -10.8 -0.255  518.  23.9
- 3          1  1.45 -10.8 -0.255  518.  23.9
- 4          1  1.45 -10.8 -0.255  518.  23.9
- 5          1  1.45 -10.8 -0.255  518.  23.9
- 6          1  1.45 -10.8 -0.255  518.  23.9
- 7          1  1.45 -10.8 -0.255  518.  23.9
- 8          1  1.45 -10.8 -0.255  518.  23.9
- 9          1  1.45 -10.8 -0.255  518.  23.9
-10          1  1.45 -10.8 -0.255  518.  23.9
-# ℹ 2,832 more rows</code></pre>
+ 1          1 0.226  25.0 -0.855  530.  28.2
+ 2          1 0.226  25.0 -0.855  530.  28.2
+ 3          1 0.226  25.0 -0.855  530.  28.2
+ 4          1 0.226  25.0 -0.855  530.  28.2
+ 5          1 0.226  25.0 -0.855  530.  28.2
+ 6          1 0.226  25.0 -0.855  530.  28.2
+ 7          1 0.226  25.0 -0.855  530.  28.2
+ 8          1 0.226  25.0 -0.855  530.  28.2
+ 9          1 0.226  25.0 -0.855  530.  28.2
+10          1 0.226  25.0 -0.855  530.  28.2
+# ℹ 2,822 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -983,20 +982,20 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">e =</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(.), <span class="at">sd =</span> <span class="fu">sqrt</span>(tau_1)))</span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>d1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2,842 × 8
+<pre><code># A tibble: 2,832 × 8
    cluster_id   C_j  e_0j   e_1j  b_0j  b_1j    V_ij     e
         &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
- 1          1  1.45 -10.8 -0.255  518.  23.9 -1.03   -1.69
- 2          1  1.45 -10.8 -0.255  518.  23.9 -0.320   2.66
- 3          1  1.45 -10.8 -0.255  518.  23.9  0.415   5.41
- 4          1  1.45 -10.8 -0.255  518.  23.9 -0.601   1.19
- 5          1  1.45 -10.8 -0.255  518.  23.9 -0.372   3.37
- 6          1  1.45 -10.8 -0.255  518.  23.9 -0.0809  1.08
- 7          1  1.45 -10.8 -0.255  518.  23.9 -1.99    3.95
- 8          1  1.45 -10.8 -0.255  518.  23.9 -1.11    3.87
- 9          1  1.45 -10.8 -0.255  518.  23.9  1.47    3.04
-10          1  1.45 -10.8 -0.255  518.  23.9 -2.42   -5.74
-# ℹ 2,832 more rows</code></pre>
+ 1          1 0.226  25.0 -0.855  530.  28.2 -0.0953  2.06
+ 2          1 0.226  25.0 -0.855  530.  28.2 -0.0774  4.52
+ 3          1 0.226  25.0 -0.855  530.  28.2 -0.0243  6.34
+ 4          1 0.226  25.0 -0.855  530.  28.2 -0.120   2.93
+ 5          1 0.226  25.0 -0.855  530.  28.2 -0.675   4.16
+ 6          1 0.226  25.0 -0.855  530.  28.2  0.0480 -8.11
+ 7          1 0.226  25.0 -0.855  530.  28.2 -0.669   6.06
+ 8          1 0.226  25.0 -0.855  530.  28.2 -1.20   12.8 
+ 9          1 0.226  25.0 -0.855  530.  28.2 -1.55   -5.43
+10          1 0.226  25.0 -0.855  530.  28.2  1.26   -1.82
+# ℹ 2,822 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -1010,20 +1009,20 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Reading =</span> b_0j <span class="sc">+</span> b_1j <span class="sc">*</span> V_ij <span class="sc">+</span> e)</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>d1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2,842 × 9
+<pre><code># A tibble: 2,832 × 9
    cluster_id   C_j  e_0j   e_1j  b_0j  b_1j    V_ij     e Reading
         &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
- 1          1  1.45 -10.8 -0.255  518.  23.9 -1.03   -1.69    492.
- 2          1  1.45 -10.8 -0.255  518.  23.9 -0.320   2.66    513.
- 3          1  1.45 -10.8 -0.255  518.  23.9  0.415   5.41    534.
- 4          1  1.45 -10.8 -0.255  518.  23.9 -0.601   1.19    505.
- 5          1  1.45 -10.8 -0.255  518.  23.9 -0.372   3.37    513.
- 6          1  1.45 -10.8 -0.255  518.  23.9 -0.0809  1.08    517.
- 7          1  1.45 -10.8 -0.255  518.  23.9 -1.99    3.95    475.
- 8          1  1.45 -10.8 -0.255  518.  23.9 -1.11    3.87    496.
- 9          1  1.45 -10.8 -0.255  518.  23.9  1.47    3.04    557.
-10          1  1.45 -10.8 -0.255  518.  23.9 -2.42   -5.74    454.
-# ℹ 2,832 more rows</code></pre>
+ 1          1 0.226  25.0 -0.855  530.  28.2 -0.0953  2.06    529.
+ 2          1 0.226  25.0 -0.855  530.  28.2 -0.0774  4.52    532.
+ 3          1 0.226  25.0 -0.855  530.  28.2 -0.0243  6.34    535.
+ 4          1 0.226  25.0 -0.855  530.  28.2 -0.120   2.93    529.
+ 5          1 0.226  25.0 -0.855  530.  28.2 -0.675   4.16    515.
+ 6          1 0.226  25.0 -0.855  530.  28.2  0.0480 -8.11    523.
+ 7          1 0.226  25.0 -0.855  530.  28.2 -0.669   6.06    517.
+ 8          1 0.226  25.0 -0.855  530.  28.2 -1.20   12.8     508.
+ 9          1 0.226  25.0 -0.855  530.  28.2 -1.55   -5.43    480.
+10          1 0.226  25.0 -0.855  530.  28.2  1.26   -1.82    563.
+# ℹ 2,822 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -1642,7 +1641,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -1669,7 +1668,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>

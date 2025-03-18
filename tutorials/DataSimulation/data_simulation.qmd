@@ -71,20 +71,20 @@ Simulated data have a primary limitation: they can only tell you about truths im
 
 Sometimes we need to generate simulated data one variable at a time. Let's generate 5 points from a normal distribution with a mean of 50 and a standard deviation of 10:
 
-```{r}
+```{r rnorm}
 rnorm(n = 5, mean = 50, sd = 10)
 ```
 
 Of course, as long as the order of your parameters is what R expects, you can write this code more succinctly like so:
 
-```{r}
+```{r rnorm2}
 rnorm(5, 50, 10)
 ```
 
 
 Let's generate many cases and see if the plot looks normal. We need to put the variable in a tibble because ggplot needs its input to be in a data.frame or tibble.
 
-```{r}
+```{r ggplotdensity}
 tibble(x = rnorm(100000, 50, 10)) %>% 
   ggplot(aes(x)) + 
   geom_density()
@@ -103,7 +103,7 @@ You already know how to set up a vector with the `c` function. We are going to c
 
 There are, of course, several ways to give vector elements names. Pick one that you like. 
 
-```{r}
+```{r meannames}
 # Supply names directly. Does the job with the least typing.
 m <- c(x = 50, y = 75, z = 80)
 
@@ -122,7 +122,7 @@ m
 
 We set up the vector of standard deviations in the standard way, though you can apply names to it if you like.
 
-```{r}
+```{r svector}
 s <- c(5, 8, 9)
 ```
 
@@ -134,7 +134,7 @@ The `matrix` function takes a vector, and you tell it how many rows and columns 
 $$\boldsymbol{R}=\left[\begin{array}{r} 1 & .6 & .7 \\ .6 & 1 & .8 \\ .7 & .8 & 1\end{array}\right]$$
 
 
-```{r}
+```{r rmatrix}
 
 # Correlation matrix
 R <- matrix(c(1, .6, .7,
@@ -157,7 +157,7 @@ $$\boldsymbol{R}_{\text{Lower}}=\left[\begin{array}{r} 1 & \\ .6 & 1 \\ .7 & .8 
 
 The input for lavaan's `lav_matrix_lower2full` function is just a vector, but I put line breaks in it to mimic the configuration of the lower triangle of the matrix.
 
-```{r}
+```{r lower2full}
 R <- lavaan::lav_matrix_lower2full(c(1,
                                     .6,  1,
                                     .7, .8, 1))
@@ -178,7 +178,7 @@ $$\boldsymbol{D}=\left[\begin{array}{l} \sigma_x&0\\0&\sigma_y \end{array}\right
 
 $$\boldsymbol{\Sigma = DRD}$$
 
-```{r}
+```{r diagfunction}
 # Using matrix operations:
 # The diag function converts a vector to a diagonal matrix
 D <- diag(s)
@@ -190,7 +190,7 @@ Sigma = D %*% R %*% D
 
 If this conversion process seems like a lot of work, lavaan's `cor2cov` function is a quicker alternative:
 
-```{r}
+```{r cor2cov}
 Sigma <- lavaan::cor2cov(R = R, sds = s)
 ```
 
@@ -198,7 +198,7 @@ Sigma <- lavaan::cor2cov(R = R, sds = s)
 
 Now we are ready to generate our multivariate normal data. Let's generate 1000 cases. The `rmvnorm` function outputs a matrix, so we usually need to convert it to a tibble.
 
-```{r}
+```{r rmvnorm}
 d <- mvtnorm::rmvnorm(n = 1000, mean = m, sigma = Sigma) %>% 
   as_tibble()
 
@@ -208,15 +208,14 @@ d
 
 Let's plot the simulated data
 
-```{r}
+```{r displaypoint}
 ggplot(d, aes(x, y)) + 
   geom_point()
 ```
 
 If you want to add marginal density plots, ggExtra's `ggMarginal` function looks nice to me.
 
-```{r}
-
+```{r ggmarginal}
 # Here we save a plot as a variable p
 p <- ggplot(d, aes(x, y)) + 
   geom_point()
@@ -237,7 +236,7 @@ For example, in this model, we know what path coefficients we want, but we do no
 
 Using [lavaan syntax](https://lavaan.ugent.be/tutorial/syntax1.html), we can specify the model like so:
 
-```{r}
+```{r lavaansyntax}
 library(simstandard)
 
 # lavaan syntax for model
@@ -259,14 +258,14 @@ cat(model_complete(m))
 
 Let's verify that the simulated data really has the right model. First we take the model and remove all the fixed coefficients.
 
-```{r}
+```{r mfree}
 m_free <- fixed2free(m)
 cat(m_free)
 ```
 
 Now we use lavaan to evaluate the data with the `m_free` model. The simulated data has the latent variables in the data frame. We need to remove them before this can work:
 
-```{r}
+```{r evaluatefit}
 library(lavaan)
 fit <- d %>% 
   select(-A, -B) %>% 
@@ -290,7 +289,6 @@ Suppose we want to simulate data in which first-graders' reading ability is pred
 So, we know that vocabulary is a level-1 variable, and teacher conscientiousness is a level-2 variable. Teacher conscientiousness is expected to have an effect on both the random intercept and vocabulary's random slope.
 
 Let's write out the entire equations:
-
 
 $$
 \begin{align*}
@@ -343,7 +341,7 @@ In this case, we have four coefficients, and it is straightforward to specify th
 
 Which values should you choose? That is determined by theory. With complex models like this one, sometimes there is a bit of trial-and-error to get parameter values that produce data that are consistent with the theory you have in mind.
 
-```{r}
+```{r fixedb}
 # Fixed coefficients
 # Fixed intercept
 b_00 <- 500
@@ -359,7 +357,7 @@ b_11 <- -4
 
 You need to remember whether you set this number up as a variance or as a standard deviation. I am setting it up as a variance.
 
-```{r}
+```{r tau1}
 # Level-1 error variance
 tau_1 <- 5 ^ 2
 ```
@@ -374,7 +372,8 @@ I have written out the $\boldsymbol{\tau}_2$ matrix showing only the lower trian
 
 :::{.column-margin}
 Specifying the full matrix would look like this:
-```{r, eval = F}
+```{r taufull}
+#| eval: false
 matrix(
   c(tau_00, tau_10,
     tau_10, tau_11), 
@@ -384,7 +383,7 @@ matrix(
 
 We can create the $\boldsymbol{\tau}_2$ matrix like so:
 
-```{r}
+```{r tau2}
 # Variance of intercepts
 tau_00 <- 25 ^ 2
 # Variance of Vocabulary slope
@@ -409,7 +408,7 @@ tau_2 <- lavaan::lav_matrix_lower2full(tau_lower_triangle)
 
 It is generally best to start with a small number so that you simulations will run quickly. You can increase the number of clusters later. Let's start with 100 groups. We will use the variable `k` to refer to the number of clusters.
 
-```{r}
+```{r kcluster}
 # Number of clusters
 k <- 100
 
@@ -422,7 +421,7 @@ cluster_id <- seq(k)
 
 **Option 1** Every cluster has the same size.
 
-```{r}
+```{r clustersize}
 # Every class has 28 students
 cluster_size = 28
 ```
@@ -433,13 +432,13 @@ Which random variable? It is up to you. Some common choices include the normal d
 
 A) *Use the normal distribution, and round to the nearest integer.* With small means and/or large standard deviations, there is a chance that you will have cluster sizes less than one, so you will want to plan for that. <br><br>To make sure we never have a cluster size less than 1, we will use the `pmax` function. It replaces any vector element less than the lower limit with the lower limit. For example:
 
-```{r}
+```{r pmax}
 pmax(c(2,0,-1, 4), 1)
 ```
 
 Here we generate a normal variate with a mean of 28 and a standard deviation of 2. 
 
-```{r}
+```{r d2bar}
 cluster_size <- rnorm(k, mean = 28, sd = 2) %>% 
   round(digits = 0) %>% 
   pmax(1)
@@ -453,7 +452,7 @@ ggplot(d2, aes(cluster_size)) +
 
 B) *Use the Poisson distribution to create integers with a mean (and variance) of &lambda;.* With a small &lambda;, it is possible to have cluster sizes of zero.
 
-```{r}
+```{r clustersized2}
 cluster_size = rpois(k, lambda = 28) %>% 
   pmax(1)
 
@@ -467,7 +466,7 @@ The binomial distribution is also a good choice for generating non-negative numb
 
 C) Use the `sample` function to have cluster sizes uniformly distributed between 2 values.
 
-```{r}
+```{r sampleclustersize}
 cluster_size = sample(x = 25:35, size = k, replace = TRUE) 
 
 d2 <- tibble(cluster_id, cluster_size)
@@ -480,7 +479,7 @@ ggplot(d2, aes(cluster_size)) +
 
 A) If you know the probability of each member of your sample space, you can specify each probability in the `prob` argument in the `sample` function.
 
-```{r}
+```{r dprobs}
 # A tribble is a "transposed tibble" that is easy to view.
 # I pasted it directly from Excel using the datapasta RStudio addin
 d_probs <- tibble::tribble(
@@ -512,7 +511,7 @@ ggplot(d2, aes(cluster_size)) +
 
 B) If you have real data that you want to mimic, you can use the `sample` function to generate new data with the same proportions as the real data.
 
-```{r}
+```{r dx}
 # Pretend that x is a vector with real data on class sizes. 
 # Also pretend that we do not know how it was made. 
 # All we know is the data in x.
@@ -545,7 +544,7 @@ $$\begin{bmatrix}e_{0j}\\e_{1j}\end{bmatrix}\sim\mathcal{N}\left(\begin{bmatrix}
 
 Create level-2 error terms.
 
-```{r}
+```{r u2}
 u <- rmvnorm(k, 
              mean = c(e_0j = 0, e_1j = 0), 
              sigma = tau_2) %>% 
@@ -559,7 +558,7 @@ u
 
 How you simulate the level-2 predictors depends on theory. Personality variables like conscientiousness usually have a normal distribution. I am going to make things simple by creating a standard normal variate (mean = 0, sd = 1).
 
-```{r}
+```{r cj}
 C_j = rnorm(k)
 ```
 
@@ -567,7 +566,7 @@ C_j = rnorm(k)
 
 The `bind_cols` function binds the columns of two data.frames (or tibbles). 
 
-```{r}
+```{r d2}
 
 d2 <- tibble(cluster_id = 1:k,
        cluster_size = rpois(k, 28) %>% pmax(1),
@@ -585,7 +584,7 @@ d2
 
 The `uncount` function makes this step easy. It duplicates a row the number of times specified in the weights variable---the cluster size in this case.
 
-```{r}
+```{r d1}
 d1 <- d2 %>% 
   uncount(cluster_size)
 
@@ -596,7 +595,7 @@ d1
 
 The `rnorm` function needs to know how many rows there are. Because the number of rows was generated randomly, we do not usually know how many rows there will be. Fortunately, we can use the `nrow` function, which tells us how many rows are in a data frame. The dot in the phrase `nrow(.)` the data.frame that was piped into the `mutate` function.
 
-```{r}
+```{r d1combined}
 d1 <- d1 %>% 
   mutate(V_ij = rnorm(nrow(.)),
          e = rnorm(nrow(.), sd = sqrt(tau_1)))
@@ -609,7 +608,7 @@ If we have written out the level-1 equation, this step is easy.
 
 $$Reading_{ij}=b_{0j} + b_{1j}V_{ij}+e_{ij}$$
 
-```{r}
+```{r d1reading}
 d1 <- d1 %>% 
   mutate(Reading = b_0j + b_1j * V_ij + e)
 d1
@@ -619,7 +618,7 @@ d1
 
 In the context of this tutorial, it might seem like the number of steps was really, really long. It is not actually all that bad. Let's see what things look like put together:
 
-```{r}
+```{r allcode}
 set.seed(9)
 pacman::p_load(tidyverse, mvtnorm, lavaan, lme4)
 
@@ -677,7 +676,7 @@ d <- tibble(cluster_id = factor(1:k),
 
 Let's see what our simulated data look like
 
-```{r}
+```{r fit}
 # Final model
 fit <- lmer(Reading ~ 1 + C_j * V_ij + (1 + V_ij | cluster_id), data = d)
 summary(fit)
@@ -685,7 +684,7 @@ summary(fit)
 
 We see that our fixed effect and random variance estimates are reasonably close to our population parameters.
 
-```{r, echo = F}
+```{r effectb, echo = F}
 tibble(Effect = paste0("$", c("b_{00}", "b_{01}", "b_{10}", "b_{11}", "\\tau_{00}", "\\tau_{10}", "\\tau_{11}"), "$"), 
        Parameter = c(b_00, b_01, b_10, b_11, tau_00, tau_10, tau_11), 
        Estimate = c(fixef(fit), VarCorr(fit)$cluster_id[c(1,2,4)])) %>% 
@@ -699,26 +698,18 @@ Not bad. The variance components look a bit off. I am not showing the results he
 
 # Plot the data
 
-```{r}
+```{r plotmodel}
 sjPlot::plot_model(fit, 
                    type = "pred", 
                    terms = c("V_ij", "C_j")) +
   labs(x = "Vocabulary", 
        color = "Teacher\nConscientiousness")
-
-
-
-
-
-
-
-
 ```
 
 
 Alternately, make the plot yourself
 
-```{r}
+```{r polished}
 d_augmented <- broom.mixed::augment(fit)
 
 # Make fitted values for conditional slopes
@@ -738,15 +729,6 @@ ggplot(d_augmented, aes(V_ij, Reading)) +
   labs(x = "Vocabulary", color = "Teacher\nConscientiousness")
 ```
 
-
-
-
 # Simulation packages
 
 There are many R packages for simulating multilevel data. I recommend checking out [simr](https://github.com/pitakakariki/simr) and [simstudy](https://kgoldfeld.github.io/simstudy/).
-
-
-
-
-
-
