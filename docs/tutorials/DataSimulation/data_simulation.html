@@ -137,7 +137,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="W. Joel Schneider">
 <meta property="og:description" content="Advanced Data Analysis (EDUC 8825)">
-<meta property="og:image" content="https://wjschne.github.io/tutorials/DataSimulation/data_simulation_files/figure-html/ggplotdensity-1.png">
+<meta property="og:image" content="https://wjschne.github.io/tutorials/DataSimulation/data_simulation_files/figure-html/fig-polished-1.png">
 <meta property="og:site_name" content="W. Joel Schneider">
 <meta property="og:image:height" content="1536">
 <meta property="og:image:width" content="1536">
@@ -781,7 +781,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/clustersized2-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -800,7 +800,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/sampleclustersize-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -840,7 +840,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/dprobs-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -871,7 +871,7 @@ e_{1j} &amp;= \text{The Vocabulary slope's error for class } j \\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/dx-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -1630,7 +1630,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 <p>Not bad. The variance components look a bit off. I am not showing the results here, but when I increased the level 1 and level 2 sample sizes to much larger values, the tau matrix approximated the correct values. The model took a looooooong time to run. However, it was worth the wait because I now have confidence that the data are being generated correctly.</p>
 </section>
-<section id="plot-the-data" class="level1">
+<section id="plot-the-data" class="level1 page-columns page-full">
 <h1>Plot the data</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>sjPlot<span class="sc">::</span><span class="fu">plot_model</span>(fit, </span>
@@ -1641,13 +1641,13 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="data_simulation_files/figure-html/plotmodel-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Alternately, make the plot yourself</p>
-<div class="cell">
+<div class="cell preview-image page-columns page-full">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>d_augmented <span class="ot">&lt;-</span> broom.mixed<span class="sc">::</span><span class="fu">augment</span>(fit)</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Make fitted values for conditional slopes</span></span>
@@ -1665,10 +1665,15 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>),</span>
 <span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
 <span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Vocabulary"</span>, <span class="at">color =</span> <span class="st">"Teacher</span><span class="sc">\n</span><span class="st">Conscientiousness"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="data_simulation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="768"></p>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-polished" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-polished-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_simulation_files/figure-html/fig-polished-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-polished-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Effect of Vocabulary on Reading by Teacher Conscientiousness
+</figcaption>
 </figure>
 </div>
 </div>
