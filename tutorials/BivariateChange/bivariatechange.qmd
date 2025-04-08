@@ -1021,11 +1021,10 @@ d_lgsr %>%
   labs(y = NULL, x = "Time")
 ```
 
-<!-- Testing the model -->
+Testing the model
 
 ```{r}
 #| label: lgsrfit
-#| include: false
 sem(model = m_lgsr, data = d_lgsr, auto.cov.lv.x = F) %>% 
   model_parameters(component = "all")
 ```

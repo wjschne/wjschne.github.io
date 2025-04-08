@@ -4058,7 +4058,123 @@ Figure&nbsp;10: Distribution of X and Y over Time in LGSR Model
 </div>
 </div>
 </div>
-<!-- Testing the model -->
+<p>Testing the model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sem</span>(<span class="at">model =</span> m_lgsr, <span class="at">data =</span> d_lgsr, <span class="at">auto.cov.lv.x =</span> F) <span class="sc">%&gt;%</span> </span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_parameters</span>(<span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link       | Coefficient |   SE |       95% CI |      p
+-------------------------------------------------------
+i_x =~ x1  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i_x =~ x2  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i_x =~ x3  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i_x =~ x4  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i_y =~ y1  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i_y =~ y2  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i_y =~ y3  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i_y =~ y4  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+s_x =~ x1  |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+s_x =~ x2  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+s_x =~ x3  |        2.00 | 0.00 | [2.00, 2.00] | &lt; .001
+s_x =~ x4  |        3.00 | 0.00 | [3.00, 3.00] | &lt; .001
+s_y =~ y1  |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+s_y =~ y2  |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+s_y =~ y3  |        2.00 | 0.00 | [2.00, 2.00] | &lt; .001
+s_y =~ y4  |        3.00 | 0.00 | [3.00, 3.00] | &lt; .001
+e_x1 =~ x1 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+e_x2 =~ x2 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+e_x3 =~ x3 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+e_x4 =~ x4 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+e_y1 =~ y1 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+e_y2 =~ y2 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+e_y3 =~ y3 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+e_y4 =~ y4 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+
+# Variance
+
+Link                   | Coefficient |   SE |       95% CI |     z |      p
+---------------------------------------------------------------------------
+x1 ~~ x1               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+x2 ~~ x2               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+x3 ~~ x3               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+x4 ~~ x4               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+y1 ~~ y1               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+y2 ~~ y2               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+y3 ~~ y3               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+y4 ~~ y4               |        0.00 | 0.00 | [0.00, 0.00] |       | &lt; .001
+e_x1 ~~ e_x1 (tau_ex1) |        1.12 | 0.16 | [0.80, 1.44] |  6.84 | &lt; .001
+e_x2 ~~ e_x2 (tau_exx) |        0.43 | 0.05 | [0.33, 0.52] |  8.91 | &lt; .001
+e_x3 ~~ e_x3 (tau_exx) |        0.43 | 0.05 | [0.33, 0.52] |  8.91 | &lt; .001
+e_x4 ~~ e_x4 (tau_exx) |        0.43 | 0.05 | [0.33, 0.52] |  8.91 | &lt; .001
+e_y1 ~~ e_y1 (tau_ey1) |        1.04 | 0.13 | [0.78, 1.29] |  7.97 | &lt; .001
+e_y2 ~~ e_y2 (tau_eyy) |        0.51 | 0.03 | [0.44, 0.57] | 15.17 | &lt; .001
+e_y3 ~~ e_y3 (tau_eyy) |        0.51 | 0.03 | [0.44, 0.57] | 15.17 | &lt; .001
+e_y4 ~~ e_y4 (tau_eyy) |        0.51 | 0.03 | [0.44, 0.57] | 15.17 | &lt; .001
+i_x ~~ i_x (tau_ix)    |        0.43 | 0.15 | [0.13, 0.73] |  2.79 | 0.005 
+i_y ~~ i_y (tau_iy)    |        0.56 | 0.13 | [0.31, 0.80] |  4.46 | &lt; .001
+s_x ~~ s_x (tau_sx)    |        0.09 | 0.04 | [0.02, 0.17] |  2.54 | 0.011 
+s_y ~~ s_y (tau_sy)    |        0.23 | 0.03 | [0.16, 0.29] |  6.87 | &lt; .001
+
+# Correlation
+
+Link                    | Coefficient |   SE |        95% CI |     z |      p
+-----------------------------------------------------------------------------
+e_x1 ~~ e_y1 (tau_exy1) |        0.53 | 0.12 | [ 0.29, 0.77] |  4.32 | &lt; .001
+e_x2 ~~ e_y2 (tau_exy)  |        0.24 | 0.04 | [ 0.16, 0.32] |  6.07 | &lt; .001
+e_x3 ~~ e_y3 (tau_exy)  |        0.24 | 0.04 | [ 0.16, 0.32] |  6.07 | &lt; .001
+e_x4 ~~ e_y4 (tau_exy)  |        0.24 | 0.04 | [ 0.16, 0.32] |  6.07 | &lt; .001
+i_x ~~ i_y (tau_ixiy)   |        0.19 | 0.11 | [-0.03, 0.41] |  1.73 | 0.084 
+i_x ~~ s_x (tau_ixsx)   |        0.05 | 0.03 | [ 0.00, 0.11] |  1.83 | 0.067 
+i_x ~~ s_y (tau_ixsy)   |    6.80e-03 | 0.03 | [-0.06, 0.07] |  0.22 | 0.829 
+i_y ~~ s_x (tau_iysx)   |        0.06 | 0.03 | [ 0.00, 0.12] |  1.85 | 0.064 
+i_y ~~ s_y (tau_iysy)   |       -0.03 | 0.04 | [-0.10, 0.04] | -0.79 | 0.428 
+s_x ~~ s_y (tau_sxsy)   |       -0.02 | 0.02 | [-0.06, 0.02] | -0.85 | 0.394 
+
+# Regression
+
+Link               | Coefficient |   SE |        95% CI |    z |      p
+-----------------------------------------------------------------------
+e_x2 ~ x1 (b_xx)   |        0.40 | 0.08 | [ 0.24, 0.55] | 4.95 | &lt; .001
+e_x2 ~ e_y1 (b_yx) |        0.04 | 0.06 | [-0.07, 0.15] | 0.65 | 0.518 
+e_x3 ~ x2 (b_xx)   |        0.40 | 0.08 | [ 0.24, 0.55] | 4.95 | &lt; .001
+e_x3 ~ e_y2 (b_yx) |        0.04 | 0.06 | [-0.07, 0.15] | 0.65 | 0.518 
+e_x4 ~ x3 (b_xx)   |        0.40 | 0.08 | [ 0.24, 0.55] | 4.95 | &lt; .001
+e_x4 ~ e_y3 (b_yx) |        0.04 | 0.06 | [-0.07, 0.15] | 0.65 | 0.518 
+e_y2 ~ y1 (b_yy)   |        0.28 | 0.04 | [ 0.20, 0.37] | 6.37 | &lt; .001
+e_y2 ~ e_x1 (b_xy) |        0.16 | 0.06 | [ 0.04, 0.29] | 2.53 | 0.011 
+e_y3 ~ y2 (b_yy)   |        0.28 | 0.04 | [ 0.20, 0.37] | 6.37 | &lt; .001
+e_y3 ~ e_x2 (b_xy) |        0.16 | 0.06 | [ 0.04, 0.29] | 2.53 | 0.011 
+e_y4 ~ y3 (b_yy)   |        0.28 | 0.04 | [ 0.20, 0.37] | 6.37 | &lt; .001
+e_y4 ~ e_x3 (b_xy) |        0.16 | 0.06 | [ 0.04, 0.29] | 2.53 | 0.011 
+
+# Mean
+
+Link             | Coefficient |   SE |         95% CI |      z |      p
+------------------------------------------------------------------------
+x1 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+x2 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+x3 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+x4 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+y1 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+y2 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+y3 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+y4 ~1            |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+i_x ~1  (b_ix_0) |    7.60e-03 | 0.03 | [-0.06,  0.07] |   0.22 | 0.823 
+i_y ~1  (b_iy_0) |       -0.05 | 0.04 | [-0.12,  0.02] |  -1.38 | 0.168 
+s_x ~1  (b_sx_0) |       -0.24 | 0.02 | [-0.29, -0.20] | -10.20 | &lt; .001
+s_y ~1  (b_sy_0) |        0.56 | 0.03 | [ 0.51,  0.62] |  19.78 | &lt; .001
+e_x1 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+e_x2 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+e_x3 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+e_x4 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+e_y1 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+e_y2 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+e_y3 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001
+e_y4 ~1          |        0.00 | 0.00 | [ 0.00,  0.00] |        | &lt; .001</code></pre>
+</div>
+</div>
 </section>
 <section id="excercise" class="level1">
 <h1>Excercise</h1>
@@ -4066,17 +4182,17 @@ Figure&nbsp;10: Distribution of X and Y over Time in LGSR Model
 <p>A sample of 300 1st-grader are randomly assigned to treatment and control conditions. Their reading and spelling abilities are measured 6 times throughout the year. Obviously, reading and spelling is going to improve over the course of the year. The main question is whether it improves faster in the treatment condition. In addition, the researchers are interested in whether reading affects spelling or vice-versa.</p>
 <p>Get data here:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
-<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://github.com/wjschne/EDUC8825/raw/main/reading2spelling.csv"</span>,</span>
-<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> F</span>
-<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://github.com/wjschne/EDUC8825/raw/main/reading2spelling.csv"</span>,</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> F</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You will need to restructure the data (use <code>pivot_longer</code> and <code>pivot_wider</code> functions) to get all variables on 1 row.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>d_wider <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> </span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(reading, spelling)) <span class="sc">%&gt;%</span> </span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(name, name, time) <span class="sc">%&gt;%</span> </span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>d_wider <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> </span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(reading, spelling)) <span class="sc">%&gt;%</span> </span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(name, name, time) <span class="sc">%&gt;%</span> </span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol type="1">
 <li>Use the Latent Growth with Structured Residuals Model to see how Reading and Spelling affect each other over time.</li>
