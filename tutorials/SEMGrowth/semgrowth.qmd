@@ -1152,7 +1152,7 @@ pd0
 As usual, we start with a simple model with random intercepts. Time is not yet included in the model. The latent variable $i$ has a mean of $b_{00}$ and a variance of $\tau_{00}$. The variances of error terms for each observed variable are constrained to be equal $(\tau_1)$. The intercepts of the observed variables are not modeled here, so they are assumbed to be 0.
 
 ```{r m0}
-m_0 <- "
+m_0 <- '
 # Intercept
 i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 
 # Intercept, slope, and quadratic effects
@@ -1165,7 +1165,7 @@ voc_2 ~~ e * voc_2
 voc_3 ~~ e * voc_3
 voc_4 ~~ e * voc_4
 voc_5 ~~ e * voc_5
-"
+'
 
 fit_0 <- growth(m_0, data = d_wide)
 # The standard way to get output from lavaan
@@ -2059,7 +2059,6 @@ voc_5 ~ r * voc_4
 
 fit_8 <- growth(m_8, data = d_wide)
 
-summary(fit_8, fit.measures = T, standardized = T)
 parameters(fit_8, component = "all")
 
 # Compare models

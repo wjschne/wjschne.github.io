@@ -1,0 +1,1193 @@
+---
+title: "Bivariate Change Models"
+subtitle: "Advanced Data Analysis (EDUC 8825)"
+date: "2025-03-26"
+engine: knitr
+knitr: 
+  opts_chunk: 
+    warning: false
+    message: false
+    echo: true
+    cache: true
+    dev: ragg_png
+    out-width: 100%
+language:
+  callout-note-title: "Hint"
+format: 
+  html: 
+    # html-math-method: katex
+    fig-height: 8
+    fig-width: 8
+    theme: journal
+    toc: true
+    toc-float: true
+    toc-location: left
+    tbl-cap-location: margin
+    fig-cap-location: margin
+    reference-location: margin
+    citation-location: margin
+    # css: tutorial.css
+csl: "https://www.zotero.org/styles/apa"
+bibliography: "../../bibliography.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+library(tidyverse)
+library(lavaan)
+library(ggdiagram)
+library(gt)
+library(geomtextpath)
+library(sjPlot)
+library(easystats)
+library(gganimate)
+library(extrafont)
+loadfonts(device = "all")
+```
+
+To investigate causal relations, experiments with manipulated variables are the most straightforward and persuasive forms of evidence we have. Unfortunately, there are a lot of interesting variables that are hard to manipulate experimentally. To investigate what they cause and what causes such variables, longitudinal studies are among the most useful forms of evidence we have. 
+
+For example, reading comprehension and vocabulary have a reciprocally causal relationship [@quinnDevelopmentalRelationsVocabulary2015; @killinglyReciprocalRelationshipsReading2025]. That is, if you have a good vocabulary, it is easier for you to comprehend text. If it is easy for you to comprehend text, you will likely expand your vocabulary. 
+
+Unfortunately, many of our initial methods of understanding longitudinal relationships can generate misleading findings.
+
+# Cross-Lag Panel Models (CLPM)
+
+One intuitively simple model is the cross-lagged panel model, as shown with four time periods in @fig-crosslag. The cross-lag panel model has two series of variables, *X* and *Y*. The paths within each series (*X*~1~ to *X*~2~ to *X*~3~ to *X*~4~ and *Y*~1~ to *Y*~2~ to *Y*~3~ to *Y*~4~) are called *auto-regressive paths*, meaning that each variable is predicting itself across time.
+
+Each variable also influences the other at a subsequent time. These paths crossing from one series to the other are called *cross lags*.
+
+In addition to the cross lags and autoregressive paths, the series have *correlated errors*, which allow variables measured at the same time to have additional reasons to correlate.
+
+```{r}
+#| label: fig-crosslag
+#| fig-cap: The Cross-Lag Panel Model
+#| code-fold: true
+my_observed <- redefault(ob_ellipse, m1 = 15)
+my_connect <- redefault(connect, resect = 2)
+my_error <- redefault(ob_circle, radius = .35)
+my_font <- "Roboto Condensed"
+k <- 4
+my_sep <- 4
+ggdiagram(font_family = my_font, font_size = 24) +
+  {x <- my_observed() %>% 
+    ob_array(k, sep = my_sep, 
+             where = "south", 
+             label = paste0("*X*~" , 1:k, "~"))} +
+  {y <- my_observed(label = paste0("*Y*~" ,1:k, "~")) %>%  
+    place(x, "right", sep = my_sep)} +
+  {e_x <- my_error() %>% place(x[-1], "right", sep = .6)} +
+  {e_y <- my_error() %>% place(y[-1], "left", sep = .6)} +
+  my_connect(x[-k], x[-1], 
+             label = ob_label("*b*~*XX*~", 
+                              angle = 0, 
+                              size = 12)) +
+  my_connect(x[-k], y[-1], 
+             label = ob_label("*b*~*XY*~", 
+                              angle = 0, 
+                              size = 12, position = .27)) +
+  my_connect(y[-k], x[-1], 
+             label = ob_label("*b*~*YX*~", 
+                              angle = 0, 
+                              size = 12, position = .27)) +
+  my_connect(y[-k], y[-1], 
+             label = ob_label("*b*~*YY*~", 
+                              angle = 0, 
+                              size = 12)) + 
+  my_connect(e_x, x[-1], length_head = 5, resect = 1) + 
+  my_connect(e_y, y[-1], length_head = 5, resect = 1) +
+  {tau_x1y1 <- ob_covariance(x[1], y[1])} +
+  ob_latex("\\tau_{X_1Y_1}", tau_x1y1@midpoint(), width = 1.35, delete_files = F, force_recompile = F) +
+  {tau_xy <- ob_covariance(e_y, e_x, 
+                resect = 1, 
+                length_head = 4, 
+                length_fins = 4, 
+                looseness = 1.3)} + 
+  ob_latex("\\tau_{xy}", tau_xy@midpoint(), width = .95, delete_files = F, force_recompile = T) +
+  {tau_x2 <- ob_variance(x[1], 
+              length_head = 5, 
+              length_fins = 5, 
+              resect = 1, 
+              bend = -10, 
+              theta = degree(65), 
+              looseness = 1.1)} + 
+  ob_latex("\\tau^2_{X_1}", tau_x2@midpoint(), width = .85, delete_files = F, force_recompile = F) +
+  {tau_y2 <- ob_variance(y[1], 
+              length_head = 5, 
+              length_fins = 5, 
+              resect = 1, 
+              bend = degree(-10), 
+              theta = degree(65), 
+              looseness = 1.1)} +
+  ob_latex("\\tau^2_{Y_1}", tau_y2@midpoint(), width = .85, delete_files = F, force_recompile = F) +
+  {tau_ex2 <- ob_variance(e_x, 
+              length_head = 5, 
+              length_fins = 5, 
+              resect = 1, 
+              # bend = degree(-90), 
+              theta = degree(90), 
+              looseness = 3.5)} +
+  ob_latex("\\tau^2_{X}", tau_ex2@midpoint(), width = .75, force_recompile = F, delete_files = F) +
+  {tau_ey2 <- ob_variance(e_y, 
+              length_head = 5, 
+              length_fins = 5, 
+              resect = 1, 
+              # bend = degree(-90), 
+              theta = degree(90), 
+              looseness = 3.5)} +
+  ob_latex("\\tau^2_{Y}", tau_ey2@midpoint(), width = .75, delete_files = F, force_recompile = F) 
+```
+
+## Automating repetitive lavaan models
+
+Unfortunately, lavaan models can become quite large. In most lavaan models, we do not need to name the parameters. However, if we are specifying parameters are constrained to equal each other, we need to name our parameters. **Any parameter with the same name is constrained to be equal.**
+
+To specify the model with lavaan syntax, one could do it by hand like so:
+
+
+```{r}
+#| label: clpmhand
+m <- '
+# Covariances
+x1 ~~ tau_x1 * x1
+y1 ~~ tau_y1 * y1 + tau_x1y1 * x1
+x2 ~~ tau_xx * x2 + tau_xy * y2 
+x3 ~~ tau_xx * x3 + tau_xy * y3
+x4 ~~ tau_xx * x4 + tau_xy * y4
+y2 ~~ tau_yy * y2 
+y3 ~~ tau_yy * y3
+y4 ~~ tau_yy * y4
+# Regressions with intercepts
+x1 ~ b_x01 * 1
+x2 ~ b_x02 * 1 + b_xx * x1 + b_yx * y1
+x3 ~ b_x03 * 1 + b_xx * x2 + b_yx * y2
+x4 ~ b_x04 * 1 + b_xx * x3 + b_yx * y3
+y1 ~ b_y01 * 1
+y2 ~ b_y02 * 1 + b_yy * y1 + b_xy * x1
+y3 ~ b_y03 * 1 + b_yy * y2 + b_xy * x2
+y4 ~ b_y04 * 1 + b_yy * y3 + b_xy * x3
+'
+```
+
+The benefits of this approach are that the code is easier to create and to understand. With only 4 waves of data, this model does not seem so difficult to specify by hand. 
+
+The liabilities of this approach are that it is error prone and increasingly tedious for large models. We are better off using `paste0` or `glue` from the glue package to automate model production. 
+
+## Pasting text together with `paste0`
+
+:::{.column-margin}
+The `paste0` function is a special variant of the `paste` function that has 0 separation between the pasted elements. By default, `paste` separates the elements with spaces:
+
+```{r}
+#| label: pastespaces
+paste("A", "B", "C")
+```
+
+You can put anything between the elements with the `sep` parameter:
+
+```{r}
+#| label: pastecommas
+paste("A", "B", "C", sep = ",")
+```
+
+
+:::
+
+The `paste0` function pastes text together. For example,
+
+```{r}
+#| label: pasteabc
+paste0("A", "B", "C")
+```
+
+If you use a vector, `paste0` will paste multiple strings:
+
+```{r}
+#| label: pastea123
+paste0("A", 1:3)
+```
+
+We can "collapse" the vector strings into a single string separated by the newline symbol `\n`:
+
+```{r}
+#| label: pastecollapse
+paste0("A", 1:3, collapse = "\n") %>% 
+  cat()
+```
+
+## Pasting repetitive code
+
+Suppose we have 8 waves of data. We need to set the variances of the x series.
+
+This is what we need:
+
+```
+x1 ~~ tau_x1 * x1 
+x2 ~~ tau_xx * x2 
+x3 ~~ tau_xx * x3 
+x4 ~~ tau_xx * x4 
+x5 ~~ tau_xx * x5 
+x6 ~~ tau_xx * x6
+x7 ~~ tau_xx * x7 
+x8 ~~ tau_xx * x8 
+ 
+```
+
+We see that each line is very similar. We need to create vectors for the parts that change: the numbers 1 to 8 and the variance parameters (`tau_x1` and `tau_xx`). The numbers 1 to 8 are easy to make with the `:` operator.
+
+```{r}
+#| label: seq18
+1:8
+```
+
+Alternately, we could use the `seq` function to make a sequence:
+
+```{r}
+#| label: seq8
+seq(1, 8)
+```
+
+
+However, we do not want our code to be tied specifically to the number 8. We want any number of waves. We define a variable `k` for the number of waves and make a sequence 
+
+```{r}
+#| label: seqk
+k <- 8
+1:k
+# or
+seq(1, k)
+# or omit the start value
+seq(k)
+```
+
+The variance parameters are all the same except for `x1`. So we need a vector that is one value for the first element and repeated `k - 1` times for the remaining elements. The `rep` function repeats elements as many times as you specify:
+
+```{r}
+#| label: repx
+rep("tau_xx", k - 1)
+```
+
+Putting the first and remaining elements together:
+
+```{r}
+#| label: vx
+v_x <- c("tau_x1", rep("tau_xx", k - 1))
+v_x
+```
+
+Now we are ready to paste the entire line of code:
+
+```{r}
+#| label: varx
+# Make string
+var_x <- paste0("x", 1:k, " ~~ ", v_x, " * x", 1:k, collapse = "\n") 
+
+# Output string 
+cat(var_x)
+```
+
+# The `glue` function: An alterntive to `paste0`
+
+Many people find the `glue` function from the glue package easier to read than the `paste0` function. Put everything inside a single string, with R code enclosed in curly braces:
+
+```{r}
+#| label: gluevarx
+library(glue)
+var_x <- glue("x{1:k} ~~ {v_x} * x{1:k}")
+```
+
+The `glue_collapse` function is useful to see the output of `glue` as one string:
+
+```{r}
+#| label: gluecollapse
+glue_collapse(var_x, sep = "\n")
+```
+
+## Specifying the CLPM Model
+
+To specify @fig-crosslag with automated lavaan syntax
+
+```{r}
+#| label: mclpm
+library(glue)
+# Number of waves
+k <- 4
+# Sequence from 2 to k
+s2k <- seq(2, k)
+# Sequence from 1 to k - 1
+s1k1 <- seq(1, k - 1)
+
+# variance symbols for x
+v_x <- c("tau_x1", rep("tau_xx", k - 1))
+# variance symbols for y
+v_y <- c("tau_y1", rep("tau_yy", k - 1))
+# covariance symbols xy
+cov_xy <- c("tau_x1y1", rep("tau_xy", k - 1))
+
+
+# Model with comments added
+m_clpm <- c(
+  "# Regressions",
+  glue("x{s2k} ~ b_xx * x{s1k1} + b_yx * y{s1k1}"),
+  glue("y{s2k} ~ b_yy * y{s1k1} + b_xy * x{s1k1}") ,
+  "# Variances",
+  glue("x{1:k} ~~ {v_x} * x{1:k}"),
+  glue("y{1:k} ~~ {v_y} * y{1:k}"),
+  "# Covariances",
+  glue("x{1:k} ~~ {cov_xy} * y{1:k}"),
+  "# Intercepts",
+  glue("x{1:k} ~ b_x0{1:k} * 1"),
+  glue("y{1:k} ~ b_y0{1:k} * 1")
+) %>%
+  glue_collapse("\n")
+
+m_clpm
+
+
+
+```
+
+# Simulating data based on the CLPM
+
+To simulate data, we need to replace the parameter labels in the model with specific values. Doing so by hand is no fun, and it is easy to mess things up when playing with different values. I recommend placing parameter labels programmatically with a named vector and a custom function.
+
+Here is a named vector of parameter values:
+
+```{r}
+#| label: myparams
+my_parameters <- c(
+  tau_xx = .4,
+  tau_yy = .5,
+  tau_x1y1 = .4,
+  tau_xy = .2,
+  tau_x1 = 1,
+  tau_y1 = 1,
+  b_xx = .7,
+  b_yy = .6,
+  b_xy = 0,
+  b_yx = 0.3
+) 
+```
+
+I have made a custom function `replace_parameters`to replace parameter labels. I have also made a custom function `plot_cor` to plot correlation matrices.
+
+```{r}
+#| label: myfunctions
+replace_parameters <- function(model, params) {
+  # Make sure replacements are whole words
+  names(params) <- paste0("\\b", names(params), "\\b")
+  # Convert to strings but retain names
+  p <- purrr::map_chr(params, as.character)
+  # replace all strings
+  stringr::str_replace_all(model, p)
+}
+
+plot_cor <- function(d, font_size = 16) {
+  cor(d) %>%
+    corrr::as_cordf(1) %>%
+    corrr::stretch() %>%
+    mutate(y = fct_rev(y)) %>%
+    ggplot(aes(x, y)) +
+    geom_tile(aes(fill = r)) +
+    geom_text(aes(label = ggdiagram::round_probability(r)), 
+              size = font_size * .8, 
+              size.unit = "pt") +
+    scale_fill_gradient2(NULL,
+      limits = c(-1, 1),
+      low = "darkgreen",
+      mid = "white",
+      high = "orchid4",
+      breaks = seq(-1, 1, .2),
+      labels = \(x) ggdiagram::round_probability(x, digits = 1)
+    ) +
+    scale_x_discrete(NULL, expand = expansion()) +
+    scale_y_discrete(NULL, expand = expansion()) +
+    coord_fixed() +
+    theme_minimal(base_size = font_size) +
+    theme(legend.key.height = unit(1, "null"), 
+          legend.text = element_text(hjust = 1), 
+          legend.text.position = "left")
+}
+
+```
+
+Let's make a model to simulate values:
+
+```{r}
+#| label: clpmmodel
+m_clpm_sim <- m_clpm %>% 
+  replace_parameters(my_parameters) %>% 
+  glue_collapse("\n")
+
+m_clpm_sim
+```
+
+Let's make data that conforms to this model:
+
+```{r}
+#| label: clpmsim
+d_clpm <- simulateData(model = m_clpm_sim, sample.nobs = 1000)
+head(d_clpm)
+```
+
+@fig-clpmsim displays the correlations among the variables we have simulated. Notice that adjacent variables are more highly correlated than variables separated by time.
+
+```{r}
+#| label: fig-clpmsim
+plot_cor(d_clpm)
+```
+
+If we test the free-parameter model on the simulated data, we can see that the estimates are close to the specified population parameters, which increases our confidence that the simulation is correct.
+
+```{r}
+#| label: clpmfit
+fit_clpm <- sem(model = m_clpm, data = d_clpm) 
+my_metrics <- c("Chi2", "Chi2_df", "p_Chi2", "RMSEA", "GFI", "NNFI")
+model_performance(fit_clpm, metrics = my_metrics) %>% 
+  print_md()
+
+model_parameters(fit_clpm, component = "all") %>% 
+  print_md()
+# my fork of Jason Tsukahara's semoutput:
+# remotes("wjschne/semoutput")
+semoutput::sem_tables(fit_clpm, intercepts = T)
+```
+
+
+
+
+# Why the CLPM is probably not your model
+
+There is nothing inherently wrong with the cross-lag panel model---if it describes how a set of phenomena works, it is the model to use. However, the cross-lag panel model has a set of assumptions and implications that are not always apparent to the researcher, and it can give misleading results under situations that arise frequently. The cross-lag panel model assumes that the only source of stability across time is the influence of the immediate past. It may not be obvious that this restriction implies that the long-term stability of every variable eventually becomes 0.
+
+For example, in @fig-crosslag, *X*~3~ has been influenced by the time 2 variables *X*~2~ and *Y*~2~ only---and the only connection to the time 1 variables *X*~1~ and *Y*~1~ is through the time 2 variables. Many variables do not operate like this. The past certainly influences the future, but some variables are influenced by traits that have long-term influences that affect scores at every time point more or less equally. The personality trait of extroversion is not merely affected by the recent past but by longstanding habits, temperament, and genetic factors [@kandlerHowGeneticEnvironmental2021].
+
+The cross-lag panel model, given enough measurements, implies that the long-term stability of every variable eventually goes to 0. That is, the correlation between the first and last measurement of any variable will approach 0, given a sufficient number of measurements. Why? Because the standardized paths are less than one, and multiplying across many such paths has an asymptote at 0. 
+
+Trait-like variables, by contrast, have long-term stability coefficients that never approach 0. The cross-lag panel model attempts to account for the increased correlations across time by inflating the cross-lag effects. Thus, for trait-like variables, the model is likely to imply cross-lag effects that do not exist [@lucasWhyCrosslaggedPanel2023].
+
+# Random Intercept Cross-Lag Panel Models
+
+Adding random intercepts to the cross-lag panel model allows for long-term stability of variable series. The random intercepts *i*~*X*~ and *i*~*X*~ act as trait-like influences on each variable series. @fig-ricrosslag might look much more complicated than @fig-crosslag, but the residuals between series *X* and *Y* in @fig-ricrosslag are configured exactly like the cross-lag panel in @fig-crosslag. That is, the autoregressive and cross-lag effects connect the residuals rather than the observed variables. The advantage of this model is that it fully separates between-person differences and within-person change [@hamakerCritiqueCrosslaggedPanel2015].
+
+```{r}
+#| label: fig-ricrosslag
+#| fig-cap: The Cross-Lag Panel Model with Random Intercepts
+#| code-fold: true
+my_connect2 <- redefault(connect, length_head = 5, resect = 1)
+
+ggdiagram(font_family = my_font, font_size = 24) +
+  {x <- my_observed() %>% 
+    ob_array(k,
+             sep = 2.5,
+             where = "south",
+             label = paste0("*X*~" , 1:k, "~"))} +
+  {y <- my_observed(label = paste0("*Y*~" ,1:k, "~")) %>%  
+    place(x, "right", sep = 7)} +
+  {e_x <- my_error(
+    radius = .5, 
+    label = ob_label(paste0("*e*~*X*", 1:k, "~"), 
+                     size = 11,
+                     fill = NA)) %>% 
+    place(x, "right", sep = .6)} +
+  {e_y <- my_error(
+    radius = .5,
+    label = ob_label(paste0("*e*~*Y*", 1:k, "~"), 
+                     size = 11,
+                     fill = NA)) %>% 
+    place(y, "left", sep = .6)} +
+  {ee_x <- my_error() %>% place(e_x[-1], "right", sep = .6)} +
+  {ee_y <- my_error() %>% place(e_y[-1], "left", sep = .6)} +
+  {lxx <- my_connect(e_x[-k], e_x[-1])} +
+  ob_label("*b~XX~*", lxx@midpoint(.47), size = 14) +
+  {lxy <- my_connect(e_x[-k], e_y[-1])} +
+  ob_label("*b~XY~*", lxy@midpoint(.27), size = 14) +
+  {lyx <- my_connect(e_y[-k], e_x[-1])} +
+  ob_label("*b~YX~*", lyx@midpoint(.27), size = 14) +
+  {lyy <- my_connect(e_y[-k], e_y[-1])} + 
+  ob_label("*b~YY~*", lyy@midpoint(.47), size = 14) +
+  my_connect2(e_x, x) + 
+  my_connect2(e_y, y) +
+  my_connect2(ee_x, e_x[-1]) +
+  my_connect2(ee_y, e_y[-1]) +
+  ob_covariance(e_x[1], e_y[1]) + 
+  ob_covariance(ee_y, ee_x, 
+                resect = 1,
+                length_head = 4, 
+                length_fins = 4, 
+                looseness = 1.2) +
+  {ix <- ob_circle(label = "*i*~*X*~", radius = sqrt(4 / pi)) %>% 
+    place(x@bounding_box@point_at("left"), "left", sep = 1.5)} +
+  {iy <- ob_circle(label = "*i*~*Y*~", radius = sqrt(4 / pi)) %>% 
+    place(y@bounding_box@point_at("right"), "right", sep = 1.5)} + 
+  {lx <- my_connect(ix, x@point_at(degree(seq(225,135,length.out = k))))} +
+  {ly <- my_connect(iy, y@point_at(degree(seq(-45,45,length.out = k))))} + 
+  ob_label("1", center = lx@line@point_at_x(lx[2]@midpoint(.47)@x), size = 12) +
+  ob_label("1", center = ly@line@point_at_x(ly[2]@midpoint(.47)@x), size = 12) + 
+  ob_covariance(ix@point_at("north"), iy@point_at("north"), 
+                looseness = 1.5, 
+                bend = 45)
+```
+
+We need to create latent intercepts for the X and Y series. Here is the syntax we need to define the latent variable *I~X*:
+
+```
+i_x =~ 1 * x1 + 1 * x2 + 1 * x3 + 1 * x4
+```
+
+If you would rather get that with code instead of typing:
+
+```{r}
+#| label: glue1k
+glue("i_x =~ ", 
+     glue_collapse(glue("1 * x{1:k}"), 
+                   sep = " + "))
+```
+
+That's even more typing! I do not want to type that kind of thing for every latent variable. 
+
+How about making a custom `make_latent` function instead?
+
+```{r}
+#| label: makelatent
+make_latent <- function(latent, indicator, sep = " + ") {
+  glue::glue(
+    latent, 
+    " =~ ",
+    glue::glue_collapse(glue::glue(indicator), sep = sep))
+} 
+
+# Less typing!
+make_latent(latent = "i_x", indicator = "1 * x{1:k}")
+# Even less typing!
+make_latent("i_y", "1 * y{1:k}")
+```
+
+
+## Structured Residuals
+
+In @fig-ricrosslag, the residuals for *X*~2~ to *X*~4~ are *structured residuals* because they have residuals themselves. Technically, structured residuals are not really residuals, but latent variables with loadings of 1.
+
+```{r}
+#| label: latentindicators
+glue("e_x{1:k} =~ 1 * x{1:k}") 
+glue("e_y{1:k} =~ 1 * y{1:k}") 
+```
+
+To make the structured residuals behave like residuals, we need to set the actual residuals of the observed variables to have 0 variance:
+
+```\{r\}
+#| label:\1
+glue("x{1:k} ~~ 0 * x{1:k}") 
+glue("y{1:k} ~~ 0 * y{1:k}") 
+```
+
+We also need to label the latent variance and covariance parameters such that the first one is different from the others, which are set equal:
+
+```{r}
+#| label: evar
+var_ex <- c("tau_ex1", rep("tau_exx", k - 1))
+var_ey <- c("tau_ey1", rep("tau_eyy", k - 1))
+cov_exy <- c("tau_exy1", rep("tau_exy", k - 1))
+glue("e_x{1:k} ~~ {var_ex} * e_x{1:k}") 
+glue("e_y{1:k} ~~ {var_ey} * e_y{1:k}") 
+glue("e_x{1:k} ~~ {cov_exy} * e_y{1:k}") 
+```
+
+The regression syntax is similar to the CLPM syntax except that the predictors and outcomes are between the structured residuals instead of the observed variables.
+
+```{r}
+#| label: ereg
+glue("e_x{s2k} ~ b_xx * x{s1k1} + b_yx * e_y{s1k1}") 
+glue("e_y{s2k} ~ b_yy * y{s1k1} + b_xy * e_x{s1k1}") 
+```
+
+The latent random intercepts need intercepts (weird but true):
+
+```
+i_x ~ b_ix_0 * 1
+i_y ~ b_iy_0 * 1
+```
+
+
+Finally, the latent random intercepts need variances and a covariance:
+
+```
+i_x ~~ tau_ix * i_x + tau_ixiy * i_y
+i_y ~~ tau_iy * i_y 
+```
+
+Putting it all together for the RI-CLPM:
+
+```{r}
+#| label: mriclmp
+# Number of waves
+k <- 4
+# Sequence from 2 to k
+s2k <- seq(2, k)
+# Sequence from 1 to k - 1
+s1k1 <- seq(1, k - 1)
+# Residual variances and covariances
+var_ex <- c("tau_ex1", rep("tau_exx", k - 1))
+var_ey <- c("tau_ey1", rep("tau_eyy", k - 1))
+cov_exy <- c("tau_exy1", rep("tau_exy", k - 1))
+
+
+m_riclpm <- c("# Latent intercepts",
+  make_latent("i_x", "1 * x{1:k}"),
+  make_latent("i_y", "1 * y{1:k}"),
+  "# Structured Residuals",
+  glue("e_x{1:k} =~ 1 * x{1:k}"), 
+  glue("e_y{1:k} =~ 1 * y{1:k}"),
+  "# Set observed residuals to 0",
+  glue("x{1:k} ~~ 0 * x{1:k}"), 
+  glue("y{1:k} ~~ 0 * y{1:k}"),
+  "# Structured Residual Variances and Covariances",
+  glue("e_x{1:k} ~~ {var_ex} * e_x{1:k}"),
+  glue("e_y{1:k} ~~ {var_ey} * e_y{1:k}"), 
+  glue("e_x{1:k} ~~ {cov_exy} * e_y{1:k}"),
+  "# Structured Residual Regressions",
+  glue("e_x{s2k} ~ b_xx * e_x{s1k1} + b_yx * e_y{s1k1}"),
+  glue("e_y{s2k} ~ b_yy * e_y{s1k1} + b_xy * e_x{s1k1}"),
+  "# Observed Intercepts set to 0",
+  glue("x{1:k} ~ 0 * 1"), 
+  glue("y{1:k} ~ 0 * 1"), 
+  "# Random Intercept Intercepts",
+  "i_x ~ b_ix_0 * 1",
+  "i_y ~ b_iy_0 * 1",
+  "# Random Intecept Variances and Covariance",
+  "i_x ~~ tau_ix * i_x + tau_ixiy * i_y",
+  "i_y ~~ tau_iy * i_y"
+  ) %>% 
+  glue_collapse("\n") 
+
+m_riclpm
+
+```
+
+Here we set the parameters for data simulation:
+
+```{r}
+#| label: riclpmparams
+params_riclpm <- c(
+  tau_ex1 = 1,
+  tau_ey1 = 1,
+  tau_exy1 = .4,
+  tau_exx = .4,
+  tau_eyy = .5,
+  tau_exy = .2,
+  tau_ix = 0.75,
+  tau_iy = 0.75,
+  tau_ixiy = .25,
+  b_xx = .5,
+  b_yy = .4,
+  b_xy = .3,
+  b_yx = 0,
+  b_ix_0 = 0,
+  b_iy_0 = 0
+) 
+
+d_riclpm <- replace_parameters(model = m_riclpm, 
+                   params = params_riclpm) %>% 
+  glue_collapse("\n") %>% 
+  simulateData(sample.nobs = 1000) 
+```
+
+In @fig-riclpmcor, we can see the correlations among the variables created with the RI-CLPM.
+
+```{r}
+#| label: fig-riclpmcor
+#| fig-cap: "Correlation of X and Y in RI-CLPM"
+#| code-fold: true
+plot_cor(d_riclpm)
+```
+
+In @fig-riclpmchange, we see that the RI-CLPM creates data that stays at the same overall level across time. There is no growth.
+
+```{r}
+#| label: fig-riclpmchange
+#| fig-cap: "Changes in X and Y over Time in RI-CLPM"
+#| code-fold: true
+#| preview-image: true
+library(gganimate)
+d_riclpm %>%
+  tibble::rowid_to_column("id") %>%
+  pivot_longer(-id) %>%
+  mutate(v = str_sub(name, 1, 1),
+         time = str_sub(name, 2, 2) %>% as.integer()) %>%
+  select(-name) %>%
+  pivot_wider(names_from = v) %>%
+  mutate(id = fct_reorder(factor(id), x, .fun = mean)) %>%
+  ggplot(aes(x, y)) +
+  geom_point(aes(color = id), pch = 16) +
+  transition_states(time, .75, 3) +
+  ease_aes('cubic-in-out') +
+  shadow_wake(wake_length = 0.15) +
+  theme_minimal(base_size = 24, base_family = "Roboto Condensed") +
+  theme(legend.position = "none",
+        axis.title.y = element_text(
+          angle = 0,
+          hjust = .5,
+          vjust = .5
+        )) +
+  scale_color_viridis_d() +
+  labs(title = 'Time {closest_state}', x = 'X', y = 'Y')
+```
+
+@fig-riclpmstability show the distributions over time in the RI-CLPM. It is evident that the model does not allow for change over time (by design). If we expect growth, we need a model that allows for growth.
+
+```{r}
+#| label: fig-riclpmstability
+#| fig-cap: "Distribution of X and Y over Time in RI-CLPM"
+#| code-fold: true
+d_riclpm %>%
+  tibble::rowid_to_column("id") %>%
+  pivot_longer(-id) %>%
+  mutate(v = str_sub(name, 1, 1),
+         time = str_sub(name, 2, 2) %>% as.integer() %>% factor()) %>%
+  mutate(id = fct_reorder(factor(id), value, .fun = mean)) %>%
+  select(-name) %>%
+  
+  ggplot(aes(time, value)) +
+  geom_violin(color = NA, fill = "gray95") +
+  geom_line(aes(group = id, color = id), linewidth = .2, alpha = .1) +
+  facet_grid(cols = vars(v)) +
+  scale_color_viridis_d() +
+  theme_light(base_size = 24, base_family = "Roboto Condensed") +
+  theme(legend.position = "none",
+        axis.title.y = element_text(
+          angle = 0,
+          hjust = .5,
+          vjust = .5
+        )) +
+  labs(y = NULL, x = "Time")
+```
+
+
+If we did not know how the data were generated, we could evaluate the model with the RI-CLPM. 
+
+
+```{r}
+#| label: riclpmfit
+sem(model = m_riclpm, data = d_riclpm, auto.cov.lv.x = F) %>% 
+  model_parameters(component = "all")
+```
+
+# Latent Growth With Structured Residuals
+
+Here we combine bivariate latent growth models with the cross-lagged panel model [@curranSeparationBetweenpersonWithinperson2014].
+
+
+```{r}
+#| label: fig-lgsr
+#| fig-cap: The Latent Growth Model with Structured Residuals
+#| fig-width: 10
+#| fig-height: 10
+#| code-fold: true
+ggdiagram(font_family = my_font, font_size = 24) +
+  {x <- my_observed() %>%
+    ob_array(k,
+             sep = 2.5,
+             where = "south",
+             label = paste0("*X*~" , 1:k, "~"))} +
+  {y <- my_observed(label = paste0("*Y*~" ,1:k, "~")) %>%  
+    place(x, "right", sep = 6)} +
+  {e_x <- my_error(radius = .5) %>% place(x, "right", sep = .5)} +
+  {e_y <- my_error(radius = .5) %>% place(y, "left", sep = .5)} +
+  {ee_x <- my_error() %>% place(e_x[-1], "right", sep = .5)} +
+  {ee_y <- my_error() %>% place(e_y[-1], "left", sep = .5)} +
+  {lxx <- my_connect(e_x[-k], e_x[-1])} +
+  ob_label("*b~XX~*", lxx@midpoint(.47), size = 14) +
+  {lxy <- my_connect(e_x[-k], e_y[-1])} +
+  ob_label("*b~XY~*", lxy@midpoint(.27), size = 14) +
+  {lyx <- my_connect(e_y[-k], e_x[-1])} +
+  ob_label("*b~YX~*", lyx@midpoint(.27), size = 14) +
+  {lyy <- my_connect(e_y[-k], e_y[-1])} + 
+  ob_label("*b~YY~*", lyy@midpoint(.47), size = 14) +
+  my_connect2(e_x, x) + 
+  my_connect2(e_y, y) +
+  my_connect2(ee_x, e_x[-1]) +
+  my_connect2(ee_y, e_y[-1]) +
+  ob_covariance(e_x[1], e_y[1]) + 
+  ob_covariance(ee_y, ee_x, 
+                resect = 1,
+                length_head = 4, 
+                length_fins = 4, 
+                looseness = 1.3) +
+  {ix <- ob_circle(label = "*i*~*X*~", radius = sqrt(4 / pi)) %>% 
+    place(x[2]@bounding_box@point_at("left"), "left", sep = 3)} +
+  {iy <- ob_circle(label = "*i*~*Y*~", radius = sqrt(4 / pi)) %>% 
+    place(y[2]@bounding_box@point_at("right"), "right", sep = 3)} + 
+  {sx <- ob_circle(label = "*s*~*X*~", radius = sqrt(4 / pi)) %>% 
+    place(x[3]@bounding_box@point_at("left"), "left", sep = 3)} +
+  {sy <- ob_circle(label = "*s*~*Y*~", radius = sqrt(4 / pi)) %>% 
+    place(y[3]@bounding_box@point_at("right"), "right", sep = 3)} + 
+  {lx <- my_connect(ix, x@point_at(degree(175)))} +
+  {ly <- my_connect(iy, y@point_at(degree(5)))} + 
+  ob_label("1",
+           center = lx@line@point_at_x(lx[2]@midpoint(.66)@x),
+           size = 12) +
+  ob_label("1",
+           center = ly@line@point_at_x(ly[2]@midpoint(.66)@x),
+           size = 12) + 
+  {lsx <- my_connect(sx, x@point_at(degree(185)))} +
+  {lsy <- my_connect(sy, y@point_at(degree(-5)))} + 
+  ob_label(0:3,
+           center = lsx@line@point_at_x(lsx[3]@midpoint(.66)@x),
+           size = 12) +
+  ob_label(0:3,
+           center = lsy@line@point_at_x(lsy[3]@midpoint(.66)@x),
+           size = 12) +
+  ob_covariance(ix@point_at(degree(80)), 
+                iy@point_at(degree(100)), 
+                looseness = 1.1, 
+                bend = 40) +
+  ob_covariance(ix@point_at(degree(95)), 
+                sy@point_at(degree(55)), 
+                looseness = 1.5, 
+                bend = 60) +
+  ob_covariance(sy@point_at(degree(260)), 
+                sx@point_at(degree(280)), 
+                looseness = 1.1, 
+                bend = 40) +
+  ob_covariance(sy@point_at(degree(285)), 
+                ix@point_at(degree(235)), 
+                looseness = 1.5, 
+                bend = 60) +
+  ob_covariance(iy@point_at(degree(-70)), 
+                sy@point_at(degree(70)), 
+                bend = degree(-20)) +
+  ob_covariance(sx@point_at(degree(110)), 
+                ix@point_at(degree(-110)), 
+                bend = degree(-20))
+```
+
+
+The Latent Growth with Structured Residuals Model is exactly the same as the RI-CLPM but it adds growth in the form of random latent slopes, *s~X~* and *s~Y~* and the covariances among the random latent slopes and random latent intercepts.
+
+```{r}
+#| label: modellgsr
+# Number of waves
+k <- 4
+# Sequence from 2 to k
+s2k <- seq(2, k)
+# Sequence from 1 to k - 1
+s1k1 <- seq(1, k - 1)
+# Residual variances and covariances
+var_ex <- c("tau_ex1", rep("tau_exx", k - 1))
+var_ey <- c("tau_ey1", rep("tau_eyy", k - 1))
+cov_exy <- c("tau_exy1", rep("tau_exy", k - 1))
+
+
+m_lgsr <- c("# Random Latent Intercepts",
+  make_latent("i_x", "1 * x{1:k}"),
+  make_latent("i_y", "1 * y{1:k}"),
+  "# Random Latent Slopes",
+  make_latent("s_x", "{seq(0,k-1)} * x{1:k}"),
+  make_latent("s_y", "{seq(0,k-1)} * y{1:k}"),
+  "# Structured Residuals",
+  glue("e_x{1:k} =~ 1 * x{1:k}"), 
+  glue("e_y{1:k} =~ 1 * y{1:k}"),
+  "# Set observed residuals to 0",
+  glue("x{1:k} ~~ 0 * x{1:k}"), 
+  glue("y{1:k} ~~ 0 * y{1:k}"),
+  "# Structured Residual Variances and Covariances",
+  glue("e_x{1:k} ~~ {var_ex} * e_x{1:k}"),
+  glue("e_y{1:k} ~~ {var_ey} * e_y{1:k}"), 
+  glue("e_x{1:k} ~~ {cov_exy} * e_y{1:k}"),
+  "# Structured Residual Regressions",
+  glue("e_x{s2k} ~ b_xx * x{s1k1} + b_yx * e_y{s1k1}"),
+  glue("e_y{s2k} ~ b_yy * y{s1k1} + b_xy * e_x{s1k1}"),
+  "# Observed Intercepts",
+  glue("x{1:k} ~ 0 * 1"), 
+  glue("y{1:k} ~ 0 * 1"), 
+  "# Random Intercept Intercepts",
+  "i_x ~ b_ix_0 * 1",
+  "i_y ~ b_iy_0 * 1",
+  "# Random Slope Intercepts",
+  "s_x ~ b_sx_0 * 1",
+  "s_y ~ b_sy_0 * 1",
+  "# Random Intecept Variances and Covariance",
+  "i_x ~~ tau_ix * i_x + tau_ixiy * i_y + tau_ixsx * s_x + tau_ixsy * s_y",
+  "i_y ~~ tau_iy * i_y + tau_iysx * s_x + tau_iysy * s_y", 
+  "s_x ~~ tau_sx * s_x + tau_sxsy * s_y",
+  "s_y ~~ tau_sy * s_y"
+  ) %>% 
+  glue_collapse("\n") 
+
+m_lgsr
+
+```
+
+Let's make the random slope for X be negative (`b_sx_0 = -.25`), on average, and the random slope for Y be positive (`b_sy_0 = .5`), on average. 
+
+```{r}
+#| label: lsgrparams
+params_lgsr <- c(
+  tau_ex1 = 1,
+  tau_ey1 = 1,
+  tau_exy1 = .4,
+  tau_exx = .4,
+  tau_eyy = .5,
+  tau_exy = .2,
+  tau_ix = 0.5,
+  tau_iy = 0.6,
+  tau_sx = 0.1,
+  tau_sy = 0.2,
+  tau_ixiy = .3,
+  tau_ixsy = 0,
+  tau_ixsx = .03,
+  tau_iysx = 0,
+  tau_iysy = -.02,
+  tau_sxsy = 0.01,
+  b_xx = .4,
+  b_yy = .3,
+  b_xy = .1,
+  b_yx = 0,
+  b_ix_0 = 0,
+  b_iy_0 = 0,
+  b_sx_0 = -.25,
+  b_sy_0 = .5
+) 
+
+d_lgsr <- replace_parameters(model = m_lgsr, 
+                   params = params_lgsr) %>% 
+  glue_collapse("\n") %>% 
+  simulateData(sample.nobs = 1000)
+
+fit_lgsr <- sem(model = m_lgsr, data = d_lgsr, auto.cov.lv.x = F)
+```
+
+All the variables are still positively correlated:
+
+```{r}
+#| label: fig-lgsrcor
+#| fig-cap: "Correlation of X and Y in LGSR Model"
+#| code-fold: true
+plot_cor(d_lgsr)
+```
+
+But, over time, X decreases, and Y increases.
+
+```{r}
+#| label: fig-lgsrchange
+#| fig-cap: "Changes in X and Y over Time in LGSR Model"
+#| code-fold: true
+#| preview-image: true
+library(gganimate)
+d_lgsr %>% 
+  tibble::rowid_to_column("id") %>% 
+  pivot_longer(-id) %>% 
+  mutate(v = str_sub(name, 1,1),
+         time = str_sub(name, 2,2) %>% as.integer()) %>% 
+  select(-name) %>% 
+  pivot_wider(names_from = v) %>% 
+  mutate(id = fct_reorder(factor(id), x, .fun = mean)) %>% 
+  ggplot(aes(x,y)) + 
+  geom_point(aes(color = id), pch = 16) + 
+  transition_states(time, .75, 3) +
+  ease_aes('cubic-in-out') +
+  shadow_wake(wake_length = 0.15) +
+  theme_minimal(base_size = 24, base_family = "Roboto Condensed") +
+  theme(legend.position = "none", axis.title.y = element_text(angle = 0, hjust = .5, vjust=.5)) +
+  scale_color_viridis_d() +
+  labs(title = 'Time {closest_state}', x = 'X', y = 'Y')
+```
+
+See the slopes for the two variables:
+
+```{r}
+#| label: fig-lgsrstability
+#| fig-cap: "Distribution of X and Y over Time in LGSR Model"
+#| code-fold: true
+d_lgsr %>% 
+  tibble::rowid_to_column("id") %>% 
+  pivot_longer(-id) %>% 
+  mutate(v = str_sub(name, 1,1),
+         time = str_sub(name, 2,2) %>% as.integer() %>% factor()) %>% 
+  mutate(id = fct_reorder(factor(id), value, .fun = mean)) %>% 
+  select(-name) %>%
+  
+  ggplot(aes(time, value)) + 
+  geom_violin(color = NA, fill = "gray95") + 
+  geom_line(aes(group = id, color = id), size = .2, alpha = .1) + 
+  geom_smooth(aes(x = as.integer(time)), method = "lm") +
+  facet_grid(cols = vars(v)) + 
+  scale_color_viridis_d() +
+  theme_light(base_size = 24, base_family = "Roboto Condensed") +
+  theme(legend.position = "none", axis.title.y = element_text(angle = 0, hjust = .5, vjust = .5)) + 
+  labs(y = NULL, x = "Time")
+```
+
+<!-- Testing the model -->
+
+```{r}
+#| label: lgsrfit
+#| include: false
+sem(model = m_lgsr, data = d_lgsr, auto.cov.lv.x = F) %>% 
+  model_parameters(component = "all")
+```
+
+
+# Excercise
+
+A new reading curriculum is being tested. Its developers are excited that students who are taught to read using the curriculum seems to learn to read faster than students who were taught with previous methods. The developers notice that although spelling is not specifically targeted, students using the new reading program appear to develop better spelling abilities as well. 
+
+A sample of 300 1st-grader are randomly assigned to treatment and control conditions. Their reading and spelling abilities are measured 6 times throughout the year. Obviously, reading and spelling is going to improve over the course of the year. The main question is whether it improves faster in the treatment condition. In addition, the researchers are interested in whether reading affects spelling or vice-versa.
+
+
+```{r}
+#| label: makedata
+#| include: false
+#| echo: false
+#| eval: false
+set.seed(1)
+
+# Number of waves
+k <- 6
+# Sequence from 2 to k
+s2k <- seq(2, k)
+# Sequence from 1 to k - 1
+s1k1 <- seq(1, k - 1)
+# Residual variances and covariances
+var_ex <- c("tau_ex1", rep("tau_exx", k - 1))
+var_ey <- c("tau_ey1", rep("tau_eyy", k - 1))
+cov_exy <- c("tau_exy1", rep("tau_exy", k - 1))
+
+
+m_lgsr <- c("# Random Latent Intercepts",
+  make_latent("i_x", "1 * x{1:k}"),
+  make_latent("i_y", "1 * y{1:k}"),
+  "# Random Latent Slopes",
+  make_latent("s_x", "{seq(0,k-1)} * x{1:k}"),
+  make_latent("s_y", "{seq(0,k-1)} * y{1:k}"),
+  "# Structured Residuals",
+  glue("e_x{1:k} =~ 1 * x{1:k}"), 
+  glue("e_y{1:k} =~ 1 * y{1:k}"),
+  "# Set observed residuals to 0",
+  glue("x{1:k} ~~ 0 * x{1:k}"), 
+  glue("y{1:k} ~~ 0 * y{1:k}"),
+  "# Structured Residual Variances and Covariances",
+  glue("e_x{1:k} ~~ {var_ex} * e_x{1:k}"),
+  glue("e_y{1:k} ~~ {var_ey} * e_y{1:k}"), 
+  glue("e_x{1:k} ~~ {cov_exy} * e_y{1:k}"),
+  "# Structured Residual Regressions",
+  glue("e_x{s2k} ~ b_xx * x{s1k1} + b_yx * e_y{s1k1}"),
+  glue("e_y{s2k} ~ b_yy * y{s1k1} + b_xy * e_x{s1k1}"),
+  "# Observed Intercepts",
+  glue("x{1:k} ~ 0 * 1"), 
+  glue("y{1:k} ~ 0 * 1"), 
+  "# Random Intercept Intercepts",
+  "i_x ~ b_ix_0 * 1",
+  "i_y ~ b_iy_0 * 1",
+  "# Random Slope Intercepts",
+  "s_x ~ b_sx_0 * 1",
+  "s_y ~ b_sy_0 * 1",
+  "# Random Intecept Variances and Covariance",
+  "i_x ~~ tau_ix * i_x + tau_ixiy * i_y + tau_ixsx * s_x + tau_ixsy * s_y",
+  "i_y ~~ tau_iy * i_y + tau_iysx * s_x", 
+  "s_x ~~ tau_sx * s_x",
+  "s_y ~~ tau_sy * s_y",
+  "# Covariates",
+  "s_x ~ b_s_x_intervention * intervention",
+  "s_y ~ b_s_xy * s_x",
+  "i_x ~ b_i_x_intervention * intervention"
+  ) %>% 
+  glue_collapse("\n") 
+
+params_lgsr <- c(
+  tau_ex1 = 1,
+  tau_ey1 = 1,
+  tau_exy1 = .5,
+  tau_exx = .5,
+  tau_eyy = .3,
+  tau_exy = .1,
+  tau_ix = 0.5,
+  tau_iy = 1,
+  tau_sx = 0.25,
+  tau_sy = 0.15,
+  tau_ixiy = .3,
+  tau_ixsy = 0,
+  tau_ixsx = .03,
+  tau_iysx = 0,
+  tau_iysy = 0.025,
+  tau_sxsy = 0.1,
+  b_xx = .5,
+  b_yy = .3,
+  b_xy = .25,
+  b_yx = 0,
+  b_ix_0 = 0,
+  b_iy_0 = 0,
+  b_sx_0 = .7,
+  b_sy_0 = .5,
+  b_i_x_intervention = 0,
+  b_s_x_intervention = .7,
+  b_s_xy = .9
+) 
+
+d_lgsr <- replace_parameters(model = m_lgsr, 
+                   params = params_lgsr) %>% 
+  glue_collapse("\n") %>% 
+  simulateData(sample.nobs = 300) %>% 
+  mutate(intervention = ifelse(intervention > 0, "Treatment", "Control") %>% factor()) %>% 
+  mutate(id = dplyr::row_number() %>% factor(), .before = 1L)
+fit_lgsr <- sem(model = m_lgsr, data = d_lgsr, auto.cov.lv.x = F)
+
+d_lgsr %>% 
+  pivot_longer(-c(id, intervention)) %>% 
+  mutate(v = str_sub(name, 1,1),
+         time = str_sub(name, 2,2) %>% as.integer() %>% factor()) %>% 
+  select(-name) %>% 
+  mutate(v = ifelse(v == "x", "reading", "spelling"),
+         value = round(value * 100 + 500)) %>% 
+  pivot_wider(names_from = v) %>% 
+  write_csv("reading2spelling.csv")
+
+d_lgsr %>% 
+  pivot_longer(-c(id, intervention)) %>% 
+  mutate(v = str_sub(name, 1,1),
+         time = str_sub(name, 2,2) %>% as.integer() %>% factor()) %>% 
+  mutate(id = fct_reorder(factor(id), value, .fun = mean)) %>% 
+  select(-name) %>% 
+  ggplot(aes(time, value)) + 
+  geom_violin(color = NA, aes(fill = intervention)) +
+  # geom_density(aes(fill = intervention, x =), orientation = "y") +
+  geom_smooth(aes(x = as.integer(time), color = intervention), method = "lm", formula = "y~x") +
+  facet_grid(cols = vars(v)) +
+  scale_fill_viridis_d(begin = .2, end = .7, alpha = .2) +
+  scale_color_viridis_d(begin = .2, end = .7) +
+  theme_light(base_size = 24, base_family = "Roboto Condensed") +
+  theme(legend.position = "none", axis.title.y = element_text(angle = 0, hjust = .5, vjust = .5)) + 
+  labs(y = NULL, x = "Time")
+```
+
+
+
+Get data here:
+
+```{r}
+#| label: getdata
+#| eval: false
+d <- readr::read_csv(
+  "https://github.com/wjschne/EDUC8825/raw/main/reading2spelling.csv",
+  show_col_types = F
+) 
+```
+
+You will need to restructure the data (use `pivot_longer` and `pivot_wider` functions) to get all variables on 1 row.
+
+```{r}
+#| label: pivotdata
+#| eval: false
+d_wider <- d %>% 
+  pivot_longer(c(reading, spelling)) %>% 
+  unite(name, name, time) %>% 
+  pivot_wider()
+```
+
+
+1. Use the Latent Growth with Structured Residuals Model to see how Reading and Spelling affect each other over time.
+2. Use the intervention variable to predict the intercept and slope for reading.
+3. Write-up your analysis and explain your results in a quarto file.
