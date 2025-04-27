@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.7.3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -92,7 +92,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-8324e2080287992c21ba0f6d539105a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -3877,7 +3877,7 @@ Figure&nbsp;12: Path Diagram for Model 0
 </div>
 <p>As usual, we start with a simple model with random intercepts. Time is not yet included in the model. The latent variable <span class="math inline">i</span> has a mean of <span class="math inline">b_{00}</span> and a variance of <span class="math inline">\tau_{00}</span>. The variances of error terms for each observed variable are constrained to be equal <span class="math inline">(\tau_1)</span>. The intercepts of the observed variables are not modeled here, so they are assumbed to be 0.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>m_0 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>m_0 <span class="ot">&lt;-</span> <span class="st">'</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * voc_0 + 1 * voc_1 + 1 * voc_2 + 1 * voc_3 + 1 * voc_4 + 1 * voc_5 </span></span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept, slope, and quadratic effects</span></span>
@@ -3890,7 +3890,7 @@ Figure&nbsp;12: Path Diagram for Model 0
 <span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="st">voc_3 ~~ e * voc_3</span></span>
 <span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="st">voc_4 ~~ e * voc_4</span></span>
 <span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="st">voc_5 ~~ e * voc_5</span></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
 <span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>fit_0 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_0, <span class="at">data =</span> d_wide)</span>
 <span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="co"># The standard way to get output from lavaan</span></span>
@@ -6403,10 +6403,61 @@ Hint
 <span id="cb121-17"><a href="#cb121-17" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
 <span id="cb121-18"><a href="#cb121-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb121-19"><a href="#cb121-19" aria-hidden="true" tabindex="-1"></a>fit_0 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_0, <span class="at">data =</span> d_belong)</span>
-<span id="cb121-20"><a href="#cb121-20" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_0, <span class="at">component =</span> <span class="st">"all"</span>)</span>
-<span id="cb121-21"><a href="#cb121-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-22"><a href="#cb121-22" aria-hidden="true" tabindex="-1"></a>my_metrics <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CFI"</span>, <span class="st">"NNFI"</span>, <span class="st">"AGFI"</span>, <span class="st">"RMSEA"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span>)</span>
-<span id="cb121-23"><a href="#cb121-23" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(fit_0, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb121-20"><a href="#cb121-20" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_0, <span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link      | Coefficient |   SE |       95% CI |      p
+------------------------------------------------------
+i =~ sb_0 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_1 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_2 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_3 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_4 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_5 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_6 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_7 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_8 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+
+# Mean
+
+Link         | Coefficient |   SE |           95% CI |      z |      p
+----------------------------------------------------------------------
+i ~1  (b_00) |      129.94 | 1.05 | [127.88, 132.00] | 123.87 | &lt; .001
+sb_0 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_1 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_2 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_3 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_4 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_5 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_6 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_7 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_8 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+
+# Variance
+
+Link                 | Coefficient |    SE |           95% CI |     z |      p
+------------------------------------------------------------------------------
+i ~~ i (tau_00)      |      496.94 | 34.82 | [428.69, 565.18] | 14.27 | &lt; .001
+sb_0 ~~ sb_0 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_1 ~~ sb_1 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_2 ~~ sb_2 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_3 ~~ sb_3 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_4 ~~ sb_4 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_5 ~~ sb_5 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_6 ~~ sb_6 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_7 ~~ sb_7 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001
+sb_8 ~~ sb_8 (tau_1) |      479.53 | 10.72 | [458.52, 500.55] | 44.72 | &lt; .001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>my_metrics <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CFI"</span>, <span class="st">"NNFI"</span>, <span class="st">"AGFI"</span>, <span class="st">"RMSEA"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span>)</span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(fit_0, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+CFI   |  NNFI |  AGFI | RMSEA |       AIC |       BIC
+-----------------------------------------------------
+0.022 | 0.310 | 0.769 | 0.482 | 41721.454 | 41734.098</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -6427,33 +6478,110 @@ Hint
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>m_1 <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
-<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 </span></span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Linear slope of time</span></span>
-<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="st">s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8</span></span>
-<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a><span class="st"># Regression effects on latent variables</span></span>
-<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a><span class="st">i ~ b_00 * 1 </span></span>
-<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a><span class="st">s ~ b_10 * 1</span></span>
-<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a><span class="st"># Variances and covariances</span></span>
-<span id="cb122-10"><a href="#cb122-10" aria-hidden="true" tabindex="-1"></a><span class="st">i ~~ tau_00 * i </span></span>
-<span id="cb122-11"><a href="#cb122-11" aria-hidden="true" tabindex="-1"></a><span class="st">s ~~ 0 * s + 0 * i</span></span>
-<span id="cb122-12"><a href="#cb122-12" aria-hidden="true" tabindex="-1"></a><span class="st">sb_0 ~~ tau_1 * sb_0</span></span>
-<span id="cb122-13"><a href="#cb122-13" aria-hidden="true" tabindex="-1"></a><span class="st">sb_1 ~~ tau_1 * sb_1</span></span>
-<span id="cb122-14"><a href="#cb122-14" aria-hidden="true" tabindex="-1"></a><span class="st">sb_2 ~~ tau_1 * sb_2</span></span>
-<span id="cb122-15"><a href="#cb122-15" aria-hidden="true" tabindex="-1"></a><span class="st">sb_3 ~~ tau_1 * sb_3</span></span>
-<span id="cb122-16"><a href="#cb122-16" aria-hidden="true" tabindex="-1"></a><span class="st">sb_4 ~~ tau_1 * sb_4</span></span>
-<span id="cb122-17"><a href="#cb122-17" aria-hidden="true" tabindex="-1"></a><span class="st">sb_5 ~~ tau_1 * sb_5</span></span>
-<span id="cb122-18"><a href="#cb122-18" aria-hidden="true" tabindex="-1"></a><span class="st">sb_6 ~~ tau_1 * sb_6</span></span>
-<span id="cb122-19"><a href="#cb122-19" aria-hidden="true" tabindex="-1"></a><span class="st">sb_7 ~~ tau_1 * sb_7</span></span>
-<span id="cb122-20"><a href="#cb122-20" aria-hidden="true" tabindex="-1"></a><span class="st">sb_8 ~~ tau_1 * sb_8</span></span>
-<span id="cb122-21"><a href="#cb122-21" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb122-22"><a href="#cb122-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-23"><a href="#cb122-23" aria-hidden="true" tabindex="-1"></a>fit_1 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_1, <span class="at">data =</span> d_belong)</span>
-<span id="cb122-24"><a href="#cb122-24" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_1, <span class="at">component =</span> <span class="st">"all"</span>)</span>
-<span id="cb122-25"><a href="#cb122-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-26"><a href="#cb122-26" aria-hidden="true" tabindex="-1"></a><span class="fu">test_likelihoodratio</span>(fit_0, fit_1)</span>
-<span id="cb122-27"><a href="#cb122-27" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(fit_0, fit_1, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>m_1 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 </span></span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Linear slope of time</span></span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a><span class="st">s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8</span></span>
+<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a><span class="st"># Regression effects on latent variables</span></span>
+<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a><span class="st">i ~ b_00 * 1 </span></span>
+<span id="cb125-8"><a href="#cb125-8" aria-hidden="true" tabindex="-1"></a><span class="st">s ~ b_10 * 1</span></span>
+<span id="cb125-9"><a href="#cb125-9" aria-hidden="true" tabindex="-1"></a><span class="st"># Variances and covariances</span></span>
+<span id="cb125-10"><a href="#cb125-10" aria-hidden="true" tabindex="-1"></a><span class="st">i ~~ tau_00 * i </span></span>
+<span id="cb125-11"><a href="#cb125-11" aria-hidden="true" tabindex="-1"></a><span class="st">s ~~ 0 * s + 0 * i</span></span>
+<span id="cb125-12"><a href="#cb125-12" aria-hidden="true" tabindex="-1"></a><span class="st">sb_0 ~~ tau_1 * sb_0</span></span>
+<span id="cb125-13"><a href="#cb125-13" aria-hidden="true" tabindex="-1"></a><span class="st">sb_1 ~~ tau_1 * sb_1</span></span>
+<span id="cb125-14"><a href="#cb125-14" aria-hidden="true" tabindex="-1"></a><span class="st">sb_2 ~~ tau_1 * sb_2</span></span>
+<span id="cb125-15"><a href="#cb125-15" aria-hidden="true" tabindex="-1"></a><span class="st">sb_3 ~~ tau_1 * sb_3</span></span>
+<span id="cb125-16"><a href="#cb125-16" aria-hidden="true" tabindex="-1"></a><span class="st">sb_4 ~~ tau_1 * sb_4</span></span>
+<span id="cb125-17"><a href="#cb125-17" aria-hidden="true" tabindex="-1"></a><span class="st">sb_5 ~~ tau_1 * sb_5</span></span>
+<span id="cb125-18"><a href="#cb125-18" aria-hidden="true" tabindex="-1"></a><span class="st">sb_6 ~~ tau_1 * sb_6</span></span>
+<span id="cb125-19"><a href="#cb125-19" aria-hidden="true" tabindex="-1"></a><span class="st">sb_7 ~~ tau_1 * sb_7</span></span>
+<span id="cb125-20"><a href="#cb125-20" aria-hidden="true" tabindex="-1"></a><span class="st">sb_8 ~~ tau_1 * sb_8</span></span>
+<span id="cb125-21"><a href="#cb125-21" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb125-22"><a href="#cb125-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-23"><a href="#cb125-23" aria-hidden="true" tabindex="-1"></a>fit_1 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_1, <span class="at">data =</span> d_belong)</span>
+<span id="cb125-24"><a href="#cb125-24" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_1, <span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link      | Coefficient |   SE |       95% CI |      p
+------------------------------------------------------
+i =~ sb_0 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_1 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_2 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_3 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_4 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_5 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_6 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_7 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+i =~ sb_8 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+s =~ sb_0 |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+s =~ sb_1 |        1.00 | 0.00 | [1.00, 1.00] | &lt; .001
+s =~ sb_2 |        2.00 | 0.00 | [2.00, 2.00] | &lt; .001
+s =~ sb_3 |        3.00 | 0.00 | [3.00, 3.00] | &lt; .001
+s =~ sb_4 |        4.00 | 0.00 | [4.00, 4.00] | &lt; .001
+s =~ sb_5 |        5.00 | 0.00 | [5.00, 5.00] | &lt; .001
+s =~ sb_6 |        6.00 | 0.00 | [6.00, 6.00] | &lt; .001
+s =~ sb_7 |        7.00 | 0.00 | [7.00, 7.00] | &lt; .001
+s =~ sb_8 |        8.00 | 0.00 | [8.00, 8.00] | &lt; .001
+
+# Mean
+
+Link         | Coefficient |   SE |           95% CI |     z |      p
+---------------------------------------------------------------------
+i ~1  (b_00) |      103.58 | 1.09 | [101.45, 105.71] | 95.25 | &lt; .001
+s ~1  (b_10) |        6.59 | 0.07 | [  6.45,   6.73] | 92.06 | &lt; .001
+sb_0 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_1 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_2 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_3 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_4 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_5 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_6 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_7 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_8 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |       | &lt; .001
+
+# Variance
+
+Link                 | Coefficient |    SE |           95% CI |     z |      p
+------------------------------------------------------------------------------
+i ~~ i (tau_00)      |      533.13 | 34.80 | [464.93, 601.34] | 15.32 | &lt; .001
+s ~~ s               |        0.00 |  0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_0 ~~ sb_0 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_1 ~~ sb_1 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_2 ~~ sb_2 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_3 ~~ sb_3 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_4 ~~ sb_4 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_5 ~~ sb_5 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_6 ~~ sb_6 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_7 ~~ sb_7 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+sb_8 ~~ sb_8 (tau_1) |      153.76 |  3.44 | [147.03, 160.50] | 44.72 | &lt; .001
+
+# Correlation
+
+Link   | Coefficient |   SE |       95% CI |      p
+---------------------------------------------------
+i ~~ s |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_likelihoodratio</span>(fit_0, fit_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Likelihood-Ratio-Test (LRT) for Model Comparison
+
+Model |   Type | df | df_diff |    Chi2 |      p
+------------------------------------------------
+fit_0 | lavaan | 51 |       1 | 5986.38 | &lt; .001
+fit_1 | lavaan | 50 |         | 1436.84 |       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(fit_0, fit_1, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name  |  Model |   CFI |  NNFI |  AGFI | RMSEA |   AIC (weights) |   BIC (weights)
+----------------------------------------------------------------------------------
+fit_0 | lavaan | 0.022 | 0.310 | 0.769 | 0.482 | 41721.5 (&lt;.001) | 41734.1 (&lt;.001)
+fit_1 | lavaan | 0.772 | 0.836 | 0.907 | 0.236 | 37173.9 (&gt;.999) | 37190.8 (&gt;.999)</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -6477,6 +6605,131 @@ Hint
 <pre><code>q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8
 q ~ b_20 * 1
 q ~~ 0 * q + 0 * i + 0 * s</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>m_2 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 </span></span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Linear slope of time</span></span>
+<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a><span class="st">s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8</span></span>
+<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a><span class="st"># Quadratic slope of time</span></span>
+<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a><span class="st">q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8</span></span>
+<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a><span class="st"># Regression effects on latent variables</span></span>
+<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a><span class="st">i ~ b_00 * 1 </span></span>
+<span id="cb132-10"><a href="#cb132-10" aria-hidden="true" tabindex="-1"></a><span class="st">s ~ b_10 * 1</span></span>
+<span id="cb132-11"><a href="#cb132-11" aria-hidden="true" tabindex="-1"></a><span class="st">q ~ b_20 * 1</span></span>
+<span id="cb132-12"><a href="#cb132-12" aria-hidden="true" tabindex="-1"></a><span class="st"># Variances and covariances</span></span>
+<span id="cb132-13"><a href="#cb132-13" aria-hidden="true" tabindex="-1"></a><span class="st">i ~~ tau_00 * i </span></span>
+<span id="cb132-14"><a href="#cb132-14" aria-hidden="true" tabindex="-1"></a><span class="st">s ~~ 0 * s + 0 * i </span></span>
+<span id="cb132-15"><a href="#cb132-15" aria-hidden="true" tabindex="-1"></a><span class="st">q ~~ 0 * q + 0 * i + 0 * s</span></span>
+<span id="cb132-16"><a href="#cb132-16" aria-hidden="true" tabindex="-1"></a><span class="st">sb_0 ~~ tau_1 * sb_0</span></span>
+<span id="cb132-17"><a href="#cb132-17" aria-hidden="true" tabindex="-1"></a><span class="st">sb_1 ~~ tau_1 * sb_1</span></span>
+<span id="cb132-18"><a href="#cb132-18" aria-hidden="true" tabindex="-1"></a><span class="st">sb_2 ~~ tau_1 * sb_2</span></span>
+<span id="cb132-19"><a href="#cb132-19" aria-hidden="true" tabindex="-1"></a><span class="st">sb_3 ~~ tau_1 * sb_3</span></span>
+<span id="cb132-20"><a href="#cb132-20" aria-hidden="true" tabindex="-1"></a><span class="st">sb_4 ~~ tau_1 * sb_4</span></span>
+<span id="cb132-21"><a href="#cb132-21" aria-hidden="true" tabindex="-1"></a><span class="st">sb_5 ~~ tau_1 * sb_5</span></span>
+<span id="cb132-22"><a href="#cb132-22" aria-hidden="true" tabindex="-1"></a><span class="st">sb_6 ~~ tau_1 * sb_6</span></span>
+<span id="cb132-23"><a href="#cb132-23" aria-hidden="true" tabindex="-1"></a><span class="st">sb_7 ~~ tau_1 * sb_7</span></span>
+<span id="cb132-24"><a href="#cb132-24" aria-hidden="true" tabindex="-1"></a><span class="st">sb_8 ~~ tau_1 * sb_8</span></span>
+<span id="cb132-25"><a href="#cb132-25" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb132-26"><a href="#cb132-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-27"><a href="#cb132-27" aria-hidden="true" tabindex="-1"></a>fit_2 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_2, <span class="at">data =</span> d_belong)</span>
+<span id="cb132-28"><a href="#cb132-28" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_2, <span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link      | Coefficient |   SE |         95% CI |      p
+--------------------------------------------------------
+i =~ sb_0 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_2 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_3 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_4 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_5 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_6 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_7 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_8 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+s =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_2 |        2.00 | 0.00 | [ 2.00,  2.00] | &lt; .001
+s =~ sb_3 |        3.00 | 0.00 | [ 3.00,  3.00] | &lt; .001
+s =~ sb_4 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+s =~ sb_5 |        5.00 | 0.00 | [ 5.00,  5.00] | &lt; .001
+s =~ sb_6 |        6.00 | 0.00 | [ 6.00,  6.00] | &lt; .001
+s =~ sb_7 |        7.00 | 0.00 | [ 7.00,  7.00] | &lt; .001
+s =~ sb_8 |        8.00 | 0.00 | [ 8.00,  8.00] | &lt; .001
+q =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+q =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+q =~ sb_2 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+q =~ sb_3 |        9.00 | 0.00 | [ 9.00,  9.00] | &lt; .001
+q =~ sb_4 |       16.00 | 0.00 | [16.00, 16.00] | &lt; .001
+q =~ sb_5 |       25.00 | 0.00 | [25.00, 25.00] | &lt; .001
+q =~ sb_6 |       36.00 | 0.00 | [36.00, 36.00] | &lt; .001
+q =~ sb_7 |       49.00 | 0.00 | [49.00, 49.00] | &lt; .001
+q =~ sb_8 |       64.00 | 0.00 | [64.00, 64.00] | &lt; .001
+
+# Mean
+
+Link         | Coefficient |   SE |          95% CI |      z |      p
+---------------------------------------------------------------------
+i ~1  (b_00) |      100.66 | 1.12 | [98.46, 102.87] |  89.49 | &lt; .001
+s ~1  (b_10) |        9.09 | 0.26 | [ 8.58,   9.60] |  35.03 | &lt; .001
+q ~1  (b_20) |       -0.31 | 0.03 | [-0.37,  -0.25] | -10.02 | &lt; .001
+sb_0 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_1 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_2 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_3 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_4 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_5 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_6 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_7 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_8 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+
+# Variance
+
+Link                 | Coefficient |    SE |           95% CI |     z |      p
+------------------------------------------------------------------------------
+i ~~ i (tau_00)      |      533.55 | 34.80 | [465.34, 601.76] | 15.33 | &lt; .001
+s ~~ s               |        0.00 |  0.00 | [  0.00,   0.00] |       | &lt; .001
+q ~~ q               |        0.00 |  0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_0 ~~ sb_0 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_1 ~~ sb_1 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_2 ~~ sb_2 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_3 ~~ sb_3 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_4 ~~ sb_4 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_5 ~~ sb_5 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_6 ~~ sb_6 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_7 ~~ sb_7 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+sb_8 ~~ sb_8 (tau_1) |      150.00 |  3.35 | [143.43, 156.58] | 44.72 | &lt; .001
+
+# Correlation
+
+Link   | Coefficient |   SE |       95% CI |      p
+---------------------------------------------------
+i ~~ s |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+i ~~ q |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+s ~~ q |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_likelihoodratio</span>(fit_0, fit_1, fit_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Likelihood-Ratio-Test (LRT) for Model Comparison
+
+Model |   Type | df | df_diff |    Chi2 |      p
+------------------------------------------------
+fit_0 | lavaan | 51 |       1 | 5986.38 | &lt; .001
+fit_1 | lavaan | 50 |       1 | 1436.84 | &lt; .001
+fit_2 | lavaan | 49 |         | 1337.75 |       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(fit_0, fit_1, fit_2, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name  |  Model |   CFI |  NNFI |  AGFI | RMSEA |   AIC (weights) |   BIC (weights)
+----------------------------------------------------------------------------------
+fit_0 | lavaan | 0.022 | 0.310 | 0.769 | 0.482 | 41721.5 (&lt;.001) | 41734.1 (&lt;.001)
+fit_1 | lavaan | 0.772 | 0.836 | 0.907 | 0.236 | 37173.9 (&lt;.001) | 37190.8 (&lt;.001)
+fit_2 | lavaan | 0.788 | 0.844 | 0.906 | 0.229 | 37076.8 (&gt;.999) | 37097.9 (&gt;.999)</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -6500,6 +6753,133 @@ Hint
 </div>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>m_3 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 </span></span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Linear slope of time</span></span>
+<span id="cb139-5"><a href="#cb139-5" aria-hidden="true" tabindex="-1"></a><span class="st">s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8</span></span>
+<span id="cb139-6"><a href="#cb139-6" aria-hidden="true" tabindex="-1"></a><span class="st"># Quadratic effect of time</span></span>
+<span id="cb139-7"><a href="#cb139-7" aria-hidden="true" tabindex="-1"></a><span class="st">q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8</span></span>
+<span id="cb139-8"><a href="#cb139-8" aria-hidden="true" tabindex="-1"></a><span class="st"># Regression effects on latent variables</span></span>
+<span id="cb139-9"><a href="#cb139-9" aria-hidden="true" tabindex="-1"></a><span class="st">i ~ b_00 * 1 </span></span>
+<span id="cb139-10"><a href="#cb139-10" aria-hidden="true" tabindex="-1"></a><span class="st">s ~ b_10 * 1</span></span>
+<span id="cb139-11"><a href="#cb139-11" aria-hidden="true" tabindex="-1"></a><span class="st">q ~ b_20 * 1</span></span>
+<span id="cb139-12"><a href="#cb139-12" aria-hidden="true" tabindex="-1"></a><span class="st"># Variances and covariances</span></span>
+<span id="cb139-13"><a href="#cb139-13" aria-hidden="true" tabindex="-1"></a><span class="st">i ~~ tau_00 * i </span></span>
+<span id="cb139-14"><a href="#cb139-14" aria-hidden="true" tabindex="-1"></a><span class="st">s ~~ tau_11 * s + 0 * i</span></span>
+<span id="cb139-15"><a href="#cb139-15" aria-hidden="true" tabindex="-1"></a><span class="st">q ~~ 0 * q + 0 * i + 0 * s</span></span>
+<span id="cb139-16"><a href="#cb139-16" aria-hidden="true" tabindex="-1"></a><span class="st">sb_0 ~~ tau_1 * sb_0</span></span>
+<span id="cb139-17"><a href="#cb139-17" aria-hidden="true" tabindex="-1"></a><span class="st">sb_1 ~~ tau_1 * sb_1</span></span>
+<span id="cb139-18"><a href="#cb139-18" aria-hidden="true" tabindex="-1"></a><span class="st">sb_2 ~~ tau_1 * sb_2</span></span>
+<span id="cb139-19"><a href="#cb139-19" aria-hidden="true" tabindex="-1"></a><span class="st">sb_3 ~~ tau_1 * sb_3</span></span>
+<span id="cb139-20"><a href="#cb139-20" aria-hidden="true" tabindex="-1"></a><span class="st">sb_4 ~~ tau_1 * sb_4</span></span>
+<span id="cb139-21"><a href="#cb139-21" aria-hidden="true" tabindex="-1"></a><span class="st">sb_5 ~~ tau_1 * sb_5</span></span>
+<span id="cb139-22"><a href="#cb139-22" aria-hidden="true" tabindex="-1"></a><span class="st">sb_6 ~~ tau_1 * sb_6</span></span>
+<span id="cb139-23"><a href="#cb139-23" aria-hidden="true" tabindex="-1"></a><span class="st">sb_7 ~~ tau_1 * sb_7</span></span>
+<span id="cb139-24"><a href="#cb139-24" aria-hidden="true" tabindex="-1"></a><span class="st">sb_8 ~~ tau_1 * sb_8</span></span>
+<span id="cb139-25"><a href="#cb139-25" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb139-26"><a href="#cb139-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-27"><a href="#cb139-27" aria-hidden="true" tabindex="-1"></a>fit_3 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_3, <span class="at">data =</span> d_belong)</span>
+<span id="cb139-28"><a href="#cb139-28" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_3, <span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link      | Coefficient |   SE |         95% CI |      p
+--------------------------------------------------------
+i =~ sb_0 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_2 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_3 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_4 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_5 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_6 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_7 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_8 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+s =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_2 |        2.00 | 0.00 | [ 2.00,  2.00] | &lt; .001
+s =~ sb_3 |        3.00 | 0.00 | [ 3.00,  3.00] | &lt; .001
+s =~ sb_4 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+s =~ sb_5 |        5.00 | 0.00 | [ 5.00,  5.00] | &lt; .001
+s =~ sb_6 |        6.00 | 0.00 | [ 6.00,  6.00] | &lt; .001
+s =~ sb_7 |        7.00 | 0.00 | [ 7.00,  7.00] | &lt; .001
+s =~ sb_8 |        8.00 | 0.00 | [ 8.00,  8.00] | &lt; .001
+q =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+q =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+q =~ sb_2 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+q =~ sb_3 |        9.00 | 0.00 | [ 9.00,  9.00] | &lt; .001
+q =~ sb_4 |       16.00 | 0.00 | [16.00, 16.00] | &lt; .001
+q =~ sb_5 |       25.00 | 0.00 | [25.00, 25.00] | &lt; .001
+q =~ sb_6 |       36.00 | 0.00 | [36.00, 36.00] | &lt; .001
+q =~ sb_7 |       49.00 | 0.00 | [49.00, 49.00] | &lt; .001
+q =~ sb_8 |       64.00 | 0.00 | [64.00, 64.00] | &lt; .001
+
+# Mean
+
+Link         | Coefficient |   SE |          95% CI |      z |      p
+---------------------------------------------------------------------
+i ~1  (b_00) |      100.66 | 1.16 | [98.39, 102.94] |  86.75 | &lt; .001
+s ~1  (b_10) |        9.09 | 0.26 | [ 8.59,   9.59] |  35.61 | &lt; .001
+q ~1  (b_20) |       -0.31 | 0.03 | [-0.37,  -0.25] | -10.34 | &lt; .001
+sb_0 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_1 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_2 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_3 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_4 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_5 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_6 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_7 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_8 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+
+# Variance
+
+Link                 | Coefficient |    SE |           95% CI |     z |      p
+------------------------------------------------------------------------------
+i ~~ i (tau_00)      |      580.25 | 38.43 | [504.94, 655.56] | 15.10 | &lt; .001
+s ~~ s (tau_11)      |        0.99 |  0.21 | [  0.58,   1.40] |  4.75 | &lt; .001
+q ~~ q               |        0.00 |  0.00 | [  0.00,   0.00] |       | &lt; .001
+sb_0 ~~ sb_0 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_1 ~~ sb_1 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_2 ~~ sb_2 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_3 ~~ sb_3 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_4 ~~ sb_4 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_5 ~~ sb_5 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_6 ~~ sb_6 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_7 ~~ sb_7 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+sb_8 ~~ sb_8 (tau_1) |      140.76 |  3.35 | [134.21, 147.32] | 42.07 | &lt; .001
+
+# Correlation
+
+Link   | Coefficient |   SE |       95% CI |      p
+---------------------------------------------------
+i ~~ s |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+i ~~ q |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+s ~~ q |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_likelihoodratio</span>(fit_0, fit_1, fit_2, fit_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Likelihood-Ratio-Test (LRT) for Model Comparison
+
+Model |   Type | df | df_diff |    Chi2 |      p
+------------------------------------------------
+fit_0 | lavaan | 51 |       1 | 5986.38 | &lt; .001
+fit_1 | lavaan | 50 |       1 | 1436.84 | &lt; .001
+fit_2 | lavaan | 49 |       1 | 1337.75 | &lt; .001
+fit_3 | lavaan | 48 |         | 1308.59 |       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(fit_0, fit_1, fit_2, fit_3, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name  |  Model |   CFI |  NNFI |  AGFI | RMSEA |   AIC (weights) |   BIC (weights)
+----------------------------------------------------------------------------------
+fit_0 | lavaan | 0.022 | 0.310 | 0.769 | 0.482 | 41721.5 (&lt;.001) | 41734.1 (&lt;.001)
+fit_1 | lavaan | 0.772 | 0.836 | 0.907 | 0.236 | 37173.9 (&lt;.001) | 37190.8 (&lt;.001)
+fit_2 | lavaan | 0.788 | 0.844 | 0.906 | 0.229 | 37076.8 (&lt;.001) | 37097.9 (&lt;.001)
+fit_3 | lavaan | 0.792 | 0.844 | 0.885 | 0.229 | 37049.7 (&gt;.999) | 37074.9 (&gt;.999)</code></pre>
+</div>
+</div>
 <ol start="5" type="1">
 <li>Evaluate whether adding a random quadratic effect of time is significant. Set <code>q</code>’s variance to parameter name to <code>tau_22</code>.</li>
 </ol>
@@ -6518,6 +6898,135 @@ Hint
 <p>Replace the 0 in with <code>tau_22</code> in your model like so:</p>
 <pre><code>q ~~ tau_22 * q + 0 * i + 0 * s</code></pre>
 </div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>m_4 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 </span></span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Linear slope of time</span></span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a><span class="st">s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8</span></span>
+<span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a><span class="st"># Quadratic effect of time</span></span>
+<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a><span class="st">q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8</span></span>
+<span id="cb146-8"><a href="#cb146-8" aria-hidden="true" tabindex="-1"></a><span class="st"># Regression effects on latent variables</span></span>
+<span id="cb146-9"><a href="#cb146-9" aria-hidden="true" tabindex="-1"></a><span class="st">i ~ b_00 * 1 </span></span>
+<span id="cb146-10"><a href="#cb146-10" aria-hidden="true" tabindex="-1"></a><span class="st">s ~ b_10 * 1</span></span>
+<span id="cb146-11"><a href="#cb146-11" aria-hidden="true" tabindex="-1"></a><span class="st">q ~ b_20 * 1</span></span>
+<span id="cb146-12"><a href="#cb146-12" aria-hidden="true" tabindex="-1"></a><span class="st"># Variances and covariances</span></span>
+<span id="cb146-13"><a href="#cb146-13" aria-hidden="true" tabindex="-1"></a><span class="st">i ~~ tau_00 * i </span></span>
+<span id="cb146-14"><a href="#cb146-14" aria-hidden="true" tabindex="-1"></a><span class="st">s ~~ tau_11 * s + 0 * i</span></span>
+<span id="cb146-15"><a href="#cb146-15" aria-hidden="true" tabindex="-1"></a><span class="st">q ~~ tau_22 * q + 0 * i + 0 * s</span></span>
+<span id="cb146-16"><a href="#cb146-16" aria-hidden="true" tabindex="-1"></a><span class="st">sb_0 ~~ tau_1 * sb_0</span></span>
+<span id="cb146-17"><a href="#cb146-17" aria-hidden="true" tabindex="-1"></a><span class="st">sb_1 ~~ tau_1 * sb_1</span></span>
+<span id="cb146-18"><a href="#cb146-18" aria-hidden="true" tabindex="-1"></a><span class="st">sb_2 ~~ tau_1 * sb_2</span></span>
+<span id="cb146-19"><a href="#cb146-19" aria-hidden="true" tabindex="-1"></a><span class="st">sb_3 ~~ tau_1 * sb_3</span></span>
+<span id="cb146-20"><a href="#cb146-20" aria-hidden="true" tabindex="-1"></a><span class="st">sb_4 ~~ tau_1 * sb_4</span></span>
+<span id="cb146-21"><a href="#cb146-21" aria-hidden="true" tabindex="-1"></a><span class="st">sb_5 ~~ tau_1 * sb_5</span></span>
+<span id="cb146-22"><a href="#cb146-22" aria-hidden="true" tabindex="-1"></a><span class="st">sb_6 ~~ tau_1 * sb_6</span></span>
+<span id="cb146-23"><a href="#cb146-23" aria-hidden="true" tabindex="-1"></a><span class="st">sb_7 ~~ tau_1 * sb_7</span></span>
+<span id="cb146-24"><a href="#cb146-24" aria-hidden="true" tabindex="-1"></a><span class="st">sb_8 ~~ tau_1 * sb_8</span></span>
+<span id="cb146-25"><a href="#cb146-25" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb146-26"><a href="#cb146-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-27"><a href="#cb146-27" aria-hidden="true" tabindex="-1"></a>fit_4 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_4, <span class="at">data =</span> d_belong)</span>
+<span id="cb146-28"><a href="#cb146-28" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_4, <span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link      | Coefficient |   SE |         95% CI |      p
+--------------------------------------------------------
+i =~ sb_0 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_2 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_3 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_4 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_5 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_6 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_7 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_8 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+s =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_2 |        2.00 | 0.00 | [ 2.00,  2.00] | &lt; .001
+s =~ sb_3 |        3.00 | 0.00 | [ 3.00,  3.00] | &lt; .001
+s =~ sb_4 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+s =~ sb_5 |        5.00 | 0.00 | [ 5.00,  5.00] | &lt; .001
+s =~ sb_6 |        6.00 | 0.00 | [ 6.00,  6.00] | &lt; .001
+s =~ sb_7 |        7.00 | 0.00 | [ 7.00,  7.00] | &lt; .001
+s =~ sb_8 |        8.00 | 0.00 | [ 8.00,  8.00] | &lt; .001
+q =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+q =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+q =~ sb_2 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+q =~ sb_3 |        9.00 | 0.00 | [ 9.00,  9.00] | &lt; .001
+q =~ sb_4 |       16.00 | 0.00 | [16.00, 16.00] | &lt; .001
+q =~ sb_5 |       25.00 | 0.00 | [25.00, 25.00] | &lt; .001
+q =~ sb_6 |       36.00 | 0.00 | [36.00, 36.00] | &lt; .001
+q =~ sb_7 |       49.00 | 0.00 | [49.00, 49.00] | &lt; .001
+q =~ sb_8 |       64.00 | 0.00 | [64.00, 64.00] | &lt; .001
+
+# Mean
+
+Link         | Coefficient |   SE |          95% CI |      z |      p
+---------------------------------------------------------------------
+i ~1  (b_00) |      100.66 | 1.23 | [98.25, 103.07] |  81.76 | &lt; .001
+s ~1  (b_10) |        9.09 | 0.23 | [ 8.64,   9.54] |  39.43 | &lt; .001
+q ~1  (b_20) |       -0.31 | 0.03 | [-0.37,  -0.25] | -10.10 | &lt; .001
+sb_0 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_1 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_2 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_3 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_4 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_5 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_6 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_7 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_8 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+
+# Variance
+
+Link                 | Coefficient |       SE |           95% CI |     z |      p
+---------------------------------------------------------------------------------
+i ~~ i (tau_00)      |      672.37 |    42.81 | [588.48, 756.27] | 15.71 | &lt; .001
+s ~~ s (tau_11)      |       -2.46 |     0.39 | [ -3.23,  -1.70] | -6.34 | &lt; .001
+q ~~ q (tau_22)      |        0.06 | 7.14e-03 | [  0.04,   0.07] |  8.21 | &lt; .001
+sb_0 ~~ sb_0 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_1 ~~ sb_1 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_2 ~~ sb_2 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_3 ~~ sb_3 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_4 ~~ sb_4 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_5 ~~ sb_5 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_6 ~~ sb_6 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_7 ~~ sb_7 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+sb_8 ~~ sb_8 (tau_1) |      129.42 |     3.08 | [123.37, 135.46] | 41.96 | &lt; .001
+
+# Correlation
+
+Link   | Coefficient |   SE |       95% CI |      p
+---------------------------------------------------
+i ~~ s |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+i ~~ q |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001
+s ~~ q |        0.00 | 0.00 | [0.00, 0.00] | &lt; .001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_likelihoodratio</span>(fit_0, fit_1, fit_2, fit_3, fit_4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Likelihood-Ratio-Test (LRT) for Model Comparison
+
+Model |   Type | df | df_diff |    Chi2 |      p
+------------------------------------------------
+fit_0 | lavaan | 51 |       1 | 5986.38 | &lt; .001
+fit_1 | lavaan | 50 |       1 | 1436.84 | &lt; .001
+fit_2 | lavaan | 49 |       1 | 1337.75 | &lt; .001
+fit_3 | lavaan | 48 |       1 | 1308.59 | &lt; .001
+fit_4 | lavaan | 47 |         | 1075.54 |       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(fit_0, fit_1, fit_2, fit_3, fit_4, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name  |  Model |   CFI |  NNFI |  AGFI | RMSEA |   AIC (weights) |   BIC (weights)
+----------------------------------------------------------------------------------
+fit_0 | lavaan | 0.022 | 0.310 | 0.769 | 0.482 | 41721.5 (&lt;.001) | 41734.1 (&lt;.001)
+fit_1 | lavaan | 0.772 | 0.836 | 0.907 | 0.236 | 37173.9 (&lt;.001) | 37190.8 (&lt;.001)
+fit_2 | lavaan | 0.788 | 0.844 | 0.906 | 0.229 | 37076.8 (&lt;.001) | 37097.9 (&lt;.001)
+fit_3 | lavaan | 0.792 | 0.844 | 0.885 | 0.229 | 37049.7 (&lt;.001) | 37074.9 (&lt;.001)
+fit_4 | lavaan | 0.831 | 0.870 | 0.924 | 0.209 | 36818.6 (&gt;.999) | 36848.1 (&gt;.999)</code></pre>
 </div>
 </div>
 <ol start="6" type="1">
@@ -6543,6 +7052,137 @@ q ~~ tau_22 * q + tau_12 * s + tau_02 * i</code></pre>
 </div>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a>m_5 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb153-2"><a href="#cb153-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
+<span id="cb153-3"><a href="#cb153-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 </span></span>
+<span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Linear slope of time</span></span>
+<span id="cb153-5"><a href="#cb153-5" aria-hidden="true" tabindex="-1"></a><span class="st">s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8</span></span>
+<span id="cb153-6"><a href="#cb153-6" aria-hidden="true" tabindex="-1"></a><span class="st"># Quadratic effect of time</span></span>
+<span id="cb153-7"><a href="#cb153-7" aria-hidden="true" tabindex="-1"></a><span class="st">q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8</span></span>
+<span id="cb153-8"><a href="#cb153-8" aria-hidden="true" tabindex="-1"></a><span class="st"># Regression effects on latent variables</span></span>
+<span id="cb153-9"><a href="#cb153-9" aria-hidden="true" tabindex="-1"></a><span class="st">i ~ b_00 * 1 </span></span>
+<span id="cb153-10"><a href="#cb153-10" aria-hidden="true" tabindex="-1"></a><span class="st">s ~ b_10 * 1</span></span>
+<span id="cb153-11"><a href="#cb153-11" aria-hidden="true" tabindex="-1"></a><span class="st">q ~ b_20 * 1</span></span>
+<span id="cb153-12"><a href="#cb153-12" aria-hidden="true" tabindex="-1"></a><span class="st"># Variances and covariances</span></span>
+<span id="cb153-13"><a href="#cb153-13" aria-hidden="true" tabindex="-1"></a><span class="st">i ~~ tau_00 * i </span></span>
+<span id="cb153-14"><a href="#cb153-14" aria-hidden="true" tabindex="-1"></a><span class="st">s ~~ tau_11 * s + tau_01 * i</span></span>
+<span id="cb153-15"><a href="#cb153-15" aria-hidden="true" tabindex="-1"></a><span class="st">q ~~ tau_22 * q + tau_12 * s + tau_02 * i</span></span>
+<span id="cb153-16"><a href="#cb153-16" aria-hidden="true" tabindex="-1"></a><span class="st">sb_0 ~~ tau_1 * sb_0</span></span>
+<span id="cb153-17"><a href="#cb153-17" aria-hidden="true" tabindex="-1"></a><span class="st">sb_1 ~~ tau_1 * sb_1</span></span>
+<span id="cb153-18"><a href="#cb153-18" aria-hidden="true" tabindex="-1"></a><span class="st">sb_2 ~~ tau_1 * sb_2</span></span>
+<span id="cb153-19"><a href="#cb153-19" aria-hidden="true" tabindex="-1"></a><span class="st">sb_3 ~~ tau_1 * sb_3</span></span>
+<span id="cb153-20"><a href="#cb153-20" aria-hidden="true" tabindex="-1"></a><span class="st">sb_4 ~~ tau_1 * sb_4</span></span>
+<span id="cb153-21"><a href="#cb153-21" aria-hidden="true" tabindex="-1"></a><span class="st">sb_5 ~~ tau_1 * sb_5</span></span>
+<span id="cb153-22"><a href="#cb153-22" aria-hidden="true" tabindex="-1"></a><span class="st">sb_6 ~~ tau_1 * sb_6</span></span>
+<span id="cb153-23"><a href="#cb153-23" aria-hidden="true" tabindex="-1"></a><span class="st">sb_7 ~~ tau_1 * sb_7</span></span>
+<span id="cb153-24"><a href="#cb153-24" aria-hidden="true" tabindex="-1"></a><span class="st">sb_8 ~~ tau_1 * sb_8</span></span>
+<span id="cb153-25"><a href="#cb153-25" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb153-26"><a href="#cb153-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-27"><a href="#cb153-27" aria-hidden="true" tabindex="-1"></a>fit_5 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_5, <span class="at">data =</span> d_belong)</span>
+<span id="cb153-28"><a href="#cb153-28" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_5, <span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link      | Coefficient |   SE |         95% CI |      p
+--------------------------------------------------------
+i =~ sb_0 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_2 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_3 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_4 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_5 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_6 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_7 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_8 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+s =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_2 |        2.00 | 0.00 | [ 2.00,  2.00] | &lt; .001
+s =~ sb_3 |        3.00 | 0.00 | [ 3.00,  3.00] | &lt; .001
+s =~ sb_4 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+s =~ sb_5 |        5.00 | 0.00 | [ 5.00,  5.00] | &lt; .001
+s =~ sb_6 |        6.00 | 0.00 | [ 6.00,  6.00] | &lt; .001
+s =~ sb_7 |        7.00 | 0.00 | [ 7.00,  7.00] | &lt; .001
+s =~ sb_8 |        8.00 | 0.00 | [ 8.00,  8.00] | &lt; .001
+q =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+q =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+q =~ sb_2 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+q =~ sb_3 |        9.00 | 0.00 | [ 9.00,  9.00] | &lt; .001
+q =~ sb_4 |       16.00 | 0.00 | [16.00, 16.00] | &lt; .001
+q =~ sb_5 |       25.00 | 0.00 | [25.00, 25.00] | &lt; .001
+q =~ sb_6 |       36.00 | 0.00 | [36.00, 36.00] | &lt; .001
+q =~ sb_7 |       49.00 | 0.00 | [49.00, 49.00] | &lt; .001
+q =~ sb_8 |       64.00 | 0.00 | [64.00, 64.00] | &lt; .001
+
+# Mean
+
+Link         | Coefficient |   SE |          95% CI |      z |      p
+---------------------------------------------------------------------
+i ~1  (b_00) |      100.66 | 0.92 | [98.86, 102.46] | 109.60 | &lt; .001
+s ~1  (b_10) |        9.09 | 0.36 | [ 8.39,   9.79] |  25.50 | &lt; .001
+q ~1  (b_20) |       -0.31 | 0.05 | [-0.41,  -0.22] |  -6.32 | &lt; .001
+sb_0 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_1 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_2 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_3 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_4 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_5 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_6 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_7 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+sb_8 ~1      |        0.00 | 0.00 | [ 0.00,   0.00] |        | &lt; .001
+
+# Variance
+
+Link                 | Coefficient |    SE |           95% CI |     z |      p
+------------------------------------------------------------------------------
+i ~~ i (tau_00)      |      358.60 | 26.72 | [306.22, 410.98] | 13.42 | &lt; .001
+s ~~ s (tau_11)      |       42.11 |  4.06 | [ 34.15,  50.06] | 10.37 | &lt; .001
+q ~~ q (tau_22)      |        0.91 |  0.08 | [  0.76,   1.07] | 11.74 | &lt; .001
+sb_0 ~~ sb_0 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_1 ~~ sb_1 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_2 ~~ sb_2 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_3 ~~ sb_3 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_4 ~~ sb_4 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_5 ~~ sb_5 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_6 ~~ sb_6 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_7 ~~ sb_7 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_8 ~~ sb_8 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+
+# Correlation
+
+Link            | Coefficient |   SE |           95% CI |      z |      p
+-------------------------------------------------------------------------
+i ~~ s (tau_01) |      113.96 | 8.27 | [ 97.74, 130.17] |  13.77 | &lt; .001
+s ~~ q (tau_12) |       -6.13 | 0.56 | [ -7.22,  -5.04] | -11.04 | &lt; .001
+i ~~ q (tau_02) |      -16.83 | 1.19 | [-19.17, -14.49] | -14.09 | &lt; .001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_likelihoodratio</span>(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Likelihood-Ratio-Test (LRT) for Model Comparison
+
+Model |   Type | df | df_diff |    Chi2 |      p
+------------------------------------------------
+fit_0 | lavaan | 51 |       1 | 5986.38 | &lt; .001
+fit_1 | lavaan | 50 |       1 | 1436.84 | &lt; .001
+fit_2 | lavaan | 49 |       1 | 1337.75 | &lt; .001
+fit_3 | lavaan | 48 |       1 | 1308.59 | &lt; .001
+fit_4 | lavaan | 47 |       3 | 1075.54 | &lt; .001
+fit_5 | lavaan | 44 |         |   39.91 |       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(fit_0, fit_1, fit_2, fit_3, fit_4,  fit_5, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name  |  Model |   CFI |  NNFI |  AGFI | RMSEA |   AIC (weights) |   BIC (weights)
+----------------------------------------------------------------------------------
+fit_0 | lavaan | 0.022 | 0.310 | 0.769 | 0.482 | 41721.5 (&lt;.001) | 41734.1 (&lt;.001)
+fit_1 | lavaan | 0.772 | 0.836 | 0.907 | 0.236 | 37173.9 (&lt;.001) | 37190.8 (&lt;.001)
+fit_2 | lavaan | 0.788 | 0.844 | 0.906 | 0.229 | 37076.8 (&lt;.001) | 37097.9 (&lt;.001)
+fit_3 | lavaan | 0.792 | 0.844 | 0.885 | 0.229 | 37049.7 (&lt;.001) | 37074.9 (&lt;.001)
+fit_4 | lavaan | 0.831 | 0.870 | 0.924 | 0.209 | 36818.6 (&lt;.001) | 36848.1 (&lt;.001)
+fit_5 | lavaan | 1.000 | 1.001 | 0.999 | 0.000 | 35789.0 (&gt;.999) | 35831.1 (&gt;.999)</code></pre>
+</div>
+</div>
 <ol start="7" type="1">
 <li>Evaluate whether <code>bullied</code> has effects on <code>i</code>, <code>s</code>, and <code>q</code>. Call the regression parameters <code>b_01</code> for <code>i</code>, <code>b_11</code> for <code>s</code>, and <code>b_21</code> for <code>q</code>. Is the trajectory of change different for students who identify as having been bullied?</li>
 </ol>
@@ -6564,6 +7204,149 @@ i ~ b_00 * 1 + b_01 * bullied
 s ~ b_10 * 1 + b_11 * bullied
 q ~ b_20 * 1 + b_21 * bullied</code></pre>
 </div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a>m_6 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Intercept</span></span>
+<span id="cb160-3"><a href="#cb160-3" aria-hidden="true" tabindex="-1"></a><span class="st">i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 </span></span>
+<span id="cb160-4"><a href="#cb160-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Linear slope of time</span></span>
+<span id="cb160-5"><a href="#cb160-5" aria-hidden="true" tabindex="-1"></a><span class="st">s =~ 0 * sb_0 + 1 * sb_1 + 2 * sb_2 + 3 * sb_3 + 4 * sb_4 + 5 * sb_5 + 6 * sb_6 + 7 * sb_7 + 8 * sb_8</span></span>
+<span id="cb160-6"><a href="#cb160-6" aria-hidden="true" tabindex="-1"></a><span class="st"># Quadratic effect of time</span></span>
+<span id="cb160-7"><a href="#cb160-7" aria-hidden="true" tabindex="-1"></a><span class="st">q =~ 0 * sb_0 + 1 * sb_1 + 4 * sb_2 + 9 * sb_3 + 16 * sb_4 + 25 * sb_5 + 36 * sb_6 + 49 * sb_7 + 64 * sb_8</span></span>
+<span id="cb160-8"><a href="#cb160-8" aria-hidden="true" tabindex="-1"></a><span class="st"># Regression effects on latent variables</span></span>
+<span id="cb160-9"><a href="#cb160-9" aria-hidden="true" tabindex="-1"></a><span class="st">i ~ b_00 * 1 + b_01 * bullied</span></span>
+<span id="cb160-10"><a href="#cb160-10" aria-hidden="true" tabindex="-1"></a><span class="st">s ~ b_10 * 1 + b_11 * bullied</span></span>
+<span id="cb160-11"><a href="#cb160-11" aria-hidden="true" tabindex="-1"></a><span class="st">q ~ b_20 * 1 + b_21 * bullied</span></span>
+<span id="cb160-12"><a href="#cb160-12" aria-hidden="true" tabindex="-1"></a><span class="st"># Variances and covariances</span></span>
+<span id="cb160-13"><a href="#cb160-13" aria-hidden="true" tabindex="-1"></a><span class="st">i ~~ tau_00 * i </span></span>
+<span id="cb160-14"><a href="#cb160-14" aria-hidden="true" tabindex="-1"></a><span class="st">s ~~ tau_11 * s + tau_01 * i</span></span>
+<span id="cb160-15"><a href="#cb160-15" aria-hidden="true" tabindex="-1"></a><span class="st">q ~~ tau_22 * q + tau_12 * s + tau_02 * i</span></span>
+<span id="cb160-16"><a href="#cb160-16" aria-hidden="true" tabindex="-1"></a><span class="st">sb_0 ~~ tau_1 * sb_0</span></span>
+<span id="cb160-17"><a href="#cb160-17" aria-hidden="true" tabindex="-1"></a><span class="st">sb_1 ~~ tau_1 * sb_1</span></span>
+<span id="cb160-18"><a href="#cb160-18" aria-hidden="true" tabindex="-1"></a><span class="st">sb_2 ~~ tau_1 * sb_2</span></span>
+<span id="cb160-19"><a href="#cb160-19" aria-hidden="true" tabindex="-1"></a><span class="st">sb_3 ~~ tau_1 * sb_3</span></span>
+<span id="cb160-20"><a href="#cb160-20" aria-hidden="true" tabindex="-1"></a><span class="st">sb_4 ~~ tau_1 * sb_4</span></span>
+<span id="cb160-21"><a href="#cb160-21" aria-hidden="true" tabindex="-1"></a><span class="st">sb_5 ~~ tau_1 * sb_5</span></span>
+<span id="cb160-22"><a href="#cb160-22" aria-hidden="true" tabindex="-1"></a><span class="st">sb_6 ~~ tau_1 * sb_6</span></span>
+<span id="cb160-23"><a href="#cb160-23" aria-hidden="true" tabindex="-1"></a><span class="st">sb_7 ~~ tau_1 * sb_7</span></span>
+<span id="cb160-24"><a href="#cb160-24" aria-hidden="true" tabindex="-1"></a><span class="st">sb_8 ~~ tau_1 * sb_8</span></span>
+<span id="cb160-25"><a href="#cb160-25" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb160-26"><a href="#cb160-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-27"><a href="#cb160-27" aria-hidden="true" tabindex="-1"></a>fit_6 <span class="ot">&lt;-</span> <span class="fu">growth</span>(m_6, <span class="at">data =</span> d_belong)</span>
+<span id="cb160-28"><a href="#cb160-28" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(fit_6, <span class="at">component =</span> <span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Loading
+
+Link      | Coefficient |   SE |         95% CI |      p
+--------------------------------------------------------
+i =~ sb_0 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_2 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_3 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_4 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_5 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_6 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_7 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+i =~ sb_8 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+s =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+s =~ sb_2 |        2.00 | 0.00 | [ 2.00,  2.00] | &lt; .001
+s =~ sb_3 |        3.00 | 0.00 | [ 3.00,  3.00] | &lt; .001
+s =~ sb_4 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+s =~ sb_5 |        5.00 | 0.00 | [ 5.00,  5.00] | &lt; .001
+s =~ sb_6 |        6.00 | 0.00 | [ 6.00,  6.00] | &lt; .001
+s =~ sb_7 |        7.00 | 0.00 | [ 7.00,  7.00] | &lt; .001
+s =~ sb_8 |        8.00 | 0.00 | [ 8.00,  8.00] | &lt; .001
+q =~ sb_0 |        0.00 | 0.00 | [ 0.00,  0.00] | &lt; .001
+q =~ sb_1 |        1.00 | 0.00 | [ 1.00,  1.00] | &lt; .001
+q =~ sb_2 |        4.00 | 0.00 | [ 4.00,  4.00] | &lt; .001
+q =~ sb_3 |        9.00 | 0.00 | [ 9.00,  9.00] | &lt; .001
+q =~ sb_4 |       16.00 | 0.00 | [16.00, 16.00] | &lt; .001
+q =~ sb_5 |       25.00 | 0.00 | [25.00, 25.00] | &lt; .001
+q =~ sb_6 |       36.00 | 0.00 | [36.00, 36.00] | &lt; .001
+q =~ sb_7 |       49.00 | 0.00 | [49.00, 49.00] | &lt; .001
+q =~ sb_8 |       64.00 | 0.00 | [64.00, 64.00] | &lt; .001
+
+# Mean
+
+Link         | Coefficient |   SE |           95% CI |      z |      p
+----------------------------------------------------------------------
+i ~1  (b_00) |      138.89 | 3.76 | [131.52, 146.26] |  36.95 | &lt; .001
+s ~1  (b_10) |       23.17 | 1.48 | [ 20.28,  26.06] |  15.71 | &lt; .001
+q ~1  (b_20) |       -2.52 | 0.20 | [ -2.91,  -2.13] | -12.65 | &lt; .001
+sb_0 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_1 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_2 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_3 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_4 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_5 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_6 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_7 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+sb_8 ~1      |        0.00 | 0.00 | [  0.00,   0.00] |        | &lt; .001
+bullied ~1   |        1.06 | 0.00 | [  1.06,   1.06] |        | &lt; .001
+
+# Regression
+
+Link               | Coefficient |   SE |           95% CI |      z |      p
+----------------------------------------------------------------------------
+i ~ bullied (b_01) |      -35.99 | 3.45 | [-42.76, -29.23] | -10.43 | &lt; .001
+s ~ bullied (b_11) |      -13.26 | 1.35 | [-15.91, -10.60] |  -9.79 | &lt; .001
+q ~ bullied (b_21) |        2.08 | 0.18 | [  1.72,   2.44] |  11.36 | &lt; .001
+
+# Variance
+
+Link                 | Coefficient |    SE |           95% CI |     z |      p
+------------------------------------------------------------------------------
+i ~~ i (tau_00)      |      283.25 | 21.97 | [240.19, 326.31] | 12.89 | &lt; .001
+s ~~ s (tau_11)      |       31.89 |  3.42 | [ 25.19,  38.59] |  9.33 | &lt; .001
+q ~~ q (tau_22)      |        0.66 |  0.06 | [  0.54,   0.78] | 10.68 | &lt; .001
+sb_0 ~~ sb_0 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_1 ~~ sb_1 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_2 ~~ sb_2 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_3 ~~ sb_3 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_4 ~~ sb_4 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_5 ~~ sb_5 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_6 ~~ sb_6 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_7 ~~ sb_7 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+sb_8 ~~ sb_8 (tau_1) |       95.63 |  2.47 | [ 90.79, 100.47] | 38.73 | &lt; .001
+bullied ~~ bullied   |        0.06 |  0.00 | [  0.06,   0.06] |       | &lt; .001
+
+# Correlation
+
+Link            | Coefficient |   SE |           95% CI |      z |      p
+-------------------------------------------------------------------------
+i ~~ s (tau_01) |       86.21 | 6.63 | [ 73.21,  99.20] |  13.00 | &lt; .001
+s ~~ q (tau_12) |       -4.53 | 0.45 | [ -5.42,  -3.64] |  -9.97 | &lt; .001
+i ~~ q (tau_02) |      -12.48 | 0.93 | [-14.30, -10.65] | -13.43 | &lt; .001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_likelihoodratio</span>(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5, fit_6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Likelihood-Ratio-Test (LRT) for Model Comparison
+
+Model |   Type | df | df_diff |    Chi2 |      p
+------------------------------------------------
+fit_0 | lavaan | 51 |       1 | 5986.38 | &lt; .001
+fit_1 | lavaan | 50 |       1 | 1436.84 | &lt; .001
+fit_2 | lavaan | 49 |       1 | 1337.75 | &lt; .001
+fit_3 | lavaan | 48 |       1 | 1308.59 | &lt; .001
+fit_4 | lavaan | 47 |       3 | 1075.54 | &lt; .001
+fit_5 | lavaan | 44 |         |   39.91 |       
+fit_6 | lavaan | 50 |       0 |   45.63 |       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(fit_0, fit_1, fit_2, fit_3, fit_4,  fit_5, fit_6, <span class="at">metrics =</span> my_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name  |  Model |   CFI |  NNFI |  AGFI | RMSEA |   AIC (weights) |   BIC (weights)
+----------------------------------------------------------------------------------
+fit_0 | lavaan | 0.022 | 0.310 | 0.769 | 0.482 | 41721.5 (&lt;.001) | 41734.1 (&lt;.001)
+fit_1 | lavaan | 0.772 | 0.836 | 0.907 | 0.236 | 37173.9 (&lt;.001) | 37190.8 (&lt;.001)
+fit_2 | lavaan | 0.788 | 0.844 | 0.906 | 0.229 | 37076.8 (&lt;.001) | 37097.9 (&lt;.001)
+fit_3 | lavaan | 0.792 | 0.844 | 0.885 | 0.229 | 37049.7 (&lt;.001) | 37074.9 (&lt;.001)
+fit_4 | lavaan | 0.831 | 0.870 | 0.924 | 0.209 | 36818.6 (&lt;.001) | 36848.1 (&lt;.001)
+fit_5 | lavaan | 1.000 | 1.001 | 0.999 | 0.000 | 35789.0 (&lt;.001) | 35831.1 (&lt;.001)
+fit_6 | lavaan | 1.000 | 1.001 | 0.999 | 0.000 | 35649.6 (&gt;.999) | 35704.4 (&gt;.999)</code></pre>
 </div>
 </div>
 <ol start="8" type="1">

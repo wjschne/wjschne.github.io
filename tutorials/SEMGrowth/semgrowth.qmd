@@ -2075,7 +2075,7 @@ After a series of painful incidents in which several middle-schoolers were sever
 
 ```{r makebelongingdata}
 #| include: false
-#| eval: false
+#| eval: true
 b_00 <- 100
 b_01 <- -17
 b_10 <- 9
@@ -2176,7 +2176,7 @@ Using latent growth models, conduct the following tests:
 ::: {.callout-note collapse=true title="Hint"}
 
 ```{r bm0}
-#| eval: false
+#| eval: true
 m_0 <- "
 # Intercept
 i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
@@ -2209,7 +2209,7 @@ performance(fit_0, metrics = my_metrics)
 ::: {.callout-note collapse=true title="Hint"}
 
 ```{r bm1}
-#| eval: false
+#| eval: true
 m_1 <- "
 # Intercept
 i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
@@ -2255,8 +2255,8 @@ q ~~ 0 * q + 0 * i + 0 * s
 ```
 
 ```{r bm2}
-#| include: false
-#| eval: false
+#| include: true
+#| eval: true
 m_2 <- "
 # Intercept
 i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
@@ -2307,8 +2307,8 @@ s ~~ tau_11 * s + 0 * i
 :::
 
 ```{r bm3}
-#| include: false
-#| eval: false
+#| include: true
+#| eval: true
 m_3 <- "
 # Intercept
 i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
@@ -2358,8 +2358,8 @@ q ~~ tau_22 * q + 0 * i + 0 * s
 :::
 
 ```{r bm4}
-#| include: false
-#| eval: false
+#| include: true
+#| eval: true
 m_4 <- "
 # Intercept
 i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
@@ -2409,8 +2409,8 @@ q ~~ tau_22 * q + tau_12 * s + tau_02 * i
 :::
 
 ```{r bm5}
-#| include: false
-#| eval: false
+#| include: true
+#| eval: true
 m_5 <- "
 # Intercept
 i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
@@ -2460,8 +2460,8 @@ q ~ b_20 * 1 + b_21 * bullied
 :::
 
 ```{r bm6}
-#| include: false
-#| eval: false
+#| include: true
+#| eval: true
 m_6 <- "
 # Intercept
 i =~ 1 * sb_0 + 1 * sb_1 + 1 * sb_2 + 1 * sb_3 + 1 * sb_4 + 1 * sb_5  + 1 * sb_6 + 1 * sb_7 + 1 * sb_8 
@@ -2489,7 +2489,7 @@ sb_8 ~~ tau_1 * sb_8
 "
 
 fit_6 <- growth(m_6, data = d_belong)
-parameters(fit_5, component = "all")
+parameters(fit_6, component = "all")
 
 test_likelihoodratio(fit_0, fit_1, fit_2, fit_3, fit_4, fit_5, fit_6)
 compare_performance(fit_0, fit_1, fit_2, fit_3, fit_4,  fit_5, fit_6, metrics = my_metrics)

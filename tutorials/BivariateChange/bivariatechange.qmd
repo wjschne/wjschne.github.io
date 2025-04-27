@@ -44,6 +44,7 @@ library(sjPlot)
 library(easystats)
 library(gganimate)
 library(extrafont)
+library(glue)
 loadfonts(device = "all")
 ```
 
@@ -288,7 +289,7 @@ var_x <- paste0("x", 1:k, " ~~ ", v_x, " * x", 1:k, collapse = "\n")
 cat(var_x)
 ```
 
-# The `glue` function: An alterntive to `paste0`
+# The `glue` function: An alternative to `paste0`
 
 Many people find the `glue` function from the glue package easier to read than the `paste0` function. Put everything inside a single string, with R code enclosed in curly braces:
 
