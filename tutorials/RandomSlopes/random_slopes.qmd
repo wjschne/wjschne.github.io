@@ -6,6 +6,7 @@ date: '2025-02-06'
 engine: knitr
 execute: 
   freeze: true
+  cache: true
 knitr: 
   opts_chunk: 
     warning: false
@@ -26,10 +27,7 @@ format:
     fig-cap-location: margin
 callout-icon: false
 
-bibliography: 
-  - references.bib
-  - grateful-refs.bib
-
+bibliography: references.bib
 csl: "https://www.zotero.org/styles/apa"
 ---
 
@@ -842,7 +840,7 @@ gt::tab_stubhead("Level")
 ```{r fig-read2L1}
 #| fig-cap: Reading Time 2 Random Intercepts Model + Level 1 Covariate
 #| fig-width: 8
-#| fig-height: 4.5
+#| fig-height: 8
 #| code-fold: true
 p_read2L1 <- ggdiagram(myfont, font_size = 16) +
   {read_2 <- my_observed(

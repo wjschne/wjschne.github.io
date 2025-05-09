@@ -3,8 +3,16 @@ title: "Data Wrangling"
 author: "W. Joel Schneider"
 description: Getting Data into Useable Formats
 date: 2024-03-01
-execute: 
-  freeze: true
+engine: knitr
+knitr: 
+  opts_chunk: 
+    dev: "ragg_png"
+    out-width: "100%"
+    message: false
+execute:
+  echo: true
+  cache: true
+  warning: false
 format: 
   html: 
     fig-height: 8
@@ -19,14 +27,6 @@ format:
 #| label: setup
 #| include: false
 options(digits = 3)
-
-knitr::opts_chunk$set(
-  echo = TRUE, 
-  dev = "ragg_png", 
-  dpi = 300,
-  warning = F, 
-  message = F, 
-  out.width = '100%')
 library(tidyverse)
 library(lubridate)
 library(ggtext)
@@ -454,6 +454,7 @@ d %>%
 In this example, there is no advantage over just applying the transformations directly in `rename`:
 
 ```{r}
+#| label: renameadvantage
 d %>% 
   rename(ID = "id", 
          Baseline = "baseline_sessions_n",

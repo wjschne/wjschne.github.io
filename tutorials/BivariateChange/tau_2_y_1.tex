@@ -1,0 +1,17 @@
+\documentclass[border=1pt]{standalone}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{fontspec}
+\setmainfont{Arial}
+
+
+
+\definecolor{mybackground}{HTML}{FFFFFF}
+\newsavebox\pagecolorbox
+\savebox\pagecolorbox{%
+  \makebox[0pt]{\raisebox{-\paperheight}[0pt][0pt]{%
+    \textcolor{mybackground}{\rule{2\paperwidth}{\paperheight}}}}}
+\AtBeginDvi{\box\pagecolorbox}
+\begin{document}
+$\tau^2_{Y_1}$
+\end{document}

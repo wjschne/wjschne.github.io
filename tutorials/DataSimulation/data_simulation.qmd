@@ -545,12 +545,12 @@ $$\begin{bmatrix}e_{0j}\\e_{1j}\end{bmatrix}\sim\mathcal{N}\left(\begin{bmatrix}
 Create level-2 error terms.
 
 ```{r u2}
-u <- rmvnorm(k, 
+e2 <- rmvnorm(k, 
              mean = c(e_0j = 0, e_1j = 0), 
              sigma = tau_2) %>% 
   as_tibble()
 
-u
+e2
 ```
 
 
@@ -571,7 +571,7 @@ The `bind_cols` function binds the columns of two data.frames (or tibbles).
 d2 <- tibble(cluster_id = 1:k,
        cluster_size = rpois(k, 28) %>% pmax(1),
        C_j = rnorm(k)) %>% 
-  bind_cols(u) %>% 
+  bind_cols(e2) %>% 
   mutate(b_0j = b_00 + b_01 * C_j + e_0j,
          b_1j = b_10 + b_11 * C_j + e_1j)
 d2
@@ -593,12 +593,12 @@ d1
 
 ### Compute the level-1 error term and the level-1 covariates.
 
-The `rnorm` function needs to know how many rows there are. Because the number of rows was generated randomly, we do not usually know how many rows there will be. Fortunately, we can use the `nrow` function, which tells us how many rows are in a data frame. The dot in the phrase `nrow(.)` the data.frame that was piped into the `mutate` function.
+The `rnorm` function needs to know how many rows there are. Because the number of rows was generated randomly, we do not usually know how many rows there will be. Fortunately, we can use the `n` function, which tells us how many rows are in a data frame. 
 
 ```{r d1combined}
 d1 <- d1 %>% 
-  mutate(V_ij = rnorm(nrow(.)),
-         e = rnorm(nrow(.), sd = sqrt(tau_1)))
+  mutate(V_ij = rnorm(n()),
+         e = rnorm(n(), sd = sqrt(tau_1)))
 d1
 ```
 
@@ -653,7 +653,7 @@ tau_2 <- lav_matrix_lower2full(c(tau_00,
                                tau_10, tau_11))
 
 # Level-2 error terms
-u <- rmvnorm(k, 
+e2 <- rmvnorm(k, 
              mean = c(e_0j = 0, e_1j = 0), 
              sigma = tau_2) %>% 
   as_tibble()
@@ -662,12 +662,12 @@ u <- rmvnorm(k,
 d <- tibble(cluster_id = factor(1:k),
             cluster_size = rpois(k, 28) %>% pmax(1),
             C_j = rnorm(k)) %>% 
-  bind_cols(u) %>% 
+  bind_cols(e2) %>% 
   mutate(b_0j = b_00 + b_01 * C_j + e_0j,
          b_1j = b_10 + b_11 * C_j + e_1j) %>% 
   uncount(cluster_size) %>% 
-  mutate(V_ij = rnorm(nrow(.)), 
-         e = rnorm(nrow(.), sd = sqrt(tau_1)),
+  mutate(V_ij = rnorm(n()), 
+         e = rnorm(n(), sd = sqrt(tau_1)),
          Reading = b_0j + b_1j * V_ij + e,
          cluster_id = fct_reorder(cluster_id, C_j))
 ```

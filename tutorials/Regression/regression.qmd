@@ -6,8 +6,10 @@ date: 2024-03-07
 format: 
   html: 
     df-print: kable
+engine: knitr
 execute: 
   freeze: true
+  cache: true
 knitr:
   opts_chunk: 
     out-width: 100%
@@ -252,7 +254,7 @@ Sometimes a single outlier can radically alter a regression model. The plot in @
 
 Many additional outlier detection methods are available via the `check_outliers` function:
 
-```{r}
+```{r checkoutliers}
 #| message: false
 check_outliers(m1, method = "all")
 ```
@@ -423,7 +425,7 @@ sigma(m1)
 
 Alternately, it can be extracted from the `performance` function's output:
 
-```{r}
+```{r getsigma}
 performance(m1)$Sigma
 ```
 

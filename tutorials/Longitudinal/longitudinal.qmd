@@ -244,9 +244,9 @@ b_20 <- 8 # simple main effect of reading decoding
 b_21 <- -0.9 # reading decoding * working memory interaction
 
 # Standard deviations of level-2 random effects
-e_sd <- c(e0i = 50, # sd of random intercept
-          e1i = 1.7, # sd of random slope for time
-          e2i = 1.8) # sd of random slope for reading decoding
+e_sd <- c(e_0i = 50, # sd of random intercept
+          e_1i = 1.7, # sd of random slope for time
+          e_2i = 1.8) # sd of random slope for reading decoding
 
 # Correlations among level-2 random effects
 e_cor <- c(1,
@@ -261,7 +261,7 @@ tau_2 <- lavaan::cor2cov(R = e_cor,
 
 # simulate level-2 random effects
 e_2 <- mvtnorm::rmvnorm(n_person, 
-                      mean = c(e0i = 0, e1i = 0, e2i = 0), 
+                      mean = c(e_0i = 0, e_1i = 0, e_2i = 0), 
                       sigma = tau_2) %>% 
   as_tibble()
 
@@ -270,9 +270,9 @@ d_level2 <- tibble(person_id = factor(1:n_person),
                    n_occasions = n_occasions,
                working_memory = rnorm(n_person)) %>% 
   bind_cols(e_2) %>% 
-  mutate(b_0i = b_00 + b_01 * working_memory + e0i,
-         b_1i = b_10 + b_11 * working_memory + e1i,
-         b_2i = b_20 + b_21 * working_memory + e2i)
+  mutate(b_0i = b_00 + b_01 * working_memory + e_0i,
+         b_1i = b_10 + b_11 * working_memory + e_1i,
+         b_2i = b_20 + b_21 * working_memory + e_2i)
 
 d_level2
 ```
@@ -287,18 +287,18 @@ Let's say that our measurement of our level-1 variables occurs at the beginning 
 
 ```{r l1sim}
 # level-1 sd
-tau_1 <- 15 ^ 2
+tau_1 <- 15^2
 
-d_level1 <- d_level2 %>% 
-  uncount(n_occasions) %>% 
-  group_by(person_id) %>% 
-  mutate(Grade = row_number() - 1) %>% 
-  ungroup() %>% 
-  mutate(reading_decoding = 6 + 2 * Grade + .5 * working_memory + rnorm(nrow(.)),
-         e_ti = rnorm(nrow(.), 0, sd = sqrt(tau_1)), 
-         reading_comprehension = b_0i + b_1i * Grade + b_2i * reading_decoding + e_ti) %>% 
-  arrange(Grade, reading_comprehension) %>% 
-  mutate(person_id = fct_inorder(person_id)) %>% 
+d_level1 <- d_level2 %>%
+  uncount(n_occasions) %>%
+  mutate(Grade = row_number() - 1, .by = person_id) %>%
+  mutate(
+    reading_decoding = 6 + 2 * Grade + .5 * working_memory + rnorm(n()),
+    e_ti = rnorm(n(), mean = 0, sd = sqrt(tau_1)),
+    reading_comprehension = b_0i + b_1i * Grade + b_2i * reading_decoding + e_ti
+  ) %>%
+  arrange(Grade, reading_comprehension) %>%
+  mutate(person_id = fct_inorder(person_id)) %>%
   arrange(person_id, Grade)
 
 d_level1
@@ -310,9 +310,8 @@ Notes on the code from above:
 Code | Interpretation
 ------------------------------------:|:---------------------------------------------------
 `uncount(n_occasions)` | Make copies of each row in `d_level2` according to what value is in `n_occasions`, which in this case is 6 in every row. Thus, the 6 copies of each row `d_level2` are made.
-`group_by(person_id)` | "I'm about to do something to groups of rows defined by `person_id`."
-`mutate(Grade = row_number() - 1)` | Create a variable called `Grade` by taking the row number of each group defined by `person_id` and subtract 1. Because there are 6 rows per person, the values within each person will be 0, 1, 2, 3, 4, 5
-`ungroup()` | Stop computing things by group and compute variables the same way for the whole tibble.
+`mutate(Grade = row_number() - 1), .by = person_id` | Create a variable called `Grade` by taking the row number of each group defined by `person_id` and subtract 1. Because there are 6 rows per person, the values within each person will be 0, 1, 2, 3, 4, 5
+
 
 If the data were real, and I wanted to test the hypothesized model, I would run this code:
 
