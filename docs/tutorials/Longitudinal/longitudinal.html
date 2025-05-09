@@ -1124,7 +1124,7 @@ Table&nbsp;2: Model Results
 </section>
 </section>
 </section>
-<section id="complete-analysis-walkthrough" class="level1">
+<section id="complete-analysis-walkthrough" class="level1 page-columns page-full">
 <h1>Complete Analysis Walkthrough</h1>
 <p>Okay, suppose that we had no idea how the simulated data were generated. Imagine that we are researchers who collected the data rather than the people who simulated it. However, we hypothesized the model with which the data were simulated. Of course, we can go straight to testing the hypothesized model, but generally we start with the null model and build from there.</p>
 <section id="model-building-plan" class="level2">
@@ -1421,7 +1421,7 @@ fit_null |    0.00e+00 |     0.00e+00 |    0.00e+00 |             0.00%</code></
 </div>
 <p>As expected, the <code>fit_time</code> model fits better than the <code>fit_null</code> model.</p>
 </section>
-<section id="quadratic-effect-of-time" class="level2">
+<section id="quadratic-effect-of-time" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="quadratic-effect-of-time">Quadratic effect of Time</h2>
 <p>We did not have a hypothesis about whether time (Grade) would have a linear effect. Let’s see if we need a quadratic effect. We can construct a quadratic effect by using the <code>poly</code> function with a degree of 2. By default, it creates orthogonal polynomials (i.e., uncorrelated). Often raw polynomials are so highly correlated that they cannot be in the same regression formula. If you need raw polynomials (i.e., Grade and Grade squared), then specify <code>poly(Grade, 2, raw = T)</code>.</p>
 <div class="cell">
@@ -1560,14 +1560,19 @@ fit_time_quadratic    5 113435 113472 -56713   113425 0.0136  1      0.907</code
 </div>
 <p>No effect! We could add a third-order polynomial (i.e., the effect of Grade to the third power), but we did not hypothesize such an effect. Let’s stick with the linear effect of time.</p>
 <p>If we plot our data, we get this:</p>
-<div class="cell">
+<div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_level1, <span class="fu">aes</span>(Grade, reading_comprehension, <span class="at">color =</span> person_id)) <span class="sc">+</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> person_id), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="longitudinal_files/figure-html/plottime-1.png" class="img-fluid figure-img" width="768"></p>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plottime" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plottime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="longitudinal_files/figure-html/fig-plottime-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-plottime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Linear Effects of Time on Reading Comprehension
+</figcaption>
 </figure>
 </div>
 </div>
@@ -3050,7 +3055,7 @@ fit_wm_x_grade    |    4.36e-10 |     4.37e-10 |    1.76e-08 |            12.50%
 </div>
 </div>
 </section>
-<section id="final-model" class="level2">
+<section id="final-model" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="final-model">Final model</h2>
 <p>Let’s remove the now non-significant level-1 interaction, which brings us to the true model we simulated.</p>
 <div class="cell">
@@ -3272,30 +3277,47 @@ fit_wm_x_decoding |       0.270 |        0.270 |       0.009 |             0.00%
 </div>
 </div>
 <p>An alternate view of the same model suggests that the effect of working memory on reading comprehension is minimal in Kindergarten (Grade 0) and 1st grade when the focus is more on reading letters, single words, and very short sentences. However as the focus moves to longer, more complex sentences and paragraphs, the effect of Working Memory on Reading Comprehension increases.</p>
-<div class="cell">
+<div class="cell page-columns page-full" data-preview-image="true">
 <div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_model</span>(fit_final, </span>
 <span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"pred"</span>, </span>
 <span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"working_memory [-2, 2]"</span>, <span class="st">"reading_decoding [5, 10, 15]"</span>, <span class="st">"Grade [0:5]"</span>),</span>
-<span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"The Effect of Working Memory on Reading Comprehension</span><span class="sc">\n</span><span class="st"> at Different Levels of Reading Decoding and Grade"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="longitudinal_files/figure-html/plotwmbygradefinal-1.png" class="img-fluid figure-img" width="768"></p>
+<span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"The Effect of Working Memory on Reading Comprehension</span><span class="sc">\n</span><span class="st"> at Different Levels of Reading Decoding and Grade"</span>) <span class="sc">+</span> </span>
+<span id="cb143-5"><a href="#cb143-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">16</span>, <span class="at">base_family =</span> <span class="st">"Roboto Condensed"</span>) <span class="sc">+</span></span>
+<span id="cb143-6"><a href="#cb143-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb143-7"><a href="#cb143-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">"Reading</span><span class="sc">\n</span><span class="st">Decoding"</span>, <span class="at">begin =</span> .<span class="dv">2</span>, <span class="at">end =</span> .<span class="dv">8</span>) <span class="sc">+</span> </span>
+<span id="cb143-8"><a href="#cb143-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Working Memory"</span>, <span class="at">y =</span> <span class="st">"Reading Comprehension"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plotwmbygradefinal" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="768">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plotwmbygradefinal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="longitudinal_files/figure-html/fig-plotwmbygradefinal-1.png" id="fig-plotwmbygradefinal" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig quarto-uncaptioned margin-caption" id="fig-plotwmbygradefinal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Another view of the same model suggests that students with higher Working Memory have faster Reading Comprehension growth rates, even after controlling for Reading Decoding.</p>
-<div class="cell">
+<div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_model</span>(fit_final, </span>
 <span id="cb144-2"><a href="#cb144-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"pred"</span>, </span>
 <span id="cb144-3"><a href="#cb144-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"Grade [0:5]"</span>, <span class="st">"working_memory [-1, 0, 1]"</span>, <span class="st">"reading_decoding [5, 10, 15]"</span>),</span>
 <span id="cb144-4"><a href="#cb144-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"The Effect of Working Memory on Reading Comprehension</span><span class="sc">\n</span><span class="st"> at Different Levels of Reading Decoding and Grade"</span>) <span class="sc">+</span> </span>
-<span id="cb144-5"><a href="#cb144-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="longitudinal_files/figure-html/plotwmbygradefinal2-1.png" class="img-fluid figure-img" width="768"></p>
+<span id="cb144-5"><a href="#cb144-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">16</span>, <span class="at">base_family =</span> <span class="st">"Roboto Condensed"</span>) <span class="sc">+</span></span>
+<span id="cb144-6"><a href="#cb144-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb144-7"><a href="#cb144-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">"Working</span><span class="sc">\n</span><span class="st">Memory"</span>, <span class="at">begin =</span> .<span class="dv">2</span>, <span class="at">end =</span> .<span class="dv">8</span>) <span class="sc">+</span> </span>
+<span id="cb144-8"><a href="#cb144-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Grade"</span>, <span class="at">y =</span> <span class="st">"Reading Comprehension"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plotwmbygradefinal2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="768">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plotwmbygradefinal2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="longitudinal_files/figure-html/fig-plotwmbygradefinal2-1.png" id="fig-plotwmbygradefinal2" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig quarto-uncaptioned margin-caption" id="fig-plotwmbygradefinal2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11
+</figcaption>
 </figure>
 </div>
 </div>
@@ -3575,7 +3597,7 @@ Question 4
 <img src="longitudinal_files/figure-html/fig-fitweek-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fitweek-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Predicted Effects of Week
+Figure&nbsp;12: Predicted Effects of Week
 </figcaption>
 </figure>
 </div>
@@ -3795,7 +3817,7 @@ Hint (Click)
 <img src="longitudinal_files/figure-html/fig-meditation-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-meditation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: The Predicted Effects of Week by Meditation Hours
+Figure&nbsp;13: The Predicted Effects of Week by Meditation Hours
 </figcaption>
 </figure>
 </div>
@@ -4293,7 +4315,7 @@ fit_support           | 3.370 |    7.09e-04 |     7.12e-04 |       0.976 |      
 <img src="longitudinal_files/figure-html/fig-3interaction-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-3interaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: Interaction of Week, Meditation, and Therapist Support
+Figure&nbsp;14: Interaction of Week, Meditation, and Therapist Support
 </figcaption>
 </figure>
 </div>

@@ -296,7 +296,7 @@ Our `detect_effect` function returns `TRUE` or `FALSE`.
 
 The `replicate` function will perform `detect_effect` with our specified settings as many times as we want. It normally returns a vector if it can, but with `simplify = FALSE` it will return a list of all the objects created by our analysis. This list is bound into a single data.frame with `bind_rows` and then filtered to remove the intercept. Finally, we summarize the results by taking the mean of the `significant` column.
 
-```{r, warning=FALSE, message=FALSE, cache=T}
+```{r replicateoption, warning=FALSE, message=FALSE, cache=T}
 # Fixed effects
 b_00 = 0 # Reading level at month 0
 b_10 = 0.5 # Pre-assessment growth rate
@@ -376,7 +376,11 @@ Given the assumptions I set up, 90% power for the `month` variable is present in
 Suppose that I am not so sure about the size of assessment's effect. Therefore, I specify a variety of effect sizes for $b_{20}$. The `crossing` function creates tibble with all combinations of `n` and `b_20`. I then set `repeats` to 2, so that I can see the effect of sample size and effect size on power. The `uncount` function creates a new row for each row in the tibble, repeating the rows by the number of times specified in `repeats`.
 
 
-```{r tidyeffectsize, warning=FALSE, message=FALSE, cache=T}
+```{r}
+#| label: fig-tidyeffectsize
+#| fig-cap: Power Analysis by Sample Size and Effect Size
+#| preview-image: true
+
 crossing(n = c(seq(10,90, 5), seq(100, 1000, 25)), 
          b_20 = c(Smaller = .1,
                       Medium = .2,

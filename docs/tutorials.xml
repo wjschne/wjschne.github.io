@@ -932,7 +932,7 @@ font-style: inherit;">select</span>(term, significant)</span>
 <span id="cb7-9">}</span></code></pre></div>
 </div>
 </section>
-<section id="generate-many-data-sets-detecting-the-effect-on-each-set" class="level1">
+<section id="generate-many-data-sets-detecting-the-effect-on-each-set" class="level1 page-columns page-full">
 <h1>Generate Many Data Sets, Detecting the Effect on Each Set</h1>
 <p>Our <code>detect_effect</code> function returns <code>TRUE</code> or <code>FALSE</code>.</p>
 <p>The <code>replicate</code> function will perform <code>detect_effect</code> with our specified settings as many times as we want. It normally returns a vector if it can, but with <code>simplify = FALSE</code> it will return a list of all the objects created by our analysis. This list is bound into a single data.frame with <code>bind_rows</code> and then filtered to remove the intercept. Finally, we summarize the results by taking the mean of the <code>significant</code> column.</p>
@@ -1098,7 +1098,7 @@ font-style: inherit;">.by =</span> term)</span></code></pre></div>
 </div>
 <p>I usually start with a small number of replications (e.g., 10) to make sure the function is working as intended. Then I increase the replications by powers of 10 (100, 1000, 10000) until the analysis produces stable estimates and does not take too long to run.</p>
 <p>We can play around with different samples sizes we are interested in (50, 100, 200, 300, 500, 1000, …).</p>
-<section id="an-alternate-tidy-method" class="level2">
+<section id="an-alternate-tidy-method" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="an-alternate-tidy-method">An Alternate “Tidy” Method</h2>
 <p>Here we create a tibble with 1000 rows, each with a different sample size between 20 and 200. We create a new variable called <code>Power</code> that will contain the output of a function that makes data and tells us whether the effect was detected. The <code>map_dbl</code> is part of the <code>map</code> family. It takes the input of our sample size column <code>n</code> and performs our custom function for every row. The <code>Power</code> variable is just a column of 1s and 0s, telling whether the effect was detected or not.</p>
 <p>I then plot the results using the <code>geom_smooth</code> function. I specify a binomial glm, which is a logistic regression—regression for binary output. The result is a plot showing the relationship between sample size and power.</p>
@@ -1271,7 +1271,7 @@ font-style: inherit;">2</span>))</span></code></pre></div>
 </div>
 <p>Given the assumptions I set up, 90% power for the <code>month</code> variable is present in even small sample sizes. For the <code>months_after_assessment</code> variable, 90% power is present at a sample size of about 75.</p>
 <p>Suppose that I am not so sure about the size of assessment’s effect. Therefore, I specify a variety of effect sizes for <img src="https://latex.codecogs.com/png.latex?b_%7B20%7D">. The <code>crossing</code> function creates tibble with all combinations of <code>n</code> and <code>b_20</code>. I then set <code>repeats</code> to 2, so that I can see the effect of sample size and effect size on power. The <code>uncount</code> function creates a new row for each row in the tibble, repeating the rows by the number of times specified in <code>repeats</code>.</p>
-<div class="cell">
+<div class="cell page-columns page-full" data-preview-image="true">
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">crossing</span>(<span class="at" style="color: #657422;
@@ -1561,10 +1561,15 @@ background-color: null;
 font-style: inherit;">facet_wrap</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">vars</span>(term))</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/PowerAnalysis/power_analysis_files/figure-html/tidyeffectsize-1.png" class="img-fluid figure-img" width="768"></p>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-tidyeffectsize" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-tidyeffectsize-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/PowerAnalysis/power_analysis_files/figure-html/fig-tidyeffectsize-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-tidyeffectsize-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Power Analysis by Sample Size and Effect Size
+</figcaption>
 </figure>
 </div>
 </div>
@@ -11093,7 +11098,7 @@ Table&nbsp;2: Model Results
 </section>
 </section>
 </section>
-<section id="complete-analysis-walkthrough" class="level1">
+<section id="complete-analysis-walkthrough" class="level1 page-columns page-full">
 <h1>Complete Analysis Walkthrough</h1>
 <p>Okay, suppose that we had no idea how the simulated data were generated. Imagine that we are researchers who collected the data rather than the people who simulated it. However, we hypothesized the model with which the data were simulated. Of course, we can go straight to testing the hypothesized model, but generally we start with the null model and build from there.</p>
 <section id="model-building-plan" class="level2">
@@ -11468,7 +11473,7 @@ fit_null |    0.00e+00 |     0.00e+00 |    0.00e+00 |             0.00%</code></
 </div>
 <p>As expected, the <code>fit_time</code> model fits better than the <code>fit_null</code> model.</p>
 </section>
-<section id="quadratic-effect-of-time" class="level2">
+<section id="quadratic-effect-of-time" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="quadratic-effect-of-time">Quadratic effect of Time</h2>
 <p>We did not have a hypothesis about whether time (Grade) would have a linear effect. Let’s see if we need a quadratic effect. We can construct a quadratic effect by using the <code>poly</code> function with a degree of 2. By default, it creates orthogonal polynomials (i.e., uncorrelated). Often raw polynomials are so highly correlated that they cannot be in the same regression formula. If you need raw polynomials (i.e., Grade and Grade squared), then specify <code>poly(Grade, 2, raw = T)</code>.</p>
 <div class="cell">
@@ -11647,7 +11652,7 @@ fit_time_quadratic    5 113435 113472 -56713   113425 0.0136  1      0.907</code
 </div>
 <p>No effect! We could add a third-order polynomial (i.e., the effect of Grade to the third power), but we did not hypothesize such an effect. Let’s stick with the linear effect of time.</p>
 <p>If we plot our data, we get this:</p>
-<div class="cell">
+<div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(d_level1, <span class="fu" style="color: #4758AB;
@@ -11677,10 +11682,15 @@ background-color: null;
 font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"none"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/plottime-1.png" class="img-fluid figure-img" width="768"></p>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plottime" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plottime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-plottime-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-plottime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Linear Effects of Time on Reading Comprehension
+</figcaption>
 </figure>
 </div>
 </div>
@@ -13647,7 +13657,7 @@ fit_wm_x_grade    |    4.36e-10 |     4.37e-10 |    1.76e-08 |            12.50%
 </div>
 </div>
 </section>
-<section id="final-model" class="level2">
+<section id="final-model" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="final-model">Final model</h2>
 <p>Let’s remove the now non-significant level-1 interaction, which brings us to the true model we simulated.</p>
 <div class="cell">
@@ -13947,7 +13957,7 @@ font-style: inherit;"> at Different Levels of Working Memory and Grade"</span>)<
 </div>
 </div>
 <p>An alternate view of the same model suggests that the effect of working memory on reading comprehension is minimal in Kindergarten (Grade 0) and 1st grade when the focus is more on reading letters, single words, and very short sentences. However as the focus moves to longer, more complex sentences and paragraphs, the effect of Working Memory on Reading Comprehension increases.</p>
-<div class="cell">
+<div class="cell page-columns page-full" data-preview-image="true">
 <div class="sourceCode cell-code" id="cb143" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_model</span>(fit_final, </span>
@@ -13975,17 +13985,88 @@ font-style: inherit;">"The Effect of Working Memory on Reading Comprehension</sp
 background-color: null;
 font-style: inherit;">\n</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;"> at Different Levels of Reading Decoding and Grade"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/plotwmbygradefinal-1.png" class="img-fluid figure-img" width="768"></p>
+font-style: inherit;"> at Different Levels of Reading Decoding and Grade"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb143-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_light</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb143-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.justification =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb143-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_viridis_d</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Reading</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Decoding"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">begin =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">end =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb143-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Working Memory"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Reading Comprehension"</span>)</span></code></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plotwmbygradefinal" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="768">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plotwmbygradefinal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-plotwmbygradefinal-1.png" id="fig-plotwmbygradefinal" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig quarto-uncaptioned margin-caption" id="fig-plotwmbygradefinal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Another view of the same model suggests that students with higher Working Memory have faster Reading Comprehension growth rates, even after controlling for Reading Decoding.</p>
-<div class="cell">
+<div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb144" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_model</span>(fit_final, </span>
@@ -14018,27 +14099,77 @@ background-color: null;
 font-style: inherit;">+</span> </span>
 <span id="cb144-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
+font-style: inherit;">theme_light</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb144-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
 font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">legend.position =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">0</span>), <span class="at" style="color: #657422;
+font-style: inherit;">1</span>), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">legend.justification =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">0</span>))</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/plotwmbygradefinal2-1.png" class="img-fluid figure-img" width="768"></p>
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb144-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_viridis_d</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Working</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Memory"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">begin =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">end =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb144-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Grade"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Reading Comprehension"</span>)</span></code></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plotwmbygradefinal2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="768">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plotwmbygradefinal2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-plotwmbygradefinal2-1.png" id="fig-plotwmbygradefinal2" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig quarto-uncaptioned margin-caption" id="fig-plotwmbygradefinal2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11
+</figcaption>
 </figure>
 </div>
 </div>
@@ -14424,7 +14555,7 @@ font-style: inherit;">"Week"</span>)</span></code></pre></div>
 <img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-fitweek-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fitweek-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Predicted Effects of Week
+Figure&nbsp;12: Predicted Effects of Week
 </figcaption>
 </figure>
 </div>
@@ -14756,7 +14887,7 @@ font-style: inherit;">"meditation_hours [0, 5, 10]"</span>))</span></code></pre>
 <img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-meditation-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-meditation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: The Predicted Effects of Week by Meditation Hours
+Figure&nbsp;13: The Predicted Effects of Week by Meditation Hours
 </figcaption>
 </figure>
 </div>
@@ -15462,7 +15593,7 @@ font-style: inherit;">"top"</span>)</span></code></pre></div>
 <img src="https://wjschne.github.io/tutorials/Longitudinal/longitudinal_files/figure-html/fig-3interaction-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-3interaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: Interaction of Week, Meditation, and Therapist Support
+Figure&nbsp;14: Interaction of Week, Meditation, and Therapist Support
 </figcaption>
 </figure>
 </div>
@@ -69564,36 +69695,36 @@ Steps to create a project
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">July 13, 2014_District_B.csv</td>
-<td style="text-align: left;">2008-05-21_District_H.csv</td>
+<td style="text-align: left;">December 04, 2010_District_P.csv</td>
+<td style="text-align: left;">2007-07-19_District_G.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">March 15, 2013_District_F.csv</td>
-<td style="text-align: left;">2008-09-06_District_E.csv</td>
+<td style="text-align: left;">February 21, 2009_District_Q.csv</td>
+<td style="text-align: left;">2008-01-27_District_H.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">May 02, 2009_District_O.csv</td>
-<td style="text-align: left;">2008-10-04_District_G.csv</td>
+<td style="text-align: left;">February 27, 2013_District_Q.csv</td>
+<td style="text-align: left;">2009-02-21_District_Q.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">May 21, 2008_District_H.csv</td>
-<td style="text-align: left;">2009-05-02_District_O.csv</td>
+<td style="text-align: left;">January 27, 2008_District_H.csv</td>
+<td style="text-align: left;">2009-09-08_District_G.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">May 25, 2012_District_K.csv</td>
-<td style="text-align: left;">2011-05-31_District_K.csv</td>
+<td style="text-align: left;">July 19, 2007_District_G.csv</td>
+<td style="text-align: left;">2010-07-27_District_Z.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">May 31, 2011_District_K.csv</td>
-<td style="text-align: left;">2012-05-25_District_K.csv</td>
+<td style="text-align: left;">July 27, 2010_District_Z.csv</td>
+<td style="text-align: left;">2010-11-17_District_X.csv</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">October 04, 2008_District_G.csv</td>
-<td style="text-align: left;">2013-03-15_District_F.csv</td>
+<td style="text-align: left;">November 17, 2010_District_X.csv</td>
+<td style="text-align: left;">2010-12-04_District_P.csv</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">September 06, 2008_District_E.csv</td>
-<td style="text-align: left;">2014-07-13_District_B.csv</td>
+<td style="text-align: left;">September 08, 2009_District_G.csv</td>
+<td style="text-align: left;">2013-02-27_District_Q.csv</td>
 </tr>
 </tbody>
 </table>

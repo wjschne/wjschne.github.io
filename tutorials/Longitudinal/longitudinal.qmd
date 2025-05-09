@@ -565,7 +565,8 @@ No effect! We could add a third-order polynomial (i.e., the effect of Grade to t
 
 If we plot our data, we get this:
 
-```{r plottime}
+```{r fig-plottime}
+#| fig-cap: Linear Effects of Time on Reading Comprehension
 ggplot(d_level1, aes(Grade, reading_comprehension, color = person_id)) +
   geom_line(aes(group = person_id), alpha = 0.2) +
   theme(legend.position = "none")
@@ -774,21 +775,29 @@ plot_model(fit_final,
 
 An alternate view of the same model suggests that the effect of working memory on reading comprehension is minimal in Kindergarten (Grade 0) and 1st grade when the focus is more on reading letters, single words, and very short sentences. However as the focus moves to longer, more complex sentences and paragraphs, the effect of Working Memory on Reading Comprehension increases.
 
-```{r plotwmbygradefinal}
+```{r fig-plotwmbygradefinal}
+#| preview-image: true
 plot_model(fit_final, 
            type = "pred", 
            terms = c("working_memory [-2, 2]", "reading_decoding [5, 10, 15]", "Grade [0:5]"),
-           title = "The Effect of Working Memory on Reading Comprehension\n at Different Levels of Reading Decoding and Grade")
+           title = "The Effect of Working Memory on Reading Comprehension\n at Different Levels of Reading Decoding and Grade") + 
+  theme_light(base_size = 16, base_family = "Roboto Condensed") +
+  theme(legend.position = c(0,1), legend.justification = c(0,1)) + 
+  scale_color_viridis_d("Reading\nDecoding", begin = .2, end = .8) + 
+  labs(x = "Working Memory", y = "Reading Comprehension")
 ```
 
 Another view of the same model suggests that students with higher Working Memory have faster Reading Comprehension growth rates, even after controlling for Reading Decoding.
 
-```{r plotwmbygradefinal2}
+```{r fig-plotwmbygradefinal2}
 plot_model(fit_final, 
            type = "pred", 
            terms = c("Grade [0:5]", "working_memory [-1, 0, 1]", "reading_decoding [5, 10, 15]"),
            title = "The Effect of Working Memory on Reading Comprehension\n at Different Levels of Reading Decoding and Grade") + 
-  theme(legend.position = c(1,0), legend.justification = c(1,0))
+  theme_light(base_size = 16, base_family = "Roboto Condensed") +
+  theme(legend.position = c(0,1), legend.justification = c(0,1)) + 
+  scale_color_viridis_d("Working\nMemory", begin = .2, end = .8) + 
+  labs(x = "Grade", y = "Reading Comprehension")
 
 ```
 

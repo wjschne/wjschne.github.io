@@ -705,7 +705,7 @@ Model failed to converge with max|grad| = 0.0033821 (tol = 0.002, component 1)</
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="generate-many-data-sets-detecting-the-effect-on-each-set" class="level1">
+<section id="generate-many-data-sets-detecting-the-effect-on-each-set" class="level1 page-columns page-full">
 <h1>Generate Many Data Sets, Detecting the Effect on Each Set</h1>
 <p>Our <code>detect_effect</code> function returns <code>TRUE</code> or <code>FALSE</code>.</p>
 <p>The <code>replicate</code> function will perform <code>detect_effect</code> with our specified settings as many times as we want. It normally returns a vector if it can, but with <code>simplify = FALSE</code> it will return a list of all the objects created by our analysis. This list is bound into a single data.frame with <code>bind_rows</code> and then filtered to remove the intercept. Finally, we summarize the results by taking the mean of the <code>significant</code> column.</p>
@@ -751,7 +751,7 @@ Model failed to converge with max|grad| = 0.0033821 (tol = 0.002, component 1)</
 </div>
 <p>I usually start with a small number of replications (e.g., 10) to make sure the function is working as intended. Then I increase the replications by powers of 10 (100, 1000, 10000) until the analysis produces stable estimates and does not take too long to run.</p>
 <p>We can play around with different samples sizes we are interested in (50, 100, 200, 300, 500, 1000, …).</p>
-<section id="an-alternate-tidy-method" class="level2">
+<section id="an-alternate-tidy-method" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="an-alternate-tidy-method">An Alternate “Tidy” Method</h2>
 <p>Here we create a tibble with 1000 rows, each with a different sample size between 20 and 200. We create a new variable called <code>Power</code> that will contain the output of a function that makes data and tells us whether the effect was detected. The <code>map_dbl</code> is part of the <code>map</code> family. It takes the input of our sample size column <code>n</code> and performs our custom function for every row. The <code>Power</code> variable is just a column of 1s and 0s, telling whether the effect was detected or not.</p>
 <p>I then plot the results using the <code>geom_smooth</code> function. I specify a binomial glm, which is a logistic regression—regression for binary output. The result is a plot showing the relationship between sample size and power.</p>
@@ -792,7 +792,7 @@ Model failed to converge with max|grad| = 0.0033821 (tol = 0.002, component 1)</
 </div>
 <p>Given the assumptions I set up, 90% power for the <code>month</code> variable is present in even small sample sizes. For the <code>months_after_assessment</code> variable, 90% power is present at a sample size of about 75.</p>
 <p>Suppose that I am not so sure about the size of assessment’s effect. Therefore, I specify a variety of effect sizes for <span class="math inline">b_{20}</span>. The <code>crossing</code> function creates tibble with all combinations of <code>n</code> and <code>b_20</code>. I then set <code>repeats</code> to 2, so that I can see the effect of sample size and effect size on power. The <code>uncount</code> function creates a new row for each row in the tibble, repeating the rows by the number of times specified in <code>repeats</code>.</p>
-<div class="cell">
+<div class="cell page-columns page-full" data-preview-image="true">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crossing</span>(<span class="at">n =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">10</span>,<span class="dv">90</span>, <span class="dv">5</span>), <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">1000</span>, <span class="dv">25</span>)), </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">b_20 =</span> <span class="fu">c</span>(<span class="at">Smaller =</span> .<span class="dv">1</span>,</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Medium =</span> .<span class="dv">2</span>,</span>
@@ -832,10 +832,15 @@ Model failed to converge with max|grad| = 0.0033821 (tol = 0.002, component 1)</
 <span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">end =</span> .<span class="dv">9</span>, <span class="at">begin =</span> .<span class="dv">1</span>) <span class="sc">+</span> </span>
 <span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.2</span>)) <span class="sc">+</span></span>
 <span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>   <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(term))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="power_analysis_files/figure-html/tidyeffectsize-1.png" class="img-fluid figure-img" width="768"></p>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-tidyeffectsize" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-tidyeffectsize-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="power_analysis_files/figure-html/fig-tidyeffectsize-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-tidyeffectsize-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Power Analysis by Sample Size and Effect Size
+</figcaption>
 </figure>
 </div>
 </div>
