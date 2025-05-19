@@ -22,28 +22,46 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href=".//images/favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-44ce1a59488a08bcbffc924d0f9d8e94.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//images/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-f9714f3b0eab36ed1e05c4292bfb43c3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,84 +89,26 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-subtitle','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
- var mathElements = document.getElementsByClassName("math");
- var macros = [];
- for (var i = 0; i < mathElements.length; i++) {
-  var texText = mathElements[i].firstChild;
-  if (mathElements[i].tagName == "SPAN") {
-   katex.render(texText.data, mathElements[i], {
-    displayMode: mathElements[i].classList.contains('display'),
-    throwOnError: false,
-    macros: macros,
-    fleqn: false
-   });
-}}});
-  </script>
-  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="W. Joel Schneider" href="assessingpsyche.xml" data-external="1"><meta property="og:title" content="W. Joel Schneider">
-<meta property="og:description" content="A Blog about Psychological Assessment">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="W. Joel Schneider">
+<meta property="og:description" content="A Re-Analysis">
+<meta property="og:image" content="https://wjschne.github.io/AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966_files/figure-html/unnamed-chunk-1-1.png">
 <meta property="og:site_name" content="W. Joel Schneider">
+<meta property="og:image:height" content="1344">
+<meta property="og:image:width" content="1344">
+<meta name="citation_title" content="Horn &amp;amp; Cattell (1966)">
+<meta name="citation_author" content="W. Joel Schneider">
+<meta name="citation_fulltext_html_url" content="https://wjschne.github.io/AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html">
+<meta name="citation_language" content="en">
+<meta name="citation_journal_title" content="AssessingPsyche">
+<meta name="citation_reference" content="citation_title=Refinement and test of the theory of fluid and crystallized general intelligences.;,citation_author=John L. Horn;,citation_author=Raymond B. Cattell;,citation_publication_date=1966;,citation_cover_date=1966;,citation_year=1966;,citation_issue=5;,citation_doi=10.1037/h0023816;,citation_volume=57;,citation_journal_title=Journal of Educational Psychology;,citation_publisher=American Psychological Association;">
+<meta name="citation_reference" content="citation_title=The Cattell-Horn-Carroll theory of cognitive abilities;,citation_author=William Joel Schneider;,citation_author=Kevin S McGrew;,citation_editor=Dawn P. Flanagan;,citation_editor=Erin M. McDonough;,citation_publication_date=2018;,citation_cover_date=2018;,citation_year=2018;,citation_fulltext_html_url=https://www.guilford.com/books/Contemporary-Intellectual-Assessment/Flanagan-McDonough/9781462552030;,citation_isbn=978-1-4625-3578-1;,citation_inbook_title=Contemporary intellectual assessment: Theories, tests, and issues;">
+<meta name="citation_reference" content="citation_title=Primary mental abilities.;,citation_author=Louis Leon Thurstone;,citation_publication_date=1938;,citation_cover_date=1938;,citation_year=1938;">
+<meta name="citation_reference" content="citation_title=The cattell-horn-carroll model of intelligence;,citation_author=William Joel Schneider;,citation_author=Kevin S. McGrew;,citation_editor=Dawn P. Flanagan;,citation_editor=Patti L. Harrison;,citation_publication_date=2012;,citation_cover_date=2012;,citation_year=2012;,citation_fulltext_html_url=https://psycnet.apa.org/record/2012-09043-004;,citation_isbn=978-1-60918-995-2;,citation_inbook_title=Contemporary intellectual assessment: Theories, tests, and issues;">
+<meta name="citation_reference" content="citation_title=The cattell-horn-carroll theory of cognitive abilities: Past, present, and future.;,citation_author=Kevin S. McGrew;,citation_editor=Dawn P. Flanagan;,citation_editor=Patti L. Harrison;,citation_publication_date=2005;,citation_cover_date=2005;,citation_year=2005;,citation_inbook_title=Contemporary intellectual assessment. Theories, tests, and issues;">
+<meta name="citation_reference" content="citation_title=CHC theory and the human cognitive abilities project: Standing on the shoulders of the giants of psychometric intelligence research;,citation_author=Kevin S. McGrew;,citation_publication_date=2009;,citation_cover_date=2009;,citation_year=2009;,citation_issue=1;,citation_doi=10.1016/j.intell.2008.08.004;,citation_volume=37;,citation_journal_title=Intelligence;,citation_publisher=Elsevier;">
 </head>
 
 <body class="floating nav-fixed quarto-light">
@@ -158,7 +118,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">W. Joel Schneider</span>
     </a>
   </div>
@@ -169,31 +129,31 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html"> 
+    <a class="nav-link" href="../../blog.html"> 
 <span class="menu-text">R Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./assessingpsyche.html" aria-current="page"> 
+    <a class="nav-link" href="../../assessingpsyche.html"> 
 <span class="menu-text">Assessment Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./vita.html"> 
+    <a class="nav-link" href="../../vita.html"> 
 <span class="menu-text">Vita</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./projects.html"> 
+    <a class="nav-link" href="../../projects.html"> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./presentations.html"> 
+    <a class="nav-link" href="../../presentations.html"> 
 <span class="menu-text">Presentations</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./software.html"> 
+    <a class="nav-link" href="../../software.html"> 
 <span class="menu-text">Software</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./tutorials.html"> 
+    <a class="nav-link" href="../../tutorials.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
 </ul>
@@ -209,7 +169,7 @@ window.Quarto = {
 <span class="menu-text">GitHub</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./blog.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../blog.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -223,228 +183,179 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">AssessingPsyche</h1>
-            <p class="subtitle lead">A Blog about Psychological Assessment</p>
+    <div class="quarto-title column-body">
+      <h1 class="title">Horn &amp; Cattell (1966)</h1>
+            <p class="subtitle lead">A Re-Analysis</p>
                       </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>W. Joel Schneider </p>
+            </div>
+    </div>
       
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sections</h2>
+   
+  <ul>
+  <li><a href="#parallel-analysis" id="toc-parallel-analysis" class="nav-link active" data-scroll-target="#parallel-analysis">Parallel analysis</a></li>
+  <li><a href="#factor" id="toc-factor" class="nav-link" data-scroll-target="#factor">1 Factor</a></li>
+  <li><a href="#factors" id="toc-factors" class="nav-link" data-scroll-target="#factors">2 Factors</a></li>
+  <li><a href="#factors-1" id="toc-factors-1" class="nav-link" data-scroll-target="#factors-1">3 Factors</a></li>
+  <li><a href="#factors-2" id="toc-factors-2" class="nav-link" data-scroll-target="#factors-2">4 Factors</a></li>
+  <li><a href="#factors-3" id="toc-factors-3" class="nav-link" data-scroll-target="#factors-3">5 factors</a></li>
+  </ul>
+</nav>
+</nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(6)</span></div><div class="category" data-category="Y29uZmlkZW5jZSUyMGludGVydmFscw==">confidence intervals <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cHN5Y2hvbWV0cmljcw==">psychometrics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmVsaWFiaWxpdHk=">reliability <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3RhdGlzdGljcw==">statistics <span class="quarto-category-count">(2)</span></div></div></div>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<p><span class="citation" data-cites="hornRefinementTestTheory1966">Horn &amp; Cattell (<a href="#ref-hornRefinementTestTheory1966" role="doc-biblioref">1966</a>)</span> was a landmark study in the advancement of intelligence theory. It prompted Cattell to refine his original gf-gc theory, bringing it closer to Thurstone’s <span class="citation" data-cites="thurstonePrimaryMentalAbilities1938">(<a href="#ref-thurstonePrimaryMentalAbilities1938" role="doc-biblioref">1938</a>)</span> Primary Mental Abilities. The paper’s EFA methods are a little out of date, so I wanted to see what would happen if modern EFA methods were applied. I also removed the personality variables from the analysis, as they seemed to clutter the results.</p>
+<p>A heatmap of the correlation matrix from their Table 3 gives a nice preview of the factor analytic results:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="horncattell1966_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I see 3 big clusters, 2 of which split into 2 smaller clusters.</p>
+<section id="parallel-analysis" class="level1">
+<h1>Parallel analysis</h1>
+<p>A parallel analysis with <em>n</em> = 297 participants suggests 4 factors, perhaps 5:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="horncattell1966_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s extract up to 5 factors, starting with just a single factor.</p>
+</section>
+<section id="factor" class="level1">
+<h1>1 Factor</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="horncattell1966_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="240"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nothing to see here except the familiar finding that the reasoning tests have high <em>g</em> loadings and the speeded tests have lower <em>g</em> loadings.</p>
+</section>
+<section id="factors" class="level1">
+<h1>2 Factors</h1>
+<p>Does this look like <em>g<sub>f</sub></em>-<em>g<sub>c</sub></em> theory 1.0? It does to me!</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="horncattell1966_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="336"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="factors-1" class="level1">
+<h1>3 Factors</h1>
+<p>This looks like the higher-order <em>g<sub>f</sub></em>-<em>g<sub>c</sub></em>-<em>g<sub>s</sub></em> factors from <span class="citation" data-cites="schneiderCattellHornCarrollTheoryCognitive2018">Schneider &amp; McGrew (<a href="#ref-schneiderCattellHornCarrollTheoryCognitive2018" role="doc-biblioref">2018</a>)</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="horncattell1966_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="factors-2" class="level1">
+<h1>4 Factors</h1>
+<p>Here we see that gf splits into Gf and Gv:</p>
+<div class="cell" data-preview-image="true">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="horncattell1966_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="factors-3" class="level1">
+<h1>5 factors</h1>
+<p><em>g<sub>s</sub></em> (General Speediness) splits into Gs and Gr</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="horncattell1966_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These results are in line with CHC Theory <span class="citation" data-cites="schneiderCattellHornCarrollModelIntelligence2012 schneiderCattellHornCarrollTheoryCognitive2018 mcgrewCattellHornCarrollTheoryCognitive2005 mcgrewCHCTheoryHuman2009">(<a href="#ref-mcgrewCattellHornCarrollTheoryCognitive2005" role="doc-biblioref">McGrew, 2005</a>, <a href="#ref-mcgrewCHCTheoryHuman2009" role="doc-biblioref">2009</a>; <a href="#ref-schneiderCattellHornCarrollModelIntelligence2012" role="doc-biblioref">Schneider &amp; McGrew, 2012</a>; <a href="#ref-schneiderCattellHornCarrollTheoryCognitive2018" role="doc-biblioref">Schneider &amp; McGrew, 2018</a>)</span>, as they should be. Not much has changed! This is a <em>good</em> thing. Consistent results engender trust.</p>
 
 
 
+</section>
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1747621198394" data-listing-reading-time-sort="10" data-listing-word-count-sort="1932">
-<div class="thumbnail"><a href="./AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html" class="no-external">
-
-<p class="card-img-top"><img src="AssessingPsyche\2025-05-18-horn-cattell-1966\horncattell1966_files\figure-html\unnamed-chunk-1-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html" class="no-external">Horn &amp; Cattell (1966)</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html" class="no-external">A Re-Analysis</a>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-hornRefinementTestTheory1966" class="csl-entry" role="listitem">
+Horn, J. L., &amp; Cattell, R. B. (1966). Refinement and test of the theory of fluid and crystallized general intelligences. <em>Journal of Educational Psychology</em>, <em>57</em>(5), 253–270. <a href="https://doi.org/10.1037/h0023816">https://doi.org/10.1037/h0023816</a>
 </div>
-<div class="delink listing-description"><a href="./AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html" class="no-external">
-<span class="citation" data-cites="hornRefinementTestTheory1966">Horn &amp; Cattell (1966)</span> was a landmark study in the advancement of intelligence theory. It prompted Cattell to refine his original gf-gc theory, bringing it closer to…<span class="citation" data-cites="thurstonePrimaryMentalAbilities1938"></span>
-</a></div>
+<div id="ref-mcgrewCattellHornCarrollTheoryCognitive2005" class="csl-entry" role="listitem">
+McGrew, K. S. (2005). The cattell-horn-carroll theory of cognitive abilities: Past, present, and future. In D. P. Flanagan &amp; P. L. Harrison (Eds.), <em>Contemporary intellectual assessment. Theories, tests, and issues</em> (2nd ed., pp. 136–181). Guilford Press.
 </div>
-<div class="metadata">
-<a href="./AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html" class="no-external">
-<div class="listing-author">
-W. Joel Schneider
+<div id="ref-mcgrewCHCTheoryHuman2009" class="csl-entry" role="listitem">
+McGrew, K. S. (2009). <span>CHC</span> theory and the human cognitive abilities project: <span>Standing</span> on the shoulders of the giants of psychometric intelligence research. <em>Intelligence</em>, <em>37</em>(1), 1–10. <a href="https://doi.org/10.1016/j.intell.2008.08.004">https://doi.org/10.1016/j.intell.2008.08.004</a>
 </div>
-</a>
+<div id="ref-schneiderCattellHornCarrollModelIntelligence2012" class="csl-entry" role="listitem">
+Schneider, W. J., &amp; McGrew, K. S. (2012). The cattell-horn-carroll model of intelligence. In D. P. Flanagan &amp; P. L. Harrison (Eds.), <em>Contemporary intellectual assessment: Theories, tests, and issues</em> (3rd ed., pp. 99–144). Guilford Press. <a href="https://psycnet.apa.org/record/2012-09043-004">https://psycnet.apa.org/record/2012-09043-004</a>
 </div>
+<div id="ref-schneiderCattellHornCarrollTheoryCognitive2018" class="csl-entry" role="listitem">
+Schneider, W. J., &amp; McGrew, K. S. (2018). The <span>Cattell-Horn-Carroll</span> theory of cognitive abilities. In D. P. Flanagan &amp; E. M. McDonough (Eds.), <em>Contemporary intellectual assessment: <span>Theories</span>, tests, and issues</em> (4th ed., pp. 73–130). Guilford Press. <a href="https://www.guilford.com/books/Contemporary-Intellectual-Assessment/Flanagan-McDonough/9781462552030">https://www.guilford.com/books/Contemporary-Intellectual-Assessment/Flanagan-McDonough/9781462552030</a>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1694491200000" data-listing-file-modified-sort="1694525722744" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="173">
-<div class="thumbnail"><a href="./AssessingPsyche/2010-10-07-overture/index.html" class="no-external">
-
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./AssessingPsyche/2010-10-07-overture/index.html" class="no-external">Overture Redux</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./AssessingPsyche/2010-10-07-overture/index.html" class="no-external"></a>
+<div id="ref-thurstonePrimaryMentalAbilities1938" class="csl-entry" role="listitem">
+Thurstone, L. L. (1938). <em>Primary mental abilities.</em> University of Chicago Press.
 </div>
-<div class="delink listing-description"><a href="./AssessingPsyche/2010-10-07-overture/index.html" class="no-external">
-The original title of this blog (Assessing Psyche, Engaging Gauss, Seeking Sophia) was more of an aspiration than a description. To keep things simple, going forward the…<em></em>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./AssessingPsyche/2010-10-07-overture/index.html" class="no-external">
-<div class="listing-date">
-Sep 12, 2023
-</div>
-<div class="listing-author">
-W. Joel Schneider
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1477454400000" data-listing-file-modified-sort="1747620184832" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="36" data-listing-word-count-sort="7094">
-<div class="thumbnail"><a href="./AssessingPsyche/2016-10-26-rescae/RESCAE.html" class="no-external">
-
-<p class="card-img-top"><img src="AssessingPsyche\2016-10-26-rescae\CHC.svg" alt="A graphical depiction of CHC Theory"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./AssessingPsyche/2016-10-26-rescae/RESCAE.html" class="no-external">The RESCA-E Subtests Are Thoughtfully Designed and Highly Refined Measures of CHC Constructs</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./AssessingPsyche/2016-10-26-rescae/RESCAE.html" class="no-external">A Review of the Receptive, Expressive &amp; Social Communication Assessment–Elementary</a>
-</div>
-<div class="delink listing-description"><a href="./AssessingPsyche/2016-10-26-rescae/RESCAE.html" class="no-external">
-<strong>Conflict of Interest Statement:</strong> ATP Assessments, the publisher of the RESCA-E, commissioned me to write a descriptive account of the likely relations among the RESCA-E…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./AssessingPsyche/2016-10-26-rescae/RESCAE.html" class="no-external">
-<div class="listing-date">
-Oct 26, 2016
-</div>
-<div class="listing-author">
-W. Joel Schneider
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="cHN5Y2hvbWV0cmljcyUyQ3JlbGlhYmlsaXR5JTJDY29uZmlkZW5jZSUyMGludGVydmFscw==" data-listing-date-sort="1389848400000" data-listing-file-modified-sort="1738853829609" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1917">
-<div class="thumbnail"><a href="./AssessingPsyche/2014-01-16-reliability-is-for-squares/index.html" class="no-external">
-
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./AssessingPsyche/2014-01-16-reliability-is-for-squares/index.html" class="no-external">Reliability coefficients are for squares</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./AssessingPsyche/2014-01-16-reliability-is-for-squares/index.html" class="no-external">Confidence interval widths tell it to you straight.</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('cHN5Y2hvbWV0cmljcw=='); return false;">psychometrics</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('cmVsaWFiaWxpdHk='); return false;">reliability</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Y29uZmlkZW5jZSUyMGludGVydmFscw=='); return false;">confidence intervals</div>
-
-</div>
-<div class="delink listing-description"><a href="./AssessingPsyche/2014-01-16-reliability-is-for-squares/index.html" class="no-external">
-<p>Visualizing the relationship between reliability and confidence interval widths</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./AssessingPsyche/2014-01-16-reliability-is-for-squares/index.html" class="no-external">
-<div class="listing-date">
-Jan 16, 2014
-</div>
-<div class="listing-author">
-W. Joel Schneider
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="c3RhdGlzdGljcw==" data-listing-date-sort="1389589200000" data-listing-file-modified-sort="1730684375678" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="33" data-listing-word-count-sort="6483">
-<div class="thumbnail"><a href="./AssessingPsyche/2014-01-13-gentle-introduction-to-factor-analysis/index.html" class="no-external">
-
-<p class="card-img-top"><img src="AssessingPsyche\2014-01-13-gentle-introduction-to-factor-analysis\index_files\figure-html\tbl-independent-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./AssessingPsyche/2014-01-13-gentle-introduction-to-factor-analysis/index.html" class="no-external">A Gentle, Non-Technical Introduction to Factor Analysis</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./AssessingPsyche/2014-01-13-gentle-introduction-to-factor-analysis/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('c3RhdGlzdGljcw=='); return false;">statistics</div>
-
-</div>
-<div class="delink listing-description"><a href="./AssessingPsyche/2014-01-13-gentle-introduction-to-factor-analysis/index.html" class="no-external">
-<p>Discovering Underlying Dimensions in Data</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./AssessingPsyche/2014-01-13-gentle-introduction-to-factor-analysis/index.html" class="no-external">
-<div class="listing-date">
-Jan 13, 2014
-</div>
-<div class="listing-author">
-W. Joel Schneider
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="c3RhdGlzdGljcw==" data-listing-date-sort="1347508800000" data-listing-file-modified-sort="1738852912481" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1968">
-<div class="thumbnail"><a href="./AssessingPsyche/2012-09-13-visualizing-covariance/index.html" class="no-external">
-
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./AssessingPsyche/2012-09-13-visualizing-covariance/index.html" class="no-external">Visualizing Covariance</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./AssessingPsyche/2012-09-13-visualizing-covariance/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('c3RhdGlzdGljcw=='); return false;">statistics</div>
-
-</div>
-<div class="delink listing-description"><a href="./AssessingPsyche/2012-09-13-visualizing-covariance/index.html" class="no-external">
-<p>A visualization of covariance</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./AssessingPsyche/2012-09-13-visualizing-covariance/index.html" class="no-external">
-<div class="listing-date">
-Sep 13, 2012
-</div>
-<div class="listing-author">
-W. Joel Schneider
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider,
+  author = {Schneider, W. Joel and Joel Schneider, W.},
+  title = {Horn \&amp; {Cattell} (1966)},
+  url = {https://wjschne.github.io/AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider" class="csl-entry quarto-appendix-citeas" role="listitem">
+Schneider, W. J., &amp; Joel Schneider, W. (n.d.). Horn &amp; Cattell
+(1966). <em>AssessingPsyche</em>. <a href="https://wjschne.github.io/AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html">https://wjschne.github.io/AssessingPsyche/2025-05-18-horn-cattell-1966/horncattell1966.html</a>
+</div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
