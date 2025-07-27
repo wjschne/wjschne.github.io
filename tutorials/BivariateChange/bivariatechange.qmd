@@ -453,7 +453,7 @@ model_performance(fit_clpm, metrics = my_metrics) %>%
 model_parameters(fit_clpm, component = "all") %>% 
   print_md()
 # my fork of Jason Tsukahara's semoutput:
-# remotes("wjschne/semoutput")
+# remotes::install_github("wjschne/semoutput")
 semoutput::sem_tables(fit_clpm, intercepts = T)
 ```
 
@@ -785,9 +785,10 @@ Here we combine bivariate latent growth models with the cross-lagged panel model
 ```{r}
 #| label: fig-lgsr
 #| fig-cap: The Latent Growth Model with Structured Residuals
-#| fig-width: 10
-#| fig-height: 10
+#| fig-width: 11
+#| fig-height: 11
 #| code-fold: true
+
 ggdiagram(font_family = my_font, font_size = 24) +
   {x <- my_observed() %>%
     ob_array(k,
@@ -795,7 +796,7 @@ ggdiagram(font_family = my_font, font_size = 24) +
              where = "south",
              label = paste0("*X*~" , 1:k, "~"))} +
   {y <- my_observed(label = paste0("*Y*~" ,1:k, "~")) %>%  
-    place(x, "right", sep = 6)} +
+    place(x, "right", sep = 7)} +
   {e_x <- my_error(radius = .5) %>% place(x, "right", sep = .5)} +
   {e_y <- my_error(radius = .5) %>% place(y, "left", sep = .5)} +
   {ee_x <- my_error() %>% place(e_x[-1], "right", sep = .5)} +
@@ -819,13 +820,13 @@ ggdiagram(font_family = my_font, font_size = 24) +
                 length_fins = 4, 
                 looseness = 1.3) +
   {ix <- ob_circle(label = "*i*~*X*~", radius = sqrt(4 / pi)) %>% 
-    place(x[2]@bounding_box@point_at("left"), "left", sep = 3)} +
+    place(x[2]@bounding_box@point_at("left"), "left", sep = 2.5)} +
   {iy <- ob_circle(label = "*i*~*Y*~", radius = sqrt(4 / pi)) %>% 
-    place(y[2]@bounding_box@point_at("right"), "right", sep = 3)} + 
+    place(y[2]@bounding_box@point_at("right"), "right", sep = 2.5)} + 
   {sx <- ob_circle(label = "*s*~*X*~", radius = sqrt(4 / pi)) %>% 
-    place(x[3]@bounding_box@point_at("left"), "left", sep = 3)} +
+    place(x[3]@bounding_box@point_at("left"), "left", sep = 2.5)} +
   {sy <- ob_circle(label = "*s*~*Y*~", radius = sqrt(4 / pi)) %>% 
-    place(y[3]@bounding_box@point_at("right"), "right", sep = 3)} + 
+    place(y[3]@bounding_box@point_at("right"), "right", sep = 2.5)} + 
   {lx <- my_connect(ix, x@point_at(degree(175)))} +
   {ly <- my_connect(iy, y@point_at(degree(5)))} + 
   ob_label("1",
