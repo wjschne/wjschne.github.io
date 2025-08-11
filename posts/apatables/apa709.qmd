@@ -1,0 +1,158 @@
+---
+title: Recreating APA Manual Table 7.9 in R with apa7
+date: '2025-08-25'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 9 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Use custom `column_formatts`
+* Use `footnote`
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.9](table79.png){#fig-79 width="100%"}
+
+Setting up the data was harder than creating the table. Once the data were ready, I needed to set the rounding of the variables and alter the column header of the `F` column. 
+
+The `column_formats` function creates a modifiable copy of the default column formatters. I set the rounding accuracy of column `p` to .001, and I set the header of the `F` column to `*F* ratio`
+
+
+```{r}
+#| label: tbl-79
+#| tbl-cap: "Analyses for the Interaction of Professor 
+#|           Type and Timing of Response on Perceptions 
+#|           of Professor Traits"
+#| apa-note: "Means with different subscripts differ at 
+#|            the *p*&nbsp;=&nbsp;.05 level by Duncan’s 
+#|            new multiple range test."
+#| echo: fenced
+
+# Descriptives
+d_mean <- "
+Professor trait   	Semester	Type     	Mean	Subscript
+Dedicated         	End     	Typical  	4.71	b        
+Easy to understand	End     	Typical  	3.06	c        
+Fair              	End     	Typical  	4.00	b        
+Manipulative      	End     	Typical  	1.47	a        
+Insensitive       	End     	Typical  	2.06	b        
+Dedicated         	End     	Effective	4.79	b        
+Easy to understand	End     	Effective	4.89	a        
+Fair              	End     	Effective	4.26	b        
+Manipulative      	End     	Effective	1.63	a        
+Insensitive       	End     	Effective	1.53	c        
+Dedicated         	Start   	Typical  	4.15	c        
+Easy to understand	Start   	Typical  	3.23	c        
+Fair              	Start   	Typical  	3.73	c        
+Manipulative      	Start   	Typical  	1.73	a        
+Insensitive       	Start   	Typical  	2.54	a        
+Dedicated         	Start   	Effective	5.00	a        
+Easy to understand	Start   	Effective	4.43	b        
+Fair              	Start   	Effective	4.67	a        
+Manipulative      	Start   	Effective	1.24	a        
+Insensitive       	Start   	Effective	1.14	c        " |>
+	readr::read_tsv() |> 
+  suppressMessages()
+
+# Statistics
+d_test <- "
+Professor trait   	F      	p   	eta2
+Dedicated         	19.26  	0.00	0.15
+Easy to understand	5.01   	0.03	0.03
+Fair              	5.75   	0.02	0.06
+Manipulative      	3.92   	0.05	0.05
+Insensitive       	8.12   	0.01	0.06" |>
+  readr::read_tsv() |> 
+  suppressMessages() 
+
+# Format data
+d <- d_mean |>
+  mutate(Semester = paste0(
+    Semester, 
+    " of semester\\\nprofessor type")) |>
+  mutate(Mean = scales::number(Mean, accuracy = .001),
+         Subscript = paste0("~", Subscript, "~")) |>
+  unite(Mean, c(Mean, Subscript), sep = "") |>
+  unite(Semester, c(Semester, Type)) |>
+  pivot_wider(names_from = Semester, 
+              values_from = Mean) |>
+  left_join(d_test, by = join_by(`Professor trait`)) |>
+  mutate(`Professor trait` = hanging_indent(
+    `Professor trait`, 
+    width = 8)) 
+
+# custom formatter
+my_formatter <-  column_formats()
+## change p column's accuracy to 0.001
+my_formatter$p@formatter <- my_formatter$p@formatter |> 
+  purrr::partial(accuracy = .001)
+my_formatter$`F`@header <- "*F* ratio"
+
+# Make table
+apa_flextable(d, 
+              table_width = 1, 
+              column_formats = my_formatter) 
+```

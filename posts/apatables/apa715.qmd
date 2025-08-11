@@ -1,0 +1,205 @@
+---
+title: Recreating APA Manual Table 7.15 in R with apa7
+date: '2025-08-31'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 15 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Automatic formatting of `lm` (linear model) analyses with `apa_performance` and `apa_compare_performance`.
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+library(easystats)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.15](table715.png){#fig-715 width="100%"}
+
+I love the easystats ecosystem. It provides a coherent framework for  data-analyst to process and display statistical analyses. It makes so many previously tedious things simple. It was not designed for the final display of APA tables, however. The apa7 package has a few functions and features that help process the output of easystats functions to make them table-ready.
+
+First, lets simulate some data that resembles the data underlying the models in @fig-715, and create regression models for Models 1 and 2.
+
+```{r}
+#| label: make715
+set.seed(1)
+# sample size
+n <- 88
+
+# simulated data
+d <- tibble(
+  leader_gender = sample(0:1, n, replace = TRUE),
+  leader_sleep_condition = sample(0:1, 88, replace = TRUE),
+  charisma = 2.76 - .09 * leader_gender - .36 * leader_sleep_condition + rnorm(n, sd = 0.5))
+
+# Models 1 and 2
+m1 <- lm(charisma ~ leader_gender, data = d)
+m2 <- lm(charisma ~ leader_gender + leader_sleep_condition, data = d)
+```
+
+The `parameters::parameters` function from easystats ecosystem displays information about regression predictors.
+
+```{r}
+#| label: parametersm2
+parameters(m2) 
+```
+
+That is a really nice display. However, if we convert it directly with `flextable`, we get something far less polished.
+
+```{r}
+#| label: parametersm2flextable
+parameters(m2) |> 
+  flextable()
+```
+
+
+As it turns out, the output of the `parameters` function undergoes a fair bit of processing before it prints. The output is a `data.frame` with a `parameters_model` class  and many attributes that can be used by the easystats formatting functions. If we want to see the underlying data, we can convert the output to a `data.frame` or `tibble`.
+
+```{r}
+#| label: parametersm2tibble
+parameters(m2) |> 
+  as_tibble()
+```
+
+If we really want just the output of `parameter` as it displays, we use the `format_table` function.
+
+```{r}
+#| label: parametersm2format
+parameters(m2, ci = .95) |> 
+  insight::format_table() 
+```
+
+This gets us closer to APA style, but not quite all way there. We would like things to be nearly automatic and yet be able to fine-tune the output. Behold!
+
+```{r}
+#| label: apaparamtersm2
+apa_parameters(m2) 
+```
+
+The `apa_parameters` function is a wrapper around the `parameters` function with defaults that produce APA style output via markdown syntax. The columns are decimal aligned, statistics are italicized, the intercept is called a "Constant", and the variable names are printed in title case. 
+
+Applying `apa_flextable` to the output gives us perfect APA style:
+
+```{r}
+#| label: apaparamtersm2flextable
+apa_parameters(m2) |> 
+  apa_flextable() 
+```
+
+The `apa_format_columns` function and a few others like `apa_parameters`, `apa_performance`, and `apa_compare_performance` can process the output of the `lm` function.
+
+Getting the output of `apa_parameters` and `apa_compare_performance` into the same table requires a rather complex process. I'd like to automate some of these steps. 
+
+```{r}
+#| label: tbl-715
+#| tbl-cap: Regression Coefficients of Leader Sleep on Charismatic Leadership
+
+# pf <- column_formats()
+# pf$SE@header <- "*SE*"
+
+m <- list(`Model 1` = m1, 
+          `Model 2` = m2) 
+
+d_parameters <- apa_parameters(
+  m, 
+  predictor_parameters = c("Coefficient", "Std_Coefficient", "SE"))
+
+d_performance <- apa_performance_comparison(
+  m,
+  metrics = c("R2", "deltaR2"),
+  starred = "deltaR2") |> 
+  pivot_longer(-Model, names_to = "Variable") |> 
+  mutate(Model = paste0(Model, "_&beta;")) |> 
+  pivot_wider(names_from = Model)
+
+d_parameters |> 
+  pivot_wider_name_first(
+    id_cols = Variable, 
+    names_from = Model, 
+    values_from = 3:5) |> 
+  mutate(Variable = str_to_sentence(Variable)) |>
+  add_row(d_performance) |>
+  mutate(across(-Variable, \(x) align_chr(
+    x,
+    center = "\\.", 
+    side = "left",
+    NA_value = "") |> 
+      star_balance())) |> 
+  apa_flextable(no_format_columns = Variable) |> 
+  align(j = 1, align = "left") |> 
+  flextable::add_footer_lines(values = as_paragraph_md("*Note*. *N*&nbsp;=&nbsp;88. We examined the impact of leader sleep condition (control vs. sleep deprived) on ratings of charismatic leadership. In Models 1 and 2, we entered the control variable of leader gender to predict leader charisma.")) |> 
+  footnote(i = 2, 
+           j = 1, 
+           value = as_paragraph("Male = 1, female = 2. "), 
+           ref_symbols = "a ") |>
+    footnote(i = 3, 
+             j = 1, 
+             value = as_paragraph(
+               "Control condition = 0, sleep-deprived condition = 1"), 
+             ref_symbols = "b ", 
+             inline = T, 
+             sep = ".") |> 
+  add_footer_lines(
+    values = as_paragraph_md("\\* *p* < .05. \\*\\* *p* < .01.")) |> 
+  align(align = "left", part = "footer")
+```

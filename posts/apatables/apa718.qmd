@@ -1,0 +1,189 @@
+---
+title: Recreating APA Manual Table 7.18 in R with apa7
+date: '2025-09-03'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 18 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Presenting a sequence of regression models
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+library(easystats)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.18](table718.png){#fig-718 width="100%"}
+
+```{r}
+#| label: tbl-718
+#| tbl-cap: "Hierarchical Regression: Results for Well-Being"
+#| echo: fenced
+#| apa-note: 
+#|   - "CI = confidence interval; *LL*&nbsp;=&nbsp;lower limit; 
+#|   *UL*&nbsp;=&nbsp;upper limit; familismo = the collective 
+#|   importance of family unity that emphasizes interdependence
+#|   and solidarity; Mex Am margin&nbsp;=&nbsp;Mexican 
+#|   American marginalization."
+#|   - "^\\*^*p* < .05. ^\\*\\*^*p* < .01. ^\\*\\*\\*^*p* < .001."
+set.seed(7)
+# Make coefficients
+d_coefficients <- tibble::tribble(
+  ~Step,                ~Variable, ~beta,    ~b,
+     1L, "Perceived social class",  0.31,  0.45,
+     1L,       "Generation level", -0.01, -0.01,
+     2L,              "Familismo",  0.23,  0.37,
+     2L,          "Acculturation",  0.05,  0.11,
+     2L,          "Enculturation",  0.24,  0.35,
+     2L,        "Mex {Am} margin", -0.17, -0.23,
+     3L,   "Masculinity ideology", -0.18, -0.05
+  ) |> 
+  mutate(vname = snakecase::to_any_case(
+    Variable, 
+    case = "parsed") |> fct_inorder(),
+    Variable = fct_inorder(Variable))
+
+# Make data
+d <- d_coefficients |> 
+  unite(vname, c(beta, vname), 
+        sep = " * ") |> 
+  pull(vname) |> 
+  paste(collapse = " + ") |> 
+  {
+    \(x) paste0("y ~ ", x)
+    }() |> 
+  lavaan::simulateData(standardized = TRUE, sample.nobs = 200) |> 
+  mutate(y = y + 4) |> 
+  as_tibble()
+
+# Rescale data
+for (i in seq_len(nrow(d_coefficients))) {
+  d[,d_coefficients[i,]$vname] <- d[,d_coefficients[i,]$vname] * 
+    d_coefficients[i,]$beta / 
+    d_coefficients[i,]$beta
+}
+
+# Analyze data
+d_analysis <- d_coefficients |>
+  select(Step, vname) |>
+  crossing(Model = 1:3) |>
+  arrange(Model, Step) |>
+  filter(Step <= Model) |>
+  select(-Step) |>
+  summarise(f = paste0(vname, collapse = " + "), 
+            .by = Model) |>
+  mutate(
+    eq = paste0("y ~ ", f) |> map(formula),
+    fit = map(eq, lm, data = d),
+    Model = paste("Model", Model)
+  )
+
+# Format data
+d <- d_analysis |>
+  mutate(
+    parameters = map(fit, model_parameters),
+    std_parameters = map(fit, 
+                         model_parameters, 
+                         standardize  = "basic") |> 
+      map(\(d) select(d, Std_Coefficient))
+  ) |>
+  select(Model, parameters, std_parameters) |>
+  unnest(c(parameters, std_parameters)) |>
+  select(-CI, -t, -df_error) |>
+  rename(pp = p) |>
+  relocate(SE, .before = Std_Coefficient) |>
+  apa_format_columns() |>
+  rename(`95% CI for *B*_*LL*` = LL,
+         `95% CI for *B*_*UL*` = UL) |>
+  as_grouped_data("Model") |>
+  left_join(
+    d_analysis |>
+      pull(fit) |>
+      apa_performance_comparison(
+        starred = "deltaR2", 
+        metrics = c("R2", "deltaR2")),
+    by = join_by(Model)
+  ) |>
+  tidyr::replace_na(list(Model = "", Variable = "")) |>
+  unite(Variable, c(Variable, Model), sep = "") |>
+  add_star_column(c(`*B*`, `&beta;`), p = pp, merge = F) |> 
+  select(-pp) |>
+  mutate(Variable = str_replace(Variable, "^Model", "Step") |> 
+           snakecase::to_sentence_case() |> 
+           str_replace(" am ", " Am ")) 
+
+# Make table
+d |> 
+  apa_flextable(line_spacing = 1.5, 
+                layout = "fixed") |>
+  padding(i = ~!is.na(`*B*`), 
+          j = 1, 
+          padding.left = 15) |>
+  surround(i = ~is.na(`*B*`), 
+           border.top = fp_border_default(color = "gray30")) |> 
+  width(width = 6.5 * c(3, .6, .4, 1, 1, 1, 
+                           .6, .4, 1, 1) / 10)
+  
+
+```

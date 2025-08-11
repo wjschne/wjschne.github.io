@@ -1,0 +1,95 @@
+---
+title: Recreating APA Manual Table 7.11 in R with apa7
+date: '2025-08-27'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 11 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+* The `separate_star_column` function to align numbers with significance stars
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.11](table711.png){#fig-711 width="100%"}
+
+This correlation matrix is different above and below the diagonal. A correctable imperfection of the @fig-711 is that the correlations do not align on their decimals due to the minus signs and stars. This can be corrected by separating the correlations from the significance stars with the `separate_star_column` function. This function removes any stars from each selected column and places them in an adjacent column. The `apa_style` function then automatically right aligns the selected columns and left aligns the star columns, and removes any padding between them, giving the illusion that they are in the same column with decimal alignment.
+
+```{r}
+#| label: tbl-711
+#| tbl-cap: Intercorrelations for Study Variables Disaggregated by Gender
+#| apa-note: "The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal."
+
+"
+Variable             	1    	2    	3    	4
+Grade point average  	—    	.49**	.35**	−.05
+Academic self-concept	.35**	—    	.36**	.02
+Teacher trust        	.49**	.35**	—    	.20**
+Age                  	.10  	.21* 	−.15 	—" |>
+  readr::read_tsv() |>
+  suppressMessages() |>
+  separate_star_column(-Variable) |>
+  apa_flextable(no_format_columns = Variable) |>
+  width(width = c(1.7,.8, .4,  rep(c(.8, .4), 3))) 
+
+```

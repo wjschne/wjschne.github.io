@@ -1,0 +1,134 @@
+---
+title: Recreating APA Manual Table 7.4 in R with apa7
+date: '2025-08-20'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 4 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* `merge_v` to collapse text acros rows.
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.4](table74.png){#fig-74 width="100%"}
+
+APA Manual Table 7.4 in @fig-74 is not entirely visible, so I have reproduced the visible rows only. This table is straightforward to make. I used `merge_v` to remove redundant text in the Study column.
+
+This table is intended to illustrate repeated headers, which is not relevant in the .html display here. Fortunately, when rendered to .docx, flextable repeats headers by default.
+
+```{r}
+#| label: tbl-74
+#| echo: fenced
+#| tbl-cap: Sample and Task Information for Studies Included in the Meta-Analysis.
+#| apa-note: "AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task."
+
+# Make data and restructure data
+d <- tibble(
+  Study = c(
+    "Barch et al. (2001)",
+    "Barch et al. (2008)",
+    "Becker (2012)",
+    "Braver et al. (1999)",
+    "Chung et al. (2011)",
+    "MacDonald & Carter (2003)",
+    "Poppe et al. (2016)",
+    "Reilly et al. (2017)",
+    "Sheffield et al. (2014)",
+    "Todd et al. (2014)",
+    "Zhang et al. (2015)"
+  ),
+  `with first-episode schizophrenia` = c(
+    14L, NA, NA, 16L, NA, NA, NA, NA, NA, NA, NA),
+  `with chronic episode schizophrenia` = c(
+    NA, 57L, 49L, NA, 41L, 17L, 47L, 402L, 104L, 33L, 339L),
+  `healthy control participants` = c(
+    12L, 37L, 28L, 16L, 27L, 17L, 56L, 304L, 132L, 58L, 665L),
+  Task = c(
+    "AX-CPT",
+    "AX-CPT",
+    "AX-CPT",
+    "AX-CPT",
+    "AX-CPT",
+    "AX-CPT",
+    "DPX",
+    "DPX",
+    "AX-CPT, DPX",
+    "AX-CPT",
+    "DPX"
+  )
+) |> 
+  pivot_longer(where(is.integer)) |> 
+  filter(!is.na(value)) |> 
+  unite(Sample, c(value, name), sep = " ") |> 
+  select(Study, Sample, Task)
+
+
+# Make table
+d |> 
+  apa_flextable() |> 
+  merge_v(j = "Study") |> 
+  align(j = "Sample") 
+```

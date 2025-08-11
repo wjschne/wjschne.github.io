@@ -1,0 +1,150 @@
+---
+title: Recreating APA Manual Table 7.23 in R with apa7
+date: '2025-09-08'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 23 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Use of `hanging_indent`
+* Use of `merge_v` to remove redundant content
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+library(easystats)
+library(lme4)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.23](table723.png){#fig-723 width="100%"}
+
+Making this table was relatively straightforward, except that I needed to play with the column widths and hanging indents until they fit in a table that is 6.5 inches wide.
+
+The `Reason for interest` column needed vertical merging to remove redundant content.
+
+The frequency column was aligned on the decimal with `align_chr`.
+
+```{r}
+#| label: tbl-723
+#| tbl-cap: "Reasons Why Individuals Chose to Watch
+#|           the Royal Wedding (*N* = 45)"
+#| echo: fenced
+
+tibble(
+   `Reason for interest` = c(
+     "Royal family and its history",
+     "Royal family and its history",
+     "Fashion and pop culture",
+     "Fashion and pop culture",
+     "Fairy tales and love stories",
+     "Fairy tales and love stories",
+     "To pass time/it was on TV",
+     "To pass time/it was on TV"),
+   `Example quote` = c(
+     paste(
+       "\"I love all things British. I studied abroad in",
+       "the U.K. I also watched the weddings of Charles",
+       "& Diana and Andrew & Fergie. I watched Diana's",
+       "funeral. Watching William & Kate get married",
+       "seemed like the natural thing to do.\""),
+     paste(
+       "\"I find the royal family and their practices",
+       "and traditions fascinating. I'm a big fan of",
+       "tradition in any capacity (graduation ceremonies,",
+       "weddings, etc.) and enjoy watching traditions",
+       "older than our country (the U.S.).\""),
+     paste(
+       "\"When big pop culture things happen, I tend to",
+       "want to watch so I'm 'in on it.' Also, when I was",
+       "little my mom made us get up to watch Princess",
+       "Diana get married, so it felt a little like",
+       "tradition. \""),
+     paste(
+       "\"I was curious. Wanted to see her dress and how",
+       "the other people who attended dressed. Like pomp",
+       "and ceremony. \""),
+     paste(
+       "\"I watched his mom and dad get married, watched",
+       "him grow up. Plus I love a fairy tale that comes",
+       "true. I believe in love and romance\""),
+     paste(
+       "\"I am a romantic and I think this is a great",
+       "love story.\""),
+     paste(
+       "\"I was at the airport and it was broadcasting on",
+       "TV when I was waiting for my flight.\""),
+     paste("\"It was on CNN when I got up. \"")),
+  `Frequency, *n* (%)` = c(
+    "16 (35.6)",NA,
+    "13 (28.9)",NA,
+    "11 (24.4)",NA,
+    "5 (11.1)",NA)
+) |> 
+  mutate(`Reason for interest` = hanging_indent(`Reason for interest`, width = 16),
+         `Example quote` = hanging_indent(`Example quote`, width = 50),
+         `Frequency, *n* (%)` = align_chr(`Frequency, *n* (%)`)) |> 
+  apa_flextable(line_spacing = 1.5) |> 
+  align(j = 1:2) |> 
+  width(width = c(1.4, 3.8, 1.3)) |> 
+  merge_v(j = 1)
+```

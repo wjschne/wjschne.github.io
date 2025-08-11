@@ -1,0 +1,181 @@
+---
+title: Recreating APA Manual Table 7.13 in R with apa7
+date: '2025-08-29'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 13 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Create column spanners with column_spanner_label
+* Using `add_star_column` with `merge = TRUE` to create a starred column.
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.13](table713.png){#fig-713 width="100%"}
+
+Copying and pasting data into a table is not what happens in data analyses. To make things more realistic, I simulated data based on the means and standard deviations, and ran ANOVAs on the simulated data. I extracted the descriptives and the test statistics and formatted the resulting table. 
+
+I used the `add_star_column` function to apply stars to the  `F ratio` column from the `p` column. By default, `add_star_column` adds a special column to the right of the selected column. The selected column is then right-aligned, and the star column is left-aligned so that the column appears to be merged. Sometimes this looks great, sometimes it does not. In this case, I opted to set `merge = TRUE` in the `add_star_column`, which actually merges the selected column and its star column, then applies `star_balance` function, which pads the column with blanks spaces on the left so that the columns center properly.
+
+
+```{r}
+#| label: tbl-713
+#| tbl-cap: Means, Standard Deviations, and Two-Way ANOVA for Study Variables
+#| apa-note:
+#|   - "*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time."
+#|   - "^\\*&nbsp;^*p* < .05. ^\\*\\*&nbsp;^*p* < .01. "
+set.seed(6)
+
+# Make data
+d <- "
+variable             	Time	Group  	M   	SD  
+Psychological strain	1.00	SMT    	0.24	0.30
+Psychological strain	2.00	SMT    	0.16	0.27
+Psychological strain	3.00	SMT    	0.16	0.26
+Psychological strain	1.00	Control	0.22	0.29
+Psychological strain	2.00	Control	0.27	0.32
+Psychological strain	3.00	Control	0.26	0.31
+Emotional exhaustion	1.00	SMT    	2.82	1.47
+Emotional exhaustion	2.00	SMT    	2.55	1.31
+Emotional exhaustion	3.00	SMT    	2.36	1.39
+Emotional exhaustion	1.00	Control	2.50	1.25
+Emotional exhaustion	2.00	Control	2.47	1.28
+Emotional exhaustion	3.00	Control	2.43	1.16
+Depersonalization   	1.00	SMT    	1.20	1.09
+Depersonalization   	2.00	SMT    	1.13	1.07
+Depersonalization   	3.00	SMT    	1.00	0.93
+Depersonalization   	1.00	Control	1.12	1.05
+Depersonalization   	2.00	Control	1.25	1.16
+Depersonalization   	3.00	Control	1.24	0.93" %>%
+	readr::read_tsv() |> 
+  suppressMessages() |> 
+  mutate(n = ifelse(Group == "SMT", 75, 78)) |> 
+  mutate(x = pmap(list(mean = M, 
+                          sd = SD,
+                          n = n),
+                     rnorm)) |> 
+  select(-c(M, SD, n)) |> 
+  unnest(x) |> 
+  mutate(id = factor(row_number()), .by = c(variable, Time)) |> 
+  nest(data = -variable) 
+
+# Analyze data
+d <- d |> 
+  mutate(descriptives = map(data, \(d) {
+    d |> 
+      summarise(M = mean(x),
+                SD = sd(x), 
+                .by = c(Group, Time)) |> 
+      pivot_wider_name_first(
+        names_from = Group,
+        values_from = c(M, SD)) |> 
+      mutate(Time = paste("Time", Time))
+  }),
+         fit = map(data, 
+                   \(d) {
+                     aov(x ~ Group * Time + Error(id), 
+                         data = d)
+                     }),
+         eta = map(fit, effectsize::eta_squared) |> 
+           map(\(d) dplyr::select(
+             d, Parameter, Eta2_partial) |> 
+                 as_tibble()),
+         mp = map(fit, parameters::model_parameters) |> 
+           map(\(d) dplyr::select(
+             d, Group, Parameter, `F`, df, p) |> 
+                 as_tibble() |> 
+                 mutate(df2 = sum(
+                   ifelse(Parameter == "Residuals", df, 0)), 
+                        .by = Group) |> 
+                 dplyr::filter(Parameter != "Residuals") |> 
+                 unite(df, c(df, df2), sep = ", ") |> 
+           dplyr::select(-Group)),
+         Ftest = map2(mp, eta, \(m, e) {
+           left_join(m, e, by = join_by(Parameter)) |>
+             mutate(Parameter = factor(
+               Parameter,
+               levels = c("Group", "Time", "Group:Time"),
+               labels = c("G", "T", "G \u00D7 T"))) |>
+             rename(Effect = Parameter)
+         })
+) 
+
+# Format data
+d <- d |> 
+  dplyr::select(variable, descriptives, Ftest) |> 
+  unnest(c(descriptives, Ftest)) |> 
+  rename(Variable = Time) |> 
+  mutate(`F` = align_chr(`F`)) |> 
+  add_star_column(`F`, merge = TRUE) |> 
+  rename(`*F* ratio` = `F`) |> 
+  select(-p) |> 
+  column_spanner_label(label = "ANOVA", Effect:Eta2_partial)
+
+
+# Make table
+d |> 
+  apa_flextable(row_title_column = variable, 
+                line_spacing = 1.5) 
+```

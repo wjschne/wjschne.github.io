@@ -1,0 +1,140 @@
+---
+title: Recreating APA Manual Table 7.22 in R with apa7
+date: '2025-09-07'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 22 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Use of `hanging_indent`
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+library(easystats)
+library(lme4)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.22](table722.png){#fig-722 width="100%"}
+
+Making this table was relatively straightforward, except that I needed to play with the column widths and hanging indents until they fit in a table that is 6.5 inches wide.
+
+```{r}
+#| label: tbl-722
+#| tbl-cap: "Master Narrative Voices: Struggle and
+#|           Success and Emancipation"
+#| echo: fenced
+tibble(
+  theme = c(
+    "Struggle and success",
+    "Struggle and success",
+    "Emancipation",
+    "Emancipation"),
+  `Discourse and dimension` = c(
+    paste("Self actualization as a member of a larger",
+          "gay community is the end goal of healthy sexual",
+          "identity development or \"coming out\""),
+    paste("Maintaining healthy sexual identity entails",
+          "vigilance against internalization of",
+          "societal discrimination"),
+    paste("Open exploration of an individually fluid",
+          "sexual self is the goal of healthy sexual",
+          "identity development"),
+    paste("Questioning discrete, monolithic categories of",
+          "sexual identity")),
+  `Example quote` = c(
+    paste(
+      "\"My path of gayness...going from denial to saying,",
+      "'well, this is it,' and then the process of coming",
+      "out, and the process of just sort of looking around",
+      "and seeing, well where do I stand in the world? And",
+      "sort of having, uh, political feelings.\"",
+      "(Carl, age 50)"),
+    paste("\"When I'm, like, thinking of criticisms of",
+      "more mainstream gay culture, I try to...make sure",
+      "it's coming from an appropriate place and not, like,",
+      "a place of self loathing.\" (Patrick,age 20)"),
+    paste("\"[For heterosexuals] the man penetrates the",
+      "woman, whereas with gay people, I feel like there",
+      "is this potential for really playing around with",
+      "that model a lot, you know, and just experimenting",
+      "and exploring.\" (Orion, age 31)"),
+    paste("\"LGBTQI, you know, and added on so many letters.",
+      "It does start to raise the question about what the",
+      "terms mean and whether...any term can adequately be",
+      "descriptive.\" (Bill, age 50 )"))
+) |> 
+  mutate(
+    `Discourse and dimension` = hanging_indent(
+      `Discourse and dimension`,
+      width = 29, indent = 4),
+        `Example quote` = hanging_indent(
+      `Example quote`,
+      width = 55, indent = 4)
+    ) |> 
+  apa_flextable(
+    row_title_column = theme, 
+    line_spacing = 1.5) |> 
+  align() |> 
+  width(width = c(2.5, 4)) 
+```

@@ -1,0 +1,160 @@
+---
+title: Recreating APA Manual Table 7.17 in R with apa7
+date: '2025-09-02'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 17 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Confidence intervals in two columns
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.17](table717.png){#fig-717 width="100%"}
+
+```{r}
+#| label: tbl-717
+#| tbl-cap: "Moderator Analysis: Types of Measurement and Study Year"
+#| apa-note: 
+#|   - "Number of studies&nbsp;=&nbsp;120, number of
+#|     effects&nbsp;=&nbsp;782, total 
+#|     *N*&nbsp;=&nbsp;52,578. CI&nbsp;=&nbsp;confidence 
+#|     interval; *LL*&nbsp;=&nbsp;lower limit; 
+#|     *UL*&nbsp;=&nbsp;upper limit."
+#|   - "^a&nbsp;^0&nbsp;=&nbsp;self-report, 
+#|     1&nbsp;=&nbsp;test. ^b&nbsp;^ 0&nbsp;= test, 
+#|     1&nbsp;=&nbsp;grade point average. ^c&nbsp;^Study 
+#|     year was grand centered. ^d&nbsp;^0&nbsp;=&nbsp;other, 
+#|     1&nbsp;=&nbsp;yes. ^e&nbsp;^0&nbsp;= no, 
+#|     1&nbsp;=&nbsp;yes."
+#| echo: fenced
+
+
+
+# Make data
+d <- tibble(
+  effect_type = c(
+    "Fixed effects",
+    "Fixed effects",
+    "Fixed effects",
+    "Fixed effects",
+    "Fixed effects",
+    "Fixed effects",
+    "Random effects",
+    "Random effects"
+  ),
+  Effect = c(
+    "Intercept",
+    "Creativity measurement^&thinsp;a^",
+    "Academic achievement measurement^&thinsp;b^",
+    "Study year^&thinsp;c^",
+    "Goal^&thinsp;d^",
+    "Published^&thinsp;e^",
+    "Within-study variance",
+    "Between-study variance"
+  ),
+  Estimate = c(0.119, 0.097, -0.039, 2e-04, 
+               -0.003, 0.054, 0.009, 0.018),
+  SE = c(0.04, 0.028, 0.018, 0.001, 
+         0.029, 0.03, 0.001, 0.003),
+  `95% CI_*LL*` = c(0.041, 0.042, -0.074, -0.001, 
+                    -0.06, -0.005, 0.008, 0.012),
+  `95% CI_*UL*` = c(0.198, 0.153, -0.004, 0.002, 
+                    0.054, 0.114, 0.011, 0.023),
+  p = c(0.003, 0.001, 0.03, 0.76, 
+        0.91, 0.07, 9e-04, 9e-04)
+) 
+
+# Format data
+d <- d |> 
+  mutate(Estimate = align_chr(
+    Estimate, 
+    accuracy = .0001, 
+    drop0trailing = TRUE, 
+    trim_leading_zeros = TRUE)) |> 
+  mutate(across(c(Estimate:`95% CI_*UL*`), \(x) {
+    align_chr(x, 
+              accuracy = .001, 
+              trim_leading_zeros = TRUE)
+  })) |>
+  mutate(Effect = hanging_indent(Effect, width = 35)) |>
+  apa_format_columns()
+
+# Make table
+d |> 
+  apa_flextable(row_title_column = effect_type,
+                row_title_align = "center") |> 
+  align(j = 1) |> 
+  padding(j = 1, 
+          padding.left = c(0, 
+                           15, 
+                           rep(30, 5), 
+                           0, 
+                           rep(15, 2))) |> 
+  width(width = c(2.5, rep(.8, 5)))
+
+
+```

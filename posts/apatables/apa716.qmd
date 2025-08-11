@@ -1,0 +1,165 @@
+---
+title: Recreating APA Manual Table 7.16 in R with apa7
+date: '2025-09-01'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 16 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Two levels of grouping with `flextable::as_grouped_data`
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.16](table716.png){#fig-716 width="100%"}
+
+Here I simulate and analyze path models of the actor-partner interdependence model. Getting the row titles to be centered under the `t` column took some trial-and-error.
+
+```{r}
+#| label: tbl-716
+#| tbl-cap: "Regressions of Associations Between Marital 
+#|           Satisfaction and Average Levels of Marital Behavior"
+#| apa-note: "CI&nbsp;=&nbsp;confidence interval; H → H&nbsp;=&nbsp;husband-as-actor 
+#|           effect on the husband’s own marital satisfaction; 
+#|           W → W&nbsp;=&nbsp;wife-as-actor effect on the wife's own marital 
+#|           satisfaction; W → H&nbsp;=&nbsp;wife-as-partner effect on the 
+#|           husband’s satisfaction; H → W&nbsp;=&nbsp;husband-as-partner 
+#|           effect on the wife's satisfaction."
+#| echo: fenced
+set.seed(123)
+# Make Coefficients
+d_coefficients <- tibble::tribble(
+        ~Dependent,    ~Group, ~Predictor,     ~b,
+  "Angry Behavior",   "Actor",       "H_H",  -98.9,
+  "Angry Behavior",   "Actor",       "W_W", -87.11,
+  "Angry Behavior", "Partner",       "W_H", -76.18,
+  "Angry Behavior", "Partner",       "H_W",  -91.8,
+       "Disregard",   "Actor",       "H_H", -38.62,
+       "Disregard",   "Actor",       "W_W", -47.54,
+       "Disregard", "Partner",       "W_H", -82.81,
+       "Disregard", "Partner",       "H_W", -79.36,
+      "Distancing",   "Actor",       "H_H", -47.42,
+      "Distancing",   "Actor",       "W_W",   3.04,
+      "Distancing", "Partner",       "W_H",  -0.05,
+      "Distancing", "Partner",       "H_W",  -53.5
+  ) 
+
+# Make Model
+model <- d_coefficients |> 
+  mutate(b = b / 100) |>
+  unite(Predictor, c(Group, Predictor)) |> 
+  mutate(across(c(Dependent, Predictor), snakecase::to_snake_case)) |> 
+  unite(b, c(b, Predictor), sep = " * ") |> 
+  summarise(b = paste(b, collapse = " + "), .by = Dependent) |> 
+  unite(Model, c(Dependent, b), sep = " ~ ") |> 
+  pull(Model) 
+
+# Make data
+d1 <- lavaan::simulateData(model, sample.nobs = 50) |> 
+  as_tibble() |> 
+  mutate(id = row_number(), .before = 0) |> 
+  pivot_longer(angry_behavior:distancing, 
+               values_to = "y", names_to = "Dependent") |> 
+  mutate(y = y  * 100) |> 
+  nest(data = -Dependent)
+
+
+# Analyze data
+d2 <- d1 |> 
+  mutate(
+    fit = map(data, \(d) {
+      lm(y ~ ., data = d |> select(-id))
+      }),
+    tbl = map(fit, parameters::parameters))
+  
+# Format data
+d3 <- d2 |> 
+  select(Dependent, tbl) |> 
+  unnest(tbl) |> 
+  apa_format_columns() |> 
+  filter(Variable != "Constant") |> 
+  separate(Variable, c("Type", "i", "d")) |> 
+  mutate(across(c(i,d), toupper)) |> 
+  unite(Variable, c(i, d), sep = c(" \u2192 ")) |> 
+  relocate(`95% CI`, .after = last_col()) |> 
+  as_grouped_data(groups = c("Dependent", "Type")) |> 
+  mutate(across(c(Type, Variable), \(x) tidyr::replace_na(x, ""))) |> 
+  mutate(Variable = paste0(Type, Variable, recycle0 = TRUE),
+         Dependent = snakecase::to_sentence_case(Dependent)) |> 
+  fill(Dependent) |> 
+  filter(Variable != "") |> 
+  select(-Type)
+
+# Make Table
+d3 |> 
+  apa_flextable(row_title_column = Dependent, 
+                row_title_align = "center",
+                line_spacing = 1.5, 
+                no_format_columns = Variable) |> 
+  padding(j = 1, 
+          i = ~`*B*` != "", 
+          padding.left = 20) |> 
+  width(width = c(1.1, rep(.85, 4), 2)) 
+```

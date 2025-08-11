@@ -1,0 +1,127 @@
+---
+title: Recreating APA Manual Table 7.21 in R with apa7
+date: '2025-09-06'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 21 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Use of `add_star_column`
+* Use of thin spaces `&thinsp;` for footnote superscripts.
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+library(easystats)
+library(lme4)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.21](table721.png){#fig-721 width="100%"}
+
+I did not have enough information to simulate the three models, so I input the data directly. This made it comparatively easy to recreate. Adding stars to the $\chi^2$ column was made easier by creating a temporary p-value column with values less than .001 and then applying `add_star_column`.
+
+The APA Publication Manual recommends following the footnote symbols with a superscripted space. In the `apa-note`, the superscript symbols a, b, and c are followed by a thin space within the superscript. This gives a pleasing amount of separation.
+
+```{r}
+#| label: tbl-721
+#| tbl-cap: "Results of Confirmatory Factor Analysis for the 
+#|   Relationships Among Three Types of Intelligence"
+#| echo: fenced
+#| apa-note: 
+#|   - "Structural equation modeling was used for the analysis. 
+#|     NFI&nbsp;=&nbsp;normed fit index; 
+#|     CFI&nbsp;=&nbsp;comparative fit index; 
+#|     RMSEA&nbsp;=&nbsp;root-mean-square error of 
+#|     approximation."
+#|   - "^a&thinsp;^In Model A, all 57 items of social 
+#|    intelligence, emotional intelligence, and cultural 
+#|    intelligence were loaded onto one factor. ^b&thinsp;^In
+#|    Model B, the 21 items of social intelligence were 
+#|    loaded onto one factor, and the 16 items of emotional 
+#|    intelligence and the 20 items of cultural intelligence 
+#|    were loaded onto another factor. ^c&thinsp;^In Model C, 
+#|    the 21 items of social intelligence were loaded onto one 
+#|    factor, the 16 items of emotional intelligence were 
+#|    loaded onto a second factor, and the 20 items of 
+#|    cultural intelligence were loaded onto a third factor."
+#|   - "^\\*\\*\\*^*p* < .001."
+tibble(
+  Model = c(
+    "A: One-intelligence model^&thinsp;a^",
+    "B: Two-intelligences mode^&thinsp;b^",
+    "C: Three-intelligences model^&thinsp;c^"),
+  Chi2 = c(10994.664, 10091.236, 8640.066),
+  df = c(1539L, 1538L, 1536L),
+  NFI = c(0.296, 0.354, 0.447),
+  CFI = c(0.326, 0.39, 0.494),
+  RMSEA = c(0.115, 0.109, 0.1),
+  p = .0001
+) |> 
+  add_star_column(Chi2, merge = TRUE) |> 
+  select(-p) |> 
+  apa_flextable(column_formats = column_formats(
+    accuracy = 0.001),
+    layout = "fixed") |>
+  width(width = c(2.15, 1.15, rep(3.2 / 4, 4)))
+
+```

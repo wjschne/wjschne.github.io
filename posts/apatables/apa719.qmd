@@ -1,0 +1,114 @@
+---
+title: Recreating APA Manual Table 7.19 in R with apa7
+date: '2025-09-04'
+engine: knitr
+categories: 
+  - R
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 19 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Presenting a sequence of regression models
+
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+library(easystats)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.19](table719.png){#fig-719 width="100%"}
+
+In the recreated table, the hanging indent for *Modified latent change* was omitted because the text is shorter than *Simplex contemporaneous*, which does not have a hanging indent.
+
+```{r}
+#| label: tbl-719
+#| tbl-cap: "Comparison of Fit Indices in Models Fitted to Simulated Data Across Longitudinal Mediation Model Types"
+#| echo: fenced
+#| apa-note: "AIC and BIC differences are relative to the simplex 
+#|   lagged model. RMSEA&nbsp;=&nbsp;root-mean-square error of 
+#|   approximation; CI&nbsp;=&nbsp;confidence interval; 
+#|   AIC&nbsp;=&nbsp;Akaike information criterion; 
+#|   BIC&nbsp;=&nbsp;Bayesian information criterion."
+tibble(
+             Model = c("Simplex lagged",
+                       "Simplex contemporaneous",
+                       "Latent growth",
+                       "Modified latent change"),
+  `&chi;^2^_Value` = c(63.3, 58, 65, 26.2),
+     `&chi;^2^_df` = c(28L, 29L, 33L, 33L),
+      `&chi;^2^_p` = c(1e-04, 0.001, 1e-04, 0.79),
+       RMSEA_Value = c(0.044, 0.04, 0.039, 0),
+    `RMSEA_95% CI` = c("[.030, .059]", "[.024, .054]",
+                       "[.025, .053]", "[.000, .020]"),
+           RMSEA_p = c(0.72, 0.87, 0.9, 0.999),
+               AIC = c(13479, 13472, 13471, 13432),
+               BIC = c(13658, 13646, 13627, 13588),
+      `deltaAIC` = c(NA, -7L, -8L, -47L),
+      `deltaBIC` = c(NA, -12L, -31L, -70L)
+) |> 
+  mutate(RMSEA_Value = align_chr(
+    RMSEA_Value, 
+    accuracy = .001, 
+    trim_leading_zeros = TRUE)) |> 
+  apa_flextable(font_size = 11) |> 
+  width(width = c(1.80, .45, .35, .45, .05, .40, 
+                   .85, .35, .50, .50, .40, .40)) 
+```
