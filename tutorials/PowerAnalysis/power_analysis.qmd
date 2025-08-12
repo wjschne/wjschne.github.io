@@ -37,11 +37,14 @@ bibliography: "../../bibliography.bib"
 options(digits = 3, knitr.kable.NA = '')
 
 
-
 library(tidyverse)
-library(lme4)
 library(mvtnorm)
+library(lme4)
 library(lavaan)
+library(broom)
+library(sjPlot)
+library(easystats)
+
 # dutchmasters::dutchmasters
 options(digits = 4)
 
@@ -155,7 +158,7 @@ library(mvtnorm)
 library(lme4)
 library(lavaan)
 library(broom)
-
+library(easystats)
 
 make_data <- function(
   n = 100, # Sample size (number of students)
@@ -239,35 +242,58 @@ fit <- lmer(reading ~ month + months_after_assessment + (month | student_id),
             data = d)
 
 summary(fit)
+parameters::model_parameters(fit)
+performance::model_performance(fit)
+report::report(fit)
 
-sjPlot::tab_model(fit)
 
-d_predicted <- tibble(student_id = 0, 
-                      month = seq(0, 24), 
-                      assessment_month = 12,
-                      months_after_assessment = ifelse(
-                        month < assessment_month,
-                        0,
-                        month - assessment_month),
-                      `Time from Assessment` = month - assessment_month,
-                      Assessment = factor(months_after_assessment == 0, 
-                                          levels = c(T, F), 
-                                          labels = c("Before", "After")))
+d_predicted <- tibble(
+  student_id = 0,
+  month = seq(0, 24),
+  assessment_month = 12,
+  months_after_assessment = ifelse(
+    month < assessment_month, 
+    0, 
+    month - assessment_month),
+  `Time from Assessment` = month - assessment_month,
+  Assessment = factor(
+    months_after_assessment == 0,
+    levels = c(T, F),
+    labels = c("Before", "After")
+  )
+)
 d_predicted$`Predicted Reading` <- predict(fit, newdata = d_predicted, allow.new.levels = T)
-d %>% 
-  mutate(Assessment = factor(months_after_assessment == 0, 
-                             levels = c(T, F), 
-                             labels = c("Before", "After")),
-         `Time from Assessment` = month - assessment_month,
-         `Predicted Reading` = reading - e_ij) %>% 
-  ggplot(aes(`Time from Assessment`, `Predicted Reading`)) +
-  geom_line(aes(color = Assessment, group = factor(paste0(student_id, Assessment)) )) + 
-  geom_line(data = d_predicted, size = 1, aes(group = student_id))
-  
 
-
-
-
+d %>%
+  mutate(
+    Assessment = factor(
+      months_after_assessment == 0,
+      levels = c(T, F),
+      labels = c("Before", "After")
+    ),
+    `Time from Assessment` = month - assessment_month,
+    `Predicted Reading` = reading - e_ij
+  ) %>%
+  ggplot(aes(`Time from Assessment`, 
+             `Predicted Reading`)) +
+  geom_line(aes(color = Assessment, 
+                group = factor(paste0(
+                  student_id, 
+                  Assessment
+                  ))),
+            alpha = .2, 
+            linewidth = .25,
+            show.legend = c(alpha = F)) +
+  geom_line(data = d_predicted, 
+            linewidth = 2, 
+            aes(group = Assessment, 
+                color = Assessment)) + 
+  scale_color_viridis_d(begin = .2, 
+                        end = .7) +
+  theme_minimal() + 
+  guides(colour = guide_legend(
+    override.aes = list(alpha = 1, 
+                        linewidth = 1)))
 ```
 
 Yes! The rate of improvement becomes steeper after the assessment. Now that we know that the data generation has the effect we want, we can detect the effect analytically.
@@ -336,12 +362,12 @@ We can play around with different samples sizes we are interested in (50, 100, 2
 
 ## An Alternate "Tidy" Method
 
-Here we create a tibble with 1000 rows, each with a different sample size between 20 and 200. We create a new variable called `Power` that will contain the output of a function that makes data and tells us whether the effect was detected. The `map_dbl` is part of the `map` family. It takes the input of our sample size column `n` and performs our custom function for every row. The `Power` variable is just a column of 1s and 0s, telling whether the effect was detected or not. 
+Here we create a tibble with 1000 rows, each with a different sample size between 10 and 200. We create a new variable called `Power` that will contain the output of a function that makes data and tells us whether the effect was detected. The `map_dbl` is part of the `map` family. It takes the input of our sample size column `n` and performs our custom function for every row. The `Power` variable is just a column of 1s and 0s, telling whether the effect was detected or not. 
 
 I then plot the results using the `geom_smooth` function. I specify a binomial glm, which is a logistic regression---regression for binary output. The result is a plot showing the relationship between sample size and power. 
 
 ```{r tidymethod, warning=FALSE, message=FALSE, cache=T}
-tibble(n = 20:200) %>%
+tibble(n = 10:200) %>%
   mutate(Power = map(n, \(n) {
     make_data(
       n = n,
@@ -361,12 +387,17 @@ tibble(n = 20:200) %>%
   })) %>%
   unnest(Power) %>% 
   filter(term != "(Intercept)") %>% 
+  mutate(term = snakecase::to_title_case(term)) %>%
   ggplot(aes(n, significant)) +
   geom_smooth(method = "glm",
-              method.args = list(family = "binomial"), se = FALSE) + 
+              method.args = list(family = "binomial"), 
+              se = FALSE) + 
   geom_hline(yintercept = .9) +
   facet_wrap(vars(term)) + 
-  scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2))
+  scale_x_continuous("Sample Size (n)", limits = c(0,200)) +
+  scale_y_continuous("Proportion Significant",
+                     limits = c(0,1), breaks = seq(0,1,.2)) +
+  theme_light()
   
 ```
 
@@ -381,10 +412,12 @@ Suppose that I am not so sure about the size of assessment's effect. Therefore, 
 #| fig-cap: Power Analysis by Sample Size and Effect Size
 #| preview-image: true
 
-crossing(n = c(seq(10,90, 5), seq(100, 1000, 25)), 
-         b_20 = c(Smaller = .1,
-                      Medium = .2,
-                      Larger = .3)) %>% 
+crossing(n = c(seq(10, 90, 5), seq(100, 1000, 25)),
+              b_20 = c(
+                Smaller = .1,
+                Medium = .2,
+                Larger = .3
+              )) %>% 
   mutate(repeats = 2,
          `Effect Size` = paste0(names(b_20),
                                 " (",
@@ -409,17 +442,26 @@ crossing(n = c(seq(10,90, 5), seq(100, 1000, 25)),
       detect_effect()
   })) %>%
   unnest(Power) %>% 
-  filter(term != "(Intercept)") %>% 
-  ggplot(aes(n, significant)) + 
-  geom_smooth(method = "glm", se = F,
-              method.args = list(family = "binomial"), 
-              aes(color = `Effect Size`)) +
-  scale_x_log10("Sample Size (log)", breaks = c(1, 10,seq(20,100, 20), seq(200, 1000, 200))) + 
-    geom_hline(yintercept = .9) +
-  theme(legend.position = c(1,0), legend.justification = c(1,0)) +
-  scale_color_viridis_d(end = .9, begin = .1) + 
-  scale_y_continuous(breaks = seq(0,1,0.2)) +
-   facet_wrap(vars(term))
+  filter(term != "(Intercept)") %>%
+  mutate(term = snakecase::to_title_case(term)) %>%
+  ggplot(aes(n, significant)) +
+  geom_smooth(
+    method = "glm",
+    se = F,
+    method.args = list(family = "binomial"),
+    aes(color = `Effect Size`)
+  ) +
+  scale_x_log10("Sample Size (log)", 
+                breaks = c(10,20, 50, 100, 200, 500, 1000),
+                minor_breaks = c(seq(10,90, 10), seq(100, 1000, 100))) +
+  geom_hline(yintercept = .9) +
+  theme(legend.position.inside = c(1, 0),
+        legend.justification = c(1, 0)) +
+  scale_color_viridis_d(end = .9, begin = .1) +
+  scale_y_continuous("Proportion Significant", 
+                     breaks = seq(0, 1, 0.2)) +
+  facet_wrap(vars(term)) +
+  theme_light()
 ```
 
 Thus, it appears that under the assumptions my model has, I can detect my effect with around 100 or fewer when the effect of assessment is greater than 0.2. If the effect is 0.1, I would need about 500 participants to detect the effect with reasonable power.
