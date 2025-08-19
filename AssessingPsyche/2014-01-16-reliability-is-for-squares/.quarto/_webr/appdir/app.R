@@ -1,6 +1,10 @@
 library(tibble)
 library(ggplot2)
-
+library(shiny)
+library(munsell)
+library(ggnormalviolin)
+library(ggtext)
+library(scales)
 
 ui <- fluidPage(
   sidebarLayout(
@@ -56,11 +60,7 @@ server <- function(input, output, session) {
     sigma <- input$sigma
     my_rxx <- input$my_rxx
     x <- input$x
-    # observe(updateSliderInput(session, "x", max = input$mu + input$sigma * 4, min = input$mu - input$sigma * 4))
-    # mu = 100
-    # sigma = 15
-    # my_rxx  = .9
-    # x = 120
+
 
 p <- .95
 z <- (x - mu)  / sigma
@@ -96,46 +96,48 @@ tibble(Reliability = c(rxx, rxx_rev),
        ci = c(lb, ub),
        ci2 = c(lb2, ub2)) %>% 
   ggplot(aes(Reliability, ci)) +
-  geom_polygon(fill = "dodgerblue4", alpha = .2, aes(y = ci2)) 
-  # geom_polygon(fill = "dodgerblue3", alpha = .5) + 
-  # ggnormalviolin::geom_normalviolin(data = tibble(mu = my_tau, x = my_rxx, sigma = my_see), fill = "black", p_tail = .05, aes(x = x, mu = mu, sigma = sigma, width = .15, face_left = F), inherit.aes = F, color = NA, alpha = .3) +
-  # scale_x_continuous("Reliability Coefficient", breaks = seq(0,1,.2), labels = c("0", ".20", ".40", ".60", ".80", "1"), expand = expansion(add = .09)) + 
-  # scale_y_continuous("Score", breaks = -4:4 * sigma + mu, 
-                     # minor_breaks = seq(-4 * sigma + mu, 
-                                        # 4 * sigma + mu,
-                                        # ifelse((sigma %% 3) == 0, 
-                                               # sigma / 3, 
-                                               # sigma / 2)) ) + 
-  # coord_fixed(ratio = 1 / (sigma * 8),
-  #             ylim = c(-4 * sigma + mu, 4 * sigma + mu),
-  #             clip = "off") +
-  # theme_minimal(16, "sans") +
-  # theme(panel.spacing.x = unit(5, "mm")) +
-  # geom_line(data = d_arrow) +
-  # geom_text(data = d_arrow,
-  #           aes(label = scales::number(ci, .1), x = Reliability - .02),
-  #           hjust = 1,
-  #           family = "sans") +
-  # annotate(
-  #   "richtext",
-  #   x = my_rxx + .02,
-  #   y = x,
-  #   hjust = 0,
-  #   label = paste0("*X* = ", x),
-  #   color = "firebrick",
-  #   family = "sans"
-  # ) +
-  # annotate(
-  #   "text",
-  #   x = my_rxx - .02,
-  #   y = my_tau,
-  #   hjust = 1,
-  #   label = round(my_tau, 1),
-  #   family = "sans"
-  # ) +
-  # annotate("point", x = my_rxx, y = my_tau) +
-  # annotate("point", x = my_rxx, y = x, size = 3, color = "firebrick") + 
-  # ggtitle(paste0("Confidence Interval Width = ", round(my_ub - my_lb, 1)))
+  geom_polygon(fill = "dodgerblue4", alpha = .2, aes(y = ci2)) +
+  geom_polygon(fill = "dodgerblue3", alpha = .5) +
+  geom_normalviolin(data = tibble(mu = my_tau, x = my_rxx, sigma = my_see), fill = "black", p_tail = .05, aes(x = x, mu = mu, sigma = sigma, width = .15, face_left = F), inherit.aes = F, color = NA, alpha = .2) +
+  scale_x_continuous("Reliability Coefficient", breaks = seq(0,1,.2), labels = c("0", ".20", ".40", ".60", ".80", "1"), expand = expansion(add = .09)) +
+  scale_y_continuous("Score", breaks = -4:4 * sigma + mu,
+  minor_breaks = seq(-4 * sigma + mu,
+  4 * sigma + mu,
+  ifelse((sigma %% 3) == 0,
+  sigma / 3,
+  sigma / 2)) ) +
+  coord_fixed(ratio = 1 / (sigma * 8),
+              ylim = c(-4 * sigma + mu, 4 * sigma + mu),
+              clip = "off") +
+  theme_minimal(16, "sans") +
+  theme(panel.spacing.x = unit(5, "mm")) +
+  geom_line(data = d_arrow) +
+  geom_text(data = d_arrow,
+            aes(label = scales::number(ci, .1), x = Reliability - .02),
+            hjust = 1,
+            family = "sans") +
+  annotate(
+    "richtext",
+    x = my_rxx + .02,
+    y = x,
+    hjust = 0,
+    label = paste0("***X*** = **", x, "**"),
+    color = "firebrick",
+    family = "sans",
+    fill = NA,
+    label.colour = NA
+  ) +
+  annotate(
+    "text",
+    x = my_rxx - .02,
+    y = my_tau,
+    hjust = 1,
+    label = number(my_tau, .1),
+    family = "sans"
+  ) +
+  annotate("point", x = my_rxx, y = my_tau) +
+  annotate("point", x = my_rxx, y = x, size = 3, color = "firebrick") +
+  ggtitle(paste0("Confidence Interval Width = ", number(my_ub - my_lb, .1)))
   
     
   })

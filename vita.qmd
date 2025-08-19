@@ -58,6 +58,7 @@ library(extrafont)
 loadfonts("win", quiet = TRUE)
 loadfonts(quiet = TRUE)
 library(tidyverse)
+library(ggtext)
 
 knitr::opts_chunk$set(echo = F, cache = F, dev = "svg")
 options(knitr.kable.NA = "")
@@ -341,11 +342,12 @@ ct <- get_citation_history(id) %>%
 ggplot(ct, aes(year, cumulative_citations)) + 
   geom_step(linetype = 1, color = "gray50") + 
   geom_point(color = "gray20") +
-  geom_label(aes(label = paste0("+", cites)), 
+  geom_richtext(aes(label = paste0("+", cites, "<span style='color:white'>0</span>")), 
              hjust = 0.5, 
-             vjust = -0.5, 
-             label.size = 0, 
-             label.padding = unit(0,"pt"), 
+             vjust = 0, 
+             label.color = NA, 
+             label.padding = margin(1,0,0,0, "pt"), 
+             label.margin = margin(0,0,3,0, "pt"),
              family = "Rubik", 
              size = 4.0, 
              color = "gray30", 
@@ -647,10 +649,9 @@ jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>%
 
 #### Temple University
 
-* Emunah Mager-Garfield
-*	Denae Sisco
-* Octavia Blount
-* Valerie Woxholt [(2023)]{.smalldate}
+* Emunah Mager-Garfield [(2024)]{.smalldate}
+* Octavia Blount [(2024)]{.smalldate}
+* Valerie Woxholdt [(2024)]{.smalldate}
 *	Codie Kane [(2023)]{.smalldate}
 * Patrick Clancy [(2023)]{.smalldate}
 * Shana Levi-Nielsen [(2022)]{.smalldate}
