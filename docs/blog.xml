@@ -10,7 +10,859 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.7.29</generator>
-<lastBuildDate>Fri, 15 Mar 2024 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 19 Aug 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Announcing ggdiagram, a ggplot2 extension for making diagrams programmatically</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/announcing-ggdiagram/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I am pleased to announce that <a href="https://wjschne.github.io/ggdiagram/index.html">ggdiagram</a> has been published on <a href="https://cran.r-project.org/package=ggdiagram">CRAN</a>. The package site has many vignettes, but I will give a brief introduction here as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggdiagram)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span></code></pre></div>
+</div>
+<p>The ggdiagram package has functions to create a variety of graphical objects:</p>
+<ul>
+<li>points
+<ul>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_point.html"><code>ob_point</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_polar.html"><code>ob_polar</code></a></li>
+</ul></li>
+<li>lines and arrows
+<ul>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_line.html"><code>ob_line</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_segment.html"><code>ob_segment</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_path.html"><code>ob_path</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_bezier.html"><code>ob_bezier</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_arc.html"><code>ob_arc</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_variance.html"><code>ob_variance</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_covariance.html"><code>ob_covariance</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/connect.html"><code>connect</code></a></li>
+</ul></li>
+<li>shapes
+<ul>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_circle.html"><code>ob_circle</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_ellipse.html"><code>ob_ellipse</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_rectangle.html"><code>ob_rectangle</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_ngon.html"><code>ob_ngon</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_wedge.html"><code>ob_wedge</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_reuleaux.html"><code>ob_reuleaux</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_circular_segment.html"><code>ob_circular_segment</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_intercept.html"><code>ob_intercept</code></a></li>
+</ul></li>
+<li>text
+<ul>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_label.html"><code>ob_label</code></a></li>
+<li><a href="https://wjschne.github.io/ggdiagram/reference/ob_latex.html"><code>ob_latex</code></a></li>
+</ul></li>
+</ul>
+<p>Objects created in ggdiagram can be inserted into a standard ggplot2 pipeline.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_equal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_circle</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_rectangle</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-pipeline" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pipeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/announcing-ggdiagram/index_files/figure-html/fig-pipeline-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pipeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: A circle and a rectangle in a standard ggplot2 pipeline
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>There is nothing wrong with the code in Figure&nbsp;1, but it could have easily been written with standard ggplot2 code. That is, the ggplot2 ecosystem already has the ability to display points, lines, shapes, and text. Why do we need a new package? The grammar of graphics is optimally designed to display data. After the graphical objects are made, it is not easy to use features of those objects to make new graphical objects. For example,</p>
+<ul>
+<li>Where is the midpoint of a line segment?</li>
+<li>Where do a circle and a rectangle intersect?</li>
+<li>Where is the leftmost point of a group of rotated ellipses?</li>
+</ul>
+<p>The ggdiagram package allows users to identify features from objects to create new objects.</p>
+<p>In Figure&nbsp;2, the <code>ggdiagram</code> function sets the ggplot2 theme (<code>theme_void</code> by default), as well as the font size and font family of the labels. Circle <em>B</em> is placed at a 20-degree angle from circle <em>A</em>, with 2 units of separation between them. A connecting arrow is placed between the two circles, with 2 points of resection. A label (.56) is placed at the midpoint of the arrow segment.</p>
+<p>Note that in Figure&nbsp;2, variables <code>A</code> and <code>B</code> are defined in the middle of the pipeline. In ggplot2 code, any variable assignments for variables that are to be used later in the pipeline can be enclosed in curly braces <code>{}</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggdiagram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-2">  {</span>
+<span id="cb3-3">    A <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_circle</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span>)</span>
+<span id="cb3-4">  } <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-5">  {</span>
+<span id="cb3-6">    B <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_circle</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"B"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb3-7">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">place</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">from =</span> A,</span>
+<span id="cb3-8">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">where =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degree</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>),</span>
+<span id="cb3-9">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb3-10">  } <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-11">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">connect</span>(</span>
+<span id="cb3-12">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">from =</span> A,</span>
+<span id="cb3-13">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">to =</span> B,</span>
+<span id="cb3-14">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_label</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".56"</span>),</span>
+<span id="cb3-15">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">resect =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb3-16">  )</span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-AB" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-AB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/announcing-ggdiagram/index_files/figure-html/fig-AB-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: An arrow between two circles
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="automation" class="level1">
+<h1>Automation</h1>
+<p>Placing objects one at a time can become tiresome if the there are repetitive elements. The ggdiagram package has a number of methods to automate code. In Figure&nbsp;3, we create a path diagram with three sets of objects:</p>
+<ol type="1">
+<li>A circle of radius 1.5, with the label “A”</li>
+<li>A horizontal array of 4 indicator variables (as superellipses or squircles) 4 units below circle A, labeled A<sub>1</sub> through A<sub>4</sub>, with a separation of .4 units between the variables.</li>
+<li>Arrows from circle A to the four indicators with coefficients aligned horizontally.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggdiagram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-2">  {</span>
+<span id="cb4-3">    A <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_circle</span>(</span>
+<span id="cb4-4">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">radius =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>,</span>
+<span id="cb4-5">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_label</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"*A*"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">64</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nudge_y =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb4-6">    )</span>
+<span id="cb4-7">  } <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-8">  {</span>
+<span id="cb4-9">    a4 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_ellipse</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">m1 =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb4-10">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">place</span>(A, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">where =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"below"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb4-11">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_array</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">k =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"*A*~"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span>
+<span id="cb4-12">  } <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-13">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">connect</span>(</span>
+<span id="cb4-14">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">from =</span> A,</span>
+<span id="cb4-15">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">to =</span> a4,</span>
+<span id="cb4-16">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">resect =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb4-17">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_label</span>(</span>
+<span id="cb4-18">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round_probability</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">75</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">87</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">92</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">67</span>)),</span>
+<span id="cb4-19">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label.padding =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">t =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>),</span>
+<span id="cb4-20">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,</span>
+<span id="cb4-21">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span></span>
+<span id="cb4-22">    )</span>
+<span id="cb4-23">  )<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_label_y</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-diagram" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-diagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/announcing-ggdiagram/index_files/figure-html/fig-diagram-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: A latent variable with four indicators
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Code can be shortened considerably with <code>for</code> loops, <code>lapply</code>, or <code>map</code> functions from the purrr package. The <code>map_ob</code> function is a specialized version of <code>purrr::map</code> that unbinds the elements of an object, applies a function to each one, and binds the results into a single object. If multiple objects of different types are returned in a <code>list</code>, as they are here, they are consolidated into a single <code>ob_shape_list</code>.</p>
+<p>In Figure&nbsp;4, six latent variables are arranged in a circle. Using <code>map-ob</code>, the indicators for each latent variable are created, along with their connecting arrows.</p>
+<p>If this seems like a lot of code, imagine what it would take to create 30 objects, 30 labels, and 39 arrows line by line!</p>
+<div class="cell preview-image">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Latent variables</span></span>
+<span id="cb5-2">k <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span></span>
+<span id="cb5-3"></span>
+<span id="cb5-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># labels/id</span></span>
+<span id="cb5-5">id <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> LETTERS[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>k]</span>
+<span id="cb5-6"></span>
+<span id="cb5-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Degree positions</span></span>
+<span id="cb5-8">theta <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">360</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length.out =</span> k <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>k]</span>
+<span id="cb5-9"></span>
+<span id="cb5-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Fills</span></span>
+<span id="cb5-11">my_colors <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">class_color</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hue =</span> theta <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">90</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">saturation =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">brightness =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">55</span>)</span>
+<span id="cb5-12"></span>
+<span id="cb5-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Indicators per variable</span></span>
+<span id="cb5-14">j <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span></span>
+<span id="cb5-15"></span>
+<span id="cb5-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># All unique pairs of latent variables</span></span>
+<span id="cb5-17">path_connections <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">combn</span>(id, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb5-18"></span>
+<span id="cb5-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggdiagram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto Condensed"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-20">  {</span>
+<span id="cb5-21">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># latent variables</span></span>
+<span id="cb5-22">    l <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_circle</span>(</span>
+<span id="cb5-23">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_polar</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degree</span>(theta <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">90</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">r =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3.37</span>),</span>
+<span id="cb5-24">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_label</span>(</span>
+<span id="cb5-25">        id,</span>
+<span id="cb5-26">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">40</span>,</span>
+<span id="cb5-27">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nudge_y =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb5-28">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>,</span>
+<span id="cb5-29">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span></span>
+<span id="cb5-30">      ),</span>
+<span id="cb5-31">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">radius =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb5-32">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id =</span> id,</span>
+<span id="cb5-33">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> my_colors,</span>
+<span id="cb5-34">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span></span>
+<span id="cb5-35">    )</span>
+<span id="cb5-36">  } <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-37">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Connect each unique pair of latent variables</span></span>
+<span id="cb5-38">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">connect</span>(</span>
+<span id="cb5-39">    l[path_connections[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, ]],</span>
+<span id="cb5-40">    l[path_connections[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, ]],</span>
+<span id="cb5-41">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">resect =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb5-42">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> l[path_connections[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, ]]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>fill</span>
+<span id="cb5-43">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-44">  {</span>
+<span id="cb5-45">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make indictors for each latent variable in l</span></span>
+<span id="cb5-46">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map_ob</span>(l, \(ll) {</span>
+<span id="cb5-47">      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Get the angle</span></span>
+<span id="cb5-48">      th <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> ll<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>center<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>theta</span>
+<span id="cb5-49"></span>
+<span id="cb5-50">      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Get the color for latent variable</span></span>
+<span id="cb5-51">      ll_fill <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">class_color</span>(ll<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>fill)</span>
+<span id="cb5-52"></span>
+<span id="cb5-53">      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make color gradient for observed indicators</span></span>
+<span id="cb5-54">      cc <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">seq</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">180</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> k, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">180</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> k, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length.out =</span> j) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span></span>
+<span id="cb5-55">      o_fill <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">class_color</span>(</span>
+<span id="cb5-56">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hue =</span> ll_fill<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>hue <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> cc,</span>
+<span id="cb5-57">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">saturation =</span> ll_fill<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>saturation <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>,</span>
+<span id="cb5-58">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">brightness =</span> ll_fill<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>brightness <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.1</span></span>
+<span id="cb5-59">      )</span>
+<span id="cb5-60"></span>
+<span id="cb5-61">      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Subscripts</span></span>
+<span id="cb5-62">      i <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">seq</span>(j)</span>
+<span id="cb5-63">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> (th<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>positive <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degree</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">180</span>)) {</span>
+<span id="cb5-64">        i <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rev</span>(i)</span>
+<span id="cb5-65">      }</span>
+<span id="cb5-66"></span>
+<span id="cb5-67">      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make observed indicator variables</span></span>
+<span id="cb5-68">      o <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_ellipse</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">m1 =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">a =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">75</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> th) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb5-69">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">place</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">from =</span> ll, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">where =</span> ll<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>center<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>theta, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.45</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb5-70">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_array</span>(</span>
+<span id="cb5-71">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">k =</span> j,</span>
+<span id="cb5-72">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">where =</span> th <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degree</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">90</span>),</span>
+<span id="cb5-73">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb5-74">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> o_fill,</span>
+<span id="cb5-75">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ob_label</span>(</span>
+<span id="cb5-76">            <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(ll<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>label<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>label, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>, i, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>),</span>
+<span id="cb5-77">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nudge_y =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">05</span>,</span>
+<span id="cb5-78">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>,</span>
+<span id="cb5-79">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span></span>
+<span id="cb5-80">          )</span>
+<span id="cb5-81">        )</span>
+<span id="cb5-82"></span>
+<span id="cb5-83">      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Connect latent variable to observed indicators</span></span>
+<span id="cb5-84">      a <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">connect</span>(ll, o, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">resect =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>fill)</span>
+<span id="cb5-85">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(o, a)</span>
+<span id="cb5-86">    })</span>
+<span id="cb5-87">  }</span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-latent" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-latent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/announcing-ggdiagram/index_files/figure-html/fig-latent-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-latent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Latent variables arranged in a hexagon
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Announcing Ggdiagram, a Ggplot2 Extension for Making Diagrams
+    Programmatically},
+  date = {2025-08-19},
+  url = {https://wjschne.github.io/posts/announcing-ggdiagram/},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, August 19). Announcing ggdiagram, a ggplot2
+extension for making diagrams programmatically. <em>Schneirographs</em>.
+<a href="https://wjschne.github.io/posts/announcing-ggdiagram/">https://wjschne.github.io/posts/announcing-ggdiagram/</a>
+</div></div></section></div> ]]></description>
+  <category>ggplot2</category>
+  <category>ggdiagram</category>
+  <guid>https://wjschne.github.io/posts/announcing-ggdiagram/</guid>
+  <pubDate>Tue, 19 Aug 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>My lua filters</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -34,7 +886,7 @@
 ]</code></pre>
 <p>A Lua filter can select and transform specific elements For example, to transform all the <code>Str</code> (string) elements to uppercase:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb2-1"><span class="va" style="color: #111111;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb2-1"><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">Str</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -63,7 +915,7 @@ font-style: inherit;">)</span></span>
 <span id="cb2-3"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
-font-style: inherit;">end</span></span></code></pre></div>
+font-style: inherit;">end</span></span></code></pre></div></div>
 </div>
 <p>After running this filter, the paragraph would be transformed like so:</p>
 <pre><code>[Para [
@@ -84,7 +936,7 @@ font-style: inherit;">end</span></span></code></pre></div>
 <h2 class="anchored" data-anchor-id="first-try">First Try</h2>
 <p>Adapted from <a href="https://github.com/citation-style-language/styles/issues/3748#issuecomment-430871259">Samuel Dodson</a>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb4-1"><span class="kw" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb4-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">function</span> Cite <span class="op" style="color: #5E5E5E;
@@ -214,7 +1066,7 @@ font-style: inherit;">end</span></span>
 <span id="cb4-13"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
-font-style: inherit;">end</span></span></code></pre></div>
+font-style: inherit;">end</span></span></code></pre></div></div>
 </div>
 <p>This function walks down a document and runs every time a citation is found.</p>
 <p>The <code>pandoc.Cite</code> type has several fields in it, including <code>citations</code> and <code>content</code>. The <code>citations</code> field is a table that can contain several citations because parenthetical citations can have more than one citation. In-text citations have only one citation. To find the first citation in the <code>citation</code> field, we use square brackets and an index of <code>1</code>. Thus, <code>ct.citations[1]</code> retrieves the first citation.</p>
@@ -236,7 +1088,7 @@ font-style: inherit;">end</span></span></code></pre></div>
 <p>We want to “walk” through this sequence and find the <code>Str</code> elements that are ampersands and replace them.</p>
 <p>So, the following command says, “Walk through the <code>ct.content</code> field, and find each <code>Str</code> element. If the text of the <code>Str</code> element has an ampersand, replace the ampersand with <code>"and"</code>. Return the <code>Str</code> element.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb6-1"><span class="va" style="color: #111111;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb6-1"><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">ct</span><span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -313,14 +1165,14 @@ font-weight: bold;
 font-style: inherit;">end</span></span>
 <span id="cb6-8">  <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">}</span></span></code></pre></div>
+font-style: inherit;">}</span></span></code></pre></div></div>
 </div>
 </section>
 <section id="adding-support-for-languages-beyond-english" class="level2">
 <h2 class="anchored" data-anchor-id="adding-support-for-languages-beyond-english">Adding support for languages beyond English</h2>
 <p>I wanted people to use the filter in any language. In their metadata, they need to tell apaquarto what their word for <em>and</em> is. For example, Spanish speakers can substitute <em>y</em> for <em>and</em> like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">lang</span><span class="kw" style="color: #003B4F;
 background-color: null;
@@ -345,13 +1197,13 @@ font-style: inherit;">:</span><span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;"> </span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">y</span></span></code></pre></div>
+font-style: inherit;">y</span></span></code></pre></div></div>
 </div>
 <p>To make this work, the Lua filter needs to be able to access the <code>citation-last-author-separator</code> field in the metadata.</p>
 <p>We set up a local variable <code>andreplacement</code> with a default value <code>"and"</code>.</p>
 <p>To pass metadata into a function, we need to set up two local functions, one to retrieve the replacement word for <em>and</em> in the metadata (<code>get_and</code>) and one replace ampersands in the citations (<code>replace_and</code>). Then the <code>return</code> function runs the <code>get_and</code> function on the metadata, followed by the <code>replace_and</code> function on each citation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-- set default value for and</span></span>
 <span id="cb8-2"><span class="kw" style="color: #003B4F;
@@ -628,7 +1480,7 @@ background-color: null;
 font-style: inherit;">}</span></span>
 <span id="cb8-34"><span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">}</span></span></code></pre></div>
+font-style: inherit;">}</span></span></code></pre></div></div>
 </div>
 
 
@@ -663,7 +1515,7 @@ Schneider, W. J. (2024, March 15). My lua filters.
 <div class="cell">
 <details class="code-fold">
 <summary>Base plot for demonstrations</summary>
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
 <span id="cb1-2"><span class="co" style="color: #5E5E5E;
@@ -942,7 +1794,7 @@ background-color: null;
 font-style: inherit;">5</span></span>
 <span id="cb1-44">     )</span>
 <span id="cb1-45"></span>
-<span id="cb1-46">p</span></code></pre></div>
+<span id="cb1-46">p</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -956,7 +1808,7 @@ font-style: inherit;">5</span></span>
 <div class="cell">
 <details class="code-fold">
 <summary>Open arrow code</summary>
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -964,7 +1816,7 @@ font-style: inherit;">geom_segment</span>(<span class="at" style="color: #657422
 background-color: null;
 font-style: inherit;">arrow =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">arrow</span>())</span></code></pre></div>
+font-style: inherit;">arrow</span>())</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-open" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -984,7 +1836,7 @@ Figure&nbsp;1: The ggplot2 open arrow
 <div class="cell">
 <details class="code-fold">
 <summary>Closed arrow code</summary>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1013,7 +1865,7 @@ background-color: null;
 font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"closed"</span></span>
-<span id="cb3-6">))</span></code></pre></div>
+<span id="cb3-6">))</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-closed" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1032,7 +1884,7 @@ Figure&nbsp;2: The ggplot2 closed arrow
 <div class="cell">
 <details class="code-fold">
 <summary>TikZ code with latex’ arrow</summary>
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb4-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">\usetikzlibrary</span>{arrows}</span>
 <span id="cb4-2"><span class="kw" style="color: #003B4F;
@@ -1075,7 +1927,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">\end</span>{<span class="ex" style="color: null;
 background-color: null;
-font-style: inherit;">tikzpicture</span>}</span></code></pre></div>
+font-style: inherit;">tikzpicture</span>}</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-tkz" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1097,7 +1949,7 @@ Figure&nbsp;3: The TikZ latex’ arrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code for wings arrow (i.e, stealth arrow in TikZ)</summary>
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1105,7 +1957,7 @@ font-style: inherit;">geom_arrow_segment</span>(<span class="at" style="color: #
 background-color: null;
 font-style: inherit;">length_head =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">10</span>)</span></code></pre></div>
+font-style: inherit;">10</span>)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-stealth" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1124,7 +1976,7 @@ Figure&nbsp;4: The “wings” arrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code for sharp barbs and feathers</summary>
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
 <span id="cb6-2">  <span class="fu" style="color: #4758AB;
@@ -1157,7 +2009,7 @@ font-style: inherit;">arrow_fins_feather</span>(), </span>
 background-color: null;
 font-style: inherit;">length_fins =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">11</span>)</span></code></pre></div>
+font-style: inherit;">11</span>)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-feathers" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1175,7 +2027,7 @@ Figure&nbsp;5: Sharp barbs and feathers
 <div class="cell">
 <details class="code-fold">
 <summary>Code for kite arrowhead</summary>
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
 <span id="cb7-2">  <span class="fu" style="color: #4758AB;
@@ -1217,7 +2069,7 @@ font-style: inherit;">115</span>),</span>
 background-color: null;
 font-style: inherit;">length_fins =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">15</span>)</span></code></pre></div>
+font-style: inherit;">15</span>)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-kite" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1235,7 +2087,7 @@ Figure&nbsp;6: Double-headed arrow with kite arrowhead
 <div class="cell">
 <details class="code-fold">
 <summary>Code for reverse kite arrowhead</summary>
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
 <span id="cb8-2">  <span class="fu" style="color: #4758AB;
@@ -1258,7 +2110,7 @@ font-style: inherit;">45</span>,</span>
 background-color: null;
 font-style: inherit;">inset =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">120</span>))</span></code></pre></div>
+font-style: inherit;">120</span>))</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-reversekite" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1277,7 +2129,7 @@ Figure&nbsp;7: Reverse kite arrowhead
 <div class="cell">
 <details class="code-fold">
 <summary>Code for resecting an arrowhead</summary>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
 <span id="cb9-2">  <span class="fu" style="color: #4758AB;
@@ -1305,7 +2157,7 @@ font-style: inherit;">35</span>),</span>
 background-color: null;
 font-style: inherit;">resect_head =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">2</span>)</span></code></pre></div>
+font-style: inherit;">2</span>)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-resect" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1329,7 +2181,7 @@ Figure&nbsp;8: Demonstration of resecting arrowheads
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">par</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1440,7 +2292,7 @@ font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"a"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"b"</span>)))</span></code></pre></div>
+font-style: inherit;">"b"</span>)))</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-polygonplot" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1459,7 +2311,7 @@ Figure&nbsp;9: Grid for custom arrowheads
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">make_ellipse <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">make_ellipse <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -1519,7 +2371,7 @@ font-style: inherit;">5</span>,</span>
 background-color: null;
 font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">make_ellipse</span>())</span></code></pre></div>
+font-style: inherit;">make_ellipse</span>())</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-ellipse" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1541,7 +2393,7 @@ Figure&nbsp;10: Make ellipse
 <div class="cell preview-image">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(arrowheadr)</span>
 <span id="cb12-2"></span>
@@ -1559,7 +2411,7 @@ font-style: inherit;">5</span>,</span>
 background-color: null;
 font-style: inherit;">arrow_head =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">arrow_head_latex</span>())</span></code></pre></div>
+font-style: inherit;">arrow_head_latex</span>())</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1575,7 +2427,7 @@ font-style: inherit;">arrow_head_latex</span>())</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">stlouis <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">stlouis <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1601,7 +2453,7 @@ background-color: null;
 font-style: inherit;">5</span>,</span>
 <span id="cb13-5">                     <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">arrow_head =</span> stlouis)</span></code></pre></div>
+font-style: inherit;">arrow_head =</span> stlouis)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-stlouis" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1620,7 +2472,7 @@ Figure&nbsp;11: The Gateway Arch in St.&nbsp;Louis is shaped like a catenary, no
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
 <span id="cb14-2">  <span class="fu" style="color: #4758AB;
@@ -1638,7 +2490,7 @@ font-style: inherit;">arrow_head_function</span>(dt, <span class="at" style="col
 background-color: null;
 font-style: inherit;">df =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">1</span>))</span></code></pre></div>
+font-style: inherit;">1</span>))</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-cauchy" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1657,7 +2509,7 @@ Figure&nbsp;12: Any function can make an arrowhead.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">razors <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">razors <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1719,7 +2571,7 @@ background-color: null;
 font-style: inherit;">10</span>,</span>
 <span id="cb15-13">                     <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">arrow_head =</span> razors)</span></code></pre></div>
+font-style: inherit;">arrow_head =</span> razors)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-razors" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1738,7 +2590,7 @@ Figure&nbsp;13: The reflecter function takes a set of points and makes them symm
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">candleflame <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">candleflame <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1787,7 +2639,7 @@ background-color: null;
 font-style: inherit;">12</span>,</span>
 <span id="cb16-10">                     <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">arrow_head =</span> candleflame)</span></code></pre></div>
+font-style: inherit;">arrow_head =</span> candleflame)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-candleflame" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1806,7 +2658,7 @@ Figure&nbsp;14: Wittgenstein’s rod makes some nice shapes
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">curved_arrowhead <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">curved_arrowhead <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1948,7 +2800,7 @@ background-color: null;
 font-style: inherit;">8</span>,</span>
 <span id="cb17-23">                     <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">arrow_head =</span> curved_arrowhead)</span></code></pre></div>
+font-style: inherit;">arrow_head =</span> curved_arrowhead)</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-curved_arrowhead" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2017,17 +2869,17 @@ Note
 <h1>My Annotated Equation</h1>
 <p>I am going to refer to the same file name with various endings (e.g., .tex, .pdf, .svg), so I will define it here.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">myfile <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">myfile <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"annotatedequationsimple"</span></span></code></pre></div>
+font-style: inherit;">"annotatedequationsimple"</span></span></code></pre></div></div>
 </div>
 <p>Here is the code for the annotated equation. It is saved in <code>annotatedequationsimple.tex</code>.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>LaTeX code</summary>
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```{tikz zscorecode}</span></span>
 <span id="cb2-2"><span class="in" style="color: #5E5E5E;
@@ -2206,12 +3058,12 @@ font-style: inherit;">\end{document}</span></span>
 <span id="cb2-63"></span>
 <span id="cb2-64"><span class="in" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">```</span></span></code></pre></div>
+font-style: inherit;">```</span></span></code></pre></div></div>
 </details>
 </div>
 <p>Now convert the .tex file to .pdf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
 background-color: null;
@@ -2222,11 +3074,11 @@ background-color: null;
 font-style: inherit;">|&gt;</span> </span>
 <span id="cb3-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">shell</span>()</span></code></pre></div>
+font-style: inherit;">shell</span>()</span></code></pre></div></div>
 </div>
 <p>Now we can convert the .pdf to .svg:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
 background-color: null;
@@ -2239,12 +3091,12 @@ background-color: null;
 font-style: inherit;">|&gt;</span> </span>
 <span id="cb4-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">shell</span>()</span></code></pre></div>
+font-style: inherit;">shell</span>()</span></code></pre></div></div>
 </div>
 <div class="page-columns page-full"><p>For best image quality, import the .svg file with <a href="https://coolbutuseless.github.io/package/svgparser/index.html">svgparser</a>. The <code>read_svg</code> function will create a grid grob that can plotted directly using <code>ggplot2::annotation_custom</code>. </p><div class="no-row-height column-margin column-container"><span class="">If you want fine control of the imported grob, you can plot it using the <a href="https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html#gggrid">gggrid</a> package. See <a href="https://coolbutuseless.github.io/package/svgparser/articles/gggrid.html">here</a> for an example.</span></div></div>
 <p>In the simplest case, we can do this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(svgparser)</span>
 <span id="cb5-2">my_svg <span class="ot" style="color: #003B4F;
@@ -2286,7 +3138,7 @@ font-style: inherit;">0</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ymax =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">1</span>) </span></code></pre></div>
+font-style: inherit;">1</span>) </span></code></pre></div></div>
 <div class="cell-output-display">
 <div id="fig-simpleplot" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2304,7 +3156,7 @@ Figure&nbsp;1: A simple plot with an annotated equation.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">mu <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">mu <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -2528,7 +3380,7 @@ background-color: null;
 font-style: inherit;">breaks =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NULL</span></span>
-<span id="cb6-51">  ) </span></code></pre></div>
+<span id="cb6-51">  ) </span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-svg" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2547,7 +3399,7 @@ Figure&nbsp;2: Importing an .svg file via svgparser and <code>annotation_custom<
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2752,7 +3604,7 @@ background-color: null;
 font-style: inherit;">breaks =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NULL</span></span>
-<span id="cb7-50">  )</span></code></pre></div>
+<span id="cb7-50">  )</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2774,7 +3626,7 @@ Figure&nbsp;3: Importing a .pdf file via <code>ggimage::geom_image</code>.
 <div class="cell">
 <details class="code-fold">
 <summary>LaTeX code</summary>
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><span class="bu" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">\documentclass</span>[border={10pt 48pt -45pt 62pt}]{<span class="ex" style="color: null;
 background-color: null;
@@ -3065,14 +3917,14 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">\end</span>{<span class="ex" style="color: null;
 background-color: null;
-font-style: inherit;">document</span>}</span></code></pre></div>
+font-style: inherit;">document</span>}</span></code></pre></div></div>
 </details>
 </div>
 <p>Now convert .tex to .pdf:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">myfile <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">myfile <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -3089,14 +3941,14 @@ background-color: null;
 font-style: inherit;">|&gt;</span> </span>
 <span id="cb9-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">shell</span>()</span></code></pre></div>
+font-style: inherit;">shell</span>()</span></code></pre></div></div>
 </details>
 </div>
 <p>And we are ready to plot. This plot shows the probability that an observed score will have a true score less than a specific threshold, given a reliability coefficient.</p>
 <div class="cell preview-image">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">viridis_start <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">viridis_start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -3755,8 +4607,276 @@ font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">40</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">160</span>)) </span></code></pre></div>
+font-style: inherit;">160</span>)) </span></code></pre></div></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-pthresholdequation" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -3801,7 +4921,7 @@ Schneider, W. J. (2023, July 24). Annotated equations in ggplot2.
 
 <p>I am writing a <a href="https://individual-psychometrics.rbind.io/">(still very much unfinished) psychometrics book</a> with suggested exercises using R. I wanted to provide solutions to the questions, but I wanted to hide the answers until the reader clicks them.</p>
 <p>An easy way to create collapsible content is with html’s <code>&lt;details&gt;</code> tag. For example:</p>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1">Create a variable `x`, and assign it a value of 5.</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1">Create a variable `x`, and assign it a value of 5.</span>
 <span id="cb1-2"></span>
 <span id="cb1-3">&lt;details&gt;</span>
 <span id="cb1-4">  &lt;summary&gt;Suggested Solution&lt;/summary&gt;</span>
@@ -3809,18 +4929,18 @@ Schneider, W. J. (2023, July 24). Annotated equations in ggplot2.
 <span id="cb1-6">```{r}</span>
 <span id="cb1-7">x &lt;- 5</span>
 <span id="cb1-8">```</span>
-<span id="cb1-9">&lt;/details&gt;</span></code></pre></div>
+<span id="cb1-9">&lt;/details&gt;</span></code></pre></div></div>
 <p>Create a variable <code>x</code>, and assign it a value of 5.</p>
 <details>
 <summary>
 Suggested Solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">x <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">x <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">5</span></span></code></pre></div>
+font-style: inherit;">5</span></span></code></pre></div></div>
 </div>
 </details>
 <hr>
@@ -3828,7 +4948,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 <p><a href="https://bookdown.org/yihui/rmarkdown-cookbook/chunk-hooks.html">Chunk hooks</a> are for customizing the output of a chunk.</p>
 <p>Here I create a new chunk hook that is run before and after the chunk. When it is run before the chunk, it adds the <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> tags. After the chunk, it closes the <code>&lt;details&gt;</code> tag.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Add the details tag before running the chunk </span></span>
 <span id="cb3-2"><span class="co" style="color: #5E5E5E;
@@ -3883,13 +5003,13 @@ background-color: null;
 font-style: inherit;">"</span></span>
 <span id="cb3-13">    </span>
 <span id="cb3-14">  }</span>
-<span id="cb3-15">})</span></code></pre></div>
+<span id="cb3-15">})</span></code></pre></div></div>
 </div>
 <p>If all we needed to do was to enclose the output into a <code>&lt;details&gt;</code> tag, then just the <code>solutionsetter</code> hook would be needed. However, I also wanted to set <code>echo=TRUE</code> so that the output would be visible even if the default for <code>echo</code> was <code>FALSE</code>.</p>
 <p><a href="https://bookdown.org/yihui/rmarkdown-cookbook/option-hooks.html">Option hooks</a> are great for when you have a kind of chunk you will use often, and it requires setting many chunk options at once (e.g., a plot variant with different dimensions than your default plot has).</p>
 <p>Here I create a new option hook called <code>solution</code>. It sets the current chunk’s <code>echo</code> option to <code>TRUE</code> and also triggers the new <code>solutionsetter</code> code chunk below. The updated <code>options</code> list needs to be returned explicitly, or the hook will not work.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">knitr<span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">knitr<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span>opts_hooks<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -3918,40 +5038,40 @@ font-style: inherit;">TRUE</span></span>
 <span id="cb4-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">return</span>(options)</span>
-<span id="cb4-5">})</span></code></pre></div>
+<span id="cb4-5">})</span></code></pre></div></div>
 </div>
 <p>Now all need to do is to set my chunk option to <code>solution = TRUE</code> and the output will be collapsible:</p>
-<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"></span>
 <span id="cb5-2">Create a variable `x`, and assign it a value of 5.</span>
 <span id="cb5-3"></span>
 <span id="cb5-4">```{r, solution = TRUE}</span>
 <span id="cb5-5">x &lt;- 5</span>
-<span id="cb5-6">```</span></code></pre></div>
+<span id="cb5-6">```</span></code></pre></div></div>
 <p>Create a variable <code>x</code>, and assign it a value of 5.</p>
 <div class="cell" data-solution="true" data-solutionsetter="true">
 <details>
 <summary>
 Suggested Solution
 </summary>
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">x <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">x <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">5</span></span></code></pre></div>
+font-style: inherit;">5</span></span></code></pre></div></div>
 </details>
 </div>
 <hr>
 <section id="the-details-package" class="level1">
 <h1>The details package</h1>
 <p>If you want a function to enclose the output of a chunk or inline code in <code>&lt;details&gt;</code> tags, use the <a href="https://cran.r-project.org/package=details">details</a> package by Jonathan Sidi. For example, an inline chunk like this:</p>
-<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1">`r details::details("Answer", summary = "Question")`</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1">`r details::details("Answer", summary = "Question")`</span></code></pre></div></div>
 <p>Will output like so:</p>
 <details closed="">
 <summary>
 <span title="Click to Expand"> Question </span>
 </summary>
-<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"></span>
-<span id="cb8-2">Answer</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"></span>
+<span id="cb8-2">Answer</span></code></pre></div></div>
 </details>
 <p><br></p>
 <p>The package has many other uses, which are explained in the <a href="https://yonicd.github.io/details/articles/index.html">package’s vignettes</a>.</p>
@@ -3989,7 +5109,7 @@ chunk hooks. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/c
 <p>Suppose we give an admittedly silly questionnaire about preference for darker food. We want to display the percentages of people answering “Yes” to each question.</p>
 <p>Here are the questions and the (completely made-up) percentages:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># To install the WJSmisc package:</span></span>
 <span id="cb1-2"><span class="co" style="color: #5E5E5E;
@@ -4052,11 +5172,11 @@ font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">Item =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">fct_reorder</span>(Item, Percentage))</span></code></pre></div>
+font-style: inherit;">fct_reorder</span>(Item, Percentage))</span></code></pre></div></div>
 </div>
 <p>A preliminary plot might look like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">myfont <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">myfont <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -4282,7 +5402,7 @@ font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Y-axis labels with no text wrapping"</span>)</span></code></pre></div>
+font-style: inherit;">"Y-axis labels with no text wrapping"</span>)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -4293,7 +5413,7 @@ font-style: inherit;">"Y-axis labels with no text wrapping"</span>)</span></code
 </div>
 <p>The questions are taking up a lot of space. We can fix this by using <code>stringr::str_wrap</code> to make the text lines no longer than a specified width:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
 <span id="cb3-2">  <span class="fu" style="color: #4758AB;
@@ -4313,7 +5433,7 @@ font-style: inherit;">+</span> </span>
 background-color: null;
 font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Splitting Y-axis labels with str_wrap"</span>)</span></code></pre></div>
+font-style: inherit;">"Splitting Y-axis labels with str_wrap"</span>)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -4324,7 +5444,7 @@ font-style: inherit;">"Splitting Y-axis labels with str_wrap"</span>)</span></co
 </div>
 <p>This is a definite improvement, but I wish the lines of text were wrapped more evenly. For example, I do not like the fact that “chocolate” and “bread” are by themselves on their own lines. I have spent a fair amount of time breaking lines up by hand and hoped to create a function to automate the process. To achieve a more balanced style of text splitting, I made the <code>str_wrap_equal</code> function.</p>
 <div class="cell preview-image">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -4343,7 +5463,7 @@ font-style: inherit;">+</span> </span>
 background-color: null;
 font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Splitting Y-axis labels with str_wrap_equal"</span>)</span></code></pre></div>
+font-style: inherit;">"Splitting Y-axis labels with str_wrap_equal"</span>)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -4367,7 +5487,7 @@ font-style: inherit;">"Splitting Y-axis labels with str_wrap_equal"</span>)</spa
 </ol>
 <p>Here is the code for the function. Any suggestions to improve it are welcome.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">str_wrap_equal <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">str_wrap_equal <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -4622,7 +5742,7 @@ background-color: null;
 font-style: inherit;">collapse =</span> sep)</span>
 <span id="cb5-42">  })</span>
 <span id="cb5-43"></span>
-<span id="cb5-44">}</span></code></pre></div>
+<span id="cb5-44">}</span></code></pre></div></div>
 </div>
 
 
@@ -4656,7 +5776,7 @@ equal segments. <em>Schneirographs</em>. <a href="https://wjschne.github.io/post
 <p>While assembling a reply letter for a revise-and-resubmit document, I was documenting for reviewers how we addressed their concerns. The reply letter quoted numerous sentences and paragraphs that had been changed. Unfortunately, each time my co-authors and I edited the paper, I lost track of which sentences and paragraphs I had previously copied into the reply letter. I did not want to misquote my own paper.</p>
 <p>Copying-and-pasting with each edit was getting tedious, and it was an error-prone process. I decided to write a function that would retrieve a named div or span from the paper and print it as a quote in my reply letter. Here it is:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">get_quote <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">get_quote <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -5248,7 +6368,7 @@ background-color: null;
 font-style: inherit;">"Could not find a div or span with id = "</span>, id)</span>
 <span id="cb1-85"></span>
 <span id="cb1-86">  s</span>
-<span id="cb1-87">}</span></code></pre></div>
+<span id="cb1-87">}</span></code></pre></div></div>
 </div>
 <p>For your convenience and mine, I have added this function into the <a href="https://wjschne.github.io/WJSmisc/reference/get_quote.html">WJSmisc package</a>.</p>
 <section id="using-the-get_quote-function" class="level1">
@@ -5264,12 +6384,12 @@ This is the second paragraph.
 
 cat(get_quote("id2", "index.qmd"))</code></pre>
 <p>You can pull text from the current file or another file. This file happened to be named <code>index.qmd</code>. The text inside the span with id <code>id1</code> can be extracted with inline chunks like so:</p>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1">`r get_quote("id1", "index.qmd")`</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1">`r get_quote("id1", "index.qmd")`</span></code></pre></div></div>
 <blockquote class="blockquote">
 <p>Text in a span</p>
 </blockquote>
 <p>Here we extract the two paragraphs in div id2</p>
-<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1">`r get_quote("id2", "index.qmd")`</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1">`r get_quote("id2", "index.qmd")`</span></code></pre></div></div>
 <blockquote class="blockquote">
 <p>Here are two pagagraphs in a fenced div.</p>
 <p>This is the second paragraph.</p>
@@ -5277,15 +6397,15 @@ cat(get_quote("id2", "index.qmd"))</code></pre>
 <section id="remove-blockquote-formatting" class="level2">
 <h2 class="anchored" data-anchor-id="remove-blockquote-formatting">Remove blockquote formatting</h2>
 <p>By default, the function adds a <code>&gt;</code> before each line in the quoted markdown so that it appears as a block quote. You can turn off the block quote formatting like so:</p>
-<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1">`r get_quote("id1", "index.qmd", blockquote = FALSE)`</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1">`r get_quote("id1", "index.qmd", blockquote = FALSE)`</span></code></pre></div></div>
 <p>Text in a span</p>
 </section>
 <section id="curly-braces-with-additional-information" class="level2">
 <h2 class="anchored" data-anchor-id="curly-braces-with-additional-information">Curly braces with additional information</h2>
 <p>What if you need to put additional information in the curly braces of the span or div (e.g., a css class)?</p>
-<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1">[Here is more text with extra stuff in the curly braces.]{#id3 .myclass}</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1">[Here is more text with extra stuff in the curly braces.]{#id3 .myclass}</span></code></pre></div></div>
 <p>You can trick the function into thinking that the extra stuff is part of the id like so:</p>
-<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1">`r get_quote("id3 .myclass", "index.qmd")`</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1">`r get_quote("id3 .myclass", "index.qmd")`</span></code></pre></div></div>
 <blockquote class="blockquote">
 <p>Here is more text with extra stuff in the curly braces.</p>
 </blockquote>
@@ -5323,7 +6443,7 @@ Document into Another. <em>Schneirographs</em>. <a href="https://wjschne.github.
 <p>As explained in <a href="https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#font-size-1">this ggplot2 vignette</a>, the <code>size</code> parameter in <code>geom_text</code> and <code>geom_label</code> is in millimeters, and the <code>size</code> parameter in all other text elements in ggplot2 is in points.</p>
 <p>If I specify the <code>base_size</code> of the plot and the <code>size</code> of a label to 16, you can see that the text label is much bigger than 16.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
 <span id="cb1-2">textsize <span class="ot" style="color: #003B4F;
@@ -5406,7 +6526,7 @@ background-color: null;
 font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span></span>
-<span id="cb1-18">  )</span></code></pre></div>
+<span id="cb1-18">  )</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -5418,9 +6538,9 @@ font-style: inherit;">1</span></span>
 <p>If you do not mind a little trial and error, you can fiddle with the <code>size</code> parameter until you find a value that looks good to you. However, what if we want the axis text labels and the output of <code>geom_text</code> to be <em>exactly</em> the same size?</p>
 <p>We are in luck because ggplot2 has a <code>.pt</code> constant that will help us convert point sizes to millimeters.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">ggplot2<span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">ggplot2<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">::</span>.pt</span></code></pre></div>
+font-style: inherit;">::</span>.pt</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.845276</code></pre>
 </div>
@@ -5428,7 +6548,7 @@ font-style: inherit;">::</span>.pt</span></code></pre></div>
 <p>We know that, by default, axis text is .8 times as large as the <code>base_size</code> of the theme.</p>
 <p>Let’s make a function to automate the conversion:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">ggtext_size <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">ggtext_size <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -5445,11 +6565,11 @@ background-color: null;
 font-style: inherit;">/</span> ggplot2<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span>.pt</span>
-<span id="cb4-3">}</span></code></pre></div>
+<span id="cb4-3">}</span></code></pre></div></div>
 </div>
 <p>Now we can make the label and axis text exactly the same size:</p>
 <div class="cell preview-image">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -5521,7 +6641,7 @@ background-color: null;
 font-style: inherit;">-</span>.<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">3</span></span>
-<span id="cb5-11">  )</span></code></pre></div>
+<span id="cb5-11">  )</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -5566,7 +6686,7 @@ axis labels in ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github
 <p>Suppose I have a Likert questionnaire item with responses ranging from <em>Strongly Disagree</em> to <em>Strongly Agree</em>. Let’s say I have many groups in my study (e.g., college majors), and I want to compare their responses to the item.</p>
 <p>First I will create fake data for 26 groups, A–Z.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(extrafont)</span>
 <span id="cb1-2"><span class="fu" style="color: #4758AB;
@@ -5731,13 +6851,13 @@ background-color: null;
 font-style: inherit;">%&gt;%</span></span>
 <span id="cb1-26">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">ungroup</span>()</span></code></pre></div>
+font-style: inherit;">ungroup</span>()</span></code></pre></div></div>
 </div>
 </section>
 <section id="first-attempts-at-plotting" class="level1">
 <h1>First Attempts at Plotting</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">d <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">d <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
 <span id="cb2-2">  <span class="fu" style="color: #4758AB;
@@ -5856,7 +6976,7 @@ background-color: null;
 font-style: inherit;">vjust =</span> .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">5</span>)</span>
-<span id="cb2-16">  )</span></code></pre></div>
+<span id="cb2-16">  )</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -5867,7 +6987,7 @@ font-style: inherit;">5</span>)</span>
 </div>
 <p>Not bad, but it would look better if we sorted the groups. We have many sorting options. One is that we can convert the Likert scale to numeric and then sort by the group with the highest mean.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">d <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">d <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
 <span id="cb3-2">  <span class="fu" style="color: #4758AB;
@@ -6004,7 +7124,7 @@ background-color: null;
 font-style: inherit;">vjust =</span> .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">5</span>)</span>
-<span id="cb3-18">  )</span></code></pre></div>
+<span id="cb3-18">  )</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -6015,7 +7135,7 @@ font-style: inherit;">5</span>)</span>
 </div>
 <p>If I wanted to sort by the “Strongly Agree” category (or any other category):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">d <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">d <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
 <span id="cb4-2">  <span class="fu" style="color: #4758AB;
@@ -6161,7 +7281,7 @@ background-color: null;
 font-style: inherit;">vjust =</span> .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">5</span>)</span>
-<span id="cb4-21">  )</span></code></pre></div>
+<span id="cb4-21">  )</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -6175,7 +7295,7 @@ font-style: inherit;">5</span>)</span>
 <h1>Final Plot</h1>
 <p>So far, these plots look pretty good. However, I wish that the percentage labels were placed in a more aesthetically pleasing way. I am going to group by each of the response categories and then create a loess regression equation to smooth out the placement. It will mean that the labels are no longer centered in the stacked bars, but I think the sacrifice is worth it. I think that the percentage values are much easier to compare because the eye can follow the smooth line of labels.</p>
 <div class="cell preview-image">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">d <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">d <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -6707,7 +7827,7 @@ font-style: inherit;">22.56</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"mm"</span>)</span>
 <span id="cb5-84">             )</span>
-<span id="cb5-85">           ) </span></code></pre></div>
+<span id="cb5-85">           ) </span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -6753,7 +7873,7 @@ ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/bar-c
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7Btext%20angle%7D=%5Ctan%5E%7B-1%7D(%5Ctext%7Btangent%20slope%7D)+%5Cpi/2%0A"></p>
 <p>Now I need a pair of functions that will convert this angle into the right values for ggplot2’s <code>hjust</code> and <code>vjust</code> arguments. I have added the <code>angle2vjust</code> and <code>angle2hjust</code> functions to the <a href="https://github.com/wjschne/WJSmisc">WJSmisc package</a>, but I have defined them here as well:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">angle2vjust <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">angle2vjust <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -6853,11 +7973,11 @@ background-color: null;
 font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.5</span></span>
-<span id="cb1-9">}</span></code></pre></div>
+<span id="cb1-9">}</span></code></pre></div></div>
 </div>
 <p>Now we plot the sine function with labels. I have used <code>geom_richtext</code> from the <a href="https://github.com/wilkelab/ggtext">ggtext package</a> because it allows me to set a white background along with padding and margins.</p>
 <div class="cell preview-image">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
 <span id="cb2-2"><span class="fu" style="color: #4758AB;
@@ -7066,7 +8186,7 @@ font-style: inherit;">element_markdown</span>(),</span>
 background-color: null;
 font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">element_markdown</span>())</span></code></pre></div>
+font-style: inherit;">element_markdown</span>())</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -7077,7 +8197,7 @@ font-style: inherit;">element_markdown</span>())</span></code></pre></div>
 </div>
 <p>If you do not mind turning your head to one side or the other, a somewhat easier method is to set the label’s <code>vjust</code> to a negative value and rotate the labels by the angle of the tangent line:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -7267,7 +8387,7 @@ font-style: inherit;">element_markdown</span>(),</span>
 background-color: null;
 font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">element_markdown</span>())</span></code></pre></div>
+font-style: inherit;">element_markdown</span>())</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -7278,7 +8398,7 @@ font-style: inherit;">element_markdown</span>())</span></code></pre></div>
 </div>
 <p>What if you do not know the function’s first derivative? You can approximate the slope of the tangent line by comparing a function’s output of each point with the output of a slightly deviated point. Here is a plot of the normal cumulative distribution function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Small change in x</span></span>
 <span id="cb4-2">dx <span class="ot" style="color: #003B4F;
@@ -7472,7 +8592,7 @@ font-style: inherit;">+</span></span>
 background-color: null;
 font-style: inherit;">scale_y_continuous</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"&amp;Phi;(*x*)"</span>)</span></code></pre></div>
+font-style: inherit;">"&amp;Phi;(*x*)"</span>)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -7511,7 +8631,7 @@ in ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/po
 
 <p>Sometimes I want to put a plot caption in the lower right corner of the plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
 <span id="cb1-2">p <span class="ot" style="color: #003B4F;
@@ -7554,7 +8674,7 @@ font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Note: Mean = 0, SD = 1"</span>)</span>
 <span id="cb1-5"></span>
-<span id="cb1-6">p</span></code></pre></div>
+<span id="cb1-6">p</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -7565,7 +8685,7 @@ font-style: inherit;">"Note: Mean = 0, SD = 1"</span>)</span>
 </div>
 <p>However, I want the caption to be a little higher, on the same line as the x-axis title. To do so, set a a negative top margin:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -7587,7 +8707,7 @@ font-style: inherit;">10</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">unit =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"pt"</span>)))</span></code></pre></div>
+font-style: inherit;">"pt"</span>)))</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -7598,7 +8718,7 @@ font-style: inherit;">"pt"</span>)))</span></code></pre></div>
 </div>
 <p>Here is a more finished example.</p>
 <div class="cell preview-image">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggnormalviolin)</span>
 <span id="cb3-2"><span class="fu" style="color: #4758AB;
@@ -8460,7 +9580,7 @@ background-color: null;
 font-style: inherit;">       true&lt;br&gt;score distributions for each observed score. The black lines&lt;br&gt;</span></span>
 <span id="cb3-119"><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">       underneath span the 68% and 95% confidence intervals."</span>)</span></code></pre></div>
+font-style: inherit;">       underneath span the 68% and 95% confidence intervals."</span>)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -8499,7 +9619,7 @@ ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/capti
 
 <p>I often need to add a prefix or suffix to a character vector:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
 <span id="cb1-2">x <span class="ot" style="color: #003B4F;
@@ -8517,14 +9637,14 @@ font-style: inherit;">"C"</span>)</span>
 background-color: null;
 font-style: inherit;">paste0</span>(x, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"_1"</span>)</span></code></pre></div>
+font-style: inherit;">"_1"</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "A_1" "B_1" "C_1"</code></pre>
 </div>
 </div>
 <p>However, if the vector is empty, I do not want bare prefixes or suffixes like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">x <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">x <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -8535,14 +9655,14 @@ font-style: inherit;">0</span>)</span>
 background-color: null;
 font-style: inherit;">paste0</span>(x, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"_1"</span>)</span></code></pre></div>
+font-style: inherit;">"_1"</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "_1"</code></pre>
 </div>
 </div>
 <p>I used to write a lot of tedious <code>if</code> statements like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="cf" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">if</span> (<span class="fu" style="color: #4758AB;
@@ -8570,11 +9690,11 @@ background-color: null;
 font-style: inherit;">paste0</span>(x, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"_1"</span>)</span>
-<span id="cb5-5">}</span></code></pre></div>
+<span id="cb5-5">}</span></code></pre></div></div>
 </div>
 <p>For R 4.0.1 and later versions, the <code>paste</code> and <code>paste0</code> functions acquired the <code>recycle0</code> argument. Setting <code>recycle0</code> to <code>TRUE</code> returns an empty vector if at least one string is empty:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste0</span>(x, <span class="st" style="color: #20794D;
 background-color: null;
@@ -8582,14 +9702,14 @@ font-style: inherit;">"_1"</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">recycle0 =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
-font-style: inherit;">TRUE</span>)</span></code></pre></div>
+font-style: inherit;">TRUE</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>character(0)</code></pre>
 </div>
 </div>
 <p>If you need to work with an earlier version of R, you can use the <code>sprintf</code> function instead:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Non-empty vector</span></span>
 <span id="cb8-2">x <span class="ot" style="color: #003B4F;
@@ -8607,11 +9727,11 @@ font-style: inherit;">"C"</span>)</span>
 background-color: null;
 font-style: inherit;">sprintf</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"%s_1"</span>, x)</span></code></pre></div>
+font-style: inherit;">"%s_1"</span>, x)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "A_1" "B_1" "C_1"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Empty vector</span></span>
 <span id="cb10-2">x <span class="ot" style="color: #003B4F;
@@ -8625,14 +9745,14 @@ font-style: inherit;">0</span>)</span>
 background-color: null;
 font-style: inherit;">sprintf</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"%s_1"</span>, x)</span></code></pre></div>
+font-style: inherit;">"%s_1"</span>, x)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>character(0)</code></pre>
 </div>
 </div>
 <p>The <code>glue</code> function from the glue package also works nicely:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Non-empty vector</span></span>
 <span id="cb12-2">x <span class="ot" style="color: #003B4F;
@@ -8652,13 +9772,13 @@ font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"{x}_1"</span>)</span></code></pre></div>
+font-style: inherit;">"{x}_1"</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A_1
 B_1
 C_1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Empty vector</span></span>
 <span id="cb14-2">x <span class="ot" style="color: #003B4F;
@@ -8674,7 +9794,7 @@ font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"{x}_1"</span>)</span></code></pre></div>
+font-style: inherit;">"{x}_1"</span>)</span></code></pre></div></div>
 </div>
 
 

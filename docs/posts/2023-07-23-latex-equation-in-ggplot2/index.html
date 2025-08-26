@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.29">
+<meta name="generator" content="quarto-1.8.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,14 +70,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../..//images/favicon.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-f98ea211b99fe8356d6469e598480a52.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c73f405db3f8ed880c7bfb01249972c6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-b61e593f1137c202c05f778f9c7187da.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -134,7 +135,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -174,6 +175,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">W. Joel Schneider</span>
     </a>
@@ -329,13 +332,13 @@ Note
 <h1>My Annotated Equation</h1>
 <p>I am going to refer to the same file name with various endings (e.g., .tex, .pdf, .svg), so I will define it here.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>myfile <span class="ot">&lt;-</span> <span class="st">"annotatedequationsimple"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>myfile <span class="ot">&lt;-</span> <span class="st">"annotatedequationsimple"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here is the code for the annotated equation. It is saved in <code>annotatedequationsimple.tex</code>.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>LaTeX code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{tikz zscorecode}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{tikz zscorecode}</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: show</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: "LaTeX code"</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
@@ -398,27 +401,27 @@ Note
 <span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
 <span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="in">\end{document}</span></span>
 <span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Now convert the .tex file to .pdf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">'pdflatex -interaction=nonstopmode '</span>, myfile,<span class="st">'.tex'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shell</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">'pdflatex -interaction=nonstopmode '</span>, myfile,<span class="st">'.tex'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shell</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now we can convert the .pdf to .svg:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"dvisvgm --pdf --output="</span>, myfile,<span class="st">".svg "</span>, myfile,<span class="st">".pdf"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shell</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"dvisvgm --pdf --output="</span>, myfile,<span class="st">".svg "</span>, myfile,<span class="st">".pdf"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shell</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="page-columns page-full"><p>For best image quality, import the .svg file with <a href="https://coolbutuseless.github.io/package/svgparser/index.html">svgparser</a>. The <code>read_svg</code> function will create a grid grob that can plotted directly using <code>ggplot2::annotation_custom</code>. </p><div class="no-row-height column-margin column-container"><span class="">If you want fine control of the imported grob, you can plot it using the <a href="https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html#gggrid">gggrid</a> package. See <a href="https://coolbutuseless.github.io/package/svgparser/articles/gggrid.html">here</a> for an example.</span></div></div>
 <p>In the simplest case, we can do this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(svgparser)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(svgparser)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>my_svg <span class="ot">&lt;-</span> svgparser<span class="sc">::</span><span class="fu">read_svg</span>(<span class="fu">paste0</span>(myfile, <span class="st">".svg"</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_custom</span>(my_svg, <span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="dv">1</span>, <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_custom</span>(my_svg, <span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="dv">1</span>, <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="dv">1</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-simpleplot" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -436,7 +439,7 @@ Figure&nbsp;1: A simple plot with an annotated equation.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">15</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plot_height <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(mu, mu, sigma)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>lb <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">4</span> <span class="sc">*</span> sigma <span class="sc">+</span> mu</span>
@@ -486,7 +489,7 @@ Figure&nbsp;1: A simple plot with an annotated equation.
 <span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, plot_height),</span>
 <span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(),</span>
 <span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="cn">NULL</span></span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-svg" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -505,7 +508,7 @@ Figure&nbsp;2: Importing an .svg file via svgparser and <code>annotation_custom<
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_image</span>(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">tibble</span>(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">140</span>,</span>
@@ -554,7 +557,7 @@ Figure&nbsp;2: Importing an .svg file via svgparser and <code>annotation_custom<
 <span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, plot_height),</span>
 <span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(),</span>
 <span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="cn">NULL</span></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -576,7 +579,7 @@ Figure&nbsp;3: Importing a .pdf file via <code>ggimage::geom_image</code>.
 <div class="cell">
 <details class="code-fold">
 <summary>LaTeX code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\documentclass</span>[border={10pt 48pt -45pt 62pt}]{<span class="ex">standalone</span>}</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\documentclass</span>[border={10pt 48pt -45pt 62pt}]{<span class="ex">standalone</span>}</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">%\documentclass{article}</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">annotate-equations</span>}</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">xcolor</span>}</span>
@@ -641,24 +644,24 @@ Figure&nbsp;3: Importing a .pdf file via <code>ggimage::geom_image</code>.
 <span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>    {Standard Error of the Estimate<span class="fu">\\</span> </span>
 <span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>    <span class="ss">$</span><span class="sc">\sigma</span><span class="ss">_{T-</span><span class="sc">\hat</span><span class="ss">{T}}=</span><span class="sc">\sigma\sqrt</span><span class="ss">{r_{XX}-r_{XX}^2}$</span>}</span>
 <span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">document</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">document</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Now convert .tex to .pdf:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>myfile <span class="ot">&lt;-</span> <span class="st">"annotatedequation"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>myfile <span class="ot">&lt;-</span> <span class="st">"annotatedequation"</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">'pdflatex -interaction=nonstopmode '</span>, myfile,<span class="st">'.tex'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shell</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shell</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>And we are ready to plot. This plot shows the probability that an observed score will have a true score less than a specific threshold, given a reliability coefficient.</p>
 <div class="cell preview-image">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>viridis_start <span class="ot">&lt;-</span> .<span class="dv">2</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>viridis_start <span class="ot">&lt;-</span> .<span class="dv">2</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>viridis_end <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>threshold <span class="ot">&lt;-</span> <span class="dv">70</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -767,8 +770,276 @@ Figure&nbsp;3: Importing a .pdf file via <code>ggimage::geom_image</code>.
 <span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="st">"mm"</span>)) <span class="sc">+</span></span>
 <span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">100</span>,</span>
 <span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>              <span class="at">clip =</span> <span class="st">"off"</span>,</span>
-<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>              <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>              <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+font family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-pthresholdequation" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
