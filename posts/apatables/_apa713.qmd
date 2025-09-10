@@ -4,6 +4,7 @@ date: '2025-08-29'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,8 +54,8 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Create column spanners with column_spanner_label
-* Using `add_star_column` with `merge = TRUE` to create a starred column.
+* Create column spanners with [`column_spanner_label`](https://wjschne.github.io/apa7/reference/column_spanner_label.html)
+* Using [`add_star_column`](https://wjschne.github.io/apa7/reference/add_star_column.html) with `merge = TRUE` to create a starred column.
 :::
 
 ```{r}
@@ -77,7 +79,7 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 Copying and pasting data into a table is not what happens in data analyses. To make things more realistic, I simulated data based on the means and standard deviations, and ran ANOVAs on the simulated data. I extracted the descriptives and the test statistics and formatted the resulting table. 
 
-I used the `add_star_column` function to apply stars to the  `F ratio` column from the `p` column. By default, `add_star_column` adds a special column to the right of the selected column. The selected column is then right-aligned, and the star column is left-aligned so that the column appears to be merged. Sometimes this looks great, sometimes it does not. In this case, I opted to set `merge = TRUE` in the `add_star_column`, which actually merges the selected column and its star column, then applies `star_balance` function, which pads the column with blanks spaces on the left so that the columns center properly.
+I used the [`add_star_column`](https://wjschne.github.io/apa7/reference/add_star_column.html) function to apply stars to the  `F ratio` column from the `p` column. By default, [`add_star_column`](https://wjschne.github.io/apa7/reference/add_star_column.html) adds a special column to the right of the selected column. The selected column is then right-aligned, and the star column is left-aligned so that the column appears to be merged. Sometimes this looks great, sometimes it does not. In this case, I opted to set `merge = TRUE` in the [`add_star_column`](https://wjschne.github.io/apa7/reference/add_star_column.html), which actually merges the selected column and its star column, then applies the [`star_balance`](https://wjschne.github.io/apa7/reference/star_balance.html) function, which pads the column with blanks spaces on the left so that the columns center properly.
 
 
 ```{r}
@@ -89,7 +91,7 @@ I used the `add_star_column` function to apply stars to the  `F ratio` column fr
 set.seed(6)
 
 # Make data
-d <- "
+d_simulated <- "
 variable             	Time	Group  	M   	SD  
 Psychological strain	1.00	SMT    	0.24	0.30
 Psychological strain	2.00	SMT    	0.16	0.27
@@ -122,7 +124,7 @@ Depersonalization   	3.00	Control	1.24	0.93" %>%
   nest(data = -variable) 
 
 # Analyze data
-d <- d |> 
+d_analysis <- d_simulated |> 
   mutate(descriptives = map(data, \(d) {
     d |> 
       summarise(M = mean(x),
@@ -163,7 +165,7 @@ d <- d |>
 ) 
 
 # Format data
-d <- d |> 
+d_formatted <- d_analysis |> 
   dplyr::select(variable, descriptives, Ftest) |> 
   unnest(c(descriptives, Ftest)) |> 
   rename(Variable = Time) |> 
@@ -175,7 +177,7 @@ d <- d |>
 
 
 # Make table
-d |> 
+d_formatted |> 
   apa_flextable(row_title_column = variable, 
                 line_spacing = 1.5) 
 ```

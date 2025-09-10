@@ -4,6 +4,7 @@ date: '2025-08-24'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,7 +54,8 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Add `footnote`
+* Pre-formatting columns with [`apa_format_columns`](https://wjschne.github.io/apa7/reference/apa_format_columns.html)
+* Intentional use of inconsistent rounding within columns
 
 :::
 
@@ -120,7 +123,7 @@ d <- tibble::tribble(
   nest(data = -`Logistic Parameter`) 
 
 # Analyze data
-d <- d |> 
+d_analysis <- d |> 
   mutate(t_fit = map(data, \(d) t.test(
     x ~ Age, data = d)),
          cohen = map(data, \(d) effectsize::cohens_d(
@@ -129,12 +132,12 @@ d <- d |>
   unnest(cohen)
 
 # Format data
-d <- d |> 
+d_formatted <- d_analysis |> 
   select(-starts_with("CI")) |> 
   mutate(`t(40)` = map_dbl(t_fit, "statistic") |> 
            abs() |> 
            signs(accuracy = .001), 
-         `p` = map_dbl(t_fit, "p.value") |> 
+         `*p*` = map_dbl(t_fit, "p.value") |> 
            apa_p(min_digits = 3),
          .before = Cohens_d) |> 
   select(-t_fit) |> 
@@ -169,10 +172,9 @@ d <- d |>
 
 
 # Make table
-d |> 
+d_formatted |> 
   apa_format_columns(no_format_columns = contains("olds")) |> 
   apa_flextable(auto_format_columns = FALSE) |> 
-  align(j = 1, align = "left") |> 
-  italic(i = 1, part = "header")
+  align(j = 1, align = "left") 
 
 ```

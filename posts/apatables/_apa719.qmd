@@ -4,6 +4,7 @@ date: '2025-09-04'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"] 
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -87,7 +89,9 @@ In the recreated table, the hanging indent for *Modified latent change* was omit
 #|   approximation; CI&nbsp;=&nbsp;confidence interval; 
 #|   AIC&nbsp;=&nbsp;Akaike information criterion; 
 #|   BIC&nbsp;=&nbsp;Bayesian information criterion."
-tibble(
+
+# Make data
+d <- tibble(
              Model = c("Simplex lagged",
                        "Simplex contemporaneous",
                        "Latent growth",
@@ -103,11 +107,17 @@ tibble(
                BIC = c(13658, 13646, 13627, 13588),
       `deltaAIC` = c(NA, -7L, -8L, -47L),
       `deltaBIC` = c(NA, -12L, -31L, -70L)
-) |> 
+) 
+
+# Format data
+d_formatted <- d |> 
   mutate(RMSEA_Value = align_chr(
     RMSEA_Value, 
     accuracy = .001, 
-    trim_leading_zeros = TRUE)) |> 
+    trim_leading_zeros = TRUE))
+
+# Make table
+d_formatted |> 
   apa_flextable(font_size = 11) |> 
   width(width = c(1.80, .45, .35, .45, .05, .40, 
                    .85, .35, .50, .50, .40, .40)) 

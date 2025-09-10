@@ -4,6 +4,7 @@ date: '2025-08-26'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -75,6 +77,8 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.10](table710.png){#fig-710 width="100%"}
 
+The [`apa_cor`](https://wjschne.github.io/apa7/reference/apa_cor.html) function does a lot under the hood. By default, it gives the mean and standard deviation of each variable. By supplying a list of summary functions `summary_functions = c("n", "M", "SD")`, we can get the `n` for each variable, too.
+
 ```{r}
 #| label: tbl-710
 #| tbl-cap: Descriptive Statistics and Correlations for Study Variables
@@ -95,13 +99,13 @@ d <- tibble::tribble(
 # Correlations
 R <- "
 r   	1    	2    	3   	4    	5    	6   	7   
-1.00	0.00 	0.00 	0.00	0.00 	0.00 	0.00	0.00
-2.00	-0.08	0.00 	0.00	0.00 	0.00 	0.00	0.00
-3.00	0.45 	-0.01	0.00	0.00 	0.00 	0.00	0.00
-4.00	0.08 	-0.07	0.04	0.00 	0.00 	0.00	0.00
-5.00	-0.29	0.09 	0.01	0.09 	0.00 	0.00	0.00
-6.00	0.25 	-0.39	0.24	0.08 	0.01 	0.00	0.00
-7.00	0.00 	0.03 	0.12	-0.07	-0.02	0.16	0.00" |> 
+1 	0.00 	0.00 	0.00	0.00 	0.00 	0.00	0.00
+2 	-0.08	0.00 	0.00	0.00 	0.00 	0.00	0.00
+3 	0.45 	-0.01	0.00	0.00 	0.00 	0.00	0.00
+4 	0.08 	-0.07	0.04	0.00 	0.00 	0.00	0.00
+5 	-0.29	0.09 	0.01	0.09 	0.00 	0.00	0.00
+6 	0.25 	-0.39	0.24	0.08 	0.01 	0.00	0.00
+7 	0.00 	0.03 	0.12	-0.07	-0.02	0.16	0.00" |> 
 	readr::read_tsv() |> 
   suppressMessages() |> 
 	tibble::column_to_rownames("r") |> 
@@ -112,7 +116,7 @@ r   	1    	2    	3   	4    	5    	6   	7
 R <- (R + t(R)) |> `diag<-`(1)
 
 # Make data
-d_t <- mvtnorm::rmvnorm(
+d_simulated <- mvtnorm::rmvnorm(
   n = max(d$n), 
   mean = deframe(d |> select(Variable, M)),
   sigma = diag(d$SD) %*% R %*% diag(d$SD)) |> 
@@ -124,16 +128,13 @@ d_t <- mvtnorm::rmvnorm(
   }) |> 
   rename_with(hanging_indent, width = 15, indent = 0)
 
-cf <- column_formats()
-cf$Variable <- NULL
+
 # Make table
-d_t |> 
+d_simulated |> 
   apa_cor(
     summary_functions = c("n", "M", "SD"), 
     significance_note = FALSE, 
     p_value = c(.05, .01)) |>   
-  # set_table_properties() |> 
-  # width(j = "Variable", width = 1.2) |> 
   footnote(
     i = 1, 
     j = "Variable", 

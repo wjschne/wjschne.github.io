@@ -4,6 +4,7 @@ date: '2025-09-01'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"] 
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -117,7 +119,7 @@ model <- d_coefficients |>
   pull(Model) 
 
 # Make data
-d1 <- lavaan::simulateData(model, sample.nobs = 50) |> 
+d_simulated <- lavaan::simulateData(model, sample.nobs = 50) |> 
   as_tibble() |> 
   mutate(id = row_number(), .before = 0) |> 
   pivot_longer(angry_behavior:distancing, 
@@ -127,7 +129,7 @@ d1 <- lavaan::simulateData(model, sample.nobs = 50) |>
 
 
 # Analyze data
-d2 <- d1 |> 
+d_analysis <- d_simulated |> 
   mutate(
     fit = map(data, \(d) {
       lm(y ~ ., data = d |> select(-id))
@@ -135,7 +137,7 @@ d2 <- d1 |>
     tbl = map(fit, parameters::parameters))
   
 # Format data
-d3 <- d2 |> 
+d_formatted <- d_analysis |> 
   select(Dependent, tbl) |> 
   unnest(tbl) |> 
   apa_format_columns() |> 
@@ -153,7 +155,7 @@ d3 <- d2 |>
   select(-Type)
 
 # Make Table
-d3 |> 
+d_formatted |> 
   apa_flextable(row_title_column = Dependent, 
                 row_title_align = "center",
                 line_spacing = 1.5, 

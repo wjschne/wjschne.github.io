@@ -4,6 +4,7 @@ date: '2025-08-28'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -53,6 +55,7 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 # Highlights
 
 * Selective indentation with `flextable::padding` 
+* Decimal alignment with significance stars with `star_balance`
 :::
 
 ```{r}
@@ -74,40 +77,81 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.12](table712.png){#fig-712 width="100%"}
 
+To make the process more realistic, I simulated data using the means and standard deviations from @fig-712, calculated descriptive statistics, conducted one-way ANOVAs, and extracted significance tests and effect sizes.
+
+Note that the `F` column's stars were added using the `add_star_column` function, which looks for a column called `p`, and converts p-values to stars.
+
 ```{r}
 #| label: tbl-712
 #| tbl-cap: Means, Standard Deviations, and One-Way Analyses of Variance in Psychological and Social Resources and Cognitive Appraisals
+#| apa-note: NoNote \\* *p* < .05; \\*\\* *p* < .01 \\*\\*\\* *p* < .001
+set.seed(123)
 
 # Make data
-d <- "
-Measure             	Urban_M	Urban_SD	Rural_M	Rural_SD	*F*(1, 294)	eta2
-Self-esteem         	2.91     	0.49      	3.35     	0.35      	68.87      	0.19    
-Social support      	4.22     	1.50      	5.56     	1.20      	62.60      	0.17    
-Cognitive appraisals	 NA      	 NA       	 NA      	 NA       	 NA        	 NA     
-Threat              	2.78     	0.87      	1.99     	0.88      	56.35      	0.20    
-Challenge           	2.48     	0.88      	2.83     	1.20      	7.87       	0.03    
-Self-efficacy       	2.65     	0.79      	3.53     	0.92      	56.35      	0.16    " |>
+d_descriptives <- "
+Measure             	Urban_M	Urban_SD    	Rural_M 	Rural_SD
+Self-esteem         	2.91     	0.49      	3.35     	0.35
+Social support      	4.22     	1.50      	5.56     	1.20
+Threat              	2.78     	0.87      	1.99     	0.88
+Challenge           	2.48     	0.88      	2.83     	1.20
+Self-efficacy       	2.65     	0.79      	3.53     	0.92" |>
   readr::read_tsv() |>
-  suppressMessages()
+  suppressMessages() |> 
+  pivot_longer(-Measure) |> 
+  separate(name, c("type", "name")) |> 
+  pivot_wider() |> 
+  mutate(data = map2(M, SD, \(m,sd) rnorm(148, m, sd))) |> 
+  select(Measure, type, data) |> 
+  unnest(data) |> 
+  rename(y = data) |> 
+  nest(.by = Measure)
 
+# Analysis
+d_analysis <- d_descriptives |> 
+  mutate(
+    msd = map(data, \(d) {
+      d |> 
+        summarise(M = mean(y),
+                  SD = sd(y), 
+                  .by = type) 
+    }),
+    fit = map(data, \(d) aov(y ~ type, data = d)),
+    mp = map(fit, \(fit) {
+      parameters::model_parameters(fit) |>
+        as_tibble() |>
+        slice(1)
+      }
+      ),
+    `F` = map_dbl(mp, "F"),
+    p = map_dbl(mp, "p"),
+    eta2 = map_dbl(fit, \(fit) {
+      eta2 <- suppressMessages(
+        effectsize::effectsize(fit, type = "eta2" ))
+      
+      as_tibble(eta2)$Eta2
+        
+        }))
+
+# Get residual degrees of freedom
+df_residual <- d_analysis$fit[[1]]$df.residual
 
 # Format data
-d <- d |> 
-  mutate(across(
-    -(Measure:`Rural_SD`), 
-    \(x) align_chr(
-      x,
-      trim_leading_zeros = TRUE, 
-      accuracy = .01))) 
+d_formatted <- d_analysis |> 
+  unnest(msd) |> 
+  pivot_wider_name_first(names_from = type, 
+                         values_from = c(M, SD)) |> 
+  select(Measure, contains("_"), `F`, p, eta2)  |> 
+  mutate(`F` = align_chr(`F`)) |> 
+  add_star_column(`F`, merge = TRUE) |> 
+  select(-p) |> 
+  rename_with(\(x) ifelse(x == "F", 
+                          paste0("*F*(1,", df_residual, ")"), 
+                          x)) |> 
+  dplyr::add_row(Measure = "Cognitive appraisals", .after = 2) 
 
 # Make table
-d |> 
-  apa_flextable(table_width = 1,
-                layout = "fixed") |> 
+d_formatted |> 
+  apa_flextable() |> 
   padding(i = 4:6, j = 1, padding.left = 20) |> 
-  footnote(i = (1:6)[-3],
-           j = "*F*(1, 294)", 
-           ref_symbols = "***", 
-           value = as_paragraph_md("*p* < .001.")) |> 
   width(width = c(1.65, .8, .8, .05, .8, .8, .9, .7))
 ```

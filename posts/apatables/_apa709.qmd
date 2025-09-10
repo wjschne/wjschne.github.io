@@ -4,6 +4,7 @@ date: '2025-08-25'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,7 +54,7 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Use custom `column_formatts`
+* Use custom `column_formats`
 * Use `footnote`
 
 :::
@@ -78,7 +80,9 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 Setting up the data was harder than creating the table. Once the data were ready, I needed to set the rounding of the variables and alter the column header of the `F` column. 
 
-The `column_formats` function creates a modifiable copy of the default column formatters. I set the rounding accuracy of column `p` to .001, and I set the header of the `F` column to `*F* ratio`
+The [`column_formats`](https://wjschne.github.io/apa7/reference/column_formats.html) function creates a modifiable copy of the default column formatters. After creating a `column_formats` object, I set the rounding accuracy of column `p` to .001 using [`purrr::partial`], which creates a copy of a function with new defaults.
+
+I also set the header of the `F` column to `*F* ratio`.
 
 
 ```{r}
@@ -120,16 +124,16 @@ Insensitive       	Start   	Effective	1.14	c        " |>
 # Statistics
 d_test <- "
 Professor trait   	F      	p   	eta2
-Dedicated         	19.26  	0.00	0.15
-Easy to understand	5.01   	0.03	0.03
-Fair              	5.75   	0.02	0.06
-Manipulative      	3.92   	0.05	0.05
-Insensitive       	8.12   	0.01	0.06" |>
+Dedicated         	19.26  	0.001	0.15
+Easy to understand	5.01   	0.028	0.03
+Fair              	5.75   	0.019	0.06
+Manipulative      	3.92   	0.051	0.05
+Insensitive       	8.12   	0.006	0.06" |>
   readr::read_tsv() |> 
   suppressMessages() 
 
 # Format data
-d <- d_mean |>
+d_formatted <- d_mean |>
   mutate(Semester = paste0(
     Semester, 
     " of semester\\\nprofessor type")) |>
@@ -146,13 +150,14 @@ d <- d_mean |>
 
 # custom formatter
 my_formatter <-  column_formats()
+
 ## change p column's accuracy to 0.001
-my_formatter$p@formatter <- my_formatter$p@formatter |> 
+my_formatter$p@formatter <- my_formatter$p@formatter |>
   purrr::partial(accuracy = .001)
+
+## set F column header to "*F* ratio"
 my_formatter$`F`@header <- "*F* ratio"
 
 # Make table
-apa_flextable(d, 
-              table_width = 1, 
-              column_formats = my_formatter) 
+apa_flextable(d_formatted, column_formats = my_formatter) 
 ```

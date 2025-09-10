@@ -4,6 +4,7 @@ date: '2025-08-18'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -78,17 +80,17 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ## Hanging Indentation
 
-Indentation is usually easy with flextable's `padding` function. Here, some columns needed indentation, some hanging indentation, and some needed both. The best solution I found was to seize control of the formatting using `stringr::str_wrap` to find where to break the lines and then markdown (`\\` to make new lines, and `\u00A0`, the figure space, to indent). The `hanging_indent` function implements these steps automatically.
+Indentation is usually easy with flextable's [`padding`](https://davidgohel.github.io/flextable/reference/padding.html) function. Here, some columns needed indentation, some hanging indentation, and some needed both. The best solution I found was to seize control of the formatting using [`stringr::str_wrap`](https://stringr.tidyverse.org/reference/str_wrap.html) to find where to break the lines and then markdown (`\\` to make new lines, and `\u00A0`, the figure space, to indent). The [`hanging_indent`](https://wjschne.github.io/apa7/reference/hanging_indent.html) function implements these steps automatically.
 
 ## Decimal Alignment
 
-To my eye, numeric text often looks better when decimal aligned. The `align_chr` function allows text to be centered within a column and yet still aligned on the decimal (or any other character). By default, it pads the numeric vector with the figure space (`&numsp;` or `\u2007`) character, which is as wide as an integer.
+To my eye, numeric text often looks better when decimal aligned. The [`align_chr`](https://wjschne.github.io/apa7/reference/align_chr.html) function allows text to be centered within a column and yet still aligned on the decimal (or any other character). By default, it pads the numeric vector with the figure space (`&numsp;` or `\u2007`) character, which is as wide as an integer.
 
 Does flextable already have decimal alignment? [Yes](https://github.com/davidgohel/flextable/issues/549#issuecomment-1961765244)! However, its method requires the user to supply the position of a decimal tab within the column, which may require a fair bit of trial and error. Of course, if you need decimal alignment somewhere other than in the center of a column, the flextable method is the best option. 
 
 ## Turn off automatic formatting
 
-By default, `apa_flextable` will automatically format columns with specific names (or endings). The `Variable` column is one of those, and by default, it will transform the text to title case. In this instance, we want sentence casing, so we list `Variable` in `no_format_columns`. 
+By default, [`apa_flextable`](https://wjschne.github.io/apa7/reference/apa_flextable.html) will automatically format columns with specific names (or endings). The `Variable` column is one of those, and by default, it will transform the text to title case. In this instance, we want sentence casing, so we list `Variable` in `no_format_columns`. 
 
 The remaining columns that normally get automatic formatting (i.e, columns ending with "_n") will still get it. Setting `auto_format_columns = FALSE`, will turn off all automatic formatting. 
 
@@ -136,7 +138,7 @@ d <- tibble(
 ) 
 
 # format data
-d <- d |> 
+d_formatted <- d |> 
   pivot_longer(-c(Variable, Group), 
                values_to = "n") |>
   mutate(`%` = round(100  * n / sum(n)), 
@@ -161,7 +163,7 @@ d <- d |>
                 .fns = \(x) align_chr(x, accuracy = .1)))
 
 # Make table
-d |> 
+d_formatted |> 
   apa_flextable(
     row_title_column = Variable,
     row_title_border = NA,
@@ -173,3 +175,5 @@ d |>
   align(j = 1, align = "left") |>
   width(width = c(1.55, rep(c(.6, .6, .05), 4)[-12]))
 ```
+
+Because I used `apa-note` instead of flextable functions, the notes would only appear if using the apaquarto extension.

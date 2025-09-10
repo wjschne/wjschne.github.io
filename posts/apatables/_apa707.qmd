@@ -4,6 +4,7 @@ date: '2025-08-23'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -92,7 +94,7 @@ Celebrity display of behavior	12            	61    	128   	101.22" |>
   readr::read_tsv(show_col_types = FALSE)
 
 # Format data
-d <- d |> 
+d_formatted <- d |> 
   pivot_longer(-c(Source, chi), values_to = "n") |>
   mutate(name = fct_inorder(name)) |>
   mutate(`%` = scales::number(
@@ -106,7 +108,7 @@ d <- d |>
   mutate(Source = hanging_indent(Source, width = 18)) 
 
 # Make table
-d |> 
+d_formatted |> 
   apa_flextable(table_width = 1, layout = "fixed") |>
   footnote(j = "&chi;^2^(2)",
            value = as_paragraph_md("*p* < .001"),

@@ -4,6 +4,7 @@ date: '2025-09-06'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"] 
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,7 +54,7 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Use of `add_star_column`
+* Use of [`add_star_column`](https://wjschne.github.io/apa7/reference/add_star_column.html)
 * Use of thin spaces `&thinsp;` for footnote superscripts.
 
 :::
@@ -78,7 +80,7 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.21](table721.png){#fig-721 width="100%"}
 
-I did not have enough information to simulate the three models, so I input the data directly. This made it comparatively easy to recreate. Adding stars to the $\chi^2$ column was made easier by creating a temporary p-value column with values less than .001 and then applying `add_star_column`.
+I did not have enough information to simulate the three models, so I input the data directly. This made it comparatively easy to recreate. Adding stars to the $\chi^2$ column was made easier by creating a temporary p-value column with values less than .001 and then applying [`add_star_column`](https://wjschne.github.io/apa7/reference/add_star_column.html).
 
 The APA Publication Manual recommends following the footnote symbols with a superscripted space. In the `apa-note`, the superscript symbols a, b, and c are followed by a thin space within the superscript. This gives a pleasing amount of separation.
 

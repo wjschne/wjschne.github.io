@@ -4,6 +4,7 @@ date: '2025-09-08'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"] 
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,8 +54,8 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Use of `hanging_indent`
-* Use of `merge_v` to remove redundant content
+* Use of [`hanging_indent`](https://wjschne.github.io/apa7/reference/hanging_indent.html)
+* Use of [`flextable::merge_v`](https://davidgohel.github.io/flextable/reference/merge_v.html) to remove redundant content
 
 :::
 
@@ -82,7 +84,7 @@ Making this table was relatively straightforward, except that I needed to play w
 
 The `Reason for interest` column needed vertical merging to remove redundant content.
 
-The frequency column was aligned on the decimal with `align_chr`.
+The frequency column was aligned on the decimal with [`align_chr`](https://wjschne.github.io/apa7/reference/align_chr.html).
 
 ```{r}
 #| label: tbl-723

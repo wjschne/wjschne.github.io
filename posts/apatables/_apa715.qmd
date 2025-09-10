@@ -4,6 +4,7 @@ date: '2025-08-31'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,7 +54,7 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Automatic formatting of `lm` (linear model) analyses with `apa_performance` and `apa_compare_performance`.
+* Automatic formatting of `lm` (linear model) analyses with [`apa_performance`](https://wjschne.github.io/apa7/reference/apa_performance.html) and [`apa_compare_performance`](https://wjschne.github.io/apa7/reference/apa_performance_comparison.html).
 
 :::
 
@@ -76,7 +78,7 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.15](table715.png){#fig-715 width="100%"}
 
-I love the easystats ecosystem. It provides a coherent framework for  data-analyst to process and display statistical analyses. It makes so many previously tedious things simple. It was not designed for the final display of APA tables, however. The apa7 package has a few functions and features that help process the output of easystats functions to make them table-ready.
+I love the [easystats](https://easystats.github.io/easystats/) ecosystem. It provides a coherent framework for  data-analysts to process and display statistical analyses. It makes so many previously tedious things simple. However, it was not specifically designed for the final display of APA tables. The apa7 package has a few functions and features that help process the output of easystats functions to make them table-ready.
 
 First, lets simulate some data that resembles the data underlying the models in @fig-715, and create regression models for Models 1 and 2.
 
@@ -90,21 +92,23 @@ n <- 88
 d <- tibble(
   leader_gender = sample(0:1, n, replace = TRUE),
   leader_sleep_condition = sample(0:1, 88, replace = TRUE),
-  charisma = 2.76 - .09 * leader_gender - .36 * leader_sleep_condition + rnorm(n, sd = 0.5))
+  charisma = 2.76 - .09 * leader_gender - 
+    .36 * leader_sleep_condition + 
+    rnorm(n, sd = 0.5))
 
 # Models 1 and 2
 m1 <- lm(charisma ~ leader_gender, data = d)
 m2 <- lm(charisma ~ leader_gender + leader_sleep_condition, data = d)
 ```
 
-The `parameters::parameters` function from easystats ecosystem displays information about regression predictors.
+The [`parameters::parameters`](https://easystats.github.io/parameters/reference/model_parameters.html) function from the easystats ecosystem displays information about regression predictors.
 
 ```{r}
 #| label: parametersm2
 parameters(m2) 
 ```
 
-That is a really nice display. However, if we convert it directly with `flextable`, we get something far less polished.
+That is a really nice display. However, if we convert it directly with [ `flextable`](https://davidgohel.github.io/flextable/reference/flextable.html), we get something far less polished.
 
 ```{r}
 #| label: parametersm2flextable
@@ -113,7 +117,7 @@ parameters(m2) |>
 ```
 
 
-As it turns out, the output of the `parameters` function undergoes a fair bit of processing before it prints. The output is a `data.frame` with a `parameters_model` class  and many attributes that can be used by the easystats formatting functions. If we want to see the underlying data, we can convert the output to a `data.frame` or `tibble`.
+As it turns out, the output of the [`parameters`](https://easystats.github.io/parameters/reference/model_parameters.html) function undergoes a fair bit of processing before it prints. The output is a `data.frame` with a `parameters_model` class  and many attributes that can be used by the easystats formatting functions. If we want to see the underlying data, we can convert the output to a `data.frame` or `tibble`.
 
 ```{r}
 #| label: parametersm2tibble
@@ -121,7 +125,7 @@ parameters(m2) |>
   as_tibble()
 ```
 
-If we really want just the output of `parameter` as it displays, we use the `format_table` function.
+If we really want just the output of [`parameters`](https://easystats.github.io/parameters/reference/model_parameters.html) as it displays, we use the [`insight::format_table`](https://easystats.github.io/insight/reference/format_table.html) function.
 
 ```{r}
 #| label: parametersm2format
@@ -136,9 +140,9 @@ This gets us closer to APA style, but not quite all way there. We would like thi
 apa_parameters(m2) 
 ```
 
-The `apa_parameters` function is a wrapper around the `parameters` function with defaults that produce APA style output via markdown syntax. The columns are decimal aligned, statistics are italicized, the intercept is called a "Constant", and the variable names are printed in title case. 
+The [`apa_parameters`](https://wjschne.github.io/apa7/reference/apa_parameters.html) function is a wrapper around the [`parameters`](https://easystats.github.io/parameters/reference/model_parameters.html) function with defaults that produce APA style output via markdown syntax. The columns are decimal aligned, statistics are italicized, the intercept is called a "Constant", and the variable names are printed in title case. 
 
-Applying `apa_flextable` to the output gives us perfect APA style:
+Applying [`apa_flextable`](https://wjschne.github.io/apa7/reference/apa_flextable.html) to the output gives us perfect APA style:
 
 ```{r}
 #| label: apaparamtersm2flextable
@@ -148,7 +152,7 @@ apa_parameters(m2) |>
 
 The `apa_format_columns` function and a few others like `apa_parameters`, `apa_performance`, and `apa_compare_performance` can process the output of the `lm` function.
 
-Getting the output of `apa_parameters` and `apa_compare_performance` into the same table requires a rather complex process. I'd like to automate some of these steps. 
+Getting the output of `apa_parameters` and `apa_compare_performance` into the same table requires a rather complex process. Eventually I'd like to automate some of these steps. 
 
 ```{r}
 #| label: tbl-715
@@ -162,7 +166,10 @@ m <- list(`Model 1` = m1,
 
 d_parameters <- apa_parameters(
   m, 
-  predictor_parameters = c("Coefficient", "Std_Coefficient", "SE"))
+  predictor_parameters = c(
+    "Coefficient", 
+    "Std_Coefficient", 
+    "SE"))
 
 d_performance <- apa_performance_comparison(
   m,

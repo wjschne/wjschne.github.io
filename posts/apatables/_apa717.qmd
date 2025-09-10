@@ -4,6 +4,7 @@ date: '2025-09-02'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]  
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -53,6 +55,7 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 # Highlights
 
 * Confidence intervals in two columns
+* [`align_chr`](https://wjschne.github.io/apa7/reference/align_chr.html) with `drop0trailing = TRUE` for intentionally inconsistent rounding
 
 :::
 
@@ -75,6 +78,8 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.17](table717.png){#fig-717 width="100%"}
 
+Note that the `Estimate` column needed inconsistent rounding. Using [`align_chr`](https://wjschne.github.io/apa7/reference/align_chr.html) with `drop0trailing = TRUE` and `accuracy = .0001`, only cells with values in the fourth decimal point will be rounded to .0001.
+
 ```{r}
 #| label: tbl-717
 #| tbl-cap: "Moderator Analysis: Types of Measurement and Study Year"
@@ -91,8 +96,6 @@ set_flextable_defaults(theme_fun = theme_apa,
 #|     1&nbsp;=&nbsp;yes. ^e&nbsp;^0&nbsp;= no, 
 #|     1&nbsp;=&nbsp;yes."
 #| echo: fenced
-
-
 
 # Make data
 d <- tibble(
@@ -129,7 +132,7 @@ d <- tibble(
 ) 
 
 # Format data
-d <- d |> 
+d_formatted <- d |> 
   mutate(Estimate = align_chr(
     Estimate, 
     accuracy = .0001, 
@@ -140,14 +143,12 @@ d <- d |>
               accuracy = .001, 
               trim_leading_zeros = TRUE)
   })) |>
-  mutate(Effect = hanging_indent(Effect, width = 35)) |>
-  apa_format_columns()
+  mutate(Effect = hanging_indent(Effect, width = 35)) 
 
 # Make table
-d |> 
-  apa_flextable(row_title_column = effect_type,
-                row_title_align = "center") |> 
-  align(j = 1) |> 
+d_formatted |> 
+  apa_flextable(row_title_column = effect_type) |> 
+  align(j = 1) |>
   padding(j = 1, 
           padding.left = c(0, 
                            15, 
@@ -155,6 +156,4 @@ d |>
                            0, 
                            rep(15, 2))) |> 
   width(width = c(2.5, rep(.8, 5)))
-
-
 ```

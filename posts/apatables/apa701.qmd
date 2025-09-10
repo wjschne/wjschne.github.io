@@ -4,6 +4,7 @@ date: '2025-08-17'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -55,10 +57,10 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Row titles and styling with `apa_flextable`
-* Conditional placement of cell borders with `flextable::surround`
-* General notes with `flextable::add_footer_lines` or `apa-note` chunk option
-* Footnotes with `flextable::footnote`
+* Row titles and styling with [`apa_flextable`](https://wjschne.github.io/apa7/reference/apa_flextable.html)
+* Conditional placement of cell borders with [`flextable::surround`](https://davidgohel.github.io/flextable/reference/surround.html)
+* General notes with [`flextable::add_footer_lines`](https://davidgohel.github.io/flextable/reference/add_footer_lines.html) or `apa-note` chunk option
+* Footnotes with [`flextable::footnote`](https://davidgohel.github.io/flextable/reference/footnote.html)
 :::
 
 
@@ -79,15 +81,15 @@ When I write a research manuscript in APA style, I have twin goals that are some
 
 The final frontier of reproducibility in APA style, for me, has been getting the tables right. At long last, I am getting close to where I want to be. My process usually goes like this:
 
-1. Perform analyses.
-2. Wrangle data with tidyverse functions.
-3. Create a with [flextable](https://ardata-fr.github.io/flextable-book/).
-4. Eliminate tedious formatting with apa7 functions (e.g,. `apa_flextable` and/or `apa_style`).
+1. Wrangle data with [tidyverse functions](https://www.tidyverse.org/).
+2. Perform analyses, and format analysis tables with [easystats functions](https://easystats.github.io/easystats/).
+3. Perform table-specific data shaping with [apa7 functions](https://wjschne.github.io/apa7/reference/index.html).
+4. Create a table with [`apa7::apa_flextable`](https://wjschne.github.io/apa7/reference/apa_flextable.html).
 5. Add specific formatting and finishing touches with [flextable functions](https://davidgohel.github.io/flextable/reference/index.html).
 
 # Sample Tables from the APA Manual
 
-As an exercise, I decided to reproduce most of the sample tables in the APA Manual's Chapter 7, which covers the display of tables. There are a number of differences between the original tables and the recreated tables. 
+As an exercise, I decided to reproduce the sample tables in Chapter 7 of the APA Manual, which covers the display of tables. There are a number of differences between the original tables and the recreated tables. 
 
 * I stick with Times New Roman as my font. 
 * I add little breaks between column spanners in multilevel headers.
@@ -100,7 +102,7 @@ Things I usually change, but I do not mess with here:
 
 <hr>
 
-
+@fig-71 is a complex table, meant to illustrate the primary components of a table such as stub headings, column spanners, decked heads, table spanners, and table notes.
 
 ![Screenshot of the *APA Manual*'s Table 7.1](table71.png){#fig-71}
 
@@ -149,9 +151,9 @@ flextable(d_citizenship)
 
 ```
 
-However, @tbl-71a requires additional formatting to become publication-worthy. The `apa_flextable` function performs several layers of transformations before and after applying `flextable`, most of which can be turned off selectively.
+However, @tbl-71a requires additional formatting to become publication-worthy. The [`apa_flextable`](https://wjschne.github.io/apa7/reference/apa_flextable.html) function performs several layers of transformations before and after applying [`flextable`](https://davidgohel.github.io/flextable/reference/flextable.html), most of which can be turned off selectively.
 
-The `flextable::surround` function can place cell borders selectively by row (or column). @tbl-preliminary71 is close to the final result, but additional notes are needed.
+The [`flextable::surround`](https://davidgohel.github.io/flextable/reference/surround.html) function can place cell borders selectively by row (or column). @tbl-preliminary71 is close to the final result, but additional notes are needed.
 
 ```{r}
 #| label: tbl-preliminary71
@@ -170,7 +172,7 @@ ft_71 <- d_citizenship |>
 ft_71
 ```
 
-The `apa_flextable` function does not delete the column specified in `row_title_column` (i.e., `Wave`), but it does remove it from display. An additional hidden column called `row_title` has data in the row titles but is `NA` in other rows. Both columns are available for programmatic formatting the row titles and row groupings. For example, here I bold the row titles and make all the Wave 3 text blue and with Arial font. In documents where deviations from strict APA style are allowed, such stylings can be useful to highlight a point.
+The [`apa_flextable`](https://wjschne.github.io/apa7/reference/apa_flextable.html) function does not delete the column specified in `row_title_column` (i.e., `Wave`), but it does remove it from display. An additional hidden column called `row_title` has data in the row titles but is `NA` in other rows. Both columns are available for programmatic formatting the row titles and row groupings. For example, here I bold the row titles and make all the Wave 3 text blue and with Arial font. In documents where deviations from strict APA style are allowed, such stylings can be useful to highlight a point.
 
 ```{r}
 #| label: tbl-preliminary72
@@ -199,9 +201,9 @@ Adding footnotes with flextable functions might look like a lot of code in @tbl-
 
 The general note can be created with the `footer_lines` function. The note itself can be written inside `flextable::as_paragraph` or `ftExtra::as_paragraph_md`. The `ftExtra::as_paragraph_md` function can make moderately complex formatting a little easier because it uses markdown syntax. If precise fine-tuning is needed, the flextable package has many formatting functions that can be used inside `flextable::as_paragraph`.
 
-Getting everything to display in *perfect* APA style is not always possible with the `footer` function. The footnotes are supposed to go in a single paragraph that is separate from the general note. We can make footnotes appear in their own paragraph by setting the `inline` argument in `footer` to `TRUE`, but this makes the general note also in the same paragraph.
+Getting everything to display in *perfect* APA style is not always possible with the `footnote` function. The footnotes are supposed to go in a single paragraph that is separate from the general note. We can make footnotes appear in their own paragraph by setting the `inline` argument in `footnote` to `TRUE`, but this makes the general note also in the same paragraph.
 
-I did not use the `footer` function to create the probability note because I did not want the asterisk to be in superscript. Instead the asterisk is placed in the table with the `append_chunk` function, and the probability note is added separately with the `footer_lines` function.
+I did not use the `footnote` function to create the probability note because I did not want the asterisk to be in superscript. Instead the asterisk is placed in the table with the `append_chunk` function, and the probability note is added separately with the `footer_lines` function.
 
 ```{r}
 #| label: tbl-71b
@@ -267,11 +269,11 @@ add_footer_lines(
 
 In some formats (e.g., .pdf), long table notes can mess with the column widths and make the table unreadable.
 
-If you are rendering with the apaquarto extension, you can append table notes with the `apa-note` chunk option. After version 5.0.2, apaquarto can separate `apa-note` text into multiple paragraphs as shown in the chunk below.
+If you are rendering with the apaquarto extension, you can append table notes with the `apa-note` chunk option. Recent versions of apaquarto can separate `apa-note` text into multiple paragraphs as shown in the chunk below.
 
 Also, it bothers me that the footnote symbols mess up the number alignment. I decided to add them in myself. In the same columns that have footnotes, I padded the numbers that do not have footnotes with the `numbsp;` character (Figure Space) to maintain the alignment. 
 
-As a final polishing move, I rejiggered the column widths to make everything center correctly.
+As a final polishing move, I rejiggered the column widths to make everything center correctly. @tbl-71c is as good as I can make a table in APA Style.
 
 ```{r}
 #| label: tbl-71c

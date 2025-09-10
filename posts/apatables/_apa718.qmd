@@ -4,6 +4,7 @@ date: '2025-09-03'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"] 
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -64,6 +66,7 @@ library(flextable)
 library(ftExtra)
 library(tidyverse)
 library(easystats)
+library(lavaan)
 set_flextable_defaults(theme_fun = theme_apa, 
                        font.family = "Times New Roman")
 
@@ -76,6 +79,8 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.18](table718.png){#fig-718 width="100%"}
 
+To make the conversion of analysis to table more realistic, I simulated data to resemble the Step 3 model.
+
 ```{r}
 #| label: tbl-718
 #| tbl-cap: "Hierarchical Regression: Results for Well-Being"
@@ -87,7 +92,7 @@ set_flextable_defaults(theme_fun = theme_apa,
 #|   and solidarity; Mex Am margin&nbsp;=&nbsp;Mexican 
 #|   American marginalization."
 #|   - "^\\*^*p* < .05. ^\\*\\*^*p* < .01. ^\\*\\*\\*^*p* < .001."
-set.seed(7)
+set.seed(123)
 # Make coefficients
 d_coefficients <- tibble::tribble(
   ~Step,                ~Variable, ~beta,    ~b,
@@ -113,7 +118,7 @@ d <- d_coefficients |>
   {
     \(x) paste0("y ~ ", x)
     }() |> 
-  lavaan::simulateData(standardized = TRUE, sample.nobs = 200) |> 
+  simulateData(standardized = TRUE, sample.nobs = 125) |> 
   mutate(y = y + 4) |> 
   as_tibble()
 
@@ -140,7 +145,7 @@ d_analysis <- d_coefficients |>
   )
 
 # Format data
-d <- d_analysis |>
+d_formatted <- d_analysis |>
   mutate(
     parameters = map(fit, model_parameters),
     std_parameters = map(fit, 
@@ -165,16 +170,17 @@ d <- d_analysis |>
         metrics = c("R2", "deltaR2")),
     by = join_by(Model)
   ) |>
-  tidyr::replace_na(list(Model = "", Variable = "")) |>
+  replace_na(list(Model = "", Variable = "")) |>
   unite(Variable, c(Variable, Model), sep = "") |>
-  add_star_column(c(`*B*`, `&beta;`), p = pp, merge = F) |> 
+  mutate(`&beta;` = ifelse(Variable == "Constant", NA, `&beta;`)) |> 
+  add_star_column(c(`*B*`, `&beta;`), p = pp) |> 
   select(-pp) |>
   mutate(Variable = str_replace(Variable, "^Model", "Step") |> 
            snakecase::to_sentence_case() |> 
-           str_replace(" am ", " Am ")) 
+           str_replace(" am ", " Am "))
 
 # Make table
-d |> 
+d_formatted |> 
   apa_flextable(line_spacing = 1.5, 
                 layout = "fixed") |>
   padding(i = ~!is.na(`*B*`), 

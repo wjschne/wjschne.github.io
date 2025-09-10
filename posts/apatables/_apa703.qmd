@@ -4,6 +4,7 @@ date: '2025-08-19'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,8 +54,9 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Trim leading zeros with `signs`
-* Align on en-dash (–)
+* Trim leading zeros, decimail alignment, and align on en-dash (–) with [`align_chr`](https://wjschne.github.io/apa7/reference/align_chr.html)
+* Internal lines with [`surround`](https://davidgohel.github.io/flextable/reference/surround.html)
+* Indentation with [`padding`](https://davidgohel.github.io/flextable/reference/padding.html)
 
 :::
 
@@ -76,9 +79,11 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.3](table73.png){#fig-73 width="100%"}
 
-APA Manual Table 7.3 in @fig-73 was much easier to reproduce than Table 7.2. Because only simple indentation was required, it was easy to indent subscale rows in @tbl-73 with the `padding` function. The `signs` function not only gives negative numbers a true minus sign, but also can trim leading zeroes for probabilities, correlations, and reliability coefficients.
+APA Manual Table 7.3 in @fig-73 was easier to reproduce than the first two tables in this series. Because only simple indentation was required, it was easy to indent subscale rows in @tbl-73 with the [`padding`](https://davidgohel.github.io/flextable/reference/padding.html) function. 
 
-Whereas the mean and standard deviation columns needed decimal alignment, the Range column looked better if aligned on the en-dash character (–).
+The [`surround`](https://davidgohel.github.io/flextable/reference/surround.html) function provides internal lines. I make the internal lines a lighter gray than the header and bottom lines.
+
+Whereas the mean and standard deviation columns needed decimal alignment (provided automatically with `apa_flextable`), the Range column looked better if aligned on the en-dash character (–). The `align_chr` function makes use of the [`signs`](https://benjaminwolfe.github.io/signs/reference/signs.html) function, which not only gives negative numbers a true minus sign, but also can trim leading zeroes for probabilities, correlations, and reliability coefficients, which happens automatically for the `cronbach` column.
 
 ```{r}
 #| label: tbl-73
@@ -108,17 +113,17 @@ d <- tibble::tribble(
   ) 
 
 # Format data
-d <- d |> 
+d_formatted <- d |> 
   mutate(Range = align_chr(Range, center = "–")) 
 
 # Make table
-d |>
+d_formatted |>
   apa_flextable(layout = "fixed") |> 
   padding(j = 1, 
           i = ~!stringr::str_ends(Scale, "total score"), 
           padding.left = 16) |> 
   width(width = 1.1) |> 
   width(j = 1, 2.1) |> 
-  surround(i = ~ lead(str_ends(Scale, "total score")), 
-           border.bottom = fp_border_default(color = "gray40"))
+  surround(i = c(4,7,10), 
+           border.top = fp_border_default(color = "gray60"))
 ```

@@ -4,6 +4,7 @@ date: '2025-08-20'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -75,7 +77,7 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.4](table74.png){#fig-74 width="100%"}
 
-APA Manual Table 7.4 in @fig-74 is not entirely visible, so I have reproduced the visible rows only. This table is straightforward to make. I used `merge_v` to remove redundant text in the Study column.
+APA Manual Table 7.4 in @fig-74 is not entirely visible, so I have reproduced the visible rows only. This table is straightforward to make. I used [`flextable::merge_v`](https://davidgohel.github.io/flextable/reference/merge_v.html) to remove redundant text in the Study column.
 
 This table is intended to illustrate repeated headers, which is not relevant in the .html display here. Fortunately, when rendered to .docx, flextable repeats headers by default.
 

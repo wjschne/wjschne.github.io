@@ -4,6 +4,7 @@ date: '2025-08-22'
 engine: knitr
 categories: 
   - R
+  - APA Style
 description: "Demonstration of the apa7 package, a flextable extension package"
 tags:
   - APA Style
@@ -12,6 +13,7 @@ tags:
 csl: _extensions/wjschne/apaquarto/apa.csl
 format:
   html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
     fig-cap-location: top
     citeproc: false
     link-external-icon: false
@@ -52,7 +54,8 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Centering text on a space rather than a decimal with `align_chr`
+* Centering text on a space rather than a decimal with [`align_chr`](https://wjschne.github.io/apa7/reference/align_chr.html)
+* Automatic column formatting with [`apa-format_columns`](https://wjschne.github.io/apa7/reference/apa_format_columns.html)
 
 :::
 
@@ -75,7 +78,9 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.6](table76.png){#fig-76 width="100%"}
 
-To simply enter the data from this table would be a straightforward process. To make things interesting, I am going simulate data from the group means and standard deviations, run a series of t-tests, and display the data. This makes the process much more like what would happen in a real write-up. The means, standard deviations, and *p*-values come from the simulated data, not from @fig-76. Normally non-significant *p*-values would be rounded to 2 digits, but they were rounded to 3 digits using `apa_p`'s `min-digit = 3` parameter.
+To simply enter the data from this table would be a straightforward process. To make things interesting, I am going simulate data from the group means and standard deviations, run a series of t-tests, and display the data. This makes the process much more like what would happen in a real write-up. The means, standard deviations, and *p*-values come from the simulated data, not from @fig-76. 
+
+Normally non-significant *p*-values would be rounded to 2 digits, but they were rounded to 3 digits via [`apa_format_columns`](https://wjschne.github.io/apa7/reference/apa_format_columns.html), which also italicized the `p` column. The `apa_format_columns` is invoked by `apa_flextable`, but sometimes we want to take care of some custom formatting ahead of that step.
 
 The two middle columns are aligned on the space between the group means and standard deviations, via `align_chr(x, center = " ")`.
 
@@ -115,7 +120,7 @@ d <- tibble::tribble(
   nest(data = -Scale)
 
 # Analyze data
-d <- d |> 
+d_analysis <- d |> 
   mutate(
     descriptives = map(
       data,
@@ -139,12 +144,12 @@ d <- d |>
   unnest(descriptives)
 
 # Format data
-d <- d |> 
+d_formatted <- d_analysis |> 
   mutate(across(-c(Scale), \(x) align_chr(x, center = " "))) |> 
   apa_format_columns(accuracy = .001)
 
 # Make table
-d |> 
+d_formatted |> 
   apa_flextable(table_width = 1, 
                 layout = "fixed", 
                 line_spacing = 1.5) |>
