@@ -143,10 +143,8 @@ d_formatted <- d_mean |>
   unite(Semester, c(Semester, Type)) |>
   pivot_wider(names_from = Semester, 
               values_from = Mean) |>
-  left_join(d_test, by = join_by(`Professor trait`)) |>
-  mutate(`Professor trait` = hanging_indent(
-    `Professor trait`, 
-    width = 8)) 
+  left_join(d_test, by = join_by(`Professor trait`)) 
+
 
 # custom formatter
 my_formatter <-  column_formats()

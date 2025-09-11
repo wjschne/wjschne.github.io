@@ -9,8 +9,1077 @@
 <link>https://wjschne.github.io/blog.html</link>
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
-<generator>quarto-1.8.24</generator>
-<lastBuildDate>Tue, 19 Aug 2025 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.8.18</generator>
+<lastBuildDate>Wed, 10 Sep 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recreating APA Manual Table 7.1 in R with apa7</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/apatables/apa701.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="making-tables-in-apa-style-part-1-of-24" class="level1">
+<h1>Making tables in APA style (Part 1 of 24)</h1>
+<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Highlights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Row titles and styling with <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa_flextable</code></a></li>
+<li>Conditional placement of cell borders with <a href="https://davidgohel.github.io/flextable/reference/surround.html"><code>flextable::surround</code></a></li>
+<li>General notes with <a href="https://davidgohel.github.io/flextable/reference/add_footer_lines.html"><code>flextable::add_footer_lines</code></a> or <code>apa-note</code> chunk option</li>
+<li>Footnotes with <a href="https://davidgohel.github.io/flextable/reference/footnote.html"><code>flextable::footnote</code></a></li>
+</ul>
+</div>
+</div>
+<p>When I write a research manuscript in APA style, I have twin goals that are sometimes at odds: 1) I want the document to be fully reproducible, including the tables. 2) I want the formatting to be not only correct but aesthetically pleasing.</p>
+<p>The final frontier of reproducibility in APA style, for me, has been getting the tables right. At long last, I am getting close to where I want to be. My process usually goes like this:</p>
+<ol type="1">
+<li>Wrangle data with <a href="https://www.tidyverse.org/">tidyverse functions</a>.</li>
+<li>Perform analyses, and format analysis tables with <a href="https://easystats.github.io/easystats/">easystats functions</a>.</li>
+<li>Perform table-specific data shaping with <a href="https://wjschne.github.io/apa7/reference/index.html">apa7 functions</a>.</li>
+<li>Create a table with <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa7::apa_flextable</code></a>.</li>
+<li>Add specific formatting and finishing touches with <a href="https://davidgohel.github.io/flextable/reference/index.html">flextable functions</a>.</li>
+</ol>
+</section>
+<section id="sample-tables-from-the-apa-manual" class="level1">
+<h1>Sample Tables from the APA Manual</h1>
+<p>As an exercise, I decided to reproduce the sample tables in Chapter 7 of the APA Manual, which covers the display of tables. There are a number of differences between the original tables and the recreated tables.</p>
+<ul>
+<li>I stick with Times New Roman as my font.</li>
+<li>I add little breaks between column spanners in multilevel headers.</li>
+<li>I align decimals where possible.</li>
+</ul>
+<p>Things I usually change, but I do not mess with here:</p>
+<ul>
+<li>I like column headings to have the same alignment as the body cells under them—if the cell is left justified, I want the header to be left justified. However, APA style usually has centered headings for everything.</li>
+<li>Hanging indents are useful sometimes, but I try to avoid them when they make the columns appear uneven. Some of the tables have hanging indents that could have been avoided, but I put them in anyway.</li>
+</ul>
+<hr>
+<p>Figure&nbsp;1 is a complex table, meant to illustrate the primary components of a table such as stub headings, column spanners, decked heads, table spanners, and table notes.</p>
+<div id="fig-71" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.1</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/apatables/table71.png" class="img-fluid figure-img">
+</div>
+</figure>
+</div>
+<p>To recreate the data for the table in Figure&nbsp;1 requires a fair bit of work, most of which is not relevant to the display of the table. Table&nbsp;1 displays the data in its raw form. I used flextable’s <code>theme_apa</code> (via <code>set_flextable_defaults</code>) to get the basic formatting to be consistent with APA format.</p>
+<div class="cell FigureWithoutNote" prefix="" data-tblnum="1" data-custom-style="FigureWithoutNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(apa7)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(flextable)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ftExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme_fun =</span> theme_apa,</span>
+<span id="cb1-6">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Times New Roman"</span>,</span>
+<span id="cb1-7">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">table_align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"left"</span>)</span>
+<span id="cb1-8"></span>
+<span id="cb1-9"></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make and format data</span></span>
+<span id="cb1-11">d_citizenship <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">crossing</span>(</span>
+<span id="cb1-12">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Wave =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb1-13">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Citizenship =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_inorder</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"With"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Without"</span>)),</span>
+<span id="cb1-14">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Gender =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_inorder</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Girls"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Boys"</span>)),</span>
+<span id="cb1-15">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Grade =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span></span>
+<span id="cb1-16">) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span>  </span>
+<span id="cb1-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.integer</span>(</span>
+<span id="cb1-18">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">111</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">297</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">301</span>, </span>
+<span id="cb1-19">      <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">281</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">290</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">306</span>, </span>
+<span id="cb1-20">      <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">240</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">251</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">260</span>, </span>
+<span id="cb1-21">      <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">232</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">264</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">221</span>,</span>
+<span id="cb1-22">      <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">201</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">214</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">221</span>,</span>
+<span id="cb1-23">      <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">210</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">236</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">239</span>,</span>
+<span id="cb1-24">      <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">189</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">194</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">216</span>, </span>
+<span id="cb1-25">      <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">199</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">210</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">213</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-26">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(Gender, Citizenship) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-27">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(Gender_Citizenship, Gender, Citizenship) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-28">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> Gender_Citizenship,</span>
+<span id="cb1-29">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_from =</span> n,</span>
+<span id="cb1-30">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_vary =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"slowest"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-31">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Grade =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(Grade)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-32">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bind_rows</span>(</span>
+<span id="cb1-33">    ., </span>
+<span id="cb1-34">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(</span>
+<span id="cb1-35">      ., </span>
+<span id="cb1-36">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">where</span>(is.numeric), </span>
+<span id="cb1-37">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.fns =</span> sum), </span>
+<span id="cb1-38">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> Wave) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-39">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Grade =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-40">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(Wave, Grade) </span>
+<span id="cb1-41"></span>
+<span id="cb1-42"></span>
+<span id="cb1-43"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">flextable</span>(d_citizenship)</span></code></pre></div></div>
+<div id="tbl-71a" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Raw Table</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-71a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-71d3325a{}.cl-71bce2ac{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-71cdba28{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-71cdd6d4{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(0, 0, 0, 1.00);border-top: 0.75pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-71cdd6de{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-71cdd6df{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-71d3325a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-71cdd6d4"><p class="cl-71cdba28"><span class="cl-71bce2ac">Wave</span></p></th><th class="cl-71cdd6d4"><p class="cl-71cdba28"><span class="cl-71bce2ac">Grade</span></p></th><th class="cl-71cdd6d4"><p class="cl-71cdba28"><span class="cl-71bce2ac">Girls_With</span></p></th><th class="cl-71cdd6d4"><p class="cl-71cdba28"><span class="cl-71bce2ac">Girls_Without</span></p></th><th class="cl-71cdd6d4"><p class="cl-71cdba28"><span class="cl-71bce2ac">Boys_With</span></p></th><th class="cl-71cdd6d4"><p class="cl-71cdba28"><span class="cl-71bce2ac">Boys_Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">1</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">3</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">111</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">240</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">281</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">1</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">4</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">297</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">251</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">290</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">1</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">5</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">301</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">260</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">306</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">1</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">Total</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">709</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">751</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">877</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">2</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">3</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">201</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">189</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">210</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">2</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">4</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">214</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">194</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">236</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">2</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">5</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">221</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">216</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">239</span></p></td><td class="cl-71cdd6de"><p class="cl-71cdba28"><span class="cl-71bce2ac">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-71cdd6df"><p class="cl-71cdba28"><span class="cl-71bce2ac">2</span></p></td><td class="cl-71cdd6df"><p class="cl-71cdba28"><span class="cl-71bce2ac">Total</span></p></td><td class="cl-71cdd6df"><p class="cl-71cdba28"><span class="cl-71bce2ac">636</span></p></td><td class="cl-71cdd6df"><p class="cl-71cdba28"><span class="cl-71bce2ac">599</span></p></td><td class="cl-71cdd6df"><p class="cl-71cdba28"><span class="cl-71bce2ac">685</span></p></td><td class="cl-71cdd6df"><p class="cl-71cdba28"><span class="cl-71bce2ac">622</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>However, Table&nbsp;1 requires additional formatting to become publication-worthy. The <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa_flextable</code></a> function performs several layers of transformations before and after applying <a href="https://davidgohel.github.io/flextable/reference/flextable.html"><code>flextable</code></a>, most of which can be turned off selectively.</p>
+<p>The <a href="https://davidgohel.github.io/flextable/reference/surround.html"><code>flextable::surround</code></a> function can place cell borders selectively by row (or column). Table&nbsp;2 is close to the final result, but additional notes are needed.</p>
+<div class="cell FigureWithoutNote" prefix="" data-tblnum="2" data-custom-style="FigureWithoutNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">ft_71 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_citizenship <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_column =</span> Wave, </span>
+<span id="cb2-3">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_prefix =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Wave"</span>,</span>
+<span id="cb2-4">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>,</span>
+<span id="cb2-5">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>, </span>
+<span id="cb2-6">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">table_width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">surround</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>,</span>
+<span id="cb2-8">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">border.top =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray"</span>, </span>
+<span id="cb2-9">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb2-10">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"solid"</span>)) </span>
+<span id="cb2-11">ft_71</span></code></pre></div></div>
+<div id="tbl-preliminary71" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="2" prefix="">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-preliminary71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;2</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Initial Results</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-preliminary71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-730932f0{}.cl-7303b280{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7303b28a{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7305c138{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-7305d286{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d287{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d290{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d291{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d292{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d293{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d29a{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d29b{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d29c{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d29d{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2a4{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2a5{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2a6{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2a7{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2ae{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2af{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2b0{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2b1{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2b8{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2b9{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2ba{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2bb{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7305d2bc{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-730932f0"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-7305d286"><p class="cl-7305c138"><span class="cl-7303b280">Grade</span></p></th><th colspan="2" class="cl-7305d287"><p class="cl-7305c138"><span class="cl-7303b280">Girls</span></p></th><th rowspan="2" class="cl-7305d291"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></th><th colspan="2" class="cl-7305d287"><p class="cl-7305c138"><span class="cl-7303b280">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-7305d287"><p class="cl-7305c138"><span class="cl-7303b280">With</span></p></th><th class="cl-7305d290"><p class="cl-7305c138"><span class="cl-7303b280">Without</span></p></th><th class="cl-7305d287"><p class="cl-7305c138"><span class="cl-7303b280">With</span></p></th><th class="cl-7305d290"><p class="cl-7305c138"><span class="cl-7303b280">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-7305d292"><p class="cl-7305c138"><span class="cl-7303b280">Wave</span><span class="cl-7303b280"> </span><span class="cl-7303b280">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d292"><p class="cl-7305c138"><span class="cl-7303b280">3</span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">111</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">240</span></p></td><td class="cl-7305d29b"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">281</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d292"><p class="cl-7305c138"><span class="cl-7303b280">4</span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">297</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">251</span></p></td><td class="cl-7305d29b"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">290</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d29c"><p class="cl-7305c138"><span class="cl-7303b280">5</span></p></td><td class="cl-7305d29d"><p class="cl-7305c138"><span class="cl-7303b280">301</span></p></td><td class="cl-7305d2a4"><p class="cl-7305c138"><span class="cl-7303b280">260</span></p></td><td class="cl-7305d2a5"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d29d"><p class="cl-7305c138"><span class="cl-7303b280">306</span></p></td><td class="cl-7305d2a4"><p class="cl-7305c138"><span class="cl-7303b280">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d2a6"><p class="cl-7305c138"><span class="cl-7303b280">Total</span></p></td><td class="cl-7305d2a7"><p class="cl-7305c138"><span class="cl-7303b280">709</span></p></td><td class="cl-7305d2ae"><p class="cl-7305c138"><span class="cl-7303b280">751</span></p></td><td class="cl-7305d2af"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d2a7"><p class="cl-7305c138"><span class="cl-7303b280">877</span></p></td><td class="cl-7305d2ae"><p class="cl-7305c138"><span class="cl-7303b280">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-7305d2b0"><p class="cl-7305c138"><span class="cl-7303b280">Wave</span><span class="cl-7303b280"> </span><span class="cl-7303b280">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d292"><p class="cl-7305c138"><span class="cl-7303b280">3</span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">201</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">189</span></p></td><td class="cl-7305d29b"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">210</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d292"><p class="cl-7305c138"><span class="cl-7303b280">4</span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">214</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">194</span></p></td><td class="cl-7305d29b"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d293"><p class="cl-7305c138"><span class="cl-7303b280">236</span></p></td><td class="cl-7305d29a"><p class="cl-7305c138"><span class="cl-7303b280">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d29c"><p class="cl-7305c138"><span class="cl-7303b280">5</span></p></td><td class="cl-7305d29d"><p class="cl-7305c138"><span class="cl-7303b280">221</span></p></td><td class="cl-7305d2a4"><p class="cl-7305c138"><span class="cl-7303b280">216</span></p></td><td class="cl-7305d2a5"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d29d"><p class="cl-7305c138"><span class="cl-7303b280">239</span></p></td><td class="cl-7305d2a4"><p class="cl-7305c138"><span class="cl-7303b280">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7305d2b9"><p class="cl-7305c138"><span class="cl-7303b280">Total</span></p></td><td class="cl-7305d2ba"><p class="cl-7305c138"><span class="cl-7303b280">636</span></p></td><td class="cl-7305d2bb"><p class="cl-7305c138"><span class="cl-7303b280">599</span></p></td><td class="cl-7305d2bc"><p class="cl-7305c138"><span class="cl-7303b28a"></span></p></td><td class="cl-7305d2ba"><p class="cl-7305c138"><span class="cl-7303b280">685</span></p></td><td class="cl-7305d2bb"><p class="cl-7305c138"><span class="cl-7303b280">622</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa_flextable</code></a> function does not delete the column specified in <code>row_title_column</code> (i.e., <code>Wave</code>), but it does remove it from display. An additional hidden column called <code>row_title</code> has data in the row titles but is <code>NA</code> in other rows. Both columns are available for programmatic formatting the row titles and row groupings. For example, here I bold the row titles and make all the Wave 3 text blue and with Arial font. In documents where deviations from strict APA style are allowed, such stylings can be useful to highlight a point.</p>
+<div class="cell FigureWithoutNote" prefix="" data-tblnum="3" data-custom-style="FigureWithoutNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">ft_71 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb3-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">style</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb3-3">                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pr_t =</span> officer<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fp_text</span>(</span>
+<span id="cb3-4">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dodgerblue"</span>, </span>
+<span id="cb3-5">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Arial"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb3-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bold</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(row_title))</span></code></pre></div></div>
+<div id="tbl-preliminary72" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="3" prefix="">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-preliminary72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;3</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Table with Conditional Formatting</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-preliminary72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-7313c45e{}.cl-730e3624{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-730e362e{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-730e362f{font-family:'Times New Roman';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-730e3630{font-family:'Arial';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(30, 144, 255, 1.00);background-color:transparent;}.cl-730e3638{font-family:'Arial';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(30, 144, 255, 1.00);background-color:transparent;}.cl-73103ea6{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-73105116{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105120{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105121{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310512a{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310512b{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310512c{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310512d{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310512e{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105134{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105135{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105136{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105137{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105138{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310513e{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310513f{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105140{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105141{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105142{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105148{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105149{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310514a{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7310514b{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-73105152{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-7313c45e"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-73105116"><p class="cl-73103ea6"><span class="cl-730e3624">Grade</span></p></th><th colspan="2" class="cl-73105120"><p class="cl-73103ea6"><span class="cl-730e3624">Girls</span></p></th><th rowspan="2" class="cl-7310512a"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></th><th colspan="2" class="cl-73105120"><p class="cl-73103ea6"><span class="cl-730e3624">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-73105120"><p class="cl-73103ea6"><span class="cl-730e3624">With</span></p></th><th class="cl-73105121"><p class="cl-73103ea6"><span class="cl-730e3624">Without</span></p></th><th class="cl-73105120"><p class="cl-73103ea6"><span class="cl-730e3624">With</span></p></th><th class="cl-73105121"><p class="cl-73103ea6"><span class="cl-730e3624">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-7310512b"><p class="cl-73103ea6"><span class="cl-730e362f">Wave</span><span class="cl-730e362f"> </span><span class="cl-730e362f">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7310512b"><p class="cl-73103ea6"><span class="cl-730e3624">3</span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3624">111</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3624">240</span></p></td><td class="cl-7310512e"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3624">281</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3624">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7310512b"><p class="cl-73103ea6"><span class="cl-730e3624">4</span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3624">297</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3624">251</span></p></td><td class="cl-7310512e"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3624">290</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3624">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-73105134"><p class="cl-73103ea6"><span class="cl-730e3624">5</span></p></td><td class="cl-73105135"><p class="cl-73103ea6"><span class="cl-730e3624">301</span></p></td><td class="cl-73105136"><p class="cl-73103ea6"><span class="cl-730e3624">260</span></p></td><td class="cl-73105137"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-73105135"><p class="cl-73103ea6"><span class="cl-730e3624">306</span></p></td><td class="cl-73105136"><p class="cl-73103ea6"><span class="cl-730e3624">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-73105138"><p class="cl-73103ea6"><span class="cl-730e3624">Total</span></p></td><td class="cl-7310513e"><p class="cl-73103ea6"><span class="cl-730e3624">709</span></p></td><td class="cl-7310513f"><p class="cl-73103ea6"><span class="cl-730e3624">751</span></p></td><td class="cl-73105140"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-7310513e"><p class="cl-73103ea6"><span class="cl-730e3624">877</span></p></td><td class="cl-7310513f"><p class="cl-73103ea6"><span class="cl-730e3624">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-73105141"><p class="cl-73103ea6"><span class="cl-730e3630">Wave</span><span class="cl-730e3630"> </span><span class="cl-730e3630">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7310512b"><p class="cl-73103ea6"><span class="cl-730e3638">3</span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3638">201</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3638">189</span></p></td><td class="cl-7310512e"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3638">210</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3638">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7310512b"><p class="cl-73103ea6"><span class="cl-730e3638">4</span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3638">214</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3638">194</span></p></td><td class="cl-7310512e"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-7310512c"><p class="cl-73103ea6"><span class="cl-730e3638">236</span></p></td><td class="cl-7310512d"><p class="cl-73103ea6"><span class="cl-730e3638">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-73105134"><p class="cl-73103ea6"><span class="cl-730e3638">5</span></p></td><td class="cl-73105135"><p class="cl-73103ea6"><span class="cl-730e3638">221</span></p></td><td class="cl-73105136"><p class="cl-73103ea6"><span class="cl-730e3638">216</span></p></td><td class="cl-73105137"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-73105135"><p class="cl-73103ea6"><span class="cl-730e3638">239</span></p></td><td class="cl-73105136"><p class="cl-73103ea6"><span class="cl-730e3638">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-73105149"><p class="cl-73103ea6"><span class="cl-730e3638">Total</span></p></td><td class="cl-7310514a"><p class="cl-73103ea6"><span class="cl-730e3638">636</span></p></td><td class="cl-7310514b"><p class="cl-73103ea6"><span class="cl-730e3638">599</span></p></td><td class="cl-73105152"><p class="cl-73103ea6"><span class="cl-730e362e"></span></p></td><td class="cl-7310514a"><p class="cl-73103ea6"><span class="cl-730e3638">685</span></p></td><td class="cl-7310514b"><p class="cl-73103ea6"><span class="cl-730e3638">622</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<section id="tables-notes" class="level2">
+<h2 data-anchor-id="tables-notes">Tables Notes</h2>
+<p>APA style distinguishes between three types of table notes, each of which need to be in separate paragraphs:</p>
+<ul>
+<li><em>General Note.</em> Contains definitions, abbreviations, and other information needed to understand the table, as well as copyright information.</li>
+<li><em>Specific Note.</em> These are notes about specific cells in the table, often in form of footnotes with lowercase letters as markers. Each footnote is in the same paragraph. The <em>APA Manual</em> recommends making the the footnote marker in superscript. The space that separates the marker from the the explanatory text should also be in superscript, hence the non-breaking space <code>^\u00A0^</code> at the beginning of th footnote text.</li>
+<li><em>Probability Note.</em> This note explains the meanings of probability markers (e.g., * <em>p</em> &lt; .05; ** <em>p</em> &lt; .001; *** <em>p</em> &lt; .001).</li>
+</ul>
+</section>
+<section id="adding-table-notes-with-flextable" class="level2">
+<h2 data-anchor-id="adding-table-notes-with-flextable">Adding Table Notes with flextable</h2>
+<p>Adding footnotes with flextable functions might look like a lot of code in Table&nbsp;4, but it is mostly straightforward.</p>
+<p>The general note can be created with the <code>footer_lines</code> function. The note itself can be written inside <code>flextable::as_paragraph</code> or <code>ftExtra::as_paragraph_md</code>. The <code>ftExtra::as_paragraph_md</code> function can make moderately complex formatting a little easier because it uses markdown syntax. If precise fine-tuning is needed, the flextable package has many formatting functions that can be used inside <code>flextable::as_paragraph</code>.</p>
+<p>Getting everything to display in <em>perfect</em> APA style is not always possible with the <code>footnote</code> function. The footnotes are supposed to go in a single paragraph that is separate from the general note. We can make footnotes appear in their own paragraph by setting the <code>inline</code> argument in <code>footnote</code> to <code>TRUE</code>, but this makes the general note also in the same paragraph.</p>
+<p>I did not use the <code>footnote</code> function to create the probability note because I did not want the asterisk to be in superscript. Instead the asterisk is placed in the table with the <code>append_chunk</code> function, and the probability note is added separately with the <code>footer_lines</code> function.</p>
+<div class="cell FigureWithoutNote" prefix="" data-tblnum="4" data-custom-style="FigureWithoutNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```{r}</span></span>
+<span id="cb4-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| label: tbl-71b</span></span>
+<span id="cb4-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| tbl-cap: Numbers of Children With and Without Proof of Parental Citizenship</span></span>
+<span id="cb4-4"></span>
+<span id="cb4-5">d_citizenship <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb4-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_column =</span> Wave, </span>
+<span id="cb4-7">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_prefix =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Wave"</span>, </span>
+<span id="cb4-8">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>,</span>
+<span id="cb4-9">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb4-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">surround</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>,</span>
+<span id="cb4-11">                      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">border.top =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray"</span>, </span>
+<span id="cb4-12">                                        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb4-13">                                        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"solid"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb4-14">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_footer_lines</span>(</span>
+<span id="cb4-15">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph_md</span>(</span>
+<span id="cb4-16">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"*Note*. This table demonstrates the elements of a</span></span>
+<span id="cb4-17"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    prototypical table. A *general note* to a table appears</span></span>
+<span id="cb4-18"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    first and contains information needed to understand the</span></span>
+<span id="cb4-19"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    table, including definitions of abbreviations (see Sections</span></span>
+<span id="cb4-20"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    7.14–7.15) and the copyright attribution for a reprinted or</span></span>
+<span id="cb4-21"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    adapted table (see Section 7.7)."</span></span>
+<span id="cb4-22">  )</span>
+<span id="cb4-23">) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb4-24"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">footnote</span>(</span>
+<span id="cb4-25">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span></span>
+<span id="cb4-26">    Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>,</span>
+<span id="cb4-27">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Girls_With"</span>,</span>
+<span id="cb4-28">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph_md</span>(</span>
+<span id="cb4-29">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^\u00A0^A *specific note* appears in a separate </span></span>
+<span id="cb4-30"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">      paragraph below the general note. "</span>),</span>
+<span id="cb4-31">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ref_symbols =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span></span>
+<span id="cb4-32">) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb4-33">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">footnote</span>(</span>
+<span id="cb4-34">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span></span>
+<span id="cb4-35">    Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>,</span>
+<span id="cb4-36">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Girls_Without"</span>,</span>
+<span id="cb4-37">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph_md</span>(</span>
+<span id="cb4-38">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^\u00A0^Subsequent specific notes follow in the </span></span>
+<span id="cb4-39"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    same paragraph (see Section 7.14)."</span>),</span>
+<span id="cb4-40">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ref_symbols =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"b"</span>, </span>
+<span id="cb4-41">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inline =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, </span>
+<span id="cb4-42">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span></span>
+<span id="cb4-43">) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb4-44"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_footer_lines</span>(</span>
+<span id="cb4-45">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph_md</span>(</span>
+<span id="cb4-46">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">* A *probability note* (for *p*-values) appears as a </span></span>
+<span id="cb4-47"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    separate paragraph below any specific notes; subsequent </span></span>
+<span id="cb4-48"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    probability notes follow in the same paragraph (see </span></span>
+<span id="cb4-49"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    Section 7.14)."</span></span>
+<span id="cb4-50">    )) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb4-51">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">append_chunks</span>(</span>
+<span id="cb4-52">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>,</span>
+<span id="cb4-53">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Boys_With"</span>, </span>
+<span id="cb4-54">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_chunk</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"*"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb4-55">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">line_spacing</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">space =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">part =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"footer"</span>)</span>
+<span id="cb4-56"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```</span></span></code></pre></div></div>
+<div id="tbl-71b" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="4" prefix="">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;4</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Numbers of Children With and Without Proof of Parental Citizenship</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-71b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-75e2464c{}.cl-75d8bff0{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-75d8c004{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-75d8c005{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-75d8c006{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-75d8c00e{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-75d8c00f{font-family:'Times New Roman';font-size:6.6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-75dc4878{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-75dc4882{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1.5;background-color:transparent;}.cl-75dc6614{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6628{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6629{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6632{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6633{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc663c{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc663d{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc663e{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6646{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6647{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6648{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6649{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6650{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6651{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc665a{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc665b{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6664{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6665{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6666{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6667{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc666e{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc666f{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6670{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6678{width:1.228in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6679{width:1.053in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc667a{width:1.558in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-75dc6682{width:0.05in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-75e2464c"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-75dc6614"><p class="cl-75dc4878"><span class="cl-75d8bff0">Grade</span></p></th><th colspan="2" class="cl-75dc6628"><p class="cl-75dc4878"><span class="cl-75d8bff0">Girls</span></p></th><th rowspan="2" class="cl-75dc6632"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></th><th colspan="2" class="cl-75dc6628"><p class="cl-75dc4878"><span class="cl-75d8bff0">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-75dc6628"><p class="cl-75dc4878"><span class="cl-75d8bff0">With</span></p></th><th class="cl-75dc6629"><p class="cl-75dc4878"><span class="cl-75d8bff0">Without</span></p></th><th class="cl-75dc6628"><p class="cl-75dc4878"><span class="cl-75d8bff0">With</span></p></th><th class="cl-75dc6629"><p class="cl-75dc4878"><span class="cl-75d8bff0">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-75dc6633"><p class="cl-75dc4878"><span class="cl-75d8bff0">Wave</span><span class="cl-75d8bff0"> </span><span class="cl-75d8bff0">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6633"><p class="cl-75dc4878"><span class="cl-75d8bff0">3</span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">111</span><span class="cl-75d8c005">a</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">240</span><span class="cl-75d8c005">b</span></p></td><td class="cl-75dc663e"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">281</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6633"><p class="cl-75dc4878"><span class="cl-75d8bff0">4</span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">297</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">251</span></p></td><td class="cl-75dc663e"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">290</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6646"><p class="cl-75dc4878"><span class="cl-75d8bff0">5</span></p></td><td class="cl-75dc6647"><p class="cl-75dc4878"><span class="cl-75d8bff0">301</span></p></td><td class="cl-75dc6648"><p class="cl-75dc4878"><span class="cl-75d8bff0">260</span></p></td><td class="cl-75dc6649"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc6647"><p class="cl-75dc4878"><span class="cl-75d8bff0">306</span></p></td><td class="cl-75dc6648"><p class="cl-75dc4878"><span class="cl-75d8bff0">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6650"><p class="cl-75dc4878"><span class="cl-75d8bff0">Total</span></p></td><td class="cl-75dc6651"><p class="cl-75dc4878"><span class="cl-75d8bff0">709</span></p></td><td class="cl-75dc665a"><p class="cl-75dc4878"><span class="cl-75d8bff0">751</span></p></td><td class="cl-75dc665b"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc6651"><p class="cl-75dc4878"><span class="cl-75d8bff0">877</span></p></td><td class="cl-75dc665a"><p class="cl-75dc4878"><span class="cl-75d8bff0">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-75dc6664"><p class="cl-75dc4878"><span class="cl-75d8bff0">Wave</span><span class="cl-75d8bff0"> </span><span class="cl-75d8bff0">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6633"><p class="cl-75dc4878"><span class="cl-75d8bff0">3</span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">201</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">189</span></p></td><td class="cl-75dc663e"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">210</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6633"><p class="cl-75dc4878"><span class="cl-75d8bff0">4</span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">214</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">194</span></p></td><td class="cl-75dc663e"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc663c"><p class="cl-75dc4878"><span class="cl-75d8bff0">236</span></p></td><td class="cl-75dc663d"><p class="cl-75dc4878"><span class="cl-75d8bff0">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6646"><p class="cl-75dc4878"><span class="cl-75d8bff0">5</span></p></td><td class="cl-75dc6647"><p class="cl-75dc4878"><span class="cl-75d8bff0">221</span></p></td><td class="cl-75dc6648"><p class="cl-75dc4878"><span class="cl-75d8bff0">216</span></p></td><td class="cl-75dc6649"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc6647"><p class="cl-75dc4878"><span class="cl-75d8bff0">239</span></p></td><td class="cl-75dc6648"><p class="cl-75dc4878"><span class="cl-75d8bff0">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-75dc6667"><p class="cl-75dc4878"><span class="cl-75d8bff0">Total</span></p></td><td class="cl-75dc666e"><p class="cl-75dc4878"><span class="cl-75d8bff0">636</span></p></td><td class="cl-75dc666f"><p class="cl-75dc4878"><span class="cl-75d8bff0">599</span></p></td><td class="cl-75dc6670"><p class="cl-75dc4878"><span class="cl-75d8c004"></span></p></td><td class="cl-75dc666e"><p class="cl-75dc4878"><span class="cl-75d8bff0">685</span><span class="cl-75d8bff0">*</span></p></td><td class="cl-75dc666f"><p class="cl-75dc4878"><span class="cl-75d8bff0">622</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-75dc6678"><p class="cl-75dc4882"><span class="cl-75d8c006">Note</span><span class="cl-75d8c00e">.</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">This</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">table</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">demonstrates</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">the</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">elements</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">of</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">a</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">prototypical</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">table.</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">A</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c006">general</span><span class="cl-75d8c006"> </span><span class="cl-75d8c006">note</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">to</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">a</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">table</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">appears</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">first</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">and</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">contains</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">information</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">needed</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">to</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">understand</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">the</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">table,</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">including</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">definitions</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">of</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">abbreviations</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">(see</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">Sections</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">7.14–7.15)</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">and</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">the</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">copyright</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">attribution</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">for</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">a</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">reprinted</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">or</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">adapted</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">table</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">(see</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">Section</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">7.7).</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-75dc6678"><p class="cl-75dc4882"><span class="cl-75d8c00f">a</span><span class="cl-75d8c00f">&nbsp;</span><span class="cl-75d8c00e">A</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c006">specific</span><span class="cl-75d8c006"> </span><span class="cl-75d8c006">note</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">appears</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">in</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">a</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">separate</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">paragraph</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">below</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">the</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">general</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">note.</span><span class="cl-75d8c00f">b</span><span class="cl-75d8c00f">&nbsp;</span><span class="cl-75d8c00e">Subsequent</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">specific</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">notes</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">follow</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">in</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">the</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">same</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">paragraph</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">(see</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">Section</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">7.14).</span><span class="cl-75d8c00e"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-75dc6678"><p class="cl-75dc4882"><span class="cl-75d8c00e">*</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">A</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c006">probability</span><span class="cl-75d8c006"> </span><span class="cl-75d8c006">note</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">(for</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c006">p</span><span class="cl-75d8c00e">-values)</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">appears</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">as</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">a</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">separate</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">paragraph</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">below</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">any</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">specific</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">notes;</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">subsequent</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">probability</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">notes</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">follow</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">in</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">the</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">same</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">paragraph</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">(see</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">Section</span><span class="cl-75d8c00e"> </span><span class="cl-75d8c00e">7.14).</span></p></td></tr></tfoot></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="adding-table-notes-with-apaquartos-apa-note-chunk-option" class="level2">
+<h2 data-anchor-id="adding-table-notes-with-apaquartos-apa-note-chunk-option">Adding Table Notes with apaquarto’s <code>apa-note</code> Chunk Option</h2>
+<p>In some formats (e.g., .pdf), long table notes can mess with the column widths and make the table unreadable.</p>
+<p>If you are rendering with the apaquarto extension, you can append table notes with the <code>apa-note</code> chunk option. Recent versions of apaquarto can separate <code>apa-note</code> text into multiple paragraphs as shown in the chunk below.</p>
+<p>Also, it bothers me that the footnote symbols mess up the number alignment. I decided to add them in myself. In the same columns that have footnotes, I padded the numbers that do not have footnotes with the <code>numbsp;</code> character (Figure Space) to maintain the alignment.</p>
+<p>As a final polishing move, I rejiggered the column widths to make everything center correctly. Table&nbsp;5 is as good as I can make a table in APA Style.</p>
+<div class="cell FigureWithNote" data-image-preview="true" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" prefix="" data-tblnum="5" data-custom-style="FigureWithNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```{r}</span></span>
+<span id="cb5-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| label: tbl-71c</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| image-preview: true</span></span>
+<span id="cb5-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| tbl-cap: Numbers of Children With and Without Proof of Parental Citizenship</span></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| apa-note: </span></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|   - This table demonstrates the elements of a prototypical </span></span>
+<span id="cb5-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     table. A *general note* to a table appears first and </span></span>
+<span id="cb5-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     contains information needed to understand the table, </span></span>
+<span id="cb5-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     including definitions of abbreviations (see Sections </span></span>
+<span id="cb5-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     7.14--7.15) and the copyright attribution for a </span></span>
+<span id="cb5-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     reprinted or adapted table (see Section 7.7).</span></span>
+<span id="cb5-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|   - ^a^ Subsequent specific notes follow in the same </span></span>
+<span id="cb5-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     paragraph (see Section 7.14). ^b^ Subsequent specific </span></span>
+<span id="cb5-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     notes follow in the same paragraph (see Section 7.14).</span></span>
+<span id="cb5-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|   - \* A *probability note* (for *p* values) appears as a </span></span>
+<span id="cb5-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     separate paragraph below any specific notes; subsequent </span></span>
+<span id="cb5-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     probability notes follow in the same paragraph (see </span></span>
+<span id="cb5-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     Section 7.14).</span></span>
+<span id="cb5-19"></span>
+<span id="cb5-20">d_citizenship <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb5-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Girls_With =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(</span>
+<span id="cb5-22">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^&amp;numsp;^"</span>,</span>
+<span id="cb5-23">    Girls_With, </span>
+<span id="cb5-24">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Wave <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, </span>
+<span id="cb5-25">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^a^"</span>, </span>
+<span id="cb5-26">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^&amp;numsp;^"</span>)),</span>
+<span id="cb5-27">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Girls_Without =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(</span>
+<span id="cb5-28">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^&amp;numsp;^"</span>,</span>
+<span id="cb5-29">    Girls_Without, </span>
+<span id="cb5-30">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Wave <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, </span>
+<span id="cb5-31">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^b^"</span>, </span>
+<span id="cb5-32">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^&amp;numsp;^"</span>)),</span>
+<span id="cb5-33">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Boys_With =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(</span>
+<span id="cb5-34">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^&amp;numsp;^"</span>,</span>
+<span id="cb5-35">    Boys_With, </span>
+<span id="cb5-36">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Wave <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>, </span>
+<span id="cb5-37">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">*^"</span>, </span>
+<span id="cb5-38">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"^&amp;numsp;^"</span>))</span>
+<span id="cb5-39">    ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb5-40">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_column =</span> Wave, </span>
+<span id="cb5-41">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_prefix =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Wave"</span>, </span>
+<span id="cb5-42">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>,</span>
+<span id="cb5-43">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">table_width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb5-44">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>, </span>
+<span id="cb5-45">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">layout =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fixed"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb5-46">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">surround</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>,</span>
+<span id="cb5-47">                      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">border.top =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray"</span>, </span>
+<span id="cb5-48">                                        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb5-49">                                        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"solid"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb5-50">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">width</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.34</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.28</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.28</span>, .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">05</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.28</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.28</span>)) </span>
+<span id="cb5-51"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```</span></span></code></pre></div></div>
+<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="5" data-image-preview="true" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;5</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Numbers of Children With and Without Proof of Parental Citizenship</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-71c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-771b6eda{}.cl-7712ce74{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7712ce7e{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7712ce7f{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-77160422{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-77161e26{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e30{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e3a{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e3b{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e44{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e45{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e46{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e4e{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e4f{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e50{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e58{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e59{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e62{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e63{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e64{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e6c{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77161e6d{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-771b6eda"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-77161e26"><p class="cl-77160422"><span class="cl-7712ce74">Grade</span></p></th><th colspan="2" class="cl-77161e30"><p class="cl-77160422"><span class="cl-7712ce74">Girls</span></p></th><th rowspan="2" class="cl-77161e3a"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></th><th colspan="2" class="cl-77161e30"><p class="cl-77160422"><span class="cl-7712ce74">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-77161e30"><p class="cl-77160422"><span class="cl-7712ce74">With</span></p></th><th class="cl-77161e30"><p class="cl-77160422"><span class="cl-7712ce74">Without</span></p></th><th class="cl-77161e30"><p class="cl-77160422"><span class="cl-7712ce74">With</span></p></th><th class="cl-77161e30"><p class="cl-77160422"><span class="cl-7712ce74">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-77161e3b"><p class="cl-77160422"><span class="cl-7712ce74">Wave</span><span class="cl-7712ce74"> </span><span class="cl-7712ce74">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e3b"><p class="cl-77160422"><span class="cl-7712ce74">3</span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">111</span><span class="cl-7712ce7f">a</span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">240</span><span class="cl-7712ce7f">b</span></p></td><td class="cl-77161e45"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">281</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce74">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e3b"><p class="cl-77160422"><span class="cl-7712ce74">4</span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">297</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">251</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e45"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">290</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce74">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e46"><p class="cl-77160422"><span class="cl-7712ce74">5</span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">301</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">260</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e4f"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">306</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce74">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e50"><p class="cl-77160422"><span class="cl-7712ce74">Total</span></p></td><td class="cl-77161e58"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">709</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e58"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">751</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e59"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e58"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">877</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e58"><p class="cl-77160422"><span class="cl-7712ce74">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-77161e62"><p class="cl-77160422"><span class="cl-7712ce74">Wave</span><span class="cl-7712ce74"> </span><span class="cl-7712ce74">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e3b"><p class="cl-77160422"><span class="cl-7712ce74">3</span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">201</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">189</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e45"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">210</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce74">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e3b"><p class="cl-77160422"><span class="cl-7712ce74">4</span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">214</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">194</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e45"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">236</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e44"><p class="cl-77160422"><span class="cl-7712ce74">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e46"><p class="cl-77160422"><span class="cl-7712ce74">5</span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">221</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">216</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e4f"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">239</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e4e"><p class="cl-77160422"><span class="cl-7712ce74">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77161e64"><p class="cl-77160422"><span class="cl-7712ce74">Total</span></p></td><td class="cl-77161e6c"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">636</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e6c"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">599</span><span class="cl-7712ce7f"> </span></p></td><td class="cl-77161e6d"><p class="cl-77160422"><span class="cl-7712ce7e"></span></p></td><td class="cl-77161e6c"><p class="cl-77160422"><span class="cl-7712ce7f"> </span><span class="cl-7712ce74">685</span><span class="cl-7712ce7f">*</span></p></td><td class="cl-77161e6c"><p class="cl-77160422"><span class="cl-7712ce74">622</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+<div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<em>Note</em>. This table demonstrates the elements of a prototypical table. A <em>general note</em> to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14–7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).
+</div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<sup>a</sup> Subsequent specific notes follow in the same paragraph (see Section 7.14). <sup>b</sup> Subsequent specific notes follow in the same paragraph (see Section 7.14).
+</div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+* A <em>probability note</em> (for <em>p</em> values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).
+</div>
+</div>
+</div>
+<p>Note that in Figure&nbsp;1, the <code>Total</code> row is left-aligned in the <code>Grade</code> column. I did not do this because I think it looks bad, and there was no note saying that I had to do it to remain in strict APA style. If you think you need it, you would add this line to your table pipeline:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">align</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Grade"</span>) </span></code></pre></div></div>
+</div>
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.1 in {R} with Apa7},
+  date = {2025-09-10},
+  url = {https://wjschne.github.io/posts/apatables/apa701.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, September 10). Recreating APA Manual Table 7.1
+in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa701.html">https://wjschne.github.io/posts/apatables/apa701.html</a>
+</div></div></section></div> ]]></description>
+  <category>R</category>
+  <category>APA Style</category>
+  <guid>https://wjschne.github.io/posts/apatables/apa701.html</guid>
+  <pubDate>Wed, 10 Sep 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>APA style with Quarto: A shiny web app for creating apaquarto files</title>
   <dc:creator>W. Joel Schneider</dc:creator>
