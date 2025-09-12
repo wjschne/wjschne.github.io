@@ -10,7 +10,414 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Fri, 12 Sep 2025 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 13 Sep 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recreating APA Manual Table 7.3 in R with apa7</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/apatables/apa703.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="making-tables-in-apa-style-part-3-of-24" class="level1">
+<h1>Making tables in APA style (Part 3 of 24)</h1>
+<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Highlights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Trim leading zeros, decimail alignment, and align on en-dash (–) with <a href="https://wjschne.github.io/apa7/reference/align_chr.html"><code>align_chr</code></a></li>
+<li>Internal lines with <a href="https://davidgohel.github.io/flextable/reference/surround.html"><code>surround</code></a></li>
+<li>Indentation with <a href="https://davidgohel.github.io/flextable/reference/padding.html"><code>padding</code></a></li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(apa7)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(flextable)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ftExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme_fun =</span> theme_apa, </span>
+<span id="cb1-6">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
+</div>
+<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.3</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/apatables/table73.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+<p>APA Manual Table 7.3 in Figure&nbsp;1 was easier to reproduce than the first two tables in this series. Because only simple indentation was required, it was easy to indent subscale rows in Table&nbsp;1 with the <a href="https://davidgohel.github.io/flextable/reference/padding.html"><code>padding</code></a> function.</p>
+<p>The <a href="https://davidgohel.github.io/flextable/reference/surround.html"><code>surround</code></a> function provides internal lines. I make the internal lines a lighter gray than the header and bottom lines.</p>
+<p>Whereas the mean and standard deviation columns needed decimal alignment (provided automatically with <code>apa_flextable</code>), the Range column looked better if aligned on the en-dash character (–). The <code>align_chr</code> function makes use of the <a href="https://benjaminwolfe.github.io/signs/reference/signs.html"><code>signs</code></a> function, which not only gives negative numbers a true minus sign, but also can trim leading zeroes for probabilities, correlations, and reliability coefficients, which happens automatically for the <code>cronbach</code> column.</p>
+<div class="cell FigureWithNote" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." prefix="" data-tblnum="1" data-custom-style="FigureWithNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```{r}</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| label: tbl-73</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| tbl-cap: Psychometric Properties for DLOPFQ Scales and Subscales</span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| apa-note: "The *Diagnostic and Statistical Manual of Mental Disorders* </span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           (5th ed.) Levels of Personality Functioning Questionnaire </span></span>
+<span id="cb2-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           (DLOPFQ) we developed had four scales (Identity, Self-</span></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           Directedness, Empathy, and Intimacy), each with subscales </span></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           for the work and social domains."</span></span>
+<span id="cb2-9"></span>
+<span id="cb2-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make data</span></span>
+<span id="cb2-11">d <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> tibble<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tribble</span>(</span>
+<span id="cb2-12">                           <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Scale,    <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>M,  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>SD,   <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Range, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cronbach</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>,</span>
+<span id="cb2-13">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Identity total score"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">86.6</span>,   <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">28</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"28–155"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.94</span>,</span>
+<span id="cb2-14">                  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Work Identity"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">41.6</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">13.3</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"16–76"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.88</span>,</span>
+<span id="cb2-15">                <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Social Identity"</span>,    <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">45</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15.7</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"14–84"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.91</span>,</span>
+<span id="cb2-16">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Self-Directedness total score"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">91.2</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">26.5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"34–151"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.92</span>,</span>
+<span id="cb2-17">         <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Work Self-Directedness"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">44.9</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">13.5</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"16–76"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.85</span>,</span>
+<span id="cb2-18">       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Social Self-Directedness"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">46.3</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14.3</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"17–80"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.86</span>,</span>
+<span id="cb2-19">            <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Empathy total score"</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">101.8</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15.8</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"48–139"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.84</span>,</span>
+<span id="cb2-20">                   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Work Empathy"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">49.9</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8.2</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"20–72"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.72</span>,</span>
+<span id="cb2-21">                 <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Social Empathy"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">51.9</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8.6</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"28–76"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.77</span>,</span>
+<span id="cb2-22">           <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Intimacy total score"</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">122.9</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">28.6</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"56–189"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.91</span>,</span>
+<span id="cb2-23">                  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Work Intimacy"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">61.7</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14.3</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"28–94"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.82</span>,</span>
+<span id="cb2-24">                <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Social Intimacy"</span>,  <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">61.2</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15.4</span>,  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"24–96"</span>,                <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.86</span></span>
+<span id="cb2-25">  ) </span>
+<span id="cb2-26"></span>
+<span id="cb2-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Format data</span></span>
+<span id="cb2-28">d_formatted <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-29">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Range =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">align_chr</span>(Range, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">center =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"–"</span>)) </span>
+<span id="cb2-30"></span>
+<span id="cb2-31"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make table</span></span>
+<span id="cb2-32">d_formatted <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-33">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">layout =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fixed"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-34">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">padding</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb2-35">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~!</span>stringr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">str_ends</span>(Scale, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"total score"</span>), </span>
+<span id="cb2-36">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding.left =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-37">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">width</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-38">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">width</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-39">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">surround</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>), </span>
+<span id="cb2-40">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">border.top =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fp_border_default</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray60"</span>))</span>
+<span id="cb2-41"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```</span></span></code></pre></div></div>
+<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." data-tblnum="1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Psychometric Properties for DLOPFQ Scales and Subscales</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-e173a434{}.cl-e1604132{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e160413c{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e16f0168{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-e16f0172{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-e16f017c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:16pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-e16f2198{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21a2{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21a3{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21a4{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21a5{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.75pt solid rgba(153, 153, 153, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21ac{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.75pt solid rgba(153, 153, 153, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21ad{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0.75pt solid rgba(153, 153, 153, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21b6{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0.75pt solid rgba(153, 153, 153, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21b7{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e16f21b8{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e173a434"><thead><tr style="overflow-wrap:break-word;"><th class="cl-e16f2198"><p class="cl-e16f0168"><span class="cl-e1604132">Scale</span></p></th><th class="cl-e16f21a2"><p class="cl-e16f0168"><span class="cl-e160413c">M</span></p></th><th class="cl-e16f21a2"><p class="cl-e16f0168"><span class="cl-e160413c">SD</span></p></th><th class="cl-e16f21a2"><p class="cl-e16f0168"><span class="cl-e1604132">Range</span></p></th><th class="cl-e16f21a2"><p class="cl-e16f0168"><span class="cl-e1604132">Cronbach’s</span><span class="cl-e1604132"> </span><span class="cl-e1604132">α</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a3"><p class="cl-e16f0172"><span class="cl-e1604132">Identity</span><span class="cl-e1604132"> </span><span class="cl-e1604132">total</span><span class="cl-e1604132"> </span><span class="cl-e1604132">score</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132"> 86.60</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">28.00</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">28–155</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">.94</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a3"><p class="cl-e16f017c"><span class="cl-e1604132">Work</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Identity</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132"> 41.60</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">13.30</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">16–76 </span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">.88</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a5"><p class="cl-e16f017c"><span class="cl-e1604132">Social</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Identity</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132"> 45.00</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">15.70</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">14–84 </span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">.91</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21ad"><p class="cl-e16f0172"><span class="cl-e1604132">Self-Directedness</span><span class="cl-e1604132"> </span><span class="cl-e1604132">total</span><span class="cl-e1604132"> </span><span class="cl-e1604132">score</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132"> 91.20</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">26.50</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">34–151</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">.92</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a3"><p class="cl-e16f017c"><span class="cl-e1604132">Work</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Self-Directedness</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132"> 44.90</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">13.50</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">16–76 </span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">.85</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a5"><p class="cl-e16f017c"><span class="cl-e1604132">Social</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Self-Directedness</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132"> 46.30</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">14.30</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">17–80 </span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">.86</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21ad"><p class="cl-e16f0172"><span class="cl-e1604132">Empathy</span><span class="cl-e1604132"> </span><span class="cl-e1604132">total</span><span class="cl-e1604132"> </span><span class="cl-e1604132">score</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">101.80</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">15.80</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">48–139</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">.84</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a3"><p class="cl-e16f017c"><span class="cl-e1604132">Work</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Empathy</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132"> 49.90</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132"> 8.20</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">20–72 </span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">.72</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a5"><p class="cl-e16f017c"><span class="cl-e1604132">Social</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Empathy</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132"> 51.90</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132"> 8.60</span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">28–76 </span></p></td><td class="cl-e16f21ac"><p class="cl-e16f0168"><span class="cl-e1604132">.77</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21ad"><p class="cl-e16f0172"><span class="cl-e1604132">Intimacy</span><span class="cl-e1604132"> </span><span class="cl-e1604132">total</span><span class="cl-e1604132"> </span><span class="cl-e1604132">score</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">122.90</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">28.60</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">56–189</span></p></td><td class="cl-e16f21b6"><p class="cl-e16f0168"><span class="cl-e1604132">.91</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21a3"><p class="cl-e16f017c"><span class="cl-e1604132">Work</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Intimacy</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132"> 61.70</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">14.30</span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">28–94 </span></p></td><td class="cl-e16f21a4"><p class="cl-e16f0168"><span class="cl-e1604132">.82</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e16f21b7"><p class="cl-e16f017c"><span class="cl-e1604132">Social</span><span class="cl-e1604132"> </span><span class="cl-e1604132">Intimacy</span></p></td><td class="cl-e16f21b8"><p class="cl-e16f0168"><span class="cl-e1604132"> 61.20</span></p></td><td class="cl-e16f21b8"><p class="cl-e16f0168"><span class="cl-e1604132">15.40</span></p></td><td class="cl-e16f21b8"><p class="cl-e16f0168"><span class="cl-e1604132">24–96 </span></p></td><td class="cl-e16f21b8"><p class="cl-e16f0168"><span class="cl-e1604132">.86</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+<div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<em>Note</em>. The <em>Diagnostic and Statistical Manual of Mental Disorders</em> (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains.
+</div>
+</div>
+</div>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.3 in {R} with Apa7},
+  date = {2025-09-13},
+  url = {https://wjschne.github.io/posts/apatables/apa703.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, September 13). Recreating APA Manual Table 7.3
+in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa703.html">https://wjschne.github.io/posts/apatables/apa703.html</a>
+</div></div></section></div> ]]></description>
+  <category>R</category>
+  <category>APA Style</category>
+  <guid>https://wjschne.github.io/posts/apatables/apa703.html</guid>
+  <pubDate>Sat, 13 Sep 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Recreating APA Manual Table 7.2 in R with apa7</title>
   <dc:creator>W. Joel Schneider</dc:creator>
