@@ -6,11 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="W. Joel Schneider">
 <meta name="dcterms.date" content="2025-09-13">
-<meta name="description" content="W. Joel Schneider is a professor at Temple University.">
+<meta name="description" content="Demonstration of the apa7 package, a flextable extension package">
 
-<title>W. Joel Schneider</title>
+<title>Recreating APA Manual Table 7.3 in R with apa7</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,209 +60,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../..//images/favicon.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-bf89507611faaf460cba75b0251cb45b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
-  }
-}</script>
-<link href="../../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="apa703_files/libs/clipboard/clipboard.min.js"></script>
+<script src="apa703_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="apa703_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="apa703_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="apa703_files/libs/quarto-html/popper.min.js"></script>
+<script src="apa703_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="apa703_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="apa703_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="apa703_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="apa703_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="apa703_files/libs/bootstrap/bootstrap-609188ea7eacb4bafb6b6767f323c95d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="apa703_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
 
-<script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
+<script src="apa703_files/libs/tabwid-1.1.3/tabwid.js"></script>
 
 
 
-<meta property="og:title" content="W. Joel Schneider">
-<meta property="og:description" content="Demonstration of the apa7 package, a flextable extension package">
-<meta property="og:image" content="https://wjschne.github.io/posts/apatables/data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==">
-<meta property="og:site_name" content="W. Joel Schneider">
-<meta name="citation_title" content="Recreating APA Manual Table 7.3 in R with apa7">
-<meta name="citation_author" content="W. Joel Schneider">
-<meta name="citation_publication_date" content="2025-09-13">
-<meta name="citation_cover_date" content="2025-09-13">
-<meta name="citation_year" content="2025">
-<meta name="citation_online_date" content="2025-09-13">
-<meta name="citation_fulltext_html_url" content="https://wjschne.github.io/posts/apatables/apa703.html">
-<meta name="citation_language" content="en">
-<meta name="citation_journal_title" content="Schneirographs">
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="quarto-light">
 
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    </a>
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">W. Joel Schneider</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"> 
-<span class="menu-text">R Blog</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../assessingpsyche.html"> 
-<span class="menu-text">Assessment Blog</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../vita.html"> 
-<span class="menu-text">Vita</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../projects.html"> 
-<span class="menu-text">Projects</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../presentations.html"> 
-<span class="menu-text">Presentations</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../software.html"> 
-<span class="menu-text">Software</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../tutorials.html"> 
-<span class="menu-text">Tutorials</span></a>
-  </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="mailto:schneider@temple.edu" rel="noreferrer noopener" target="_blank"> <i class="bi bi-envelope" role="img" aria-label="Email">
-</i> 
-<span class="menu-text">Email</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://github.com/wjschne" rel="noreferrer noopener" target="_blank"> <i class="bi bi-github" role="img" aria-label="GitHub">
-</i> 
-<span class="menu-text">GitHub</span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="../../blog.xml"> <i class="bi bi-rss" role="img">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
-</header>
-<!-- content -->
-<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Recreating APA Manual Table 7.3 in R with apa7</h1>
-                  <div>
-        <div class="description">
-          Demonstration of the apa7 package, a flextable extension package
-        </div>
-      </div>
-                          <div class="quarto-categories">
-                <div class="quarto-category">R</div>
-                <div class="quarto-category">APA Style</div>
-              </div>
-                  </div>
-  </div>
-    
-  <div class="quarto-title-meta-author">
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-heading">Affiliation</div>
-    
-      <div class="quarto-title-meta-contents">
-      <p class="author"><a href="https://wjschne.github.io">W. Joel Schneider</a> <a href="https://orcid.org/0000-0002-8393-5316" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
-    </div>
-    <div class="quarto-title-meta-contents">
-          <p class="affiliation">
-              <a href="https://education.temple.edu/about/faculty-staff/w-joel-schneider-tuh42402">
-              Temple University
-              </a>
-            </p>
-        </div>
-    </div>
-
-  <div class="quarto-title-meta">
-
-        
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">September 13, 2025</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
-<!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Sections</h2>
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#making-tables-in-apa-style-part-3-of-24" id="toc-making-tables-in-apa-style-part-3-of-24" class="nav-link active" data-scroll-target="#making-tables-in-apa-style-part-3-of-24">Making tables in APA style (Part 3 of 24)</a></li>
   </ul>
 </nav>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Recreating APA Manual Table 7.3 in R with apa7</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">APA Style</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Demonstration of the apa7 package, a flextable extension package
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 13, 2025</p>
     </div>
-<!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+  </div>
+  
+    
+  </div>
+  
 
 
-
+</header>
 
 
 <section id="making-tables-in-apa-style-part-3-of-24" class="level1">
@@ -354,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">surround</span>(<span class="at">i =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">7</span>,<span class="dv">10</span>), </span>
 <span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>           <span class="at">border.top =</span> <span class="fu">fp_border_default</span>(<span class="at">color =</span> <span class="st">"gray60"</span>))</span>
 <span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains.">
+<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -366,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figcaption>
 <div aria-describedby="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-4f9c17c0{}.cl-4f8768ca{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-4f8768de{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-4f96f2f4{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-4f96f2fe{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-4f96f2ff{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:16pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-4f971716{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f971720{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f971721{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f971722{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f97172a{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.75pt solid rgba(153, 153, 153, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f97172b{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.75pt solid rgba(153, 153, 153, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f97172c{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0.75pt solid rgba(153, 153, 153, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f97172d{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0.75pt solid rgba(153, 153, 153, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f971734{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f971735{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-4f9c17c0"><thead><tr style="overflow-wrap:break-word;"><th class="cl-4f971716"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">Scale</span></p></th><th class="cl-4f971720"><p class="cl-4f96f2f4"><span class="cl-4f8768de">M</span></p></th><th class="cl-4f971720"><p class="cl-4f96f2f4"><span class="cl-4f8768de">SD</span></p></th><th class="cl-4f971720"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">Range</span></p></th><th class="cl-4f971720"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">Cronbach’s</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">α</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-4f971721"><p class="cl-4f96f2fe"><span class="cl-4f8768ca">Identity</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">total</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">score</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 86.60</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">28.00</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">28–155</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.94</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f971721"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Work</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Identity</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 41.60</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">13.30</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">16–76 </span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.88</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f97172a"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Social</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Identity</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 45.00</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">15.70</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">14–84 </span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.91</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f97172c"><p class="cl-4f96f2fe"><span class="cl-4f8768ca">Self-Directedness</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">total</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">score</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 91.20</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">26.50</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">34–151</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.92</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f971721"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Work</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Self-Directedness</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 44.90</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">13.50</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">16–76 </span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.85</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f97172a"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Social</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Self-Directedness</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 46.30</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">14.30</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">17–80 </span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.86</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f97172c"><p class="cl-4f96f2fe"><span class="cl-4f8768ca">Empathy</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">total</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">score</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">101.80</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">15.80</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">48–139</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.84</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f971721"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Work</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Empathy</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 49.90</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 8.20</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">20–72 </span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.72</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f97172a"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Social</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Empathy</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 51.90</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 8.60</span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">28–76 </span></p></td><td class="cl-4f97172b"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.77</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f97172c"><p class="cl-4f96f2fe"><span class="cl-4f8768ca">Intimacy</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">total</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">score</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">122.90</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">28.60</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">56–189</span></p></td><td class="cl-4f97172d"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.91</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f971721"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Work</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Intimacy</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 61.70</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">14.30</span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">28–94 </span></p></td><td class="cl-4f971722"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.82</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f971734"><p class="cl-4f96f2ff"><span class="cl-4f8768ca">Social</span><span class="cl-4f8768ca"> </span><span class="cl-4f8768ca">Intimacy</span></p></td><td class="cl-4f971735"><p class="cl-4f96f2f4"><span class="cl-4f8768ca"> 61.20</span></p></td><td class="cl-4f971735"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">15.40</span></p></td><td class="cl-4f971735"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">24–96 </span></p></td><td class="cl-4f971735"><p class="cl-4f96f2f4"><span class="cl-4f8768ca">.86</span></p></td></tr></tbody></table></div>
+<div class="tabwid tabwid_left"><style>.cl-62626f24{}.cl-624f7766{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-624f777a{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-625dcb72{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-625dcb7c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-625dcb7d{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:16pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-625deed6{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deed7{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deee0{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deee1{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deeea{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.75pt solid rgba(153, 153, 153, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deeeb{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.75pt solid rgba(153, 153, 153, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deeec{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0.75pt solid rgba(153, 153, 153, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deeed{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0.75pt solid rgba(153, 153, 153, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deef4{width:2.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-625deef5{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-62626f24"><thead><tr style="overflow-wrap:break-word;"><th class="cl-625deed6"><p class="cl-625dcb72"><span class="cl-624f7766">Scale</span></p></th><th class="cl-625deed7"><p class="cl-625dcb72"><span class="cl-624f777a">M</span></p></th><th class="cl-625deed7"><p class="cl-625dcb72"><span class="cl-624f777a">SD</span></p></th><th class="cl-625deed7"><p class="cl-625dcb72"><span class="cl-624f7766">Range</span></p></th><th class="cl-625deed7"><p class="cl-625dcb72"><span class="cl-624f7766">Cronbach’s</span><span class="cl-624f7766"> </span><span class="cl-624f7766">α</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-625deee0"><p class="cl-625dcb7c"><span class="cl-624f7766">Identity</span><span class="cl-624f7766"> </span><span class="cl-624f7766">total</span><span class="cl-624f7766"> </span><span class="cl-624f7766">score</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766"> 86.60</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">28.00</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">28–155</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">.94</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deee0"><p class="cl-625dcb7d"><span class="cl-624f7766">Work</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Identity</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766"> 41.60</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">13.30</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">16–76 </span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">.88</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deeea"><p class="cl-625dcb7d"><span class="cl-624f7766">Social</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Identity</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766"> 45.00</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">15.70</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">14–84 </span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">.91</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deeec"><p class="cl-625dcb7c"><span class="cl-624f7766">Self-Directedness</span><span class="cl-624f7766"> </span><span class="cl-624f7766">total</span><span class="cl-624f7766"> </span><span class="cl-624f7766">score</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766"> 91.20</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">26.50</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">34–151</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">.92</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deee0"><p class="cl-625dcb7d"><span class="cl-624f7766">Work</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Self-Directedness</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766"> 44.90</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">13.50</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">16–76 </span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">.85</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deeea"><p class="cl-625dcb7d"><span class="cl-624f7766">Social</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Self-Directedness</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766"> 46.30</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">14.30</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">17–80 </span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">.86</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deeec"><p class="cl-625dcb7c"><span class="cl-624f7766">Empathy</span><span class="cl-624f7766"> </span><span class="cl-624f7766">total</span><span class="cl-624f7766"> </span><span class="cl-624f7766">score</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">101.80</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">15.80</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">48–139</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">.84</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deee0"><p class="cl-625dcb7d"><span class="cl-624f7766">Work</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Empathy</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766"> 49.90</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766"> 8.20</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">20–72 </span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">.72</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deeea"><p class="cl-625dcb7d"><span class="cl-624f7766">Social</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Empathy</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766"> 51.90</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766"> 8.60</span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">28–76 </span></p></td><td class="cl-625deeeb"><p class="cl-625dcb72"><span class="cl-624f7766">.77</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deeec"><p class="cl-625dcb7c"><span class="cl-624f7766">Intimacy</span><span class="cl-624f7766"> </span><span class="cl-624f7766">total</span><span class="cl-624f7766"> </span><span class="cl-624f7766">score</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">122.90</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">28.60</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">56–189</span></p></td><td class="cl-625deeed"><p class="cl-625dcb72"><span class="cl-624f7766">.91</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deee0"><p class="cl-625dcb7d"><span class="cl-624f7766">Work</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Intimacy</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766"> 61.70</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">14.30</span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">28–94 </span></p></td><td class="cl-625deee1"><p class="cl-625dcb72"><span class="cl-624f7766">.82</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-625deef4"><p class="cl-625dcb7d"><span class="cl-624f7766">Social</span><span class="cl-624f7766"> </span><span class="cl-624f7766">Intimacy</span></p></td><td class="cl-625deef5"><p class="cl-625dcb72"><span class="cl-624f7766"> 61.20</span></p></td><td class="cl-625deef5"><p class="cl-625dcb72"><span class="cl-624f7766">15.40</span></p></td><td class="cl-625deef5"><p class="cl-625dcb72"><span class="cl-624f7766">24–96 </span></p></td><td class="cl-625deef5"><p class="cl-625dcb72"><span class="cl-624f7766">.86</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </figure>
@@ -377,21 +240,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-
-
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
-  author = {Schneider, W. Joel},
-  title = {Recreating {APA} {Manual} {Table} 7.3 in {R} with Apa7},
-  date = {2025-09-13},
-  url = {https://wjschne.github.io/posts/apatables/apa703.html},
-  langid = {en}
-}
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas" role="listitem">
-Schneider, W. J. (2025, September 13). Recreating APA Manual Table 7.3
-in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa703.html">https://wjschne.github.io/posts/apatables/apa703.html</a>
-</div></div></section></div></main> <!-- /main -->
+</main>
+<!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const isCodeAnnotation = (el) => {
@@ -458,7 +310,7 @@ in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/post
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/wjschne\.github\.io");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
