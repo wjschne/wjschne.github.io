@@ -54,7 +54,9 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Add `footnote`
+* Convert p-values to stars and append them to chi-square statistic with `add_star_column`
+* Add p-value note with `flextable::add_footer_lines`
+* Hanging indent with `hanging_indent`
 
 :::
 
@@ -77,6 +79,9 @@ set_flextable_defaults(theme_fun = theme_apa,
 
 ![Screenshot of the *APA Manual*'s Table 7.7](table77.png){#fig-77 width="100%"}
 
+I could have just copied the table directly, but I decided to illustrate how one might calculate percentages and chi-square tests results from the sample sizes.
+
+
 ```{r}
 #| label: tbl-77
 #| echo: fenced
@@ -85,35 +90,43 @@ set_flextable_defaults(theme_fun = theme_apa,
 #|           Celebrities (*N*&nbsp;=&nbsp;201)"
 # Make data
 d <- "
-Source                       	Do not believe	Unsure	Believe	chi   
-Media reports                	17            	140   	44    	124.75
-Family reports               	47            	106   	48    	34.06 
-Friends' reports             	42            	112   	47    	45.52 
-Caught by media              	19            	82    	100   	54.00 
-Celebrity display of behavior	12            	61    	128   	101.22" |>
+Source                       	Do not believe	Unsure	Believe   
+Media reports                	17            	140   	44
+Family reports               	47            	106   	48
+Friends' reports             	42            	112   	47
+Caught by media              	19            	82    	100
+Celebrity display of behavior	12            	61    	128" |>
   readr::read_tsv(show_col_types = FALSE)
 
 # Format data
-d_formatted <- d |> 
-  pivot_longer(-c(Source, chi), values_to = "n") |>
+d_formatted <- d |>
+  pivot_longer(-c(Source), values_to = "n") |>
   mutate(name = fct_inorder(name)) |>
-  mutate(`%` = scales::number(
-    100 * `n` / sum(`n`), 
-    accuracy = .01),
-    .by = Source) |>
+  mutate(`%` = scales::number(100 * `n` / sum(`n`), accuracy = .01),
+         .by = Source) |>
+  nest(data = -Source, .by = Source) |>
+  mutate(
+    fit = map(data, \(dd) {
+      chisq.test(dd$n)
+    }),
+    chisq = map_dbl(fit, "statistic"),
+    p = map_dbl(fit, "p.value")
+  ) |>
+  select(-fit) |>
+  unnest(data) |>
   pivot_wider_name_first(values_from = c(`n`, `%`)) |>
-  relocate(chi, .after = dplyr::last_col()) |>
-  rename(`&chi;^2^(2)` = chi) |> 
-  mutate(across(-Source, align_chr)) |> 
-  mutate(Source = hanging_indent(Source, width = 18)) 
+  relocate(chisq, .after = dplyr::last_col()) |>
+  mutate(across(-Source, align_chr)) |>
+  mutate(Source = hanging_indent(Source, width = 18)) |>
+  add_star_column(chisq, alpha = .001, merge = TRUE) |>
+  select(-p) |> 
+  rename(`&chi;^2^(2)` = chisq)
 
 # Make table
 d_formatted |> 
   apa_flextable(table_width = 1, layout = "fixed") |>
-  footnote(j = "&chi;^2^(2)",
-           value = as_paragraph_md("*p* < .001"),
-           ref_symbol = "*") |>
-  align(align = "center") |>
-  align(j = 1, align = "left") |> 
-  width(width = c(1.6, rep(c(.65,.65, .05), 3)[-9], .9))
+  width(width = c(1.6, rep(c(.65,.65, .05), 3)[-9], .9)) |> 
+  add_footer_lines(values = as_paragraph_md("^\\*^*p* < .001"))
+
+
 ```
