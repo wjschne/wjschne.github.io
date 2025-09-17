@@ -54,7 +54,7 @@ In this 24-part series, each of the tables in Chapter 7 of the *Publication Manu
 :::{.callout-note}
 # Highlights
 
-* Pre-formatting columns with [`apa_format_columns`](https://wjschne.github.io/apa7/reference/apa_format_columns.html)
+* Pre-formatting columns and turning off auto-formatting
 * Intentional use of inconsistent rounding within columns
 
 :::
@@ -85,6 +85,7 @@ For this one, the trick is to get the rounding right for the means and standard 
 
 Normally, I would respect the direction of the effect, but @fig-78 makes *t* and Cohen's *d* positive for all three rows despite the change in direction for the middle row.
 
+
 ```{r}
 #| label: tbl-78
 #| tbl-cap: Results of Curve-Fitting Analysis Examining the 
@@ -103,7 +104,7 @@ Normally, I would respect the direction of the effect, but @fig-78 makes *t* and
 #|           variance) comparing the parameter estimates between 
 #|           the two ages."
 #| echo: fenced
-set.seed(8)
+set.seed(10)
 
 # Make data
 d <- tibble::tribble(
@@ -136,9 +137,8 @@ d_formatted <- d_analysis |>
   select(-starts_with("CI")) |> 
   mutate(`t(40)` = map_dbl(t_fit, "statistic") |> 
            abs() |> 
-           signs(accuracy = .001), 
-         `*p*` = map_dbl(t_fit, "p.value") |> 
-           apa_p(min_digits = 3),
+           align_chr(accuracy = .001), 
+         p = map_dbl(t_fit, "p.value"),
          .before = Cohens_d) |> 
   select(-t_fit) |> 
   mutate(data = pmap(
@@ -167,14 +167,21 @@ d_formatted <- d_analysis |>
   select(`Logistic Parameter`, 
          contains("olds"), 
          everything()) |> 
-  mutate(`Logistic Parameter` = hanging_indent(`Logistic Parameter`)) |> 
-  mutate(across(`t(40)`:Cohens_d, align_chr))
+  mutate(`Logistic Parameter` = hanging_indent(`Logistic Parameter`)) 
 
 
 # Make table
 d_formatted |> 
-  apa_format_columns(no_format_columns = contains("olds")) |> 
-  apa_flextable(auto_format_columns = FALSE) |> 
-  align(j = 1, align = "left") 
-
+  apa_flextable(
+    no_format_columns = contains("olds"),
+    column_formats = column_formats(accuracy = .001))
 ```
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-end">
+    <li class="page-item"><a class="page-link" href="apa701.html">First</a></li>
+    <li class="page-item"><a class="page-link" href="apa707.html">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="apa709.html">Next</a></li>
+    <li class="page-item"><a class="page-link" href="apa724.html">Last</a></li>
+  </ul>
+</nav>
