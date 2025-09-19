@@ -10,7 +10,428 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Thu, 18 Sep 2025 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 19 Sep 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recreating APA Manual Table 7.9 in R with apa7</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/apatables/apa709.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="making-tables-in-apa-style-part-9-of-24" class="level1">
+<h1>Making tables in APA style (Part 9 of 24)</h1>
+<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Highlights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Use custom <code>column_formats</code></li>
+<li>Use <code>footnote</code></li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(apa7)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(flextable)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ftExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme_fun =</span> theme_apa, </span>
+<span id="cb1-6">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
+</div>
+<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.9</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/apatables/table79.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+<p>Setting up the data was harder than creating the table. Once the data were ready, I needed to set the rounding of the variables and alter the column header of the <code>F</code> column.</p>
+<p>The <a href="https://wjschne.github.io/apa7/reference/column_formats.html"><code>column_formats</code></a> function creates a modifiable copy of the default column formatters. After creating a <code>column_formats</code> object, I set the rounding accuracy of column <code>p</code> to .001 using [<code>purrr::partial</code>], which creates a copy of a function with new defaults.</p>
+<p>I also set the header of the <code>F</code> column to <code>*F* ratio</code>.</p>
+<div class="cell FigureWithNote" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." prefix="" data-tblnum="1" data-custom-style="FigureWithNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```{r}</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| label: tbl-79</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| tbl-cap: "Analyses for the Interaction of Professor </span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           Type and Timing of Response on Perceptions </span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           of Professor Traits"</span></span>
+<span id="cb2-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| apa-note: "Means with different subscripts differ at </span></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|            the *p*&amp;nbsp;=&amp;nbsp;.05 level by Duncan’s </span></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|            new multiple range test."</span></span>
+<span id="cb2-9"></span>
+<span id="cb2-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Descriptives</span></span>
+<span id="cb2-11">d_mean <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-12"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Professor trait     Semester    Type        Mean    Subscript</span></span>
+<span id="cb2-13"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Dedicated           End         Typical     4.706   b        </span></span>
+<span id="cb2-14"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Easy to understand  End         Typical     3.059   c        </span></span>
+<span id="cb2-15"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Fair                End         Typical     4.000   b        </span></span>
+<span id="cb2-16"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Manipulative        End         Typical     1.471   a        </span></span>
+<span id="cb2-17"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Insensitive         End         Typical     2.059   b        </span></span>
+<span id="cb2-18"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Dedicated           End         Effective   4.789   b        </span></span>
+<span id="cb2-19"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Easy to understand  End         Effective   4.895   a        </span></span>
+<span id="cb2-20"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Fair                End         Effective   4.263   b        </span></span>
+<span id="cb2-21"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Manipulative        End         Effective   1.632   a        </span></span>
+<span id="cb2-22"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Insensitive         End         Effective   1.526   c        </span></span>
+<span id="cb2-23"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Dedicated           Start       Typical     4.154   c        </span></span>
+<span id="cb2-24"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Easy to understand  Start       Typical     3.231   c        </span></span>
+<span id="cb2-25"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Fair                Start       Typical     3.731   c        </span></span>
+<span id="cb2-26"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Manipulative        Start       Typical     1.731   a        </span></span>
+<span id="cb2-27"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Insensitive         Start       Typical     2.538   a        </span></span>
+<span id="cb2-28"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Dedicated           Start       Effective   5.000   a        </span></span>
+<span id="cb2-29"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Easy to understand  Start       Effective   4.429   b        </span></span>
+<span id="cb2-30"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Fair                Start       Effective   4.667   a        </span></span>
+<span id="cb2-31"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Manipulative        Start       Effective   1.238   a        </span></span>
+<span id="cb2-32"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Insensitive         Start       Effective   1.143   c"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-33">    readr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_tsv</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-34">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">suppressMessages</span>()</span>
+<span id="cb2-35"></span>
+<span id="cb2-36"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Statistics</span></span>
+<span id="cb2-37">d_test <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-38"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Professor trait     F       p       eta2</span></span>
+<span id="cb2-39"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Dedicated           19.26   0.001   0.15</span></span>
+<span id="cb2-40"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Easy to understand  5.01    0.028   0.03</span></span>
+<span id="cb2-41"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Fair                5.75    0.019   0.06</span></span>
+<span id="cb2-42"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Manipulative        3.92    0.051   0.05</span></span>
+<span id="cb2-43"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Insensitive         8.12    0.006   0.06"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-44">  readr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_tsv</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-45">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">suppressMessages</span>() </span>
+<span id="cb2-46"></span>
+<span id="cb2-47"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Format data</span></span>
+<span id="cb2-48">d_formatted <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_mean <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-49">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Semester =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(</span>
+<span id="cb2-50">    Semester, </span>
+<span id="cb2-51">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" of semester</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\\\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">professor type"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-52">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Mean =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">number</span>(Mean, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">accuracy =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">001</span>),</span>
+<span id="cb2-53">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Subscript =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>, Subscript, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-54">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(Mean, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(Mean, Subscript), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-55">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(Semester, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(Semester, Type)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-56">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> Semester, </span>
+<span id="cb2-57">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_from =</span> Mean) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-58">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left_join</span>(d_test, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">join_by</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Professor trait</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>)) </span>
+<span id="cb2-59"></span>
+<span id="cb2-60"></span>
+<span id="cb2-61"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># custom formatter</span></span>
+<span id="cb2-62">my_formatter <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span>  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">column_formats</span>()</span>
+<span id="cb2-63"></span>
+<span id="cb2-64"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## change p column's accuracy to 0.001</span></span>
+<span id="cb2-65">my_formatter<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>p<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>formatter <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> my_formatter<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>p<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>formatter <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-66">  purrr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">partial</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">accuracy =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">001</span>)</span>
+<span id="cb2-67"></span>
+<span id="cb2-68"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## set F column header to "*F* ratio"</span></span>
+<span id="cb2-69">my_formatter<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">F</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span>header <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"*F* ratio"</span></span>
+<span id="cb2-70"></span>
+<span id="cb2-71"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make table</span></span>
+<span id="cb2-72"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(d_formatted, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">column_formats =</span> my_formatter) </span>
+<span id="cb2-73"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```</span></span></code></pre></div></div>
+<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." prefix="">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Analyses for the Interaction of Professor Type and Timing of Response on Perceptions of Professor Traits</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-c7759660{}.cl-c76210a4{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c76210ae{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c76210b8{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c76210b9{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-c76210ba{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;top:3.6pt;}.cl-c770ca68{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-c770ca72{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-c770eac0{width:1.664in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaca{width:0.748in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead4{width:0.871in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead5{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead6{width:0.676in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead7{width:0.486in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eade{width:0.385in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eadf{width:1.664in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eae0{width:0.748in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eae8{width:0.871in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eae9{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaea{width:0.676in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaeb{width:0.486in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaf2{width:0.385in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaf3{width:1.664in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaf4{width:0.748in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eafc{width:0.871in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eafd{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eafe{width:0.676in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eb06{width:0.486in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eb07{width:0.385in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-c7759660"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-c770eac0"><p class="cl-c770ca68"><span class="cl-c76210a4">Professor</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">trait</span></p></th><th colspan="2" class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">End</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">of</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">semester</span><br><span class="cl-c76210a4">professor</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">type</span></p></th><th rowspan="2" class="cl-c770ead5"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></th><th colspan="2" class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">Start</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">of</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">semester</span><br><span class="cl-c76210a4">professor</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">type</span></p></th><th rowspan="2" class="cl-c770ead6"><p class="cl-c770ca68"><span class="cl-c76210b8">F</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">ratio</span></p></th><th rowspan="2" class="cl-c770ead7"><p class="cl-c770ca68"><span class="cl-c76210b8">p</span></p></th><th rowspan="2" class="cl-c770eade"><p class="cl-c770ca68"><span class="cl-c76210b8">η</span><span class="cl-c76210b9">2</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">Typical</span></p></th><th class="cl-c770ead4"><p class="cl-c770ca68"><span class="cl-c76210a4">Effective</span></p></th><th class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">Typical</span></p></th><th class="cl-c770ead4"><p class="cl-c770ca68"><span class="cl-c76210a4">Effective</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Dedicated</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">4.706</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.789</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">4.154</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">5.000</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4">19.26</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.001</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.15</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Easy</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">to</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">understand</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">3.059</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.895</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">3.231</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.429</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4"> 5.01</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.028</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.03</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Fair</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">4.000</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.263</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">3.731</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.667</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4"> 5.75</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.019</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.06</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Manipulative</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">1.471</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">1.632</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">1.731</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">1.238</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4"> 3.92</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.051</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eaf3"><p class="cl-c770ca72"><span class="cl-c76210a4">Insensitive</span></p></td><td class="cl-c770eaf4"><p class="cl-c770ca68"><span class="cl-c76210a4">2.059</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eafc"><p class="cl-c770ca68"><span class="cl-c76210a4">1.526</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eafd"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eaf4"><p class="cl-c770ca68"><span class="cl-c76210a4">2.538</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eafc"><p class="cl-c770ca68"><span class="cl-c76210a4">1.143</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eafe"><p class="cl-c770ca68"><span class="cl-c76210a4"> 8.12</span></p></td><td class="cl-c770eb06"><p class="cl-c770ca68"><span class="cl-c76210a4">.006</span></p></td><td class="cl-c770eb07"><p class="cl-c770ca68"><span class="cl-c76210a4">.06</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+<div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<em>Note</em>. Means with different subscripts differ at the <em>p</em>&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test.
+</div>
+</div>
+</div>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.9 in {R} with Apa7},
+  date = {2025-09-19},
+  url = {https://wjschne.github.io/posts/apatables/apa709.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, September 19). Recreating APA Manual Table 7.9
+in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa709.html">https://wjschne.github.io/posts/apatables/apa709.html</a>
+</div></div></section></div> ]]></description>
+  <category>R</category>
+  <category>APA Style</category>
+  <guid>https://wjschne.github.io/posts/apatables/apa709.html</guid>
+  <pubDate>Fri, 19 Sep 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Recreating APA Manual Table 7.8 in R with apa7</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -1638,7 +2059,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-75" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-75" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-75-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1917,7 +2338,7 @@ font-style: inherit;">4</span>)))</span>
 <span id="cb2-42"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-75" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="A, X, Y, and B&nbsp;=&nbsp;tone, clicker, steady light, and flashing light, respectively (counterbalanced), with the constraint that A and B are drawn from one modality and X and Y from another (counterbalanced); plus sign&nbsp;(+)&nbsp;=&nbsp;shock to floor of rat chamber; minus sign&nbsp;(–)&nbsp;=&nbsp;absence of shock.">
+<div id="tbl-75" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="A, X, Y, and B&nbsp;=&nbsp;tone, clicker, steady light, and flashing light, respectively (counterbalanced), with the constraint that A and B are drawn from one modality and X and Y from another (counterbalanced); plus sign&nbsp;(+)&nbsp;=&nbsp;shock to floor of rat chamber; minus sign&nbsp;(–)&nbsp;=&nbsp;absence of shock." prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-75-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2013,7 +2434,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" data-fig-align="left" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" prefix="" data-fig-align="left" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2395,7 +2816,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3473,7 +3894,7 @@ font-style: inherit;">12</span>]))</span>
 <span id="cb2-80"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]" prefix="" data-tblnum="1">
+<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3578,7 +3999,7 @@ in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/post
 </ul>
 <hr>
 <p>Figure&nbsp;1 is a complex table, meant to illustrate the primary components of a table such as stub headings, column spanners, decked heads, table spanners, and table notes.</p>
-<div id="fig-71" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-71" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3816,7 +4237,7 @@ font-style: inherit;">arrange</span>(Wave, Grade) </span>
 <span id="cb1-43"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">flextable</span>(d_citizenship)</span></code></pre></div></div>
-<div id="tbl-71a" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1">
+<div id="tbl-71a" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3900,7 +4321,7 @@ font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"solid"</span>)) </span>
 <span id="cb2-11">ft_71</span></code></pre></div></div>
-<div id="tbl-preliminary71" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="2">
+<div id="tbl-preliminary71" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="2" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-preliminary71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3964,7 +4385,7 @@ background-color: null;
 font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.na</span>(row_title))</span></code></pre></div></div>
-<div id="tbl-preliminary72" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="3">
+<div id="tbl-preliminary72" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="3" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-preliminary72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4260,7 +4681,7 @@ font-style: inherit;">"footer"</span>)</span>
 <span id="cb4-56"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-71b" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="4">
+<div id="tbl-71b" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="4" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -13245,994 +13666,6 @@ in ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/po
   <category>ggplot2</category>
   <guid>https://wjschne.github.io/posts/point-labels-perpendicular-to-a-curve-in-ggplot2/</guid>
   <pubDate>Tue, 27 Jul 2021 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Caption on same line as axis title in ggplot2</title>
-  <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>Sometimes I want to put a plot caption in the lower right corner of the plot.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span>
-<span id="cb1-2">p <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb1-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_function</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xlim =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun =</span> dnorm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">801</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb1-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"z-scores"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Note: Mean = 0, SD = 1"</span>)</span>
-<span id="cb1-5"></span>
-<span id="cb1-6">p</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/default position-1.svg" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>However, I want the caption to be a little higher, on the same line as the x-axis title. To do so, set a a negative top margin:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.caption =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">t =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">unit =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pt"</span>)))</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/on same line-1.svg" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here is a more finished example.</p>
-<div class="cell preview-image">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggnormalviolin)</span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggtext)</span>
-<span id="cb3-3">my_font_size <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">16</span></span>
-<span id="cb3-4">my_font <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Roboto Condensed"</span></span>
-<span id="cb3-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">update_geom_defaults</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"text"</span>,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">new =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">family =</span> my_font) )</span>
-<span id="cb3-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">update_geom_defaults</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"label"</span>,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">new =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">family =</span> my_font) )</span>
-<span id="cb3-7"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">update_geom_defaults</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"richtext"</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">family =</span> my_font))</span>
-<span id="cb3-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_set</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_minimal</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> my_font_size, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_family =</span> my_font))</span>
-<span id="cb3-9"></span>
-<span id="cb3-10">d_rect <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">SS =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, </span>
-<span id="cb3-11">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">60</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">122</span>), </span>
-<span id="cb3-12">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray"</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">95</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">90</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">70</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">65</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">25</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb3-13">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">arrange</span>(<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>width)</span>
-<span id="cb3-14"></span>
-<span id="cb3-15"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(</span>
-<span id="cb3-16">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Scale =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(</span>
-<span id="cb3-17">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Fluid Reasoning"</span>,</span>
-<span id="cb3-18">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Verbal Comprehension"</span>,</span>
-<span id="cb3-19">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Visual-Spatial Processing"</span>,</span>
-<span id="cb3-20">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Working Memory"</span>,</span>
-<span id="cb3-21">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Processing Speed"</span>,</span>
-<span id="cb3-22">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population"</span>),</span>
-<span id="cb3-23">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>),</span>
-<span id="cb3-24">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">SS =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">115</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">111</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">109</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">86</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">79</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>),</span>
-<span id="cb3-25">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">rxx =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(.<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">93</span>, .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">92</span>, .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">92</span>, .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">92</span>, .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">88</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>),</span>
-<span id="cb3-26">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rep</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.4</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>), <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10.4</span>),</span>
-<span id="cb3-27">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rep</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>), .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>)</span>
-<span id="cb3-28">) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb3-29">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">true_hat =</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> (SS <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, </span>
-<span id="cb3-30">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">see =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)),</span>
-<span id="cb3-31">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Scale =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fct_inorder</span>(Scale) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fct_rev</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb3-32">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(y, SS)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb3-33">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_tile</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> d_rect, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5.8</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2.9</span>, </span>
-<span id="cb3-34">                               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> fill, </span>
-<span id="cb3-35">                               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">height =</span> width, </span>
-<span id="cb3-36">                               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> SS)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb3-37">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_normalviolin</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mu =</span> true_hat, </span>
-<span id="cb3-38">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sigma =</span> see, </span>
-<span id="cb3-39">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> width,</span>
-<span id="cb3-40">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> alpha), </span>
-<span id="cb3-41">                                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">face_left =</span> F, </span>
-<span id="cb3-42">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"white"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb3-43">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_richtext</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(</span>
-<span id="cb3-44">    Scale <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population"</span>, </span>
-<span id="cb3-45">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population Mean"</span>, </span>
-<span id="cb3-46">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;span style='font-size:8.5pt;color:white'&gt;("</span>, </span>
-<span id="cb3-47">           <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pnorm</span>(SS, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>),<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>),</span>
-<span id="cb3-48">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">") &lt;/span&gt;"</span>,</span>
-<span id="cb3-49">           SS, </span>
-<span id="cb3-50">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;span style='font-size:9pt;color:#666666'&gt; ("</span>, </span>
-<span id="cb3-51">           <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pnorm</span>(SS, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>),<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>),</span>
-<span id="cb3-52">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">")&lt;/span&gt;"</span>))), </span>
-<span id="cb3-53">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">vjust =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.2</span>, </span>
-<span id="cb3-54">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lineheight =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>, </span>
-<span id="cb3-55">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>, </span>
-<span id="cb3-56">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray20"</span>,</span>
-<span id="cb3-57">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label.color =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>,</span>
-<span id="cb3-58">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label.padding =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mm"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-59">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> true_hat, </span>
-<span id="cb3-60">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(Scale <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population"</span>, </span>
-<span id="cb3-61">                               <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>, </span>
-<span id="cb3-62">                               <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.character</span>(Scale))), </span>
-<span id="cb3-63">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.5</span>, </span>
-<span id="cb3-64">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray15"</span>,</span>
-<span id="cb3-65">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lineheight =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-66">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_linerange</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymin =</span> true_hat <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.96</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> see,</span>
-<span id="cb3-67">                      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymax =</span> true_hat <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.96</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> see), </span>
-<span id="cb3-68">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linewidth =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-69">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_pointrange</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymin =</span> true_hat <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> see,</span>
-<span id="cb3-70">                      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymax =</span> true_hat <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> see), </span>
-<span id="cb3-71">                  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.2</span>, </span>
-<span id="cb3-72">                  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fatten =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.5</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-73">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> x, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> y, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> label), </span>
-<span id="cb3-74">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(</span>
-<span id="cb3-75">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">49.5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">65</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">75</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">85</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">115</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">125</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">135</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">150.5</span>), </span>
-<span id="cb3-76">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5.5</span>, </span>
-<span id="cb3-77">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Extremely</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">Low Range"</span>, </span>
-<span id="cb3-78">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Very</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">Low"</span>, </span>
-<span id="cb3-79">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Low</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">Range"</span>, </span>
-<span id="cb3-80">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Low</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">Average"</span>, </span>
-<span id="cb3-81">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Average</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">Range"</span>, </span>
-<span id="cb3-82">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"High</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">Average"</span>, </span>
-<span id="cb3-83">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"High</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">Range"</span>, </span>
-<span id="cb3-84">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Very</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">High"</span>, </span>
-<span id="cb3-85">                                  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Extremely</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">High Range"</span>)), </span>
-<span id="cb3-86">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lineheight =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4.25</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-87">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(</span>
-<span id="cb3-88">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Standard Scores &lt;span style='font-size:11.7pt;color:#656565'&gt;&lt;br&gt;</span></span>
-<span id="cb3-89"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    (and Percentile Ranks)&lt;/span&gt;"</span>, </span>
-<span id="cb3-90">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">160</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>), </span>
-<span id="cb3-91">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">37</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">163</span>),</span>
-<span id="cb3-92">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> \(x) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(x,</span>
-<span id="cb3-93">                         <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;br&gt;&lt;span style='font-size:10pt;color:#656565'&gt;("</span>, </span>
-<span id="cb3-94">                         <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pnorm</span>(x,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb3-95">                           WJSmisc<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">proportion2percentile</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">digits =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb3-96">                           <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_trim</span>(), </span>
-<span id="cb3-97">                         <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">")&lt;/span&gt;"</span>),</span>
-<span id="cb3-98">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">expansion</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-99">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_continuous</span>(<span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">expansion</span>(), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-100">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_alpha_identity</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-101">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_identity</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-102">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">coord_flip</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">clip =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"off"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb3-103">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_markdown</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, </span>
-<span id="cb3-104">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">t =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.25</span>, </span>
-<span id="cb3-105">                                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">l =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,</span>
-<span id="cb3-106">                                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">unit =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mm"</span>)),</span>
-<span id="cb3-107">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_markdown</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray20"</span>),</span>
-<span id="cb3-108">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.caption =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_markdown</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, </span>
-<span id="cb3-109">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, </span>
-<span id="cb3-110">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">t =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10.25</span>, </span>
-<span id="cb3-111">                                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">l =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, </span>
-<span id="cb3-112">                                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">unit =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mm"</span>), </span>
-<span id="cb3-113">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray40"</span>),</span>
-<span id="cb3-114">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">025</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-115">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(</span>
-<span id="cb3-116">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Display of Cognitive Test Scores"</span>,</span>
-<span id="cb3-117">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"**Notes:** The white normal curves represent the expected </span></span>
-<span id="cb3-118"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">       true&lt;br&gt;score distributions for each observed score. The black lines&lt;br&gt;</span></span>
-<span id="cb3-119"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">       underneath span the 68% and 95% confidence intervals."</span>)</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/index_files/figure-html/display scores-1.svg" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-
-
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2021,
-  author = {Schneider, W. Joel},
-  title = {Caption on Same Line as Axis Title in Ggplot2},
-  date = {2021-07-21},
-  url = {https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/},
-  langid = {en}
-}
-</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2021" class="csl-entry quarto-appendix-citeas">
-Schneider, W. J. (2021, July 21). Caption on same line as axis title in
-ggplot2. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/">https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/</a>
-</div></div></section></div> ]]></description>
-  <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/caption-on-same-line-as-axis-title-in-ggplot2/</guid>
-  <pubDate>Wed, 21 Jul 2021 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
