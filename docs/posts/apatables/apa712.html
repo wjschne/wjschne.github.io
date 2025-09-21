@@ -6,10 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="W. Joel Schneider">
 <meta name="dcterms.date" content="2025-09-22">
-<meta name="description" content="Demonstration of the apa7 package, a flextable extension package">
+<meta name="description" content="W. Joel Schneider is a professor at Temple University.">
 
-<title>Recreating APA Manual Table 7.12 in R with apa7</title>
+<title>W. Joel Schneider</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,73 +61,209 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="apa712_files/libs/clipboard/clipboard.min.js"></script>
-<script src="apa712_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="apa712_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="apa712_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="apa712_files/libs/quarto-html/popper.min.js"></script>
-<script src="apa712_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="apa712_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="apa712_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="apa712_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="apa712_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="apa712_files/libs/bootstrap/bootstrap-17486d071faef4716b26c8496adbe13a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="apa712_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//images/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2ab1fe37bbf1d070ddeb54e90363637c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
 
-<script src="apa712_files/libs/tabwid-1.1.3/tabwid.js"></script>
+<script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
 
 
 
+<meta property="og:title" content="W. Joel Schneider">
+<meta property="og:description" content="Demonstration of the apa7 package, a flextable extension package">
+<meta property="og:image" content="https://wjschne.github.io/posts/apatables/data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==">
+<meta property="og:site_name" content="W. Joel Schneider">
+<meta name="citation_title" content="Recreating APA Manual Table 7.12 in R with apa7">
+<meta name="citation_author" content="W. Joel Schneider">
+<meta name="citation_publication_date" content="2025-09-22">
+<meta name="citation_cover_date" content="2025-09-22">
+<meta name="citation_year" content="2025">
+<meta name="citation_online_date" content="2025-09-22">
+<meta name="citation_fulltext_html_url" content="https://wjschne.github.io/posts/apatables/apa712.html">
+<meta name="citation_language" content="en">
+<meta name="citation_journal_title" content="Schneirographs">
 </head>
 
-<body class="quarto-light">
+<body class="floating nav-fixed quarto-light">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
-<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
-  <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">W. Joel Schneider</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">R Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../assessingpsyche.html"> 
+<span class="menu-text">Assessment Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../presentations.html"> 
+<span class="menu-text">Presentations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../tutorials.html"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="mailto:schneider@temple.edu" rel="noreferrer noopener" target="_blank"> <i class="bi bi-envelope" role="img" aria-label="Email">
+</i> 
+<span class="menu-text">Email</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/wjschne" rel="noreferrer noopener" target="_blank"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../blog.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Recreating APA Manual Table 7.12 in R with apa7</h1>
+                  <div>
+        <div class="description">
+          Demonstration of the apa7 package, a flextable extension package
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">APA Style</div>
+              </div>
+                  </div>
+  </div>
+    
+  <div class="quarto-title-meta-author">
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-heading">Affiliation</div>
+    
+      <div class="quarto-title-meta-contents">
+      <p class="author"><a href="https://wjschne.github.io">W. Joel Schneider</a> <a href="https://orcid.org/0000-0002-8393-5316" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+    </div>
+    <div class="quarto-title-meta-contents">
+          <p class="affiliation">
+              <a href="https://education.temple.edu/about/faculty-staff/w-joel-schneider-tuh42402">
+              Temple University
+              </a>
+            </p>
+        </div>
+    </div>
+
+  <div class="quarto-title-meta">
+
+        
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">September 22, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sections</h2>
    
   <ul>
   <li><a href="#making-tables-in-apa-style-part-12-of-24" id="toc-making-tables-in-apa-style-part-12-of-24" class="nav-link active" data-scroll-target="#making-tables-in-apa-style-part-12-of-24">Making tables in APA style (Part 12 of 24)</a></li>
   </ul>
 </nav>
-</div>
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-</div>
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Recreating APA Manual Table 7.12 in R with apa7</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">R</div>
-    <div class="quarto-category">APA Style</div>
-  </div>
-  </div>
-
-<div>
-  <div class="description">
-    Demonstration of the apa7 package, a flextable extension package
-  </div>
-</div>
-
-
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">September 22, 2025</p>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
-  </div>
-  
-    
-  </div>
-  
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
-</header>
+
 
 
 <section id="making-tables-in-apa-style-part-12-of-24" class="level1">
@@ -144,7 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <ul>
 <li>Selective indentation with <code>flextable::padding</code></li>
-<li>Decimal alignment with significance stars with <code>star_balance</code></li>
+<li>Aligned significance stars with <code>add_star_column</code></li>
 </ul>
 </div>
 </div>
@@ -156,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set_flextable_defaults</span>(<span class="at">theme_fun =</span> theme_apa, </span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">font.family =</span> <span class="st">"Times New Roman"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -243,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apa_flextable</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">padding</span>(<span class="at">i =</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">j =</span> <span class="dv">1</span>, <span class="at">padding.left =</span> <span class="dv">20</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">width</span>(<span class="at">width =</span> <span class="fu">c</span>(<span class="fl">1.65</span>, .<span class="dv">8</span>, .<span class="dv">8</span>, .<span class="dv">05</span>, .<span class="dv">8</span>, .<span class="dv">8</span>, .<span class="dv">9</span>, .<span class="dv">7</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001">
+<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001" data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -255,7 +392,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figcaption>
 <div aria-describedby="tbl-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-de3b4b94{}.cl-de24fcc2{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-de24fce0{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-de24fce1{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-de24fce2{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-de363154{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-de363168{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-de363169{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:20pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-de365594{width:1.65in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de36559e{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655a8{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655a9{width:0.9in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655aa{width:0.7in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655ab{width:1.65in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655b2{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655b3{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655b4{width:0.9in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655bc{width:0.7in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655c6{width:1.65in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655c7{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655d0{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655d1{width:0.9in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-de3655d2{width:0.7in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-de3b4b94"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-de365594"><p class="cl-de363154"><span class="cl-de24fcc2">Measure</span></p></th><th colspan="2" class="cl-de36559e"><p class="cl-de363154"><span class="cl-de24fcc2">Urban</span></p></th><th rowspan="2" class="cl-de3655a8"><p class="cl-de363154"><span class="cl-de24fce0"></span></p></th><th colspan="2" class="cl-de36559e"><p class="cl-de363154"><span class="cl-de24fcc2">Rural</span></p></th><th rowspan="2" class="cl-de3655a9"><p class="cl-de363154"><span class="cl-de24fce1">F</span><span class="cl-de24fcc2">(1,294)</span></p></th><th rowspan="2" class="cl-de3655aa"><p class="cl-de363154"><span class="cl-de24fce1">η</span><span class="cl-de24fce2">2</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-de36559e"><p class="cl-de363154"><span class="cl-de24fce1">M</span></p></th><th class="cl-de36559e"><p class="cl-de363154"><span class="cl-de24fce1">SD</span></p></th><th class="cl-de36559e"><p class="cl-de363154"><span class="cl-de24fce1">M</span></p></th><th class="cl-de36559e"><p class="cl-de363154"><span class="cl-de24fce1">SD</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-de3655ab"><p class="cl-de363168"><span class="cl-de24fcc2">Self-esteem</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">2.90</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">0.46</span></p></td><td class="cl-de3655b3"><p class="cl-de363154"><span class="cl-de24fce0"></span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">3.38</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">0.33</span></p></td><td class="cl-de3655b4"><p class="cl-de363154"><span class="cl-de24fce2">   </span><span class="cl-de24fcc2">109.38</span><span class="cl-de24fce2">***</span></p></td><td class="cl-de3655bc"><p class="cl-de363154"><span class="cl-de24fcc2">.27</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-de3655ab"><p class="cl-de363168"><span class="cl-de24fcc2">Social</span><span class="cl-de24fcc2"> </span><span class="cl-de24fcc2">support</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">4.20</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">1.55</span></p></td><td class="cl-de3655b3"><p class="cl-de363154"><span class="cl-de24fce0"></span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">5.61</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">1.13</span></p></td><td class="cl-de3655b4"><p class="cl-de363154"><span class="cl-de24fce2">   </span><span class="cl-de24fcc2"> 79.88</span><span class="cl-de24fce2">***</span></p></td><td class="cl-de3655bc"><p class="cl-de363154"><span class="cl-de24fcc2">.21</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-de3655ab"><p class="cl-de363168"><span class="cl-de24fcc2">Cognitive</span><span class="cl-de24fcc2"> </span><span class="cl-de24fcc2">appraisals</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2"></span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2"></span></p></td><td class="cl-de3655b3"><p class="cl-de363154"><span class="cl-de24fce0"></span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2"></span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2"></span></p></td><td class="cl-de3655b4"><p class="cl-de363154"><span class="cl-de24fcc2"></span></p></td><td class="cl-de3655bc"><p class="cl-de363154"><span class="cl-de24fcc2"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-de3655ab"><p class="cl-de363169"><span class="cl-de24fcc2">Threat</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">2.71</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">0.88</span></p></td><td class="cl-de3655b3"><p class="cl-de363154"><span class="cl-de24fce0"></span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">2.09</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">0.95</span></p></td><td class="cl-de3655b4"><p class="cl-de363154"><span class="cl-de24fce2">   </span><span class="cl-de24fcc2"> 34.57</span><span class="cl-de24fce2">***</span></p></td><td class="cl-de3655bc"><p class="cl-de363154"><span class="cl-de24fcc2">.11</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-de3655ab"><p class="cl-de363169"><span class="cl-de24fcc2">Challenge</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">2.51</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">0.93</span></p></td><td class="cl-de3655b3"><p class="cl-de363154"><span class="cl-de24fce0"></span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">2.82</span></p></td><td class="cl-de3655b2"><p class="cl-de363154"><span class="cl-de24fcc2">1.13</span></p></td><td class="cl-de3655b4"><p class="cl-de363154"><span class="cl-de24fce2"> </span><span class="cl-de24fcc2">  6.61</span><span class="cl-de24fce2">*</span></p></td><td class="cl-de3655bc"><p class="cl-de363154"><span class="cl-de24fcc2">.02</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-de3655c6"><p class="cl-de363169"><span class="cl-de24fcc2">Self-efficacy</span></p></td><td class="cl-de3655c7"><p class="cl-de363154"><span class="cl-de24fcc2">2.66</span></p></td><td class="cl-de3655c7"><p class="cl-de363154"><span class="cl-de24fcc2">0.79</span></p></td><td class="cl-de3655d0"><p class="cl-de363154"><span class="cl-de24fce0"></span></p></td><td class="cl-de3655c7"><p class="cl-de363154"><span class="cl-de24fcc2">3.50</span></p></td><td class="cl-de3655c7"><p class="cl-de363154"><span class="cl-de24fcc2">0.89</span></p></td><td class="cl-de3655d1"><p class="cl-de363154"><span class="cl-de24fce2">   </span><span class="cl-de24fcc2"> 72.78</span><span class="cl-de24fce2">***</span></p></td><td class="cl-de3655d2"><p class="cl-de363154"><span class="cl-de24fcc2">.20</span></p></td></tr></tbody></table></div>
+<div class="tabwid tabwid_left"><style>.cl-3e8a43d6{}.cl-3e3589cc{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3e3589e0{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3e3589ea{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3e3589eb{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-3e85a858{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-3e85a862{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-3e85a863{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:20pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-3e85c93c{width:1.65in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c946{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c947{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c950{width:0.9in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c951{width:0.7in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c95a{width:1.65in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c95b{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c95c{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c964{width:0.9in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c965{width:0.7in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c966{width:1.65in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c967{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c96e{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c96f{width:0.9in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e85c970{width:0.7in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-3e8a43d6"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-3e85c93c"><p class="cl-3e85a858"><span class="cl-3e3589cc">Measure</span></p></th><th colspan="2" class="cl-3e85c946"><p class="cl-3e85a858"><span class="cl-3e3589cc">Urban</span></p></th><th rowspan="2" class="cl-3e85c947"><p class="cl-3e85a858"><span class="cl-3e3589e0"></span></p></th><th colspan="2" class="cl-3e85c946"><p class="cl-3e85a858"><span class="cl-3e3589cc">Rural</span></p></th><th rowspan="2" class="cl-3e85c950"><p class="cl-3e85a858"><span class="cl-3e3589ea">F</span><span class="cl-3e3589cc">(1,294)</span></p></th><th rowspan="2" class="cl-3e85c951"><p class="cl-3e85a858"><span class="cl-3e3589ea">η</span><span class="cl-3e3589eb">2</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-3e85c946"><p class="cl-3e85a858"><span class="cl-3e3589ea">M</span></p></th><th class="cl-3e85c946"><p class="cl-3e85a858"><span class="cl-3e3589ea">SD</span></p></th><th class="cl-3e85c946"><p class="cl-3e85a858"><span class="cl-3e3589ea">M</span></p></th><th class="cl-3e85c946"><p class="cl-3e85a858"><span class="cl-3e3589ea">SD</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-3e85c95a"><p class="cl-3e85a862"><span class="cl-3e3589cc">Self-esteem</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">2.90</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">0.46</span></p></td><td class="cl-3e85c95c"><p class="cl-3e85a858"><span class="cl-3e3589e0"></span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">3.38</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">0.33</span></p></td><td class="cl-3e85c964"><p class="cl-3e85a858"><span class="cl-3e3589eb">   </span><span class="cl-3e3589cc">109.38</span><span class="cl-3e3589eb">***</span></p></td><td class="cl-3e85c965"><p class="cl-3e85a858"><span class="cl-3e3589cc">.27</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3e85c95a"><p class="cl-3e85a862"><span class="cl-3e3589cc">Social</span><span class="cl-3e3589cc"> </span><span class="cl-3e3589cc">support</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">4.20</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">1.55</span></p></td><td class="cl-3e85c95c"><p class="cl-3e85a858"><span class="cl-3e3589e0"></span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">5.61</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">1.13</span></p></td><td class="cl-3e85c964"><p class="cl-3e85a858"><span class="cl-3e3589eb">   </span><span class="cl-3e3589cc"> 79.88</span><span class="cl-3e3589eb">***</span></p></td><td class="cl-3e85c965"><p class="cl-3e85a858"><span class="cl-3e3589cc">.21</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3e85c95a"><p class="cl-3e85a862"><span class="cl-3e3589cc">Cognitive</span><span class="cl-3e3589cc"> </span><span class="cl-3e3589cc">appraisals</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc"></span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc"></span></p></td><td class="cl-3e85c95c"><p class="cl-3e85a858"><span class="cl-3e3589e0"></span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc"></span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc"></span></p></td><td class="cl-3e85c964"><p class="cl-3e85a858"><span class="cl-3e3589cc"></span></p></td><td class="cl-3e85c965"><p class="cl-3e85a858"><span class="cl-3e3589cc"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3e85c95a"><p class="cl-3e85a863"><span class="cl-3e3589cc">Threat</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">2.71</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">0.88</span></p></td><td class="cl-3e85c95c"><p class="cl-3e85a858"><span class="cl-3e3589e0"></span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">2.09</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">0.95</span></p></td><td class="cl-3e85c964"><p class="cl-3e85a858"><span class="cl-3e3589eb">   </span><span class="cl-3e3589cc"> 34.57</span><span class="cl-3e3589eb">***</span></p></td><td class="cl-3e85c965"><p class="cl-3e85a858"><span class="cl-3e3589cc">.11</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3e85c95a"><p class="cl-3e85a863"><span class="cl-3e3589cc">Challenge</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">2.51</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">0.93</span></p></td><td class="cl-3e85c95c"><p class="cl-3e85a858"><span class="cl-3e3589e0"></span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">2.82</span></p></td><td class="cl-3e85c95b"><p class="cl-3e85a858"><span class="cl-3e3589cc">1.13</span></p></td><td class="cl-3e85c964"><p class="cl-3e85a858"><span class="cl-3e3589eb"> </span><span class="cl-3e3589cc">  6.61</span><span class="cl-3e3589eb">*</span></p></td><td class="cl-3e85c965"><p class="cl-3e85a858"><span class="cl-3e3589cc">.02</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3e85c966"><p class="cl-3e85a863"><span class="cl-3e3589cc">Self-efficacy</span></p></td><td class="cl-3e85c967"><p class="cl-3e85a858"><span class="cl-3e3589cc">2.66</span></p></td><td class="cl-3e85c967"><p class="cl-3e85a858"><span class="cl-3e3589cc">0.79</span></p></td><td class="cl-3e85c96e"><p class="cl-3e85a858"><span class="cl-3e3589e0"></span></p></td><td class="cl-3e85c967"><p class="cl-3e85a858"><span class="cl-3e3589cc">3.50</span></p></td><td class="cl-3e85c967"><p class="cl-3e85a858"><span class="cl-3e3589cc">0.89</span></p></td><td class="cl-3e85c96f"><p class="cl-3e85a858"><span class="cl-3e3589eb">   </span><span class="cl-3e3589cc"> 72.78</span><span class="cl-3e3589eb">***</span></p></td><td class="cl-3e85c970"><p class="cl-3e85a858"><span class="cl-3e3589cc">.20</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </figure>
@@ -282,10 +419,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
 </ul>
 </nav>
+
+
 </section>
 
-</main>
-<!-- /main column -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.12 in {R} with Apa7},
+  date = {2025-09-22},
+  url = {https://wjschne.github.io/posts/apatables/apa712.html},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas" role="listitem">
+Schneider, W. J. (2025, September 22). Recreating APA Manual Table 7.12
+in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa712.html">https://wjschne.github.io/posts/apatables/apa712.html</a>
+</div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const isCodeAnnotation = (el) => {
@@ -352,7 +500,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/wjschne\.github\.io");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
