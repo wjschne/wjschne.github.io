@@ -10,7 +10,639 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Mon, 22 Sep 2025 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 23 Sep 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recreating APA Manual Table 7.13 in R with apa7</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/apatables/apa713.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="making-tables-in-apa-style-part-13-of-24" class="level1">
+<h1>Making tables in APA style (Part 13 of 24)</h1>
+<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Highlights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Create column spanners with <a href="https://wjschne.github.io/apa7/reference/column_spanner_label.html"><code>column_spanner_label</code></a></li>
+<li>Using <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a> with <code>merge = TRUE</code> to create a starred column.</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(apa7)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(flextable)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ftExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme_fun =</span> theme_apa, </span>
+<span id="cb1-6">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
+</div>
+<div id="fig-713" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.13</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/apatables/table713.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+<p>Copying and pasting data into a table is not what happens in data analyses. To make things more realistic, I simulated data based on the means and standard deviations, and ran ANOVAs on the simulated data. I extracted the descriptives and the test statistics and formatted the resulting table.</p>
+<p>I used the <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a> function to apply stars to the <code>F ratio</code> column from the <code>p</code> column. By default, <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a> adds a special column to the right of the selected column. The selected column is then right-aligned, and the star column is left-aligned so that the column appears to be merged. Sometimes this looks great, sometimes it does not. In this case, I opted to set <code>merge = TRUE</code> in the <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a>, which actually merges the selected column and its star column, then applies the <a href="https://wjschne.github.io/apa7/reference/star_balance.html"><code>star_balance</code></a> function, which pads the column with blanks spaces on the left so that the columns center properly.</p>
+<div class="cell FigureWithNote" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]" prefix="" data-tblnum="1" data-custom-style="FigureWithNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)</span>
+<span id="cb2-2"></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make data</span></span>
+<span id="cb2-4">d_simulated <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-5"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">variable                Time    Group   M       SD  </span></span>
+<span id="cb2-6"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Psychological strain    1.00    SMT     0.24    0.30</span></span>
+<span id="cb2-7"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Psychological strain    2.00    SMT     0.16    0.27</span></span>
+<span id="cb2-8"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Psychological strain    3.00    SMT     0.16    0.26</span></span>
+<span id="cb2-9"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Psychological strain    1.00    Control 0.22    0.29</span></span>
+<span id="cb2-10"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Psychological strain    2.00    Control 0.27    0.32</span></span>
+<span id="cb2-11"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Psychological strain    3.00    Control 0.26    0.31</span></span>
+<span id="cb2-12"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Emotional exhaustion    1.00    SMT     2.82    1.47</span></span>
+<span id="cb2-13"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Emotional exhaustion    2.00    SMT     2.55    1.31</span></span>
+<span id="cb2-14"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Emotional exhaustion    3.00    SMT     2.36    1.39</span></span>
+<span id="cb2-15"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Emotional exhaustion    1.00    Control 2.50    1.25</span></span>
+<span id="cb2-16"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Emotional exhaustion    2.00    Control 2.47    1.28</span></span>
+<span id="cb2-17"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Emotional exhaustion    3.00    Control 2.43    1.16</span></span>
+<span id="cb2-18"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Depersonalization       1.00    SMT     1.20    1.09</span></span>
+<span id="cb2-19"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Depersonalization       2.00    SMT     1.13    1.07</span></span>
+<span id="cb2-20"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Depersonalization       3.00    SMT     1.00    0.93</span></span>
+<span id="cb2-21"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Depersonalization       1.00    Control 1.12    1.05</span></span>
+<span id="cb2-22"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Depersonalization       2.00    Control 1.25    1.16</span></span>
+<span id="cb2-23"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Depersonalization       3.00    Control 1.24    0.93"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-24">    readr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_tsv</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-25">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">suppressMessages</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-26">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Group <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"SMT"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">75</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">78</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-27">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pmap</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mean =</span> M, </span>
+<span id="cb2-28">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd =</span> SD,</span>
+<span id="cb2-29">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> n),</span>
+<span id="cb2-30">                     rnorm)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-31">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(M, SD, n)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-32">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unnest</span>(x) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-33">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">row_number</span>()), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(variable, Time)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-34">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nest</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>variable) </span>
+<span id="cb2-35"></span>
+<span id="cb2-36"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Analyze data</span></span>
+<span id="cb2-37">d_analysis <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_simulated <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-38">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">descriptives =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(data, \(d) {</span>
+<span id="cb2-39">    d <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-40">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">M =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(x),</span>
+<span id="cb2-41">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">SD =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(x), </span>
+<span id="cb2-42">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(Group, Time)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-43">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider_name_first</span>(</span>
+<span id="cb2-44">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> Group,</span>
+<span id="cb2-45">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_from =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(M, SD)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-46">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Time =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Time"</span>, Time))</span>
+<span id="cb2-47">  }),</span>
+<span id="cb2-48">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fit =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(data, </span>
+<span id="cb2-49">                   \(d) {</span>
+<span id="cb2-50">                     <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aov</span>(x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> Group <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> Time <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Error</span>(id), </span>
+<span id="cb2-51">                         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb2-52">                     }),</span>
+<span id="cb2-53">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">eta =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(fit, effectsize<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>eta_squared) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-54">           <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(\(d) dplyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(</span>
+<span id="cb2-55">             d, Parameter, Eta2_partial) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-56">                 <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_tibble</span>()),</span>
+<span id="cb2-57">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mp =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(fit, parameters<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>model_parameters) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-58">           <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(\(d) dplyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(</span>
+<span id="cb2-59">             d, Group, Parameter, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">F</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>, df, p) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-60">                 <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_tibble</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-61">                 <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">df2 =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(</span>
+<span id="cb2-62">                   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Parameter <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Residuals"</span>, df, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)), </span>
+<span id="cb2-63">                        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> Group) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-64">                 dplyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(Parameter <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Residuals"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-65">                 <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(df, df2), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">", "</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-66">           dplyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Group)),</span>
+<span id="cb2-67">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Ftest =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map2</span>(mp, eta, \(m, e) {</span>
+<span id="cb2-68">           <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left_join</span>(m, e, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">join_by</span>(Parameter)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-69">             <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Parameter =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(</span>
+<span id="cb2-70">               Parameter,</span>
+<span id="cb2-71">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">levels =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Group"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Time"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Group:Time"</span>),</span>
+<span id="cb2-72">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"G"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"T"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"G \u00D7 T"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-73">             <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rename</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Effect =</span> Parameter)</span>
+<span id="cb2-74">         })</span>
+<span id="cb2-75">) </span>
+<span id="cb2-76"></span>
+<span id="cb2-77"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Format data</span></span>
+<span id="cb2-78">d_formatted <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_analysis <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-79">  dplyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(variable, descriptives, Ftest) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-80">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unnest</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(descriptives, Ftest)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-81">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rename</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Variable =</span> Time) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-82">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">F</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">align_chr</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">F</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-83">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_star_column</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">F</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">merge =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-84">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rename</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">*F* ratio</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">F</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-85">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>p) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-86">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">column_spanner_label</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ANOVA"</span>, Effect<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>Eta2_partial)</span>
+<span id="cb2-87"></span>
+<span id="cb2-88"></span>
+<span id="cb2-89"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make table</span></span>
+<span id="cb2-90">d_formatted <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-91">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_column =</span> variable, </span>
+<span id="cb2-92">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>) </span></code></pre></div></div>
+<div id="tbl-713" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Means, Standard Deviations, and Two-Way ANOVA for Study Variables</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-155f556c{}.cl-154a33e4{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-154a33f8{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-154a3402{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-154a3403{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-155969b8{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-155969c2{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-155969c3{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:20pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-15598d6c{width:1.299in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d6d{width:0.579in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d76{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d77{width:0.745in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d78{width:0.819in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d80{width:0.759in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d81{width:0.46in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d82{width:1.299in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d83{width:0.579in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d8a{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d8b{width:0.745in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d94{width:0.819in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d95{width:0.759in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d96{width:0.46in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d97{width:0.579in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d9e{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598d9f{width:0.745in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598da0{width:0.819in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598da8{width:0.759in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598da9{width:0.46in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598db2{width:1.299in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598db3{width:0.579in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598db4{width:0.745in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598db5{width:0.819in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dbc{width:0.759in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dbd{width:0.46in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dc6{width:1.299in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dc7{width:0.579in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dd0{width:0.745in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dd1{width:0.819in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dd2{width:0.759in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dd3{width:0.46in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598dda{width:1.299in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598ddb{width:0.579in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598ddc{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598ddd{width:0.745in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598de4{width:0.819in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598de5{width:0.759in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-15598de6{width:0.46in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-155f556c"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-15598d6c"><p class="cl-155969b8"><span class="cl-154a33e4">Variable</span></p></th><th colspan="2" class="cl-15598d6d"><p class="cl-155969b8"><span class="cl-154a33e4">SMT</span></p></th><th rowspan="2" class="cl-15598d76"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></th><th colspan="2" class="cl-15598d6d"><p class="cl-155969b8"><span class="cl-154a33e4">Control</span></p></th><th rowspan="2" class="cl-15598d76"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></th><th colspan="4" class="cl-15598d77"><p class="cl-155969b8"><span class="cl-154a33e4">ANOVA</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-15598d6d"><p class="cl-155969b8"><span class="cl-154a3402">M</span></p></th><th class="cl-15598d6d"><p class="cl-155969b8"><span class="cl-154a3402">SD</span></p></th><th class="cl-15598d6d"><p class="cl-155969b8"><span class="cl-154a3402">M</span></p></th><th class="cl-15598d6d"><p class="cl-155969b8"><span class="cl-154a3402">SD</span></p></th><th class="cl-15598d77"><p class="cl-155969b8"><span class="cl-154a33e4">Effect</span></p></th><th class="cl-15598d78"><p class="cl-155969b8"><span class="cl-154a3402">F</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">ratio</span></p></th><th class="cl-15598d80"><p class="cl-155969b8"><span class="cl-154a3402">df</span></p></th><th class="cl-15598d81"><p class="cl-155969b8"><span class="cl-154a3402">η</span><span class="cl-154a3403">2</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="11" class="cl-15598d82"><p class="cl-155969c2"><span class="cl-154a33e4">Psychological</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">strain</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598d82"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">1</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.23</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.29</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.20</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.29</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d9f"><p class="cl-155969b8"><span class="cl-154a33e4">G</span></p></td><td class="cl-15598da0"><p class="cl-155969b8"><span class="cl-154a3403">  </span><span class="cl-154a33e4">8.26</span><span class="cl-154a3403">**</span></p></td><td class="cl-15598da8"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">151</span></p></td><td class="cl-15598da9"><p class="cl-155969b8"><span class="cl-154a33e4">.05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598d82"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">2</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.15</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.27</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.27</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.31</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d9f"><p class="cl-155969b8"><span class="cl-154a33e4">T</span></p></td><td class="cl-15598da0"><p class="cl-155969b8"><span class="cl-154a33e4">0.26</span></p></td><td class="cl-15598da8"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">304</span></p></td><td class="cl-15598da9"><p class="cl-155969b8"><span class="cl-154a33e4">.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598db2"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">3</span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">0.14</span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">0.25</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">0.25</span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">0.32</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598db4"><p class="cl-155969b8"><span class="cl-154a33e4">G</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">×</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">T</span></p></td><td class="cl-15598db5"><p class="cl-155969b8"><span class="cl-154a3403"> </span><span class="cl-154a33e4">4.63</span><span class="cl-154a3403">*</span></p></td><td class="cl-15598dbc"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">304</span></p></td><td class="cl-15598dbd"><p class="cl-155969b8"><span class="cl-154a33e4">.02</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="11" class="cl-15598dc6"><p class="cl-155969c2"><span class="cl-154a33e4">Emotional</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">exhaustion</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598d82"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">1</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">2.68</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.32</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">2.62</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.18</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d9f"><p class="cl-155969b8"><span class="cl-154a33e4">G</span></p></td><td class="cl-15598da0"><p class="cl-155969b8"><span class="cl-154a33e4">0.00</span></p></td><td class="cl-15598da8"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">151</span></p></td><td class="cl-15598da9"><p class="cl-155969b8"><span class="cl-154a33e4">.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598d82"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">2</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">2.59</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.27</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">2.40</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.36</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d9f"><p class="cl-155969b8"><span class="cl-154a33e4">T</span></p></td><td class="cl-15598da0"><p class="cl-155969b8"><span class="cl-154a3403"> </span><span class="cl-154a33e4">5.49</span><span class="cl-154a3403">*</span></p></td><td class="cl-15598da8"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">304</span></p></td><td class="cl-15598da9"><p class="cl-155969b8"><span class="cl-154a33e4">.02</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598db2"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">3</span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">2.16</span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">1.60</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">2.39</span></p></td><td class="cl-15598db3"><p class="cl-155969b8"><span class="cl-154a33e4">1.19</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598db4"><p class="cl-155969b8"><span class="cl-154a33e4">G</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">×</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">T</span></p></td><td class="cl-15598db5"><p class="cl-155969b8"><span class="cl-154a33e4">0.86</span></p></td><td class="cl-15598dbc"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">304</span></p></td><td class="cl-15598dbd"><p class="cl-155969b8"><span class="cl-154a33e4">.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="11" class="cl-15598dc6"><p class="cl-155969c2"><span class="cl-154a33e4">Depersonalization</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598d82"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">1</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.40</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.19</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.02</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.94</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d9f"><p class="cl-155969b8"><span class="cl-154a33e4">G</span></p></td><td class="cl-15598da0"><p class="cl-155969b8"><span class="cl-154a33e4">0.03</span></p></td><td class="cl-15598da8"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">151</span></p></td><td class="cl-15598da9"><p class="cl-155969b8"><span class="cl-154a33e4">.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598d82"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">2</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">0.93</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.00</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.19</span></p></td><td class="cl-15598d97"><p class="cl-155969b8"><span class="cl-154a33e4">1.21</span></p></td><td class="cl-15598d9e"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598d9f"><p class="cl-155969b8"><span class="cl-154a33e4">T</span></p></td><td class="cl-15598da0"><p class="cl-155969b8"><span class="cl-154a33e4">0.14</span></p></td><td class="cl-15598da8"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">304</span></p></td><td class="cl-15598da9"><p class="cl-155969b8"><span class="cl-154a33e4">.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-15598dda"><p class="cl-155969c3"><span class="cl-154a33e4">Time</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">3</span></p></td><td class="cl-15598ddb"><p class="cl-155969b8"><span class="cl-154a33e4">1.17</span></p></td><td class="cl-15598ddb"><p class="cl-155969b8"><span class="cl-154a33e4">0.90</span></p></td><td class="cl-15598ddc"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598ddb"><p class="cl-155969b8"><span class="cl-154a33e4">1.33</span></p></td><td class="cl-15598ddb"><p class="cl-155969b8"><span class="cl-154a33e4">1.00</span></p></td><td class="cl-15598ddc"><p class="cl-155969b8"><span class="cl-154a33f8"></span></p></td><td class="cl-15598ddd"><p class="cl-155969b8"><span class="cl-154a33e4">G</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">×</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">T</span></p></td><td class="cl-15598de4"><p class="cl-155969b8"><span class="cl-154a3403"> </span><span class="cl-154a33e4">5.13</span><span class="cl-154a3403">*</span></p></td><td class="cl-15598de5"><p class="cl-155969b8"><span class="cl-154a33e4">1,</span><span class="cl-154a33e4"> </span><span class="cl-154a33e4">304</span></p></td><td class="cl-15598de6"><p class="cl-155969b8"><span class="cl-154a33e4">.02</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+<div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<em>Note</em>. <em>N</em>&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.
+</div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<sup>*&nbsp;</sup><em>p</em> &lt; .05. <sup>**&nbsp;</sup><em>p</em> &lt; .01.
+</div>
+</div>
+</div>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.13 in {R} with Apa7},
+  date = {2025-09-23},
+  url = {https://wjschne.github.io/posts/apatables/apa713.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, September 23). Recreating APA Manual Table 7.13
+in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa713.html">https://wjschne.github.io/posts/apatables/apa713.html</a>
+</div></div></section></div> ]]></description>
+  <category>R</category>
+  <category>APA Style</category>
+  <guid>https://wjschne.github.io/posts/apatables/apa713.html</guid>
+  <pubDate>Tue, 23 Sep 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Recreating APA Manual Table 7.12 in R with apa7</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -64,7 +696,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -489,7 +1121,7 @@ background-color: null;
 font-style: inherit;">9</span>, .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">7</span>))</span></code></pre></div></div>
-<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001" data-tblnum="1" prefix="">
+<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -696,7 +1328,7 @@ background-color: null;
 font-style: inherit;">4</span>), <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)))</span></code></pre></div></div>
-<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal.">
+<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal." data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-711-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -792,7 +1424,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-710" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-710" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-710-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1282,7 +1914,7 @@ background-color: null;
 font-style: inherit;">\\</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">*&amp;numsp;^*p* &lt; .01."</span>))</span></code></pre></div></div>
-<div id="tbl-710" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="">
+<div id="tbl-710" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-710-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1374,7 +2006,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1698,7 +2330,7 @@ font-style: inherit;">column_formats =</span> my_formatter) </span>
 <span id="cb2-73"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." data-tblnum="1">
+<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test.">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2324,7 +2956,7 @@ font-style: inherit;">001</span>))</span>
 <span id="cb2-89"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-78" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="For each participant, the logistic function was fit to target fixations separately. The maximum asymptote is the asymptotic degree of looking at the end of the time course of fixations. The crossover point is the point in time the function crosses the midway point between peak and baseline. The slope represents the rate of change in the function measured at the crossover. Mean parameter values for each of the analyses are shown for the 9-year-olds (*n*&nbsp;=&nbsp;24) and 16-year-olds (*n*&nbsp;=&nbsp;18), as well as the results of t tests (assuming unequal variance) comparing the parameter estimates between the two ages." prefix="" data-tblnum="1">
+<div id="tbl-78" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="For each participant, the logistic function was fit to target fixations separately. The maximum asymptote is the asymptotic degree of looking at the end of the time course of fixations. The crossover point is the point in time the function crosses the midway point between peak and baseline. The slope represents the rate of change in the function measured at the crossover. Mean parameter values for each of the analyses are shown for the 9-year-olds (*n*&nbsp;=&nbsp;24) and 16-year-olds (*n*&nbsp;=&nbsp;18), as well as the results of t tests (assuming unequal variance) comparing the parameter estimates between the two ages." data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-78-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2862,7 +3494,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-76" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-76" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-76-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3273,7 +3905,7 @@ font-style: inherit;">4</span>))</span>
 <span id="cb2-70"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores." prefix="">
+<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores." data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-76-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3744,7 +4376,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" data-fignum="1" data-fig-align="left" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" data-fig-align="left" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4028,7 +4660,7 @@ font-style: inherit;">"Sample"</span>) </span>
 <span id="cb2-52"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task." data-tblnum="1" prefix="">
+<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task." prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4126,7 +4758,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4436,7 +5068,7 @@ font-style: inherit;">"gray60"</span>))</span>
 <span id="cb2-41"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains.">
+<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5204,7 +5836,7 @@ font-style: inherit;">12</span>]))</span>
 <span id="cb2-80"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]">
+<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -6254,7 +6886,7 @@ font-style: inherit;">1.28</span>)) </span>
 <span id="cb5-51"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" prefix="" data-tblnum="5" data-image-preview="true">
+<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" data-image-preview="true" data-tblnum="5" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -12120,673 +12752,6 @@ equal segments. <em>Schneirographs</em>. <a href="https://wjschne.github.io/post
   <category>ggplot2</category>
   <guid>https://wjschne.github.io/posts/splitting-sentence-texts-into-roughly-equal-segments/</guid>
   <pubDate>Wed, 31 May 2023 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Insert Text from One Markdown Document into Another</title>
-  <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>While assembling a reply letter for a revise-and-resubmit document, I was documenting for reviewers how we addressed their concerns. The reply letter quoted numerous sentences and paragraphs that had been changed. Unfortunately, each time my co-authors and I edited the paper, I lost track of which sentences and paragraphs I had previously copied into the reply letter. I did not want to misquote my own paper.</p>
-<p>Copying-and-pasting with each edit was getting tedious, and it was an error-prone process. I decided to write a function that would retrieve a named div or span from the paper and print it as a quote in my reply letter. Here it is:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">get_quote <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(id, file, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">blockquote =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>) {</span>
-<span id="cb1-2">  blocktext <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(blockquote, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">&gt; "</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>)</span>
-<span id="cb1-3"></span>
-<span id="cb1-4">  refreplace <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(x) {</span>
-<span id="cb1-5">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># List of sequence types</span></span>
-<span id="cb1-6">    crossrefs <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@fig-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Figure"</span>,</span>
-<span id="cb1-7">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@fig-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Table"</span>,</span>
-<span id="cb1-8">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@eq-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Equation"</span>,</span>
-<span id="cb1-9">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@thm-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Lemma"</span>,</span>
-<span id="cb1-10">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@lem-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Corollary"</span>,</span>
-<span id="cb1-11">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@cor-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Proposition"</span>,</span>
-<span id="cb1-12">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@prp-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Conjecture"</span>,</span>
-<span id="cb1-13">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@cnj-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Definition"</span>,</span>
-<span id="cb1-14">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@def-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Example"</span>,</span>
-<span id="cb1-15">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@exm-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Example"</span>,</span>
-<span id="cb1-16">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@exr-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Exercise"</span>,</span>
-<span id="cb1-17">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">apafg-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Figure"</span>,</span>
-<span id="cb1-18">                   <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">apatb-</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Figure"</span></span>
-<span id="cb1-19">    )</span>
-<span id="cb1-20"></span>
-<span id="cb1-21">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Find all crossreference types and number them</span></span>
-<span id="cb1-22">    make_replacements <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(x, reftype, prefix) {</span>
-<span id="cb1-23">      regstring <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_starts</span>(reftype, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">@"</span>),</span>
-<span id="cb1-24">                          <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>, reftype, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"(.*?)(?=[</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">.</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">?</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">!</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">]</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">}</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">s,])"</span>),</span>
-<span id="cb1-25">                          <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{"</span>, reftype, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"(.*?)</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">}"</span>))</span>
-<span id="cb1-26">      patterns <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_extract_all</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">string =</span> x, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pattern =</span> regstring) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-27">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unlist</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-28">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unique</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-29">        stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_replace</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-30">        stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_replace</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">}"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">}"</span>)</span>
-<span id="cb1-31"></span>
-<span id="cb1-32">      <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> (<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">all</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(patterns))) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">return</span>(<span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>)</span>
-<span id="cb1-33">      replacements <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste</span>(prefix, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq_along</span>(patterns))</span>
-<span id="cb1-34">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">names</span>(replacements) <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> patterns</span>
-<span id="cb1-35">      replacements</span>
-<span id="cb1-36">    }</span>
-<span id="cb1-37">    allreplacements <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> purrr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">map2</span>(</span>
-<span id="cb1-38">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">names</span>(crossrefs),</span>
-<span id="cb1-39">      crossrefs,</span>
-<span id="cb1-40">      \(rt, pf) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">make_replacements</span>(</span>
-<span id="cb1-41">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> x,</span>
-<span id="cb1-42">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reftype =</span> rt,</span>
-<span id="cb1-43">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">prefix =</span> pf)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-44">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unlist</span>()</span>
-<span id="cb1-45"></span>
-<span id="cb1-46">    stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_replace_all</span>(x, allreplacements)</span>
-<span id="cb1-47"></span>
-<span id="cb1-48">  }</span>
-<span id="cb1-49"></span>
-<span id="cb1-50">  filetext <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">readLines</span>(file) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-51">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">refreplace</span>()</span>
-<span id="cb1-52"></span>
-<span id="cb1-53">  idcount <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_count</span>(filetext, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#"</span>, id)))</span>
-<span id="cb1-54">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> (idcount <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb1-55">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stop</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb1-56">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"The id ("</span>,</span>
-<span id="cb1-57">      id ,</span>
-<span id="cb1-58">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">") is not unique. There are "</span>,</span>
-<span id="cb1-59">      idcount,</span>
-<span id="cb1-60">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">" instances of id = "</span>,</span>
-<span id="cb1-61">      id,</span>
-<span id="cb1-62">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"."</span></span>
-<span id="cb1-63">    ))</span>
-<span id="cb1-64"></span>
-<span id="cb1-65">  s <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> filetext <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-66">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-67">    stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_match</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pattern =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"(?&lt;=</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">[).+(?=</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">]</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">#"</span>,</span>
-<span id="cb1-68">                               id,</span>
-<span id="cb1-69">                               <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">})"</span>))  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-70">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">getElement</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb1-71"></span>
-<span id="cb1-72">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> (<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(s)) {</span>
-<span id="cb1-73">    s <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> filetext <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-74">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"|||"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-75">      stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_match</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pattern =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">":::</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">#"</span>,</span>
-<span id="cb1-76">                                 id,</span>
-<span id="cb1-77">                                 <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">}(.*?):::"</span>))  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-78">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">getElement</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-79">      stringr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_replace_all</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">|</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">|</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">|"</span>, blocktext)</span>
-<span id="cb1-80">  } <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">else</span> {</span>
-<span id="cb1-81">    s <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(blocktext, s)</span>
-<span id="cb1-82">  }</span>
-<span id="cb1-83"></span>
-<span id="cb1-84">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> (<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(s)) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stop</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Could not find a div or span with id = "</span>, id)</span>
-<span id="cb1-85"></span>
-<span id="cb1-86">  s</span>
-<span id="cb1-87">}</span></code></pre></div></div>
-</div>
-<p>For your convenience and mine, I have added this function into the <a href="https://wjschne.github.io/WJSmisc/reference/get_quote.html">WJSmisc package</a>.</p>
-<section id="using-the-get_quote-function" class="level1">
-<h1>Using the <code>get_quote</code> function</h1>
-<p>If the file has a span or div with a specified id, the <code>get_quote</code> function can find it. Suppose the file has a span with id of <code>id1</code> and a div with id of <code>id2</code>.</p>
-<pre><code>[Text in a span]{#id1}
-
-:::{#id2}
-Here are two pagagraphs in a fenced div.
-
-This is the second paragraph.
-:::
-
-cat(get_quote("id2", "index.qmd"))</code></pre>
-<p>You can pull text from the current file or another file. This file happened to be named <code>index.qmd</code>. The text inside the span with id <code>id1</code> can be extracted with inline chunks like so:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1">`r get_quote("id1", "index.qmd")`</span></code></pre></div></div>
-<blockquote class="blockquote">
-<p>Text in a span</p>
-</blockquote>
-<p>Here we extract the two paragraphs in div id2</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1">`r get_quote("id2", "index.qmd")`</span></code></pre></div></div>
-<blockquote class="blockquote">
-<p>Here are two pagagraphs in a fenced div.</p>
-<p>This is the second paragraph.</p>
-</blockquote>
-<section id="remove-blockquote-formatting" class="level2">
-<h2 class="anchored" data-anchor-id="remove-blockquote-formatting">Remove blockquote formatting</h2>
-<p>By default, the function adds a <code>&gt;</code> before each line in the quoted markdown so that it appears as a block quote. You can turn off the block quote formatting like so:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1">`r get_quote("id1", "index.qmd", blockquote = FALSE)`</span></code></pre></div></div>
-<p>Text in a span</p>
-</section>
-<section id="curly-braces-with-additional-information" class="level2">
-<h2 class="anchored" data-anchor-id="curly-braces-with-additional-information">Curly braces with additional information</h2>
-<p>What if you need to put additional information in the curly braces of the span or div (e.g., a css class)?</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1">[Here is more text with extra stuff in the curly braces.]{#id3 .myclass}</span></code></pre></div></div>
-<p>You can trick the function into thinking that the extra stuff is part of the id like so:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1">`r get_quote("id3 .myclass", "index.qmd")`</span></code></pre></div></div>
-<blockquote class="blockquote">
-<p>Here is more text with extra stuff in the curly braces.</p>
-</blockquote>
-
-
-</section>
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
-  author = {Schneider, W. Joel},
-  title = {Insert {Text} from {One} {Markdown} {Document} into
-    {Another}},
-  date = {2023-03-30},
-  url = {https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/},
-  langid = {en}
-}
-</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
-Schneider, W. J. (2023, March 30). Insert Text from One Markdown
-Document into Another. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/">https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/</a>
-</div></div></section></div> ]]></description>
-  <category>markdown</category>
-  <guid>https://wjschne.github.io/posts/insert-text-from-one-markdown-document-into-another/</guid>
-  <pubDate>Thu, 30 Mar 2023 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
