@@ -10,7 +10,634 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Wed, 24 Sep 2025 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 25 Sep 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recreating APA Manual Table 7.15 in R with apa7</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/apatables/apa715.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="making-tables-in-apa-style-part-15-of-24" class="level1">
+<h1>Making tables in APA style (Part 15 of 24)</h1>
+<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Highlights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Automatic formatting of <code>lm</code> (linear model) analyses with <a href="https://wjschne.github.io/apa7/reference/apa_performance.html"><code>apa_performance</code></a> and <a href="https://wjschne.github.io/apa7/reference/apa_performance_comparison.html"><code>apa_compare_performance</code></a>.</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(apa7)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(flextable)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ftExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(easystats)</span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme_fun =</span> theme_apa, </span>
+<span id="cb1-7">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
+</div>
+<div id="fig-715" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-715-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.15</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-715-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/apatables/table715.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+<p>I love the <a href="https://easystats.github.io/easystats/">easystats</a> ecosystem. It provides a coherent framework for data-analysts to process and display statistical analyses. It makes so many previously tedious things simple. However, it was not specifically designed for the final display of APA tables. The apa7 package has a few functions and features that help process the output of easystats functions to make them table-ready.</p>
+<p>First, lets simulate some data that resembles the data underlying the models in Figure&nbsp;1, and create regression models for Models 1 and 2.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sample size</span></span>
+<span id="cb2-3">n <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">88</span></span>
+<span id="cb2-4"></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># simulated data</span></span>
+<span id="cb2-6">d <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(</span>
+<span id="cb2-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">leader_gender =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, n, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>),</span>
+<span id="cb2-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">leader_sleep_condition =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">88</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>),</span>
+<span id="cb2-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">charisma =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.76</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">09</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> leader_gender <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> </span>
+<span id="cb2-10">    .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">36</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> leader_sleep_condition <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-11">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))</span>
+<span id="cb2-12"></span>
+<span id="cb2-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Models 1 and 2</span></span>
+<span id="cb2-14">m1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(charisma <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> leader_gender, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span>
+<span id="cb2-15">m2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(charisma <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> leader_gender <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> leader_sleep_condition, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d)</span></code></pre></div></div>
+</div>
+<p>The <a href="https://easystats.github.io/parameters/reference/model_parameters.html"><code>parameters::parameters</code></a> function from the easystats ecosystem displays information about regression predictors.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parameters</span>(m2) </span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parameter              | Coefficient |   SE |         95% CI | t(85) |      p
+-----------------------------------------------------------------------------
+(Intercept)            |        2.79 | 0.08 | [ 2.62,  2.95] | 33.17 | &lt; .001
+leader gender          |       -0.20 | 0.10 | [-0.40,  0.00] | -1.96 | 0.054 
+leader sleep condition |       -0.34 | 0.10 | [-0.55, -0.14] | -3.37 | 0.001 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Uncertainty intervals (equal-tailed) and p-values (two-tailed) computed
+  using a Wald t-distribution approximation.</code></pre>
+</div>
+</div>
+<p>That is a really nice display. However, if we convert it directly with <a href="https://davidgohel.github.io/flextable/reference/flextable.html"><code>flextable</code></a>, we get something far less polished.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parameters</span>(m2) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">flextable</span>()</span></code></pre></div></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-0e422278{}.cl-0dec0028{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-0e3d61b6{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-0e3d86e6{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(0, 0, 0, 1.00);border-top: 0.75pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0e3d86e7{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0e3d86f0{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-0e422278"><thead><tr style="overflow-wrap:break-word;"><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">Parameter</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">Coefficient</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">SE</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">CI</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">CI_low</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">CI_high</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">t</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">df_error</span></p></th><th class="cl-0e3d86e6"><p class="cl-0e3d61b6"><span class="cl-0dec0028">p</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">(Intercept)</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">2.79</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.08</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.95</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">2.62</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">2.95</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">33.17</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">85</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">leader_gender</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">-0.20</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.10</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.95</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">-0.40</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.00</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">-1.96</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">85</span></p></td><td class="cl-0e3d86e7"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">leader_sleep_condition</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">-0.34</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.10</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.95</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">-0.55</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">-0.14</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">-3.37</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">85</span></p></td><td class="cl-0e3d86f0"><p class="cl-0e3d61b6"><span class="cl-0dec0028">0.00</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>As it turns out, the output of the <a href="https://easystats.github.io/parameters/reference/model_parameters.html"><code>parameters</code></a> function undergoes a fair bit of processing before it prints. The output is a <code>data.frame</code> with a <code>parameters_model</code> class and many attributes that can be used by the easystats formatting functions. If we want to see the underlying data, we can convert the output to a <code>data.frame</code> or <code>tibble</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parameters</span>(m2) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb7-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_tibble</span>()</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 9
+  Parameter     Coefficient     SE    CI CI_low  CI_high     t df_error        p
+  &lt;chr&gt;               &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;int&gt;    &lt;dbl&gt;
+1 (Intercept)         2.79  0.0840  0.95  2.62   2.95    33.2        85 2.05e-50
+2 leader_gender      -0.200 0.102   0.95 -0.402  0.00312 -1.96       85 5.36e- 2
+3 leader_sleep…      -0.344 0.102   0.95 -0.547 -0.141   -3.37       85 1.13e- 3</code></pre>
+</div>
+</div>
+<p>If we really want just the output of <a href="https://easystats.github.io/parameters/reference/model_parameters.html"><code>parameters</code></a> as it displays, we use the <a href="https://easystats.github.io/insight/reference/format_table.html"><code>insight::format_table</code></a> function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parameters</span>(m2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ci =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">95</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb9-2">  insight<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format_table</span>() </span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Parameter Coefficient   SE         95% CI t(85)      p
+1            (Intercept)        2.79 0.08 [ 2.62,  2.95] 33.17 &lt; .001
+2          leader gender       -0.20 0.10 [-0.40,  0.00] -1.96 0.054 
+3 leader sleep condition       -0.34 0.10 [-0.55, -0.14] -3.37 0.001 </code></pre>
+</div>
+</div>
+<p>This gets us closer to APA style, but not quite all way there. We would like things to be nearly automatic and yet be able to fine-tune the output. Behold!</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_parameters</span>(m2) </span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  Variable               `*B*` `*SE*` `&amp;beta;` `*t*(85)` `*p*`
+  &lt;chr&gt;                  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;
+1 Constant                2.79 0.08    .00     33.17     &lt;.001
+2 Leader Gender          −0.20 0.10   −.20     −1.96      .05 
+3 Leader Sleep Condition −0.34 0.10   −.34     −3.37      .001</code></pre>
+</div>
+</div>
+<p>The <a href="https://wjschne.github.io/apa7/reference/apa_parameters.html"><code>apa_parameters</code></a> function is a wrapper around the <a href="https://easystats.github.io/parameters/reference/model_parameters.html"><code>parameters</code></a> function with defaults that produce APA style output via markdown syntax. The columns are decimal aligned, statistics are italicized, the intercept is called a “Constant”, and the variable names are printed in title case.</p>
+<p>Applying <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa_flextable</code></a> to the output gives us perfect APA style:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_parameters</span>(m2) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>() </span></code></pre></div></div>
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-100721bc{}.cl-0fff72dc{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-0fff72e6{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-100287d8{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-100287e2{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-1002a542{width:2.752in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a54c{width:0.807in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a54d{width:0.654in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a556{width:0.672in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a557{width:2.752in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a558{width:0.807in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a560{width:0.654in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a561{width:0.672in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a562{width:2.752in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a56a{width:0.807in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a56b{width:0.654in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1002a56c{width:0.672in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-100721bc"><thead><tr style="overflow-wrap:break-word;"><th class="cl-1002a542"><p class="cl-100287d8"><span class="cl-0fff72dc">Variable</span></p></th><th class="cl-1002a54c"><p class="cl-100287d8"><span class="cl-0fff72e6">B</span></p></th><th class="cl-1002a54d"><p class="cl-100287d8"><span class="cl-0fff72e6">SE</span></p></th><th class="cl-1002a556"><p class="cl-100287d8"><span class="cl-0fff72dc">β</span></p></th><th class="cl-1002a54c"><p class="cl-100287d8"><span class="cl-0fff72e6">t</span><span class="cl-0fff72dc">(85)</span></p></th><th class="cl-1002a54c"><p class="cl-100287d8"><span class="cl-0fff72e6">p</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-1002a557"><p class="cl-100287e2"><span class="cl-0fff72dc">Constant</span></p></td><td class="cl-1002a558"><p class="cl-100287d8"><span class="cl-0fff72dc"> 2.79</span></p></td><td class="cl-1002a560"><p class="cl-100287d8"><span class="cl-0fff72dc">0.08</span></p></td><td class="cl-1002a561"><p class="cl-100287d8"><span class="cl-0fff72dc"> .00</span></p></td><td class="cl-1002a558"><p class="cl-100287d8"><span class="cl-0fff72dc">33.17</span></p></td><td class="cl-1002a558"><p class="cl-100287d8"><span class="cl-0fff72dc">&lt;.001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1002a557"><p class="cl-100287e2"><span class="cl-0fff72dc">Leader</span><span class="cl-0fff72dc"> </span><span class="cl-0fff72dc">Gender</span></p></td><td class="cl-1002a558"><p class="cl-100287d8"><span class="cl-0fff72dc">−0.20</span></p></td><td class="cl-1002a560"><p class="cl-100287d8"><span class="cl-0fff72dc">0.10</span></p></td><td class="cl-1002a561"><p class="cl-100287d8"><span class="cl-0fff72dc">−.20</span></p></td><td class="cl-1002a558"><p class="cl-100287d8"><span class="cl-0fff72dc">−1.96</span></p></td><td class="cl-1002a558"><p class="cl-100287d8"><span class="cl-0fff72dc"> .05 </span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1002a562"><p class="cl-100287e2"><span class="cl-0fff72dc">Leader</span><span class="cl-0fff72dc"> </span><span class="cl-0fff72dc">Sleep</span><span class="cl-0fff72dc"> </span><span class="cl-0fff72dc">Condition</span></p></td><td class="cl-1002a56a"><p class="cl-100287d8"><span class="cl-0fff72dc">−0.34</span></p></td><td class="cl-1002a56b"><p class="cl-100287d8"><span class="cl-0fff72dc">0.10</span></p></td><td class="cl-1002a56c"><p class="cl-100287d8"><span class="cl-0fff72dc">−.34</span></p></td><td class="cl-1002a56a"><p class="cl-100287d8"><span class="cl-0fff72dc">−3.37</span></p></td><td class="cl-1002a56a"><p class="cl-100287d8"><span class="cl-0fff72dc"> .001</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>The <code>apa_format_columns</code> function and a few others like <code>apa_parameters</code>, <code>apa_performance</code>, and <code>apa_compare_performance</code> can process the output of the <code>lm</code> function.</p>
+<p>Getting the output of <code>apa_parameters</code> and <code>apa_compare_performance</code> into the same table requires a rather complex process. Eventually I’d like to automate some of these steps.</p>
+<div class="cell FigureWithoutNote" prefix="" data-tblnum="1" data-custom-style="FigureWithoutNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pf &lt;- column_formats()</span></span>
+<span id="cb14-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pf$SE@header &lt;- "*SE*"</span></span>
+<span id="cb14-3"></span>
+<span id="cb14-4">m <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Model 1</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> m1, </span>
+<span id="cb14-5">          <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Model 2</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> m2) </span>
+<span id="cb14-6"></span>
+<span id="cb14-7">d_parameters <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_parameters</span>(</span>
+<span id="cb14-8">  m, </span>
+<span id="cb14-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">predictor_parameters =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb14-10">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Coefficient"</span>, </span>
+<span id="cb14-11">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Std_Coefficient"</span>, </span>
+<span id="cb14-12">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"SE"</span>))</span>
+<span id="cb14-13"></span>
+<span id="cb14-14">d_performance <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_performance_comparison</span>(</span>
+<span id="cb14-15">  m,</span>
+<span id="cb14-16">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">metrics =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"R2"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"deltaR2"</span>),</span>
+<span id="cb14-17">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">starred =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"deltaR2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_longer</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Model, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Variable"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-19">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Model =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(Model, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"_&amp;beta;"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-20">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> Model)</span>
+<span id="cb14-21"></span>
+<span id="cb14-22">d_parameters <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-23">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider_name_first</span>(</span>
+<span id="cb14-24">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id_cols =</span> Variable, </span>
+<span id="cb14-25">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> Model, </span>
+<span id="cb14-26">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_from =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-27">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Variable =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">str_to_sentence</span>(Variable)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb14-28">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_row</span>(d_performance) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb14-29">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Variable, \(x) <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">align_chr</span>(</span>
+<span id="cb14-30">    x,</span>
+<span id="cb14-31">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">center =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">."</span>, </span>
+<span id="cb14-32">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">side =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"left"</span>,</span>
+<span id="cb14-33">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">NA_value =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-34">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">star_balance</span>())) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-35">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">no_format_columns =</span> Variable) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-36">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">align</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"left"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-37">  flextable<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_footer_lines</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph_md</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"*Note*. *N*&amp;nbsp;=&amp;nbsp;88. We examined the impact of leader sleep condition (control vs. sleep deprived) on ratings of charismatic leadership. In Models 1 and 2, we entered the control variable of leader gender to predict leader charisma."</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-38">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">footnote</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, </span>
+<span id="cb14-39">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb14-40">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Male = 1, female = 2. "</span>), </span>
+<span id="cb14-41">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ref_symbols =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a "</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb14-42">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">footnote</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, </span>
+<span id="cb14-43">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb14-44">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph</span>(</span>
+<span id="cb14-45">               <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Control condition = 0, sleep-deprived condition = 1"</span>), </span>
+<span id="cb14-46">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ref_symbols =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"b "</span>, </span>
+<span id="cb14-47">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">inline =</span> T, </span>
+<span id="cb14-48">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"."</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-49">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_footer_lines</span>(</span>
+<span id="cb14-50">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_paragraph_md</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">* *p* &lt; .05. </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">*</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">* *p* &lt; .01."</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-51">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">align</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"left"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">part =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"footer"</span>)</span></code></pre></div></div>
+<div id="tbl-715" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-715-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Regression Coefficients of Leader Sleep on Charismatic Leadership</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-715-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-1283b5d6{}.cl-127b4ad6{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-127b4ae0{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-127b4ae1{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-127b4aea{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-127b4aeb{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-127b4aec{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-127b4af4{font-family:'Times New Roman';font-size:6.6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-127ec81e{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-127ec828{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-127ec832{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-127ee9de{width:2.382in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9df{width:0.726in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9e8{width:0.605in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9e9{width:0.589in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9f2{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9f3{width:0.833in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9f4{width:2.382in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9fc{width:0.726in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9fd{width:0.605in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9fe{width:0.589in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127ee9ff{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea00{width:0.833in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea06{width:2.382in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea07{width:0.726in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea08{width:0.605in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea10{width:0.589in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea11{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea12{width:0.833in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea1a{width:2.382in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea1b{width:0.726in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea1c{width:0.605in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea24{width:0.589in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea25{width:0.05in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-127eea2e{width:0.833in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1283b5d6"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-127ee9de"><p class="cl-127ec81e"><span class="cl-127b4ad6">Variable</span></p></th><th colspan="3" class="cl-127ee9df"><p class="cl-127ec81e"><span class="cl-127b4ad6">Model</span><span class="cl-127b4ad6"> </span><span class="cl-127b4ad6">1</span></p></th><th rowspan="2" class="cl-127ee9f2"><p class="cl-127ec81e"><span class="cl-127b4ae0"></span></p></th><th colspan="3" class="cl-127ee9df"><p class="cl-127ec81e"><span class="cl-127b4ad6">Model</span><span class="cl-127b4ad6"> </span><span class="cl-127b4ad6">2</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-127ee9df"><p class="cl-127ec81e"><span class="cl-127b4ae1">B</span></p></th><th class="cl-127ee9e8"><p class="cl-127ec81e"><span class="cl-127b4ad6">β</span></p></th><th class="cl-127ee9e9"><p class="cl-127ec81e"><span class="cl-127b4ae1">SE</span></p></th><th class="cl-127ee9df"><p class="cl-127ec81e"><span class="cl-127b4ae1">B</span></p></th><th class="cl-127ee9f3"><p class="cl-127ec81e"><span class="cl-127b4ad6">β</span></p></th><th class="cl-127ee9e9"><p class="cl-127ec81e"><span class="cl-127b4ae1">SE</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-127ee9f4"><p class="cl-127ec828"><span class="cl-127b4ad6">Constant</span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6"> 2.65</span></p></td><td class="cl-127ee9fd"><p class="cl-127ec81e"><span class="cl-127b4ad6"> .00</span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6">0.08</span></p></td><td class="cl-127ee9ff"><p class="cl-127ec81e"><span class="cl-127b4ae0"></span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6"> 2.79</span></p></td><td class="cl-127eea00"><p class="cl-127ec81e"><span class="cl-127b4ad6"> .00</span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6">0.08</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-127ee9f4"><p class="cl-127ec828"><span class="cl-127b4ad6">Leader</span><span class="cl-127b4ad6"> </span><span class="cl-127b4ad6">gender</span><span class="cl-127b4aea">a </span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6">−0.24</span></p></td><td class="cl-127ee9fd"><p class="cl-127ec81e"><span class="cl-127b4ad6">−.23</span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6">0.11</span></p></td><td class="cl-127ee9ff"><p class="cl-127ec81e"><span class="cl-127b4ae0"></span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6">−0.20</span></p></td><td class="cl-127eea00"><p class="cl-127ec81e"><span class="cl-127b4ad6">−.20</span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6">0.10</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-127ee9f4"><p class="cl-127ec828"><span class="cl-127b4ad6">Leader</span><span class="cl-127b4ad6"> </span><span class="cl-127b4ad6">sleep</span><span class="cl-127b4ad6"> </span><span class="cl-127b4ad6">condition</span><span class="cl-127b4aea">b </span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127ee9fd"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127ee9ff"><p class="cl-127ec81e"><span class="cl-127b4ae0"></span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6">−0.34</span></p></td><td class="cl-127eea00"><p class="cl-127ec81e"><span class="cl-127b4ad6">−.34</span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6">0.10</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-127ee9f4"><p class="cl-127ec828"><span class="cl-127b4ae1">R</span><span class="cl-127b4aea">2</span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127ee9fd"><p class="cl-127ec81e"><span class="cl-127b4ad6"> .06</span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127ee9ff"><p class="cl-127ec81e"><span class="cl-127b4ae0"></span></p></td><td class="cl-127ee9fc"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127eea00"><p class="cl-127ec81e"><span class="cl-127b4ad6"> .17</span></p></td><td class="cl-127ee9fe"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-127eea06"><p class="cl-127ec828"><span class="cl-127b4ad6">Δ</span><span class="cl-127b4ae1">R</span><span class="cl-127b4aea">2</span></p></td><td class="cl-127eea07"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127eea08"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127eea10"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127eea11"><p class="cl-127ec81e"><span class="cl-127b4ae0"></span></p></td><td class="cl-127eea07"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td><td class="cl-127eea12"><p class="cl-127ec81e"><span class="cl-127b4aea">  </span><span class="cl-127b4ad6"> .11</span><span class="cl-127b4aea">**</span></p></td><td class="cl-127eea10"><p class="cl-127ec81e"><span class="cl-127b4ad6"></span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="8" class="cl-127eea1a"><p class="cl-127ec832"><span class="cl-127b4aeb">Note</span><span class="cl-127b4aec">.</span><span class="cl-127b4aec"> </span><span class="cl-127b4aeb">N</span><span class="cl-127b4aec">&nbsp;=&nbsp;88.</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">We</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">examined</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">the</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">impact</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">of</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">leader</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">sleep</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">condition</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">(control</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">vs.&nbsp;sleep</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">deprived)</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">on</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">ratings</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">of</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">charismatic</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">leadership.</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">In</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">Models</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">1</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">and</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">2,</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">we</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">entered</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">the</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">control</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">variable</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">of</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">leader</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">gender</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">to</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">predict</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">leader</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">charisma.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="8" class="cl-127eea1a"><p class="cl-127ec832"><span class="cl-127b4af4">a </span><span class="cl-127b4aec">Male = 1, female = 2. </span><span class="cl-127b4af4">b </span><span class="cl-127b4aec">Control condition = 0, sleep-deprived condition = 1</span><span class="cl-127b4aec">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="8" class="cl-127eea1a"><p class="cl-127ec832"><span class="cl-127b4aec">*</span><span class="cl-127b4aec"> </span><span class="cl-127b4aeb">p</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">&lt;</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">.05.</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">**</span><span class="cl-127b4aec"> </span><span class="cl-127b4aeb">p</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">&lt;</span><span class="cl-127b4aec"> </span><span class="cl-127b4aec">.01.</span></p></td></tr></tfoot></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.15 in {R} with Apa7},
+  date = {2025-09-25},
+  url = {https://wjschne.github.io/posts/apatables/apa715.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, September 25). Recreating APA Manual Table 7.15
+in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa715.html">https://wjschne.github.io/posts/apatables/apa715.html</a>
+</div></div></section></div> ]]></description>
+  <category>R</category>
+  <category>APA Style</category>
+  <guid>https://wjschne.github.io/posts/apatables/apa715.html</guid>
+  <pubDate>Thu, 25 Sep 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Recreating APA Manual Table 7.14 in R with apa7</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -65,7 +692,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-714" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-714" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-714-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -479,7 +1106,7 @@ background-color: null;
 font-style: inherit;">align =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"left"</span>) </span></code></pre></div></div>
-<div id="tbl-714" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="*N*&nbsp;=&nbsp;307. The extraction method was principal axis factoring with an oblique (promax with Kaiser Normalization) rotation. Factor loadings above .30 are in bold. Reverse-scored items are denoted with (R). Adapted from “Individual Differences in Activation of the Parental Care Motivational System: Assessment, Prediction, and Implications,” by E. E. Buckels, A. T. Beall, M. K. Hofer, E. Y. Lin, Z. Zhou, and M. Schaller, 2015, *Journal of Personality and Social Psychology, 108*(3), p. 501 ([https://doi.org/10.1037/pspp0000023](https://doi.org/10.1037/pspp0000023)). Copyright 2015 by the American Psychological Association." data-tblnum="1" prefix="">
+<div id="tbl-714" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="*N*&nbsp;=&nbsp;307. The extraction method was principal axis factoring with an oblique (promax with Kaiser Normalization) rotation. Factor loadings above .30 are in bold. Reverse-scored items are denoted with (R). Adapted from “Individual Differences in Activation of the Parental Care Motivational System: Assessment, Prediction, and Implications,” by E. E. Buckels, A. T. Beall, M. K. Hofer, E. Y. Lin, Z. Zhou, and M. Schaller, 2015, *Journal of Personality and Social Psychology, 108*(3), p. 501 ([https://doi.org/10.1037/pspp0000023](https://doi.org/10.1037/pspp0000023)). Copyright 2015 by the American Psychological Association." prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-714-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -576,7 +1203,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-713" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-713" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1108,7 +1735,7 @@ background-color: null;
 font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1.5</span>) </span></code></pre></div></div>
-<div id="tbl-713" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]" data-tblnum="1">
+<div id="tbl-713" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]" prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1208,7 +1835,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1633,7 +2260,7 @@ background-color: null;
 font-style: inherit;">9</span>, .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">7</span>))</span></code></pre></div></div>
-<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001" data-tblnum="1">
+<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1840,7 +2467,7 @@ background-color: null;
 font-style: inherit;">4</span>), <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)))</span></code></pre></div></div>
-<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal." prefix="" data-tblnum="1">
+<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal." data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-711-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2842,7 +3469,7 @@ font-style: inherit;">column_formats =</span> my_formatter) </span>
 <span id="cb2-73"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test.">
+<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2942,7 +3569,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-78" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-78" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-78-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3468,7 +4095,7 @@ font-style: inherit;">001</span>))</span>
 <span id="cb2-89"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-78" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="" data-apa-note="For each participant, the logistic function was fit to target fixations separately. The maximum asymptote is the asymptotic degree of looking at the end of the time course of fixations. The crossover point is the point in time the function crosses the midway point between peak and baseline. The slope represents the rate of change in the function measured at the crossover. Mean parameter values for each of the analyses are shown for the 9-year-olds (*n*&nbsp;=&nbsp;24) and 16-year-olds (*n*&nbsp;=&nbsp;18), as well as the results of t tests (assuming unequal variance) comparing the parameter estimates between the two ages.">
+<div id="tbl-78" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="For each participant, the logistic function was fit to target fixations separately. The maximum asymptote is the asymptotic degree of looking at the end of the time course of fixations. The crossover point is the point in time the function crosses the midway point between peak and baseline. The slope represents the rate of change in the function measured at the crossover. Mean parameter values for each of the analyses are shown for the 9-year-olds (*n*&nbsp;=&nbsp;24) and 16-year-olds (*n*&nbsp;=&nbsp;18), as well as the results of t tests (assuming unequal variance) comparing the parameter estimates between the two ages.">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-78-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4417,7 +5044,7 @@ font-style: inherit;">4</span>))</span>
 <span id="cb2-70"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores.">
+<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores." prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-76-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4888,7 +5515,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" data-fignum="1" data-fig-align="left" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" data-fignum="1" prefix="" data-fig-align="left" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5172,7 +5799,7 @@ font-style: inherit;">"Sample"</span>) </span>
 <span id="cb2-52"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" prefix="" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task." data-tblnum="1">
+<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" data-tblnum="1" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task." prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5580,7 +6207,7 @@ font-style: inherit;">"gray60"</span>))</span>
 <span id="cb2-41"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." data-tblnum="1">
+<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5679,7 +6306,7 @@ background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
 <p>Figure&nbsp;1 Shows some demographic summary data. Getting the data into the proper shape took a fair amount of code, but such data wrangling is not the point of this tutorial. The part that was tricky was getting the text wrapping and hanging indentation right.</p>
-<div id="fig-72" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-72" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -6348,7 +6975,7 @@ font-style: inherit;">12</span>]))</span>
 <span id="cb2-80"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]" prefix="">
+<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -7398,7 +8025,7 @@ font-style: inherit;">1.28</span>)) </span>
 <span id="cb5-51"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" data-image-preview="true" data-tblnum="5">
+<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="5" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" prefix="" data-image-preview="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -12410,192 +13037,6 @@ Schneider, W. J. (2023, July 24). Annotated equations in ggplot2.
   <category>ggplot2</category>
   <guid>https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/</guid>
   <pubDate>Mon, 24 Jul 2023 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Creating collapsible output with knitr chunk hooks</title>
-  <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>I am writing a <a href="https://individual-psychometrics.rbind.io/">(still very much unfinished) psychometrics book</a> with suggested exercises using R. I wanted to provide solutions to the questions, but I wanted to hide the answers until the reader clicks them.</p>
-<p>An easy way to create collapsible content is with html’s <code>&lt;details&gt;</code> tag. For example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1">Create a variable `x`, and assign it a value of 5.</span>
-<span id="cb1-2"></span>
-<span id="cb1-3">&lt;details&gt;</span>
-<span id="cb1-4">  &lt;summary&gt;Suggested Solution&lt;/summary&gt;</span>
-<span id="cb1-5"></span>
-<span id="cb1-6">```{r}</span>
-<span id="cb1-7">x &lt;- 5</span>
-<span id="cb1-8">```</span>
-<span id="cb1-9">&lt;/details&gt;</span></code></pre></div></div>
-<p>Create a variable <code>x</code>, and assign it a value of 5.</p>
-<details>
-<summary>
-Suggested Solution
-</summary>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span></code></pre></div></div>
-</div>
-</details>
-<hr>
-<p>However, I did not want to worry about all the <code>&lt;details&gt;</code> every time I wrote a question. To automate this process, I used two knitr hooks: a chunk hook and an option hook.</p>
-<p><a href="https://bookdown.org/yihui/rmarkdown-cookbook/chunk-hooks.html">Chunk hooks</a> are for customizing the output of a chunk.</p>
-<p>Here I create a new chunk hook that is run before and after the chunk. When it is run before the chunk, it adds the <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> tags. After the chunk, it closes the <code>&lt;details&gt;</code> tag.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Add the details tag before running the chunk </span></span>
-<span id="cb3-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># and close the tag after running the chunk.</span></span>
-<span id="cb3-3">knitr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>knit_hooks<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">set</span>(</span>
-<span id="cb3-4">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">solutionsetter =</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(before,options) {</span>
-<span id="cb3-5">  </span>
-<span id="cb3-6">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> (before) {</span>
-<span id="cb3-7">    </span>
-<span id="cb3-8">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">&lt;details&gt;&lt;summary&gt;Suggested Solution&lt;/summary&gt;</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span></span>
-<span id="cb3-9">    </span>
-<span id="cb3-10">  } <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">else</span> {</span>
-<span id="cb3-11">    </span>
-<span id="cb3-12">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">&lt;/details&gt;</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\n\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span></span>
-<span id="cb3-13">    </span>
-<span id="cb3-14">  }</span>
-<span id="cb3-15">})</span></code></pre></div></div>
-</div>
-<p>If all we needed to do was to enclose the output into a <code>&lt;details&gt;</code> tag, then just the <code>solutionsetter</code> hook would be needed. However, I also wanted to set <code>echo=TRUE</code> so that the output would be visible even if the default for <code>echo</code> was <code>FALSE</code>.</p>
-<p><a href="https://bookdown.org/yihui/rmarkdown-cookbook/option-hooks.html">Option hooks</a> are great for when you have a kind of chunk you will use often, and it requires setting many chunk options at once (e.g., a plot variant with different dimensions than your default plot has).</p>
-<p>Here I create a new option hook called <code>solution</code>. It sets the current chunk’s <code>echo</code> option to <code>TRUE</code> and also triggers the new <code>solutionsetter</code> code chunk below. The updated <code>options</code> list needs to be returned explicitly, or the hook will not work.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">knitr<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>opts_hooks<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">set</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">solution =</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(options) {</span>
-<span id="cb4-2">  options<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>echo <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span></span>
-<span id="cb4-3">  options<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>solutionsetter <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span></span>
-<span id="cb4-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">return</span>(options)</span>
-<span id="cb4-5">})</span></code></pre></div></div>
-</div>
-<p>Now all need to do is to set my chunk option to <code>solution = TRUE</code> and the output will be collapsible:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"></span>
-<span id="cb5-2">Create a variable `x`, and assign it a value of 5.</span>
-<span id="cb5-3"></span>
-<span id="cb5-4">```{r, solution = TRUE}</span>
-<span id="cb5-5">x &lt;- 5</span>
-<span id="cb5-6">```</span></code></pre></div></div>
-<p>Create a variable <code>x</code>, and assign it a value of 5.</p>
-<div class="cell" data-solution="true" data-solutionsetter="true">
-<details>
-<summary>
-Suggested Solution
-</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span></code></pre></div></div>
-</details>
-</div>
-<hr>
-<section id="the-details-package" class="level1">
-<h1>The details package</h1>
-<p>If you want a function to enclose the output of a chunk or inline code in <code>&lt;details&gt;</code> tags, use the <a href="https://cran.r-project.org/package=details">details</a> package by Jonathan Sidi. For example, an inline chunk like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1">`r details::details("Answer", summary = "Question")`</span></code></pre></div></div>
-<p>Will output like so:</p>
-<details closed="">
-<summary>
-<span title="Click to Expand"> Question </span>
-</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"></span>
-<span id="cb8-2">Answer</span></code></pre></div></div>
-</details>
-<p><br></p>
-<p>The package has many other uses, which are explained in the <a href="https://yonicd.github.io/details/articles/index.html">package’s vignettes</a>.</p>
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
-  author = {Schneider, W. Joel},
-  title = {Creating Collapsible Output with Knitr Chunk Hooks},
-  date = {2023-06-30},
-  url = {https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/},
-  langid = {en}
-}
-</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
-Schneider, W. J. (2023, June 30). Creating collapsible output with knitr
-chunk hooks. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/">https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/</a>
-</div></div></section></div> ]]></description>
-  <category>knitr</category>
-  <category>markdown</category>
-  <guid>https://wjschne.github.io/posts/creating-collapsible-output-with-knitr-chunk-hooks/</guid>
-  <pubDate>Fri, 30 Jun 2023 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
