@@ -10,7 +10,717 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Thu, 25 Sep 2025 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 26 Sep 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recreating APA Manual Table 7.16 in R with apa7</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/apatables/apa716.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="making-tables-in-apa-style-part-16-of-24" class="level1">
+<h1>Making tables in APA style (Part 16 of 24)</h1>
+<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Highlights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Two levels of grouping with <code>flextable::as_grouped_data</code></li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(apa7)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(flextable)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ftExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme_fun =</span> theme_apa, </span>
+<span id="cb1-6">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
+</div>
+<div id="fig-716" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-716-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.16</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-716-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/apatables/table716.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+<p>Here I simulate and analyze path models of the actor-partner interdependence model. Getting the row titles to be centered under the <code>t</code> column took some trial-and-error.</p>
+<div class="cell FigureWithNote" data-apa-note="CI&nbsp;=&nbsp;confidence interval; H → H&nbsp;=&nbsp;husband-as-actor effect on the husband’s own marital satisfaction; W → W&nbsp;=&nbsp;wife-as-actor effect on the wife's own marital satisfaction; W → H&nbsp;=&nbsp;wife-as-partner effect on the husband’s satisfaction; H → W&nbsp;=&nbsp;husband-as-partner effect on the wife's satisfaction." prefix="" data-tblnum="1" data-custom-style="FigureWithNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```{r}</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| label: tbl-716</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| tbl-cap: "Regressions of Associations Between Marital </span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           Satisfaction and Average Levels of Marital Behavior"</span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| apa-note: "CI&amp;nbsp;=&amp;nbsp;confidence interval; H → H&amp;nbsp;=&amp;nbsp;husband-as-actor </span></span>
+<span id="cb2-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           effect on the husband’s own marital satisfaction; </span></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           W → W&amp;nbsp;=&amp;nbsp;wife-as-actor effect on the wife's own marital </span></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           satisfaction; W → H&amp;nbsp;=&amp;nbsp;wife-as-partner effect on the </span></span>
+<span id="cb2-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           husband’s satisfaction; H → W&amp;nbsp;=&amp;nbsp;husband-as-partner </span></span>
+<span id="cb2-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|           effect on the wife's satisfaction."</span></span>
+<span id="cb2-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">123</span>)</span>
+<span id="cb2-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make Coefficients</span></span>
+<span id="cb2-13">d_coefficients <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> tibble<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tribble</span>(</span>
+<span id="cb2-14">        <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Dependent,    <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Group, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Predictor,     <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>b,</span>
+<span id="cb2-15">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Angry Behavior"</span>,   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Actor"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"H_H"</span>,  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">98.9</span>,</span>
+<span id="cb2-16">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Angry Behavior"</span>,   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Actor"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"W_W"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">87.11</span>,</span>
+<span id="cb2-17">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Angry Behavior"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Partner"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"W_H"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">76.18</span>,</span>
+<span id="cb2-18">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Angry Behavior"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Partner"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"H_W"</span>,  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">91.8</span>,</span>
+<span id="cb2-19">       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Disregard"</span>,   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Actor"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"H_H"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">38.62</span>,</span>
+<span id="cb2-20">       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Disregard"</span>,   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Actor"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"W_W"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">47.54</span>,</span>
+<span id="cb2-21">       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Disregard"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Partner"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"W_H"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">82.81</span>,</span>
+<span id="cb2-22">       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Disregard"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Partner"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"H_W"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">79.36</span>,</span>
+<span id="cb2-23">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Distancing"</span>,   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Actor"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"H_H"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">47.42</span>,</span>
+<span id="cb2-24">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Distancing"</span>,   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Actor"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"W_W"</span>,   <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3.04</span>,</span>
+<span id="cb2-25">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Distancing"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Partner"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"W_H"</span>,  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.05</span>,</span>
+<span id="cb2-26">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Distancing"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Partner"</span>,       <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"H_W"</span>,  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">53.5</span></span>
+<span id="cb2-27">  ) </span>
+<span id="cb2-28"></span>
+<span id="cb2-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make Model</span></span>
+<span id="cb2-30">model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_coefficients <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-31">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">b =</span> b <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-32">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(Predictor, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(Group, Predictor)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-33">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(Dependent, Predictor), snakecase<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>to_snake_case)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-34">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(b, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(b, Predictor), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" * "</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-35">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">b =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(b, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" + "</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> Dependent) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-36">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(Model, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(Dependent, b), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" ~ "</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-37">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pull</span>(Model) </span>
+<span id="cb2-38"></span>
+<span id="cb2-39"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make data</span></span>
+<span id="cb2-40">d_simulated <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> lavaan<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">simulateData</span>(model, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sample.nobs =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-41">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_tibble</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-42">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">row_number</span>(), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.before =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-43">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_longer</span>(angry_behavior<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>distancing, </span>
+<span id="cb2-44">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"y"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dependent"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-45">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> y  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-46">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nest</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Dependent)</span>
+<span id="cb2-47"></span>
+<span id="cb2-48"></span>
+<span id="cb2-49"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Analyze data</span></span>
+<span id="cb2-50">d_analysis <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_simulated <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-51">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(</span>
+<span id="cb2-52">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fit =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(data, \(d) {</span>
+<span id="cb2-53">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> ., <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> d <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>id))</span>
+<span id="cb2-54">      }),</span>
+<span id="cb2-55">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tbl =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(fit, parameters<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>parameters))</span>
+<span id="cb2-56">  </span>
+<span id="cb2-57"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Format data</span></span>
+<span id="cb2-58">d_formatted <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> d_analysis <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-59">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(Dependent, tbl) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-60">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unnest</span>(tbl) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-61">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_format_columns</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-62">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(Variable <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Constant"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-63">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">separate</span>(Variable, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Type"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"i"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"d"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-64">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(i,d), toupper)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-65">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unite</span>(Variable, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(i, d), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sep =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" \u2192 "</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-66">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">relocate</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">95% CI</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.after =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">last_col</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-67">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_grouped_data</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">groups =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dependent"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Type"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-68">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(Type, Variable), \(x) tidyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">replace_na</span>(x, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-69">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Variable =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(Type, Variable, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">recycle0 =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>),</span>
+<span id="cb2-70">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Dependent =</span> snakecase<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">to_sentence_case</span>(Dependent)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-71">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fill</span>(Dependent) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-72">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(Variable <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-73">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Type)</span>
+<span id="cb2-74"></span>
+<span id="cb2-75"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make Table</span></span>
+<span id="cb2-76">d_formatted <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-77">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_column =</span> Dependent, </span>
+<span id="cb2-78">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">row_title_align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>,</span>
+<span id="cb2-79">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>, </span>
+<span id="cb2-80">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">no_format_columns =</span> Variable) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-81">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">padding</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb2-82">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">*B*</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, </span>
+<span id="cb2-83">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding.left =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-84">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">width</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.1</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">85</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>), <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)) </span>
+<span id="cb2-85"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```</span></span></code></pre></div></div>
+<div id="tbl-716" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="" data-apa-note="CI&nbsp;=&nbsp;confidence interval; H → H&nbsp;=&nbsp;husband-as-actor effect on the husband’s own marital satisfaction; W → W&nbsp;=&nbsp;wife-as-actor effect on the wife's own marital satisfaction; W → H&nbsp;=&nbsp;wife-as-partner effect on the husband’s satisfaction; H → W&nbsp;=&nbsp;husband-as-partner effect on the wife's satisfaction.">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-716-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Regressions of Associations Between Marital Satisfaction and Average Levels of Marital Behavior</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-716-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-b81e0276{}.cl-b7b8a0e8{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b7b8a0fc{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b8183256{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-b8183260{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-b818326a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:20pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-b818531c{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b818531d{width:0.85in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185326{width:2in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185327{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185328{width:0.85in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185330{width:2in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185331{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185332{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b818533a{width:0.85in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185344{width:2in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185345{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185346{width:0.85in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185347{width:2in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b818534e{width:1.1in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b818534f{width:0.85in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b8185350{width:2in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-b81e0276"><thead><tr style="overflow-wrap:break-word;"><th class="cl-b818531c"><p class="cl-b8183256"><span class="cl-b7b8a0e8">Variable</span></p></th><th class="cl-b818531d"><p class="cl-b8183256"><span class="cl-b7b8a0fc">B</span></p></th><th class="cl-b818531d"><p class="cl-b8183256"><span class="cl-b7b8a0fc">SE</span></p></th><th class="cl-b818531d"><p class="cl-b8183256"><span class="cl-b7b8a0fc">t</span></p></th><th class="cl-b818531d"><p class="cl-b8183256"><span class="cl-b7b8a0fc">p</span></p></th><th class="cl-b8185326"><p class="cl-b8183256"><span class="cl-b7b8a0e8">95%</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">CI</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-b8185327"><p class="cl-b8183256"><span class="cl-b7b8a0e8">Angry</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">behavior</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b8183260"><span class="cl-b7b8a0e8">Actor</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">H</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">H</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−88.77</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">14.91</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−5.96</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[−118.79,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−58.75]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">W</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">W</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−83.72</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">13.84</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−6.05</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[−111.60,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−55.84]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b8183260"><span class="cl-b7b8a0e8">Partner</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">W</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">H</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−70.92</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">17.41</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−4.07</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[−105.98,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−35.86]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185332"><p class="cl-b818326a"><span class="cl-b7b8a0e8">H</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">W</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−74.38</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">16.11</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−4.62</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185344"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[−106.83,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−41.93]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-b8185345"><p class="cl-b8183256"><span class="cl-b7b8a0e8">Disregard</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b8183260"><span class="cl-b7b8a0e8">Actor</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">H</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">H</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−33.51</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">14.08</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−2.38</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"> .02 </span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[ −61.87,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8"> −5.15]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">W</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">W</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−65.67</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">13.07</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−5.02</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[ −92.00,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−39.34]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b8183260"><span class="cl-b7b8a0e8">Partner</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">W</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">H</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−78.89</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">16.44</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−4.80</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[−112.01,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−45.77]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185332"><p class="cl-b818326a"><span class="cl-b7b8a0e8">H</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">W</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−83.30</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">15.22</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−5.47</span></p></td><td class="cl-b818533a"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185344"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[−113.95,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−52.65]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-b8185345"><p class="cl-b8183256"><span class="cl-b7b8a0e8">Distancing</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b8183260"><span class="cl-b7b8a0e8">Actor</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">H</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">H</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−31.47</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">14.10</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−2.23</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"> .03 </span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[ −59.86,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8"> −3.08]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">W</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">W</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">  9.47</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">13.09</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"> 0.72</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"> .47 </span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[ −16.90,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8"> 35.83]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b8183260"><span class="cl-b7b8a0e8">Partner</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b8185331"><p class="cl-b818326a"><span class="cl-b7b8a0e8">W</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">H</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−14.79</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">16.47</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−0.90</span></p></td><td class="cl-b8185328"><p class="cl-b8183256"><span class="cl-b7b8a0e8"> .37 </span></p></td><td class="cl-b8185330"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[ −47.95,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8"> 18.37]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b818534e"><p class="cl-b818326a"><span class="cl-b7b8a0e8">H</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">→</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">W</span></p></td><td class="cl-b818534f"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−73.34</span></p></td><td class="cl-b818534f"><p class="cl-b8183256"><span class="cl-b7b8a0e8">15.24</span></p></td><td class="cl-b818534f"><p class="cl-b8183256"><span class="cl-b7b8a0e8">−4.81</span></p></td><td class="cl-b818534f"><p class="cl-b8183256"><span class="cl-b7b8a0e8">&lt;.001</span></p></td><td class="cl-b8185350"><p class="cl-b8183256"><span class="cl-b7b8a0e8">[−104.03,</span><span class="cl-b7b8a0e8"> </span><span class="cl-b7b8a0e8">−42.65]</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+<div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<em>Note</em>. CI&nbsp;=&nbsp;confidence interval; H → H&nbsp;=&nbsp;husband-as-actor effect on the husband’s own marital satisfaction; W → W&nbsp;=&nbsp;wife-as-actor effect on the wife’s own marital satisfaction; W → H&nbsp;=&nbsp;wife-as-partner effect on the husband’s satisfaction; H → W&nbsp;=&nbsp;husband-as-partner effect on the wife’s satisfaction.
+</div>
+</div>
+</div>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.16 in {R} with Apa7},
+  date = {2025-09-26},
+  url = {https://wjschne.github.io/posts/apatables/apa716.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, September 26). Recreating APA Manual Table 7.16
+in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa716.html">https://wjschne.github.io/posts/apatables/apa716.html</a>
+</div></div></section></div> ]]></description>
+  <category>R</category>
+  <category>APA Style</category>
+  <guid>https://wjschne.github.io/posts/apatables/apa716.html</guid>
+  <pubDate>Fri, 26 Sep 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Recreating APA Manual Table 7.15 in R with apa7</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -692,7 +1402,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-714" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-714" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-714-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1106,7 +1816,7 @@ background-color: null;
 font-style: inherit;">align =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"left"</span>) </span></code></pre></div></div>
-<div id="tbl-714" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="*N*&nbsp;=&nbsp;307. The extraction method was principal axis factoring with an oblique (promax with Kaiser Normalization) rotation. Factor loadings above .30 are in bold. Reverse-scored items are denoted with (R). Adapted from “Individual Differences in Activation of the Parental Care Motivational System: Assessment, Prediction, and Implications,” by E. E. Buckels, A. T. Beall, M. K. Hofer, E. Y. Lin, Z. Zhou, and M. Schaller, 2015, *Journal of Personality and Social Psychology, 108*(3), p. 501 ([https://doi.org/10.1037/pspp0000023](https://doi.org/10.1037/pspp0000023)). Copyright 2015 by the American Psychological Association." prefix="">
+<div id="tbl-714" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="*N*&nbsp;=&nbsp;307. The extraction method was principal axis factoring with an oblique (promax with Kaiser Normalization) rotation. Factor loadings above .30 are in bold. Reverse-scored items are denoted with (R). Adapted from “Individual Differences in Activation of the Parental Care Motivational System: Assessment, Prediction, and Implications,” by E. E. Buckels, A. T. Beall, M. K. Hofer, E. Y. Lin, Z. Zhou, and M. Schaller, 2015, *Journal of Personality and Social Psychology, 108*(3), p. 501 ([https://doi.org/10.1037/pspp0000023](https://doi.org/10.1037/pspp0000023)). Copyright 2015 by the American Psychological Association.">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-714-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1203,7 +1913,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-713" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-713" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1735,7 +2445,7 @@ background-color: null;
 font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1.5</span>) </span></code></pre></div></div>
-<div id="tbl-713" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]" prefix="" data-tblnum="1">
+<div id="tbl-713" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]" data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1835,7 +2545,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-712" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2260,7 +2970,7 @@ background-color: null;
 font-style: inherit;">9</span>, .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">7</span>))</span></code></pre></div></div>
-<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001">
+<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2357,7 +3067,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-711" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-711" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-711-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2467,7 +3177,7 @@ background-color: null;
 font-style: inherit;">4</span>), <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)))</span></code></pre></div></div>
-<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal." data-tblnum="1" prefix="">
+<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal.">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-711-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3145,7 +3855,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3469,7 +4179,7 @@ font-style: inherit;">column_formats =</span> my_formatter) </span>
 <span id="cb2-73"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." data-tblnum="1" prefix="">
+<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4095,7 +4805,7 @@ font-style: inherit;">001</span>))</span>
 <span id="cb2-89"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-78" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="For each participant, the logistic function was fit to target fixations separately. The maximum asymptote is the asymptotic degree of looking at the end of the time course of fixations. The crossover point is the point in time the function crosses the midway point between peak and baseline. The slope represents the rate of change in the function measured at the crossover. Mean parameter values for each of the analyses are shown for the 9-year-olds (*n*&nbsp;=&nbsp;24) and 16-year-olds (*n*&nbsp;=&nbsp;18), as well as the results of t tests (assuming unequal variance) comparing the parameter estimates between the two ages.">
+<div id="tbl-78" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="For each participant, the logistic function was fit to target fixations separately. The maximum asymptote is the asymptotic degree of looking at the end of the time course of fixations. The crossover point is the point in time the function crosses the midway point between peak and baseline. The slope represents the rate of change in the function measured at the crossover. Mean parameter values for each of the analyses are shown for the 9-year-olds (*n*&nbsp;=&nbsp;24) and 16-year-olds (*n*&nbsp;=&nbsp;18), as well as the results of t tests (assuming unequal variance) comparing the parameter estimates between the two ages." data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-78-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4193,7 +4903,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-77" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-77" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-77-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4541,7 +5251,7 @@ font-style: inherit;">*^*p* &lt; .001"</span>))</span>
 <span id="cb2-45"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-77" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1">
+<div id="tbl-77" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-77-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4633,7 +5343,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-76" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-76" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-76-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5044,7 +5754,7 @@ font-style: inherit;">4</span>))</span>
 <span id="cb2-70"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores." prefix="" data-tblnum="1">
+<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores." data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-76-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5140,7 +5850,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-75" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-75" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-75-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5419,7 +6129,7 @@ font-style: inherit;">4</span>)))</span>
 <span id="cb2-42"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-75" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="A, X, Y, and B&nbsp;=&nbsp;tone, clicker, steady light, and flashing light, respectively (counterbalanced), with the constraint that A and B are drawn from one modality and X and Y from another (counterbalanced); plus sign&nbsp;(+)&nbsp;=&nbsp;shock to floor of rat chamber; minus sign&nbsp;(–)&nbsp;=&nbsp;absence of shock." prefix="" data-tblnum="1">
+<div id="tbl-75" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="A, X, Y, and B&nbsp;=&nbsp;tone, clicker, steady light, and flashing light, respectively (counterbalanced), with the constraint that A and B are drawn from one modality and X and Y from another (counterbalanced); plus sign&nbsp;(+)&nbsp;=&nbsp;shock to floor of rat chamber; minus sign&nbsp;(–)&nbsp;=&nbsp;absence of shock." data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-75-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5515,7 +6225,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" data-fignum="1" prefix="" data-fig-align="left" data-custom-style="FigureWithoutNote">
+<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" prefix="" data-fignum="1" data-fig-align="left" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5799,7 +6509,7 @@ font-style: inherit;">"Sample"</span>) </span>
 <span id="cb2-52"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" data-tblnum="1" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task." prefix="">
+<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" prefix="" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task." data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5897,7 +6607,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -6207,7 +6917,7 @@ font-style: inherit;">"gray60"</span>))</span>
 <span id="cb2-41"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." prefix="" data-tblnum="1">
+<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -8025,7 +8735,7 @@ font-style: inherit;">1.28</span>)) </span>
 <span id="cb5-51"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="5" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" prefix="" data-image-preview="true">
+<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" data-tblnum="5" data-image-preview="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -10963,2080 +11673,6 @@ ggplot2 using ggarrow and arrowheadr. <em>Schneirographs</em>. <a href="https://
   <category>ggplot2</category>
   <guid>https://wjschne.github.io/posts/2023-08-26-making-a-custom-arrowhead-for-ggplot2-using-ggarrow-and-arrowheadr/</guid>
   <pubDate>Sat, 26 Aug 2023 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Annotated equations in ggplot2</title>
-  <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The <a href="https://www.stat.auckland.ac.nz/~paul/Reports/dvir/xdvir/xdvir.html">xdvir package</a>, which inserts <img src="https://latex.codecogs.com/png.latex?%5CLaTeX"> equations into grid-based plots (including ggplot2) is now on CRAN. I recommend xdvir over the older methods presented in this post. Other than this message, I have left this post “as is.”</p>
-</div>
-</div>
-<p>R has a mathematical annotation system via <a href="https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html">plotmath</a>, but I like the look of true <img src="https://latex.codecogs.com/png.latex?%5CLaTeX"> equations better.</p>
-<p>Getting <img src="https://latex.codecogs.com/png.latex?%5CLaTeX"> equations into ggplot2 plots has never been easy. The <a href="https://cran.r-project.org/package=tikzDevice">tikzdevice</a> package is great if you are generating a .pdf document. If you are not, then you might want to consider other options.</p>
-<p>The easiest, hassle-free option that I know of is to create the equation in a <img src="https://latex.codecogs.com/png.latex?%5CTeX"> editor and then import the resulting .pdf using <a href="https://github.com/GuangchuangYu/ggimage">ggimage</a>. If I need the best possible image quality, I convert the .pdf to .svg using <code>dvisvgm</code> (see example below).</p>
-<p>For annotated equations, I like using the aptly-named <a href="https://ctan.org/pkg/annotate-equations?lang=en">annotate-equations</a> <img src="https://latex.codecogs.com/png.latex?%5CLaTeX"> package. It uses tikz to remember where parts of equations are on the page. The <code>\eqnmark</code> and <code>\eqnmarkbox</code> functions work like so:</p>
-<p><code>\eqnmark[color]{node_name}{latex equation terms}</code></p>
-<p>Then use the <code>\annotate</code> function like so:</p>
-<p><code>\annotate[color]{above,left}{node_name}{annotation text}</code></p>
-<section id="my-annotated-equation" class="level1 page-columns page-full">
-<h1>My Annotated Equation</h1>
-<p>I am going to refer to the same file name with various endings (e.g., .tex, .pdf, .svg), so I will define it here.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">myfile <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"annotatedequationsimple"</span></span></code></pre></div></div>
-</div>
-<p>Here is the code for the annotated equation. It is saved in <code>annotatedequationsimple.tex</code>.</p>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>LaTeX code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```{tikz zscorecode}</span></span>
-<span id="cb2-2"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| code-fold: show</span></span>
-<span id="cb2-3"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| code-summary: "LaTeX code"</span></span>
-<span id="cb2-4"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb2-5"></span>
-<span id="cb2-6"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\documentclass[border={25pt 50pt -35pt 52pt}]{standalone}</span></span>
-<span id="cb2-7"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%\documentclass{article}</span></span>
-<span id="cb2-8"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\usepackage{annotate-equations}</span></span>
-<span id="cb2-9"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\usepackage{xcolor}</span></span>
-<span id="cb2-10"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\definecolor{myviolet}{HTML}{440154}</span></span>
-<span id="cb2-11"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\definecolor{myblue}{HTML}{3B528B}</span></span>
-<span id="cb2-12"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\definecolor{myindigo}{HTML}{21908C}</span></span>
-<span id="cb2-13"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\definecolor{mygreen}{HTML}{5DC863}</span></span>
-<span id="cb2-14"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\usepackage[sfdefault,condensed]{roboto}</span></span>
-<span id="cb2-15"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\begin{document}</span></span>
-<span id="cb2-16"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    </span></span>
-<span id="cb2-17"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\renewcommand{\eqnhighlightheight}{\mathstrut}</span></span>
-<span id="cb2-18"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    </span></span>
-<span id="cb2-19"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\huge$</span></span>
-<span id="cb2-20"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\eqnmark[myviolet]{z}{z} = </span></span>
-<span id="cb2-21"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\frac{</span></span>
-<span id="cb2-22"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    \eqnmark[myblue]{x}{X}-</span></span>
-<span id="cb2-23"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    \eqnmark[myindigo]{mu}{\mu}}{</span></span>
-<span id="cb2-24"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    \eqnmark[mygreen]{sigma}{\sigma}}</span></span>
-<span id="cb2-25"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span></span>
-<span id="cb2-26"></span>
-<span id="cb2-27"></span>
-<span id="cb2-28"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\annotate[</span></span>
-<span id="cb2-29"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    yshift=1em, </span></span>
-<span id="cb2-30"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    myviolet,</span></span>
-<span id="cb2-31"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    align=right]</span></span>
-<span id="cb2-32"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {above, left}</span></span>
-<span id="cb2-33"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {z}</span></span>
-<span id="cb2-34"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {$z$-score}</span></span>
-<span id="cb2-35"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    </span></span>
-<span id="cb2-36"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\annotate[</span></span>
-<span id="cb2-37"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    yshift=1em, </span></span>
-<span id="cb2-38"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    myblue, </span></span>
-<span id="cb2-39"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    align=right]</span></span>
-<span id="cb2-40"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {above,left}</span></span>
-<span id="cb2-41"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {x}</span></span>
-<span id="cb2-42"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {Observed\\ Score}</span></span>
-<span id="cb2-43"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    </span></span>
-<span id="cb2-44"></span>
-<span id="cb2-45"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\annotate[</span></span>
-<span id="cb2-46"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    yshift=1em, </span></span>
-<span id="cb2-47"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    myindigo]</span></span>
-<span id="cb2-48"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {above,right}</span></span>
-<span id="cb2-49"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {mu}</span></span>
-<span id="cb2-50"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {Population\\ Mean\\ $\mu = 100$}</span></span>
-<span id="cb2-51"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    </span></span>
-<span id="cb2-52"></span>
-<span id="cb2-53"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    </span></span>
-<span id="cb2-54"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\annotate[</span></span>
-<span id="cb2-55"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    yshift=-.4em, </span></span>
-<span id="cb2-56"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    mygreen, </span></span>
-<span id="cb2-57"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    align=right]</span></span>
-<span id="cb2-58"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {below,left}</span></span>
-<span id="cb2-59"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {sigma}</span></span>
-<span id="cb2-60"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    {Population\\ Standard\\ Deviation\\ $\sigma = 15$}</span></span>
-<span id="cb2-61"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    </span></span>
-<span id="cb2-62"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\end{document}</span></span>
-<span id="cb2-63"></span>
-<span id="cb2-64"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```</span></span></code></pre></div></div>
-</details>
-</div>
-<p>Now convert the .tex file to .pdf:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'pdflatex -interaction=nonstopmode '</span>, myfile,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'.tex'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb3-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">shell</span>()</span></code></pre></div></div>
-</div>
-<p>Now we can convert the .pdf to .svg:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"dvisvgm --pdf --output="</span>, myfile,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">".svg "</span>, myfile,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">".pdf"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb4-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">shell</span>()</span></code></pre></div></div>
-</div>
-<div class="page-columns page-full"><p>For best image quality, import the .svg file with <a href="https://coolbutuseless.github.io/package/svgparser/index.html">svgparser</a>. The <code>read_svg</code> function will create a grid grob that can plotted directly using <code>ggplot2::annotation_custom</code>. </p><div class="no-row-height column-margin column-container"><span class="">If you want fine control of the imported grob, you can plot it using the <a href="https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html#gggrid">gggrid</a> package. See <a href="https://coolbutuseless.github.io/package/svgparser/articles/gggrid.html">here</a> for an example.</span></div></div>
-<p>In the simplest case, we can do this:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(svgparser)</span>
-<span id="cb5-2">my_svg <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> svgparser<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">read_svg</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(myfile, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">".svg"</span>))</span>
-<span id="cb5-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_void</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">annotation_custom</span>(my_svg, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xmin =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xmax =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymin =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymax =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div id="fig-simpleplot" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-simpleplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-simpleplot-1.svg" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-simpleplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: A simple plot with an annotated equation.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>However, this is no better than just displaying the .svg directly. You probably want to embed the equation in a plot. For example:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">mu <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span></span>
-<span id="cb6-2">sigma <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span></span>
-<span id="cb6-3">plot_height <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dnorm</span>(mu, mu, sigma)</span>
-<span id="cb6-4">lb <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> sigma <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> mu</span>
-<span id="cb6-5">ub <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> sigma <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> mu</span>
-<span id="cb6-6"></span>
-<span id="cb6-7"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb6-8">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">annotation_custom</span>(my_svg,</span>
-<span id="cb6-9">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xmin =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">112</span>,</span>
-<span id="cb6-10">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xmax =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">164</span>,</span>
-<span id="cb6-11">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymin =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">33</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> plot_height) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb6-12">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_function</span>(</span>
-<span id="cb6-13">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun =</span> \(x) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dnorm</span>(x, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mean =</span> mu, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sd =</span> sigma),</span>
-<span id="cb6-14">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"area"</span>,</span>
-<span id="cb6-15">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1000</span>,</span>
-<span id="cb6-16">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"dodgerblue"</span>,</span>
-<span id="cb6-17">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span>
-<span id="cb6-18">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb6-19">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_classic</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Roboto Condensed"</span>,</span>
-<span id="cb6-20">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">18</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb6-21">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(</span>
-<span id="cb6-22">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_markdown</span>(),</span>
-<span id="cb6-23">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_markdown</span>(),</span>
-<span id="cb6-24">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_blank</span>()</span>
-<span id="cb6-25">  )  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb6-26">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_continuous</span>(</span>
-<span id="cb6-27">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Observed Score *X*&lt;br&gt;*z*"</span>,</span>
-<span id="cb6-28">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(lb, ub, sigma),</span>
-<span id="cb6-29">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(lb, ub),</span>
-<span id="cb6-30">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> \(x) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb6-31">      signs<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">signs</span>(x),</span>
-<span id="cb6-32">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;br&gt;"</span>,</span>
-<span id="cb6-33">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(</span>
-<span id="cb6-34">        x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> mu,</span>
-<span id="cb6-35">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;em&gt;&amp;mu;&lt;/em&gt;"</span>,</span>
-<span id="cb6-36">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb6-37">          signs<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">signs</span>((x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> mu) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> sigma,</span>
-<span id="cb6-38">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">add_plusses =</span> T,</span>
-<span id="cb6-39">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label_at_zero =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"none"</span></span>
-<span id="cb6-40">          ),</span>
-<span id="cb6-41">          <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;em&gt;&amp;sigma;&lt;/em&gt;"</span></span>
-<span id="cb6-42">        )</span>
-<span id="cb6-43">      )</span>
-<span id="cb6-44">    )</span>
-<span id="cb6-45">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb6-46">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(</span>
-<span id="cb6-47">    <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>,</span>
-<span id="cb6-48">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, plot_height),</span>
-<span id="cb6-49">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">expansion</span>(),</span>
-<span id="cb6-50">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span></span>
-<span id="cb6-51">  ) </span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div id="fig-svg" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-svg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-svg-1.svg" class="img-fluid figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-svg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Importing an .svg file via svgparser and <code>annotation_custom</code>.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>If you can live with just a little pixelation, the <a href="https://github.com/GuangchuangYu/ggimage">ggimage</a> package can import a .pdf directly with good results and less hassle, provided you render the plot with the <a href="https://ragg.r-lib.org/">ragg</a> package.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_image</span>(</span>
-<span id="cb7-3">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(</span>
-<span id="cb7-4">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">140</span>,</span>
-<span id="cb7-5">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">65</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> plot_height,</span>
-<span id="cb7-6">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">image =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"annotatedequationsimple.pdf"</span></span>
-<span id="cb7-7">    ),</span>
-<span id="cb7-8">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(x, y, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">image =</span> image),</span>
-<span id="cb7-9">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">70</span></span>
-<span id="cb7-10">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-11">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_function</span>(</span>
-<span id="cb7-12">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun =</span> \(x) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dnorm</span>(x, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mean =</span> mu, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sd =</span> sigma),</span>
-<span id="cb7-13">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"area"</span>,</span>
-<span id="cb7-14">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1000</span>,</span>
-<span id="cb7-15">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"dodgerblue"</span>,</span>
-<span id="cb7-16">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span>
-<span id="cb7-17">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-18">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_classic</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Roboto Condensed"</span>, </span>
-<span id="cb7-19">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">18</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-20">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(</span>
-<span id="cb7-21">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_markdown</span>(),</span>
-<span id="cb7-22">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_markdown</span>(),</span>
-<span id="cb7-23">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_blank</span>()</span>
-<span id="cb7-24">  )  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-25">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_continuous</span>(</span>
-<span id="cb7-26">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Observed Score *X*&lt;br&gt;*z*"</span>,</span>
-<span id="cb7-27">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(lb, ub, sigma),</span>
-<span id="cb7-28">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(lb, ub),</span>
-<span id="cb7-29">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> \(x) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb7-30">      signs<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">signs</span>(x),</span>
-<span id="cb7-31">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;br&gt;"</span>,</span>
-<span id="cb7-32">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(</span>
-<span id="cb7-33">        x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> mu,</span>
-<span id="cb7-34">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;em&gt;&amp;mu;&lt;/em&gt;"</span>,</span>
-<span id="cb7-35">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb7-36">          signs<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">signs</span>((x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> mu) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> sigma,</span>
-<span id="cb7-37">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">add_plusses =</span> T,</span>
-<span id="cb7-38">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label_at_zero =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"none"</span></span>
-<span id="cb7-39">          ),</span>
-<span id="cb7-40">          <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;em&gt;&amp;sigma;&lt;/em&gt;"</span></span>
-<span id="cb7-41">        )</span>
-<span id="cb7-42">      )</span>
-<span id="cb7-43">    )</span>
-<span id="cb7-44">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-45">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(</span>
-<span id="cb7-46">    <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>,</span>
-<span id="cb7-47">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, plot_height),</span>
-<span id="cb7-48">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">expansion</span>(),</span>
-<span id="cb7-49">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span></span>
-<span id="cb7-50">  )</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div id="fig-pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-pdf-1.png" class="img-fluid figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Importing a .pdf file via <code>ggimage::geom_image</code>.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="a-more-complex-example" class="level1">
-<h1>A more complex example</h1>
-<p>In this example, I used the <code>\eqnmarkbox</code> function for greater clarity. The .tex file is saved in a file called <code>annotatedequation.tex</code>.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>LaTeX code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">\documentclass</span>[border={10pt 48pt -45pt 62pt}]{<span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">standalone</span>}</span>
-<span id="cb8-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%\documentclass{article}</span></span>
-<span id="cb8-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">\usepackage</span>{<span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">annotate-equations</span>}</span>
-<span id="cb8-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">\usepackage</span>{<span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">xcolor</span>}</span>
-<span id="cb8-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\definecolor</span>{myviolet}{HTML}{414487}</span>
-<span id="cb8-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\definecolor</span>{myblue}{HTML}{2F6C8E}</span>
-<span id="cb8-7"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\definecolor</span>{myblue2}{HTML}{21908C}</span>
-<span id="cb8-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\definecolor</span>{mygreen}{HTML}{2FB47C}</span>
-<span id="cb8-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\definecolor</span>{mygreen2}{HTML}{7AD151}</span>
-<span id="cb8-10"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">\usepackage</span>[sfdefault,condensed]{<span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">roboto</span>}</span>
-<span id="cb8-11"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">\begin</span>{<span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">document</span>}</span>
-<span id="cb8-12">    </span>
-<span id="cb8-13"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\renewcommand</span>{<span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">\eqnhighlightheight</span>}{<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\mathstrut</span>}</span>
-<span id="cb8-14">    </span>
-<span id="cb8-15"><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\LARGE</span></span>
-<span id="cb8-16"><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\eqnmarkbox</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">[myviolet]{nodeP}{P</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\left</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">(T </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\le</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\tau</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\right</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">)} = </span></span>
-<span id="cb8-17"><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\eqnmarkbox</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">[myblue]{phi}{</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\Phi</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">}</span></span>
-<span id="cb8-18"><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\left</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">(</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\frac</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{</span></span>
-<span id="cb8-19"><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\eqnmarkbox</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">[myblue2]{tau}{</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\tau</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">}-</span></span>
-<span id="cb8-20"><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\eqnmarkbox</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">[mygreen]{esttrue}{</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\hat</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{T}}}{</span></span>
-<span id="cb8-21"><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\eqnmarkbox</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">[mygreen2]{sigma}{</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\sigma</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">_{T - </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\hat</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{T}}}}</span></span>
-<span id="cb8-22"><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\right</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">)$</span></span>
-<span id="cb8-23"></span>
-<span id="cb8-24"></span>
-<span id="cb8-25"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\annotate</span>[</span>
-<span id="cb8-26">    yshift=1em, </span>
-<span id="cb8-27">    xshift=11mm, </span>
-<span id="cb8-28">    myviolet]</span>
-<span id="cb8-29">    {above, left}</span>
-<span id="cb8-30">    {nodeP}</span>
-<span id="cb8-31">    {Probability true score <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$T$</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\\</span> is less than threshold <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\tau</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span> }</span>
-<span id="cb8-32">    </span>
-<span id="cb8-33"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\annotate</span>[</span>
-<span id="cb8-34">    yshift=-.6em,</span>
-<span id="cb8-35">    myblue]</span>
-<span id="cb8-36">    {below,left}</span>
-<span id="cb8-37">    {phi}</span>
-<span id="cb8-38">    {Standard Normal Cumulative<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\\</span> Distribution Function <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\Phi</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">()$</span>}</span>
-<span id="cb8-39">    </span>
-<span id="cb8-40"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\annotate</span>[</span>
-<span id="cb8-41">    yshift=1.4em, </span>
-<span id="cb8-42">    xshift=4mm, </span>
-<span id="cb8-43">    myblue2]</span>
-<span id="cb8-44">    {above,left}</span>
-<span id="cb8-45">    {tau}</span>
-<span id="cb8-46">    {Threshold <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\tau</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">=70$</span>}</span>
-<span id="cb8-47">    </span>
-<span id="cb8-48"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\annotate</span>[</span>
-<span id="cb8-49">    yshift=3em, </span>
-<span id="cb8-50">    xshift=7mm, </span>
-<span id="cb8-51">    mygreen]</span>
-<span id="cb8-52">    {above,left}</span>
-<span id="cb8-53">    {esttrue}</span>
-<span id="cb8-54">    {Estimated True Score <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\hat</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{T}=r_{XX}(X-</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\mu</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">)+</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\mu</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\\</span> </span>
-<span id="cb8-55">    Observed Score <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$X</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\sim</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\mathcal</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{N}</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\left</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">(</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\mu</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> = 100, </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\sigma</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">=15</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\right</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">)$</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\\</span> </span>
-<span id="cb8-56">    Reliability Coefficient <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$r_{XX}=</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\{</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">.80,.85,.90,.95,.98</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span>}</span>
-<span id="cb8-57">    </span>
-<span id="cb8-58"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\annotate</span>[</span>
-<span id="cb8-59">    yshift=-2em, </span>
-<span id="cb8-60">    mygreen2]</span>
-<span id="cb8-61">    {below,left}</span>
-<span id="cb8-62">    {sigma}</span>
-<span id="cb8-63">    {Standard Error of the Estimate<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">\\</span> </span>
-<span id="cb8-64">    <span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">$</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\sigma</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">_{T-</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\hat</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{T}}=</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\sigma\sqrt</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">{r_{XX}-r_{XX}^2}$</span>}</span>
-<span id="cb8-65">    </span>
-<span id="cb8-66"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">\end</span>{<span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">document</span>}</span></code></pre></div></div>
-</details>
-</div>
-<p>Now convert .tex to .pdf:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">myfile <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"annotatedequation"</span></span>
-<span id="cb9-2"></span>
-<span id="cb9-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'pdflatex -interaction=nonstopmode '</span>, myfile,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'.tex'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb9-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">shell</span>()</span></code></pre></div></div>
-</details>
-</div>
-<p>And we are ready to plot. This plot shows the probability that an observed score will have a true score less than a specific threshold, given a reliability coefficient.</p>
-<div class="cell preview-image">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">viridis_start <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span></span>
-<span id="cb10-2">viridis_end <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span></span>
-<span id="cb10-3">threshold <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">70</span></span>
-<span id="cb10-4"></span>
-<span id="cb10-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Find where a line intersects with the normal cdf</span></span>
-<span id="cb10-6">find_x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">rxx =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>,</span>
-<span id="cb10-7">                   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">slope =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.0048</span>,</span>
-<span id="cb10-8">                   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">intercept =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">66</span>,</span>
-<span id="cb10-9">                   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mu =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>,</span>
-<span id="cb10-10">                   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sigma =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>,</span>
-<span id="cb10-11">                   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">start_x =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">60</span>,</span>
-<span id="cb10-12">                   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">threshold =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">70</span>) {</span>
-<span id="cb10-13">  x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> start_x</span>
-<span id="cb10-14">  precision <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">00001</span></span>
-<span id="cb10-15">  diff_y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> precision <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span></span>
-<span id="cb10-16">  reps <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span></span>
-<span id="cb10-17">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">while</span> (<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">abs</span>(diff_y) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> precision) {</span>
-<span id="cb10-18">    x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> diff_y </span>
-<span id="cb10-19">    line_y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> slope <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> intercept</span>
-<span id="cb10-20">    curve_y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pnorm</span>(threshold,</span>
-<span id="cb10-21">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mean =</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> (x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> mu) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> mu,</span>
-<span id="cb10-22">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sd =</span> sigma <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>))</span>
-<span id="cb10-23">    </span>
-<span id="cb10-24">    line_y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> slope <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> intercept</span>
-<span id="cb10-25">    curve_y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pnorm</span>(threshold,</span>
-<span id="cb10-26">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mean =</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> (x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> mu) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> mu,</span>
-<span id="cb10-27">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sd =</span> sigma <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>))</span>
-<span id="cb10-28">    diff_y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> line_y <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> curve_y</span>
-<span id="cb10-29">    reps <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> reps <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span></span>
-<span id="cb10-30">  }</span>
-<span id="cb10-31">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> x, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">p =</span> line_y, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mu =</span> mu, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sigma =</span> sigma, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">threshold =</span> threshold, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reps =</span> reps)</span>
-<span id="cb10-32">}</span>
-<span id="cb10-33"></span>
-<span id="cb10-34"></span>
-<span id="cb10-35"></span>
-<span id="cb10-36"></span>
-<span id="cb10-37">dimage <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">data.frame</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">115</span>, </span>
-<span id="cb10-38">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">62</span>, </span>
-<span id="cb10-39">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">image =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(myfile, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">".pdf"</span>))</span>
-<span id="cb10-40">v_rxx <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.80</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.95</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.05</span>), <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.98</span>), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)</span>
-<span id="cb10-41"></span>
-<span id="cb10-42">d_threshold <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span></span>
-<span id="cb10-43">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">crossing</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">160</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.1</span>), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>),</span>
-<span id="cb10-44">           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">rxx =</span> v_rxx,</span>
-<span id="cb10-45">           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">threshold =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">70</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-46">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(</span>
-<span id="cb10-47">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">see =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>),</span>
-<span id="cb10-48">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mu =</span> (x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> rxx <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>,</span>
-<span id="cb10-49">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">p =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pnorm</span>(threshold, mu, see)</span>
-<span id="cb10-50">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-51">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(rxx) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-52">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">acceleration =</span> p <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">lag</span>(p)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-53">  ungroup</span>
-<span id="cb10-54"></span>
-<span id="cb10-55"></span>
-<span id="cb10-56"></span>
-<span id="cb10-57">d_labels <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">rxx =</span> v_rxx) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-58">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">map_df</span>(rxx, find_x)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb10-59">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unnest</span>(x)</span>
-<span id="cb10-60"></span>
-<span id="cb10-61">d_threshold <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-62">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(x, p)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-63">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">factor</span>(rxx)), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lwd =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-64">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_vline</span>(</span>
-<span id="cb10-65">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xintercept =</span> threshold),</span>
-<span id="cb10-66">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lty =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,</span>
-<span id="cb10-67">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lwd =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,</span>
-<span id="cb10-68">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray30"</span></span>
-<span id="cb10-69">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-70">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_image</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> dimage,</span>
-<span id="cb10-71">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> x,</span>
-<span id="cb10-72">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> y,</span>
-<span id="cb10-73">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">image =</span> image),</span>
-<span id="cb10-74">             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">87</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-75">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_richtext</span>(</span>
-<span id="cb10-76">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> rxx_label,</span>
-<span id="cb10-77">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">factor</span>(rxx)),</span>
-<span id="cb10-78">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> d_labels <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-79">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">rxx_label =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">prob_label</span>(rxx)),</span>
-<span id="cb10-80">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">angle =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">67</span>,</span>
-<span id="cb10-81">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> WJSmisc<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtext_size</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">13</span>),</span>
-<span id="cb10-82">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label.colour =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>,</span>
-<span id="cb10-83">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#FFFFFF"</span>,</span>
-<span id="cb10-84">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Roboto Condensed"</span>,</span>
-<span id="cb10-85">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label.margin =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mm"</span>),</span>
-<span id="cb10-86">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label.r =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mm"</span>),</span>
-<span id="cb10-87">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label.padding =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unit</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.75</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>), <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mm"</span>)</span>
-<span id="cb10-88">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-89">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_continuous</span>(</span>
-<span id="cb10-90">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Observed Score"</span>,</span>
-<span id="cb10-91">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">160</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>),</span>
-<span id="cb10-92">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">minor_breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">160</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>),</span>
-<span id="cb10-93">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">expansion</span>()</span>
-<span id="cb10-94">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-95">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(</span>
-<span id="cb10-96">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Probability True Score &lt; "</span>, threshold),</span>
-<span id="cb10-97">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">expansion</span>(),</span>
-<span id="cb10-98">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.1</span>),</span>
-<span id="cb10-99">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> prob_label,</span>
-<span id="cb10-100">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb10-101">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-102">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_color_viridis_d</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">begin =</span> viridis_start,</span>
-<span id="cb10-103">                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">end =</span> viridis_end) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-104">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_minimal</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Roboto Condensed"</span>, </span>
-<span id="cb10-105">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">16</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-106">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"none"</span>, </span>
-<span id="cb10-107">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.margin =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unit</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>), <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mm"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-108">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">coord_fixed</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ratio =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>,</span>
-<span id="cb10-109">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">clip =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"off"</span>,</span>
-<span id="cb10-110">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xlim =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">160</span>)) </span></code></pre></div></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
-'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead
-Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-font family 'Roboto Condensed' not found, will use 'sans' instead</code></pre>
-</div>
-<div class="cell-output-display">
-<div id="fig-pthresholdequation" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-pthresholdequation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/index_files/figure-html/fig-pthresholdequation-1.png" class="img-fluid figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pthresholdequation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: The probability that a true score is less than 70 depends on the observed score’s position and reliability coefficient.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2023,
-  author = {Schneider, W. Joel},
-  title = {Annotated Equations in Ggplot2},
-  date = {2023-07-24},
-  url = {https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/},
-  langid = {en}
-}
-</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2023" class="csl-entry quarto-appendix-citeas">
-Schneider, W. J. (2023, July 24). Annotated equations in ggplot2.
-<em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/">https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/</a>
-</div></div></section></div> ]]></description>
-  <category>ggplot2</category>
-  <guid>https://wjschne.github.io/posts/2023-07-23-latex-equation-in-ggplot2/</guid>
-  <pubDate>Mon, 24 Jul 2023 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
