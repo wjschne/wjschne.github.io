@@ -2247,90 +2247,112 @@ library(glue)
 library(dplyr)
 library(tibble)
 library(ggplot2)
-library(ggtext) 
+library(ggtext)
 library(munsell)
 
 if (FALSE) {
   library(ggdiagram)
 }
 
-prob_label &lt;- function (p, accuracy = 0.01, digits = NULL, max_digits = NULL, 
-    remove_leading_zero = TRUE, round_zero_one = TRUE) 
-{
-    if (is.null(digits)) {
-        l &lt;- scales::number(p, accuracy = accuracy)
-    }
-    else {
-        sig_digits &lt;- abs(ceiling(log10(p + p/1e+09)) - digits)
-        pgt99 &lt;- p &gt; 0.99
-        sig_digits[pgt99] &lt;- abs(ceiling(log10(1 - p[pgt99])) - 
-            digits + 1)
-        sig_digits[ceiling(log10(p)) == log10(p) &amp; (-log10(p) &gt;= 
-            digits)] &lt;- sig_digits[ceiling(log10(p)) == log10(p) &amp; 
-            (-log10(p) &gt;= digits)] - 1
-        sig_digits[is.infinite(sig_digits)] &lt;- 0
-        l &lt;- purrr::map2_chr(p, sig_digits, formatC, format = "f", 
-            flag = "#")
-    }
-    if (remove_leading_zero) 
-        l &lt;- sub("^-0", "-", sub("^0", "", l))
+prob_label &lt;- function(
+  p,
+  accuracy = 0.01,
+  digits = NULL,
+  max_digits = NULL,
+  remove_leading_zero = TRUE,
+  round_zero_one = TRUE
+) {
+  if (is.null(digits)) {
+    l &lt;- scales::number(p, accuracy = accuracy)
+  } else {
+    sig_digits &lt;- abs(ceiling(log10(p + p / 1e+09)) - digits)
+    pgt99 &lt;- p &gt; 0.99
+    sig_digits[pgt99] &lt;- abs(
+      ceiling(log10(1 - p[pgt99])) -
+        digits +
+        1
+    )
+    sig_digits[
+      ceiling(log10(p)) == log10(p) &amp; (-log10(p) &gt;= digits)
+    ] &lt;- sig_digits[
+      ceiling(log10(p)) == log10(p) &amp;
+        (-log10(p) &gt;= digits)
+    ] -
+      1
+    sig_digits[is.infinite(sig_digits)] &lt;- 0
+    l &lt;- purrr::map2_chr(p, sig_digits, formatC, format = "f", flag = "#")
+  }
+  if (remove_leading_zero) {
+    l &lt;- sub("^-0", "-", sub("^0", "", l))
+  }
+  if (round_zero_one) {
+    l[p == 0] &lt;- "0"
+    l[p == 1] &lt;- "1"
+    l[p == -1] &lt;- "-1"
+  }
+  if (!is.null(max_digits)) {
     if (round_zero_one) {
-        l[p == 0] &lt;- "0"
-        l[p == 1] &lt;- "1"
-        l[p == -1] &lt;- "-1"
+      l[round(p, digits = max_digits) == 0] &lt;- "0"
+      l[round(p, digits = max_digits) == 1] &lt;- "1"
+      l[round(p, digits = max_digits) == -1] &lt;- "-1"
+    } else {
+      l[round(p, digits = max_digits) == 0] &lt;- paste0(
+        ".",
+        paste0(rep("0", max_digits), collapse = "")
+      )
+      l[round(p, digits = max_digits) == 1] &lt;- paste0(
+        "1.",
+        paste0(rep("0", max_digits), collapse = "")
+      )
+      l[round(p, digits = max_digits) == -1] &lt;- paste0(
+        "-1.",
+        paste0(rep("0", max_digits), collapse = "")
+      )
     }
-    if (!is.null(max_digits)) {
-        if (round_zero_one) {
-            l[round(p, digits = max_digits) == 0] &lt;- "0"
-            l[round(p, digits = max_digits) == 1] &lt;- "1"
-            l[round(p, digits = max_digits) == -1] &lt;- "-1"
-        }
-        else {
-            l[round(p, digits = max_digits) == 0] &lt;- paste0(".", 
-                paste0(rep("0", max_digits), collapse = ""))
-            l[round(p, digits = max_digits) == 1] &lt;- paste0("1.", 
-                paste0(rep("0", max_digits), collapse = ""))
-            l[round(p, digits = max_digits) == -1] &lt;- paste0("-1.", 
-                paste0(rep("0", max_digits), collapse = ""))
-        }
-    }
-    l &lt;- sub(pattern = "-", replacement = "−", x = l)
-    Encoding(l) &lt;- "UTF-8"
-    dim(l) &lt;- dim(p)
-    l
+  }
+  l &lt;- sub(pattern = "-", replacement = "−", x = l)
+  Encoding(l) &lt;- "UTF-8"
+  dim(l) &lt;- dim(p)
+  l
 }
 ui &lt;- fluidPage(
   sidebarLayout(
-      mainPanel(
-      plotOutput(outputId = "distPlot",width = "400px", height = "400px")
+    mainPanel(
+      plotOutput(outputId = "distPlot", width = "400px", height = "400px")
     ),
     sidebarPanel(
-      div(style="display: inline-block; width: 200px;",
-      sliderInput(
-        inputId = "sd_blue",
-        label = "SD for x:",
-        min = 1,
-        max = 10,
-        value = 10
-      )),
-      div(style="display: inline-block; width: 200px;",
-      sliderInput(
-        inputId = "sd_red",
-        label = "SD for y:",
-        min = 1,
-        max = 10,
-        value = 10
-      )),
-      div(style="display: inline-block; width: 200px;",
-      sliderInput(
-        inputId = "r",
-        label = "Correlation (r)",
-        min = 0,
-        max = 1,
-        value = .5, step = .01
-      ))
+      div(
+        style = "display: inline-block; width: 200px;",
+        sliderInput(
+          inputId = "sd_blue",
+          label = "SD for x:",
+          min = 1,
+          max = 10,
+          value = 10
+        )
+      ),
+      div(
+        style = "display: inline-block; width: 200px;",
+        sliderInput(
+          inputId = "sd_red",
+          label = "SD for y:",
+          min = 1,
+          max = 10,
+          value = 10
+        )
+      ),
+      div(
+        style = "display: inline-block; width: 200px;",
+        sliderInput(
+          inputId = "r",
+          label = "Correlation (r)",
+          min = 0,
+          max = 1,
+          value = .5,
+          step = .01
+        )
+      )
     )
-    
   )
 )
 server &lt;- function(input, output) {
@@ -2349,8 +2371,8 @@ server &lt;- function(input, output) {
     tibble(
       x = c(x_red, x_blue, x_pink, x_purple),
       y = c(y_red, y_blue, y_pink, y_purple),
-      width =  c(sd_red, sd_blue, sd_blue, sd_blue),
-      height = c(sd_red, sd_blue, sd_red, sd_red  * r),
+      width = c(sd_red, sd_blue, sd_blue, sd_blue),
+      height = c(sd_red, sd_blue, sd_red, sd_red * r),
       color = c("firebrick4", "dodgerblue4", "orchid", "orchid4"),
       label = c(
         glue("Var(*y*) = {sd_red ^ 2}"),
@@ -2360,11 +2382,13 @@ server &lt;- function(input, output) {
       )
     ) %&gt;%
       ggplot(aes(x, y)) +
-      geom_tile((aes(
-        width = width,
-        height = height,
-        fill = I(color)
-      ))) +
+      geom_tile(
+        (aes(
+          width = width,
+          height = height,
+          fill = I(color)
+        ))
+      ) +
       geom_richtext(
         aes(label = label),
         color = "white",
@@ -2406,12 +2430,8 @@ server &lt;- function(input, output) {
           vjust = vjust
         )
       ) +
-      scale_x_continuous(NULL, 
-                         expand = expansion(add = 1), 
-                         limits = c(0, 20)) +
-      scale_y_continuous(NULL, 
-                         expand = expansion(add = 1), 
-                         limits = c(0, 20))+
+      scale_x_continuous(NULL, expand = expansion(add = 1), limits = c(0, 20)) +
+      scale_y_continuous(NULL, expand = expansion(add = 1), limits = c(0, 20)) +
       coord_equal(clip = "off") +
       theme_void() +
       theme(panel.background = element_rect("black"))
