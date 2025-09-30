@@ -10,7 +10,339 @@
 <atom:link href="https://wjschne.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Tue, 30 Sep 2025 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 01 Oct 2025 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recreating APA Manual Table 7.21 in R with apa7</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/posts/apatables/apa721.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="making-tables-in-apa-style-part-21-of-24" class="level1">
+<h1>Making tables in APA style (Part 21 of 24)</h1>
+<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Highlights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Use of <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a></li>
+<li>Use of thin spaces <code>&amp;thinsp;</code> for footnote superscripts.</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(apa7)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(flextable)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ftExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(easystats)</span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(lme4)</span>
+<span id="cb1-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme_fun =</span> theme_apa, </span>
+<span id="cb1-8">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
+</div>
+<div id="fig-721" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.21</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/posts/apatables/table721.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+<p>I did not have enough information to simulate the three models, so I input the data directly. This made it comparatively easy to recreate. Adding stars to the <img src="https://latex.codecogs.com/png.latex?%5Cchi%5E2"> column was made easier by creating a temporary p-value column with values less than .001 and then applying <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a>.</p>
+<p>The APA Publication Manual recommends following the footnote symbols with a superscripted space. In the <code>apa-note</code>, the superscript symbols a, b, and c are followed by a thin space within the superscript. This gives a pleasing amount of separation.</p>
+<div class="cell FigureWithNote" data-apa-note="[&quot;Structural equation modeling was used for the analysis. NFI&nbsp;=&nbsp;normed fit index; CFI&nbsp;=&nbsp;comparative fit index; RMSEA&nbsp;=&nbsp;root-mean-square error of approximation.&quot;,&quot;^a ^In Model A, all 57 items of social intelligence, emotional intelligence, and cultural intelligence were loaded onto one factor. ^b ^In Model B, the 21 items of social intelligence were loaded onto one factor, and the 16 items of emotional intelligence and the 20 items of cultural intelligence were loaded onto another factor. ^c ^In Model C, the 21 items of social intelligence were loaded onto one factor, the 16 items of emotional intelligence were loaded onto a second factor, and the 20 items of cultural intelligence were loaded onto a third factor.&quot;,&quot;^\*\*\*^*p* < .001.&quot;]" prefix="" data-tblnum="1" data-custom-style="FigureWithNote">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```{r}</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| label: tbl-721</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| tbl-cap: "Results of Confirmatory Factor Analysis for the </span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|   Relationships Among Three Types of Intelligence"</span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| apa-note: </span></span>
+<span id="cb2-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|   - "Structural equation modeling was used for the analysis. </span></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     NFI&amp;nbsp;=&amp;nbsp;normed fit index; </span></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     CFI&amp;nbsp;=&amp;nbsp;comparative fit index; </span></span>
+<span id="cb2-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     RMSEA&amp;nbsp;=&amp;nbsp;root-mean-square error of </span></span>
+<span id="cb2-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|     approximation."</span></span>
+<span id="cb2-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|   - "^a&amp;thinsp;^In Model A, all 57 items of social </span></span>
+<span id="cb2-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    intelligence, emotional intelligence, and cultural </span></span>
+<span id="cb2-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    intelligence were loaded onto one factor. ^b&amp;thinsp;^In</span></span>
+<span id="cb2-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    Model B, the 21 items of social intelligence were </span></span>
+<span id="cb2-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    loaded onto one factor, and the 16 items of emotional </span></span>
+<span id="cb2-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    intelligence and the 20 items of cultural intelligence </span></span>
+<span id="cb2-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    were loaded onto another factor. ^c&amp;thinsp;^In Model C, </span></span>
+<span id="cb2-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    the 21 items of social intelligence were loaded onto one </span></span>
+<span id="cb2-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    factor, the 16 items of emotional intelligence were </span></span>
+<span id="cb2-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    loaded onto a second factor, and the 20 items of </span></span>
+<span id="cb2-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|    cultural intelligence were loaded onto a third factor."</span></span>
+<span id="cb2-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#|   - "^\\*\\*\\*^*p* &lt; .001."</span></span>
+<span id="cb2-23"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(</span>
+<span id="cb2-24">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Model =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb2-25">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A: One-intelligence model^&amp;thinsp;a^"</span>,</span>
+<span id="cb2-26">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"B: Two-intelligences mode^&amp;thinsp;b^"</span>,</span>
+<span id="cb2-27">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C: Three-intelligences model^&amp;thinsp;c^"</span>),</span>
+<span id="cb2-28">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Chi2 =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10994.664</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10091.236</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8640.066</span>),</span>
+<span id="cb2-29">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">df =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1539</span>L, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1538</span>L, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1536</span>L),</span>
+<span id="cb2-30">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">NFI =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.296</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.354</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.447</span>),</span>
+<span id="cb2-31">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">CFI =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.326</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.39</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.494</span>),</span>
+<span id="cb2-32">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">RMSEA =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.115</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.109</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>),</span>
+<span id="cb2-33">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">p =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0001</span></span>
+<span id="cb2-34">) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-35">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_star_column</span>(Chi2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">merge =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-36">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>p) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-37">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">column_formats =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">column_formats</span>(</span>
+<span id="cb2-38">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">accuracy =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.001</span>),</span>
+<span id="cb2-39">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">layout =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fixed"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb2-40">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">width</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.15</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.15</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3.2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)))</span>
+<span id="cb2-41"><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">```</span></span></code></pre></div></div>
+<div id="tbl-721" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;Structural equation modeling was used for the analysis. NFI&nbsp;=&nbsp;normed fit index; CFI&nbsp;=&nbsp;comparative fit index; RMSEA&nbsp;=&nbsp;root-mean-square error of approximation.&quot;,&quot;^a ^In Model A, all 57 items of social intelligence, emotional intelligence, and cultural intelligence were loaded onto one factor. ^b ^In Model B, the 21 items of social intelligence were loaded onto one factor, and the 16 items of emotional intelligence and the 20 items of cultural intelligence were loaded onto another factor. ^c ^In Model C, the 21 items of social intelligence were loaded onto one factor, the 16 items of emotional intelligence were loaded onto a second factor, and the 20 items of cultural intelligence were loaded onto a third factor.&quot;,&quot;^\*\*\*^*p* < .001.&quot;]" prefix="">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Results of Confirmatory Factor Analysis for the Relationships Among Three Types of Intelligence</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-1cc0bd44{}.cl-1c62adee{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1c62ae02{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1c62ae03{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-1cbbba10{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-1cbbba1a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-1cbbde14{width:2.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde1e{width:1.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde1f{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde20{width:2.15in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde28{width:1.15in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde29{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde32{width:2.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde33{width:1.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde34{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1cc0bd44"><thead><tr style="overflow-wrap:break-word;"><th class="cl-1cbbde14"><p class="cl-1cbbba10"><span class="cl-1c62adee">Model</span></p></th><th class="cl-1cbbde1e"><p class="cl-1cbbba10"><span class="cl-1c62ae02">χ</span><span class="cl-1c62ae03">2</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62ae02">df</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62adee">NFI</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62adee">CFI</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62adee">RMSEA</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-1cbbde20"><p class="cl-1cbbba1a"><span class="cl-1c62adee">A:</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">One-intelligence</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">model</span><span class="cl-1c62ae03"> a</span></p></td><td class="cl-1cbbde28"><p class="cl-1cbbba10"><span class="cl-1c62ae03">   </span><span class="cl-1c62adee">10994.664</span><span class="cl-1c62ae03">***</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">1,539</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.296</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.326</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.115</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cbbde20"><p class="cl-1cbbba1a"><span class="cl-1c62adee">B:</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">Two-intelligences</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">mode</span><span class="cl-1c62ae03"> b</span></p></td><td class="cl-1cbbde28"><p class="cl-1cbbba10"><span class="cl-1c62ae03">   </span><span class="cl-1c62adee">10091.236</span><span class="cl-1c62ae03">***</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">1,538</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.354</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.390</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.109</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cbbde32"><p class="cl-1cbbba1a"><span class="cl-1c62adee">C:</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">Three-intelligences</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">model</span><span class="cl-1c62ae03"> c</span></p></td><td class="cl-1cbbde33"><p class="cl-1cbbba10"><span class="cl-1c62adee"> </span><span class="cl-1c62ae03">   </span><span class="cl-1c62adee">8640.066</span><span class="cl-1c62ae03">***</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">1,536</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">.447</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">.494</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">.100</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+<div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<em>Note</em>. Structural equation modeling was used for the analysis. NFI&nbsp;=&nbsp;normed fit index; CFI&nbsp;=&nbsp;comparative fit index; RMSEA&nbsp;=&nbsp;root-mean-square error of approximation.
+</div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<sup>a </sup>In Model A, all 57 items of social intelligence, emotional intelligence, and cultural intelligence were loaded onto one factor. <sup>b </sup>In Model B, the 21 items of social intelligence were loaded onto one factor, and the 16 items of emotional intelligence and the 20 items of cultural intelligence were loaded onto another factor. <sup>c </sup>In Model C, the 21 items of social intelligence were loaded onto one factor, the 16 items of emotional intelligence were loaded onto a second factor, and the 20 items of cultural intelligence were loaded onto a third factor.
+</div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<sup>***</sup><em>p</em> &lt; .001.
+</div>
+</div>
+</div>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
+  author = {Schneider, W. Joel},
+  title = {Recreating {APA} {Manual} {Table} 7.21 in {R} with Apa7},
+  date = {2025-10-01},
+  url = {https://wjschne.github.io/posts/apatables/apa721.html},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
+Schneider, W. J. (2025, October 1). Recreating APA Manual Table 7.21 in
+R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa721.html">https://wjschne.github.io/posts/apatables/apa721.html</a>
+</div></div></section></div> ]]></description>
+  <category>R</category>
+  <category>APA Style</category>
+  <guid>https://wjschne.github.io/posts/apatables/apa721.html</guid>
+  <pubDate>Wed, 01 Oct 2025 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Recreating APA Manual Table 7.20 in R with apa7</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -1636,7 +1968,7 @@ background-color: null;
 font-style: inherit;">1.05</span>, <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1.05</span>))</span></code></pre></div></div>
-<div id="tbl-720" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="[&quot;Standard errors are in parentheses. All p values in this table are two tailed. In Model 1 (unconditional quadratic growth), the intercept parameter estimate (γ~00~) represents the average positive or negative emotions score at posttest across the sample. In Model 2 (prosocial and self-focused behavior vs. control), the intercept parameter estimate (γ~00~) represents the average positive or negative emotions score in the control condition at posttest, γ~02~ represents the difference at posttest between the prosocial behavior conditions and the control condition, and γ~03~ represents the difference at posttest between the self-focused behavior condition and the control condition. γ~10~ represents the average linear rate of change in the control condition, γ11 represents additional effects of prosocial behavior on linear rate of change, and γ~12~ represents additional effects of self-focused behavior on linear rate of change. Finally, γ~20~ represents the average quadratic rate of change in the control condition, γ~21~ represents additional effects of prosocial behavior on quadratic rate of change, and γ~22~ represents additional effects of self-focused behavior on quadratic rate of change. In all models, the intercept, linear slope (time), and quadratic slope (time2) were free to vary.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. ^\*\*\*&nbsp;^*p* < .001.&quot;]" data-tblnum="1" prefix="">
+<div id="tbl-720" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;Standard errors are in parentheses. All p values in this table are two tailed. In Model 1 (unconditional quadratic growth), the intercept parameter estimate (γ~00~) represents the average positive or negative emotions score at posttest across the sample. In Model 2 (prosocial and self-focused behavior vs. control), the intercept parameter estimate (γ~00~) represents the average positive or negative emotions score in the control condition at posttest, γ~02~ represents the difference at posttest between the prosocial behavior conditions and the control condition, and γ~03~ represents the difference at posttest between the self-focused behavior condition and the control condition. γ~10~ represents the average linear rate of change in the control condition, γ11 represents additional effects of prosocial behavior on linear rate of change, and γ~12~ represents additional effects of self-focused behavior on linear rate of change. Finally, γ~20~ represents the average quadratic rate of change in the control condition, γ~21~ represents additional effects of prosocial behavior on quadratic rate of change, and γ~22~ represents additional effects of self-focused behavior on quadratic rate of change. In all models, the intercept, linear slope (time), and quadratic slope (time2) were free to vary.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. ^\*\*\*&nbsp;^*p* < .001.&quot;]" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-720-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -1739,7 +2071,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-719" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-719" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-719-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2063,7 +2395,7 @@ font-style: inherit;">40</span>)) </span>
 <span id="cb2-41"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-719" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="AIC and BIC differences are relative to the simplex lagged model. RMSEA&nbsp;=&nbsp;root-mean-square error of approximation; CI&nbsp;=&nbsp;confidence interval; AIC&nbsp;=&nbsp;Akaike information criterion; BIC&nbsp;=&nbsp;Bayesian information criterion." data-tblnum="1">
+<div id="tbl-719" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="AIC and BIC differences are relative to the simplex lagged model. RMSEA&nbsp;=&nbsp;root-mean-square error of approximation; CI&nbsp;=&nbsp;confidence interval; AIC&nbsp;=&nbsp;Akaike information criterion; BIC&nbsp;=&nbsp;Bayesian information criterion." data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-719-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2899,7 +3231,7 @@ font-style: inherit;">10</span>)</span>
 <span id="cb2-109"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-718" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="" data-apa-note="[&quot;CI = confidence interval; *LL*&nbsp;=&nbsp;lower limit; *UL*&nbsp;=&nbsp;upper limit; familismo = the collective importance of family unity that emphasizes interdependence and solidarity; Mex Am margin&nbsp;=&nbsp;Mexican American marginalization.&quot;,&quot;^\*^*p* < .05. ^\*\*^*p* < .01. ^\*\*\*^*p* < .001.&quot;]">
+<div id="tbl-718" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="[&quot;CI = confidence interval; *LL*&nbsp;=&nbsp;lower limit; *UL*&nbsp;=&nbsp;upper limit; familismo = the collective importance of family unity that emphasizes interdependence and solidarity; Mex Am margin&nbsp;=&nbsp;Mexican American marginalization.&quot;,&quot;^\*^*p* < .05. ^\*\*^*p* < .01. ^\*\*\*^*p* < .001.&quot;]" prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-718-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -2999,7 +3331,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-717" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-717" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-717-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3420,7 +3752,7 @@ font-style: inherit;">5</span>)))</span>
 <span id="cb2-76"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-717" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="[&quot;Number of studies&nbsp;=&nbsp;120, number of effects&nbsp;=&nbsp;782, total *N*&nbsp;=&nbsp;52,578. CI&nbsp;=&nbsp;confidence interval; *LL*&nbsp;=&nbsp;lower limit; *UL*&nbsp;=&nbsp;upper limit.&quot;,&quot;^a&nbsp;^0&nbsp;=&nbsp;self-report, 1&nbsp;=&nbsp;test. ^b&nbsp;^ 0&nbsp;= test, 1&nbsp;=&nbsp;grade point average. ^c&nbsp;^Study year was grand centered. ^d&nbsp;^0&nbsp;=&nbsp;other, 1&nbsp;=&nbsp;yes. ^e&nbsp;^0&nbsp;= no, 1&nbsp;=&nbsp;yes.&quot;]" data-tblnum="1">
+<div id="tbl-717" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;Number of studies&nbsp;=&nbsp;120, number of effects&nbsp;=&nbsp;782, total *N*&nbsp;=&nbsp;52,578. CI&nbsp;=&nbsp;confidence interval; *LL*&nbsp;=&nbsp;lower limit; *UL*&nbsp;=&nbsp;upper limit.&quot;,&quot;^a&nbsp;^0&nbsp;=&nbsp;self-report, 1&nbsp;=&nbsp;test. ^b&nbsp;^ 0&nbsp;= test, 1&nbsp;=&nbsp;grade point average. ^c&nbsp;^Study year was grand centered. ^d&nbsp;^0&nbsp;=&nbsp;other, 1&nbsp;=&nbsp;yes. ^e&nbsp;^0&nbsp;= no, 1&nbsp;=&nbsp;yes.&quot;]" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-717-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -3519,7 +3851,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-716" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-716" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-716-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4232,7 +4564,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-715" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-715" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-715-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -4765,7 +5097,7 @@ background-color: null;
 font-style: inherit;">part =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"footer"</span>)</span></code></pre></div></div>
-<div id="tbl-715" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1">
+<div id="tbl-715" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-715-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -5901,7 +6233,7 @@ background-color: null;
 font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1.5</span>) </span></code></pre></div></div>
-<div id="tbl-713" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]">
+<div id="tbl-713" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="[&quot;*N*&nbsp;=&nbsp;153. ANOVA&nbsp;=&nbsp;analysis of variance; SMT&nbsp;=&nbsp;stress management training group; Control&nbsp;=&nbsp;wait-list control group; G&nbsp;=&nbsp;group; T&nbsp;=&nbsp;time.&quot;,&quot;^\*&nbsp;^*p* < .05. ^\*\*&nbsp;^*p* < .01. &quot;]" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-713-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -6426,7 +6758,7 @@ background-color: null;
 font-style: inherit;">9</span>, .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">7</span>))</span></code></pre></div></div>
-<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001" prefix="" data-tblnum="1">
+<div id="tbl-712" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="NoNote \* *p* < .05; \*\* *p* < .01 \*\*\* *p* < .001">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-712-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -6523,7 +6855,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-711" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-711" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-711-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -6633,7 +6965,7 @@ background-color: null;
 font-style: inherit;">4</span>), <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)))</span></code></pre></div></div>
-<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal." prefix="" data-tblnum="1">
+<div id="tbl-711" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The results for the female sample (*n*&nbsp;=&nbsp;199) are shown above the diagonal. The results for the male sample (*n*&nbsp;=&nbsp;120) are shown below the diagonal." data-tblnum="1" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-711-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -7311,7 +7643,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -7635,7 +7967,7 @@ font-style: inherit;">column_formats =</span> my_formatter) </span>
 <span id="cb2-73"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." prefix="" data-tblnum="1">
+<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test.">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -7735,7 +8067,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-78" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-78" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-78-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -8799,7 +9131,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-76" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-76" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-76-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -9210,7 +9542,7 @@ font-style: inherit;">4</span>))</span>
 <span id="cb2-70"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores." prefix="" data-tblnum="1">
+<div id="tbl-76" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="Standard deviations are presented in parentheses. BAS&nbsp;=&nbsp;Behavioral Activation System; BAS-T&nbsp;=&nbsp;Behavioral Activation System–Total scores from the Behavioral Inhibition System/Behavioral Activation System Scales; SR&nbsp;=&nbsp;Sensitivity to Reward scores from the Sensitivity to Punishment and Sensitivity to Reward Questionnaire; BDI&nbsp;=&nbsp;Beck Depression Inventory scores; ASRM&nbsp;=&nbsp;Altman Self-Rating Mania Scale scores; M-SRM&nbsp;=&nbsp;Modified Social Rhythm Metric Regularity scores." prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-76-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -9585,7 +9917,7 @@ font-style: inherit;">4</span>)))</span>
 <span id="cb2-42"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-75" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="A, X, Y, and B&nbsp;=&nbsp;tone, clicker, steady light, and flashing light, respectively (counterbalanced), with the constraint that A and B are drawn from one modality and X and Y from another (counterbalanced); plus sign&nbsp;(+)&nbsp;=&nbsp;shock to floor of rat chamber; minus sign&nbsp;(–)&nbsp;=&nbsp;absence of shock." prefix="" data-tblnum="1">
+<div id="tbl-75" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-apa-note="A, X, Y, and B&nbsp;=&nbsp;tone, clicker, steady light, and flashing light, respectively (counterbalanced), with the constraint that A and B are drawn from one modality and X and Y from another (counterbalanced); plus sign&nbsp;(+)&nbsp;=&nbsp;shock to floor of rat chamber; minus sign&nbsp;(–)&nbsp;=&nbsp;absence of shock." data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-75-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -9681,7 +10013,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" data-fig-align="left" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
+<div id="fig-74" class="quarto-float quarto-figure quarto-figure-left FigureWithoutNote" prefix="" data-fig-align="left" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -9965,7 +10297,7 @@ font-style: inherit;">"Sample"</span>) </span>
 <span id="cb2-52"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" data-tblnum="1" prefix="" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task.">
+<div id="tbl-74" class="cell quarto-float quarto-figure quarto-figure-left" data-apa-note="AX-CPT = AX–continuous performance task; DPX = dot–pattern expectancy task." prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-74-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -10063,7 +10395,7 @@ font-style: inherit;">font.family =</span> <span class="st" style="color: #20794
 background-color: null;
 font-style: inherit;">"Times New Roman"</span>)</span></code></pre></div></div>
 </div>
-<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-73" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -10373,7 +10705,7 @@ font-style: inherit;">"gray60"</span>))</span>
 <span id="cb2-41"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." data-tblnum="1" prefix="">
+<div id="tbl-73" class="cell quarto-float quarto-figure quarto-figure-center" data-apa-note="The *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.) Levels of Personality Functioning Questionnaire (DLOPFQ) we developed had four scales (Identity, Self- Directedness, Empathy, and Intimacy), each with subscales for the work and social domains." prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-73-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -11141,7 +11473,7 @@ font-style: inherit;">12</span>]))</span>
 <span id="cb2-80"><span class="in" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]">
+<div id="tbl-72" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;*N*&nbsp;=&nbsp;150 (*n*&nbsp;=&nbsp;50 for each condition). Participants were on average 39.5 years old (SD&nbsp;=&nbsp;10.1), and participant age did not differ by condition.&quot;,&quot;^a&nbsp;^Reflects the number and percentage of participants answering “yes” to this question.&quot;]" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -11189,1076 +11521,6 @@ in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/post
   <category>APA Style</category>
   <guid>https://wjschne.github.io/posts/apatables/apa702.html</guid>
   <pubDate>Fri, 12 Sep 2025 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Recreating APA Manual Table 7.1 in R with apa7</title>
-  <dc:creator>W. Joel Schneider</dc:creator>
-  <link>https://wjschne.github.io/posts/apatables/apa701.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="making-tables-in-apa-style-part-1-of-24" class="level1">
-<h1>Making tables in APA style (Part 1 of 24)</h1>
-<p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Highlights
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>Row titles and styling with <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa_flextable</code></a></li>
-<li>Conditional placement of cell borders with <a href="https://davidgohel.github.io/flextable/reference/surround.html"><code>flextable::surround</code></a></li>
-<li>General notes with <a href="https://davidgohel.github.io/flextable/reference/add_footer_lines.html"><code>flextable::add_footer_lines</code></a> or <code>apa-note</code> chunk option</li>
-<li>Footnotes with <a href="https://davidgohel.github.io/flextable/reference/footnote.html"><code>flextable::footnote</code></a></li>
-</ul>
-</div>
-</div>
-<p>When I write a research manuscript in APA style, I have twin goals that are sometimes at odds: 1) I want the document to be fully reproducible, including the tables. 2) I want the formatting to be not only correct but aesthetically pleasing.</p>
-<p>The final frontier of reproducibility in APA style, for me, has been getting the tables right. At long last, I am getting close to where I want to be. My process usually goes like this:</p>
-<ol type="1">
-<li>Wrangle data with <a href="https://www.tidyverse.org/">tidyverse functions</a>.</li>
-<li>Perform analyses, and format analysis tables with <a href="https://easystats.github.io/easystats/">easystats functions</a>.</li>
-<li>Perform table-specific data shaping with <a href="https://wjschne.github.io/apa7/reference/index.html">apa7 functions</a>.</li>
-<li>Create a table with <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa7::apa_flextable</code></a>.</li>
-<li>Add specific formatting and finishing touches with <a href="https://davidgohel.github.io/flextable/reference/index.html">flextable functions</a>.</li>
-</ol>
-</section>
-<section id="sample-tables-from-the-apa-manual" class="level1">
-<h1>Sample Tables from the APA Manual</h1>
-<p>As an exercise, I decided to reproduce the sample tables in Chapter 7 of the APA Manual, which covers the display of tables. There are a number of differences between the original tables and the recreated tables.</p>
-<ul>
-<li>I stick with Times New Roman as my font.</li>
-<li>I add little breaks between column spanners in multilevel headers.</li>
-<li>I align decimals where possible.</li>
-</ul>
-<p>Things I usually change, but I do not mess with here:</p>
-<ul>
-<li>I like column headings to have the same alignment as the body cells under them—if the cell is left justified, I want the header to be left justified. However, APA style usually has centered headings for everything.</li>
-<li>Hanging indents are useful sometimes, but I try to avoid them when they make the columns appear uneven. Some of the tables have hanging indents that could have been avoided, but I put them in anyway.</li>
-</ul>
-<hr>
-<p>Figure&nbsp;1 is a complex table, meant to illustrate the primary components of a table such as stub headings, column spanners, decked heads, table spanners, and table notes.</p>
-<div id="fig-71" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" prefix="" data-fignum="1" data-custom-style="FigureWithoutNote">
-<figure class="quarto-float quarto-float-fig figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="FigureTitle" data-custom-style="FigureTitle">
-<p>Figure&nbsp;1</p>
-</div>
-<div class="Caption" data-custom-style="Caption">
-<p>Screenshot of the <em>APA Manual</em>’s Table 7.1</p>
-</div>
-</figcaption>
-<div aria-describedby="fig-71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://wjschne.github.io/posts/apatables/table71.png" class="img-fluid figure-img">
-</div>
-</figure>
-</div>
-<p>To recreate the data for the table in Figure&nbsp;1 requires a fair bit of work, most of which is not relevant to the display of the table. Table&nbsp;1 displays the data in its raw form. I used flextable’s <code>theme_apa</code> (via <code>set_flextable_defaults</code>) to get the basic formatting to be consistent with APA format.</p>
-<div class="cell FigureWithoutNote" prefix="" data-tblnum="1" data-custom-style="FigureWithoutNote">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(apa7)</span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(flextable)</span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ftExtra)</span>
-<span id="cb1-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span>
-<span id="cb1-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">set_flextable_defaults</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">theme_fun =</span> theme_apa,</span>
-<span id="cb1-6">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Times New Roman"</span>,</span>
-<span id="cb1-7">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">table_align =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"left"</span>)</span>
-<span id="cb1-8"></span>
-<span id="cb1-9"></span>
-<span id="cb1-10"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Make and format data</span></span>
-<span id="cb1-11">d_citizenship <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">crossing</span>(</span>
-<span id="cb1-12">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Wave =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,</span>
-<span id="cb1-13">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Citizenship =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fct_inorder</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"With"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Without"</span>)),</span>
-<span id="cb1-14">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Gender =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fct_inorder</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Girls"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Boys"</span>)),</span>
-<span id="cb1-15">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Grade =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span>
-<span id="cb1-16">) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span>  </span>
-<span id="cb1-17">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.integer</span>(</span>
-<span id="cb1-18">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">111</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">297</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">301</span>, </span>
-<span id="cb1-19">      <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">281</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">290</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">306</span>, </span>
-<span id="cb1-20">      <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">240</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">251</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">260</span>, </span>
-<span id="cb1-21">      <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">232</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">264</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">221</span>,</span>
-<span id="cb1-22">      <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">201</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">214</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">221</span>,</span>
-<span id="cb1-23">      <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">210</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">236</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">239</span>,</span>
-<span id="cb1-24">      <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">189</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">194</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">216</span>, </span>
-<span id="cb1-25">      <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">199</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">210</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">213</span>))) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb1-26">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">arrange</span>(Gender, Citizenship) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-27">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unite</span>(Gender_Citizenship, Gender, Citizenship) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-28">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">names_from =</span> Gender_Citizenship,</span>
-<span id="cb1-29">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values_from =</span> n,</span>
-<span id="cb1-30">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">names_vary =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"slowest"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-31">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Grade =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">factor</span>(Grade)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-32">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">bind_rows</span>(</span>
-<span id="cb1-33">    ., </span>
-<span id="cb1-34">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarise</span>(</span>
-<span id="cb1-35">      ., </span>
-<span id="cb1-36">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">across</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">where</span>(is.numeric), </span>
-<span id="cb1-37">             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.fns =</span> sum), </span>
-<span id="cb1-38">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.by =</span> Wave) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb1-39">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Grade =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">factor</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Total"</span>))) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb1-40">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">arrange</span>(Wave, Grade) </span>
-<span id="cb1-41"></span>
-<span id="cb1-42"></span>
-<span id="cb1-43"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">flextable</span>(d_citizenship)</span></code></pre></div></div>
-<div id="tbl-71a" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="FigureTitle" data-custom-style="FigureTitle">
-<p>Table&nbsp;1</p>
-</div>
-<div class="Caption" data-custom-style="Caption">
-<p>Raw Table</p>
-</div>
-</figcaption>
-<div aria-describedby="tbl-71a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-61110a98{}.cl-60fe0646{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-610c76ea{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-610c953a{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(0, 0, 0, 1.00);border-top: 0.75pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-610c9544{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-610c954e{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-61110a98"><thead><tr style="overflow-wrap:break-word;"><th class="cl-610c953a"><p class="cl-610c76ea"><span class="cl-60fe0646">Wave</span></p></th><th class="cl-610c953a"><p class="cl-610c76ea"><span class="cl-60fe0646">Grade</span></p></th><th class="cl-610c953a"><p class="cl-610c76ea"><span class="cl-60fe0646">Girls_With</span></p></th><th class="cl-610c953a"><p class="cl-610c76ea"><span class="cl-60fe0646">Girls_Without</span></p></th><th class="cl-610c953a"><p class="cl-610c76ea"><span class="cl-60fe0646">Boys_With</span></p></th><th class="cl-610c953a"><p class="cl-610c76ea"><span class="cl-60fe0646">Boys_Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">1</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">3</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">111</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">240</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">281</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">1</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">4</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">297</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">251</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">290</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">1</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">5</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">301</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">260</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">306</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">1</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">Total</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">709</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">751</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">877</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">2</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">3</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">201</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">189</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">210</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">2</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">4</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">214</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">194</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">236</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">2</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">5</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">221</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">216</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">239</span></p></td><td class="cl-610c9544"><p class="cl-610c76ea"><span class="cl-60fe0646">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-610c954e"><p class="cl-610c76ea"><span class="cl-60fe0646">2</span></p></td><td class="cl-610c954e"><p class="cl-610c76ea"><span class="cl-60fe0646">Total</span></p></td><td class="cl-610c954e"><p class="cl-610c76ea"><span class="cl-60fe0646">636</span></p></td><td class="cl-610c954e"><p class="cl-610c76ea"><span class="cl-60fe0646">599</span></p></td><td class="cl-610c954e"><p class="cl-610c76ea"><span class="cl-60fe0646">685</span></p></td><td class="cl-610c954e"><p class="cl-610c76ea"><span class="cl-60fe0646">622</span></p></td></tr></tbody></table></div>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>However, Table&nbsp;1 requires additional formatting to become publication-worthy. The <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa_flextable</code></a> function performs several layers of transformations before and after applying <a href="https://davidgohel.github.io/flextable/reference/flextable.html"><code>flextable</code></a>, most of which can be turned off selectively.</p>
-<p>The <a href="https://davidgohel.github.io/flextable/reference/surround.html"><code>flextable::surround</code></a> function can place cell borders selectively by row (or column). Table&nbsp;2 is close to the final result, but additional notes are needed.</p>
-<div class="cell FigureWithoutNote" prefix="" data-tblnum="2" data-custom-style="FigureWithoutNote">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">ft_71 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> d_citizenship <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb2-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_column =</span> Wave, </span>
-<span id="cb2-3">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_prefix =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Wave"</span>,</span>
-<span id="cb2-4">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_align =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"center"</span>,</span>
-<span id="cb2-5">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.5</span>, </span>
-<span id="cb2-6">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">table_width =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb2-7">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">surround</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Total"</span>,</span>
-<span id="cb2-8">           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">border.top =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray"</span>, </span>
-<span id="cb2-9">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, </span>
-<span id="cb2-10">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"solid"</span>)) </span>
-<span id="cb2-11">ft_71</span></code></pre></div></div>
-<div id="tbl-preliminary71" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="2">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-preliminary71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="FigureTitle" data-custom-style="FigureTitle">
-<p>Table&nbsp;2</p>
-</div>
-<div class="Caption" data-custom-style="Caption">
-<p>Initial Results</p>
-</div>
-</figcaption>
-<div aria-describedby="tbl-preliminary71-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-625e5072{}.cl-62569904{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-62569905{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6259a572{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-6259c570{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c571{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c57a{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c57b{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c57c{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c57d{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c584{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c585{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c58e{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c58f{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c590{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c591{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c598{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c599{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5a2{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5a3{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5a4{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5ac{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5ad{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5ae{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5b6{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5b7{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6259c5b8{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-625e5072"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-6259c570"><p class="cl-6259a572"><span class="cl-62569904">Grade</span></p></th><th colspan="2" class="cl-6259c571"><p class="cl-6259a572"><span class="cl-62569904">Girls</span></p></th><th rowspan="2" class="cl-6259c57b"><p class="cl-6259a572"><span class="cl-62569905"></span></p></th><th colspan="2" class="cl-6259c571"><p class="cl-6259a572"><span class="cl-62569904">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-6259c571"><p class="cl-6259a572"><span class="cl-62569904">With</span></p></th><th class="cl-6259c57a"><p class="cl-6259a572"><span class="cl-62569904">Without</span></p></th><th class="cl-6259c571"><p class="cl-6259a572"><span class="cl-62569904">With</span></p></th><th class="cl-6259c57a"><p class="cl-6259a572"><span class="cl-62569904">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-6259c57c"><p class="cl-6259a572"><span class="cl-62569904">Wave</span><span class="cl-62569904"> </span><span class="cl-62569904">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c57c"><p class="cl-6259a572"><span class="cl-62569904">3</span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">111</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">240</span></p></td><td class="cl-6259c585"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">281</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c57c"><p class="cl-6259a572"><span class="cl-62569904">4</span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">297</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">251</span></p></td><td class="cl-6259c585"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">290</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c58e"><p class="cl-6259a572"><span class="cl-62569904">5</span></p></td><td class="cl-6259c58f"><p class="cl-6259a572"><span class="cl-62569904">301</span></p></td><td class="cl-6259c590"><p class="cl-6259a572"><span class="cl-62569904">260</span></p></td><td class="cl-6259c591"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c58f"><p class="cl-6259a572"><span class="cl-62569904">306</span></p></td><td class="cl-6259c590"><p class="cl-6259a572"><span class="cl-62569904">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c598"><p class="cl-6259a572"><span class="cl-62569904">Total</span></p></td><td class="cl-6259c599"><p class="cl-6259a572"><span class="cl-62569904">709</span></p></td><td class="cl-6259c5a2"><p class="cl-6259a572"><span class="cl-62569904">751</span></p></td><td class="cl-6259c5a3"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c599"><p class="cl-6259a572"><span class="cl-62569904">877</span></p></td><td class="cl-6259c5a2"><p class="cl-6259a572"><span class="cl-62569904">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-6259c5a4"><p class="cl-6259a572"><span class="cl-62569904">Wave</span><span class="cl-62569904"> </span><span class="cl-62569904">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c57c"><p class="cl-6259a572"><span class="cl-62569904">3</span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">201</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">189</span></p></td><td class="cl-6259c585"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">210</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c57c"><p class="cl-6259a572"><span class="cl-62569904">4</span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">214</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">194</span></p></td><td class="cl-6259c585"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c57d"><p class="cl-6259a572"><span class="cl-62569904">236</span></p></td><td class="cl-6259c584"><p class="cl-6259a572"><span class="cl-62569904">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c58e"><p class="cl-6259a572"><span class="cl-62569904">5</span></p></td><td class="cl-6259c58f"><p class="cl-6259a572"><span class="cl-62569904">221</span></p></td><td class="cl-6259c590"><p class="cl-6259a572"><span class="cl-62569904">216</span></p></td><td class="cl-6259c591"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c58f"><p class="cl-6259a572"><span class="cl-62569904">239</span></p></td><td class="cl-6259c590"><p class="cl-6259a572"><span class="cl-62569904">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6259c5ae"><p class="cl-6259a572"><span class="cl-62569904">Total</span></p></td><td class="cl-6259c5b6"><p class="cl-6259a572"><span class="cl-62569904">636</span></p></td><td class="cl-6259c5b7"><p class="cl-6259a572"><span class="cl-62569904">599</span></p></td><td class="cl-6259c5b8"><p class="cl-6259a572"><span class="cl-62569905"></span></p></td><td class="cl-6259c5b6"><p class="cl-6259a572"><span class="cl-62569904">685</span></p></td><td class="cl-6259c5b7"><p class="cl-6259a572"><span class="cl-62569904">622</span></p></td></tr></tbody></table></div>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>The <a href="https://wjschne.github.io/apa7/reference/apa_flextable.html"><code>apa_flextable</code></a> function does not delete the column specified in <code>row_title_column</code> (i.e., <code>Wave</code>), but it does remove it from display. An additional hidden column called <code>row_title</code> has data in the row titles but is <code>NA</code> in other rows. Both columns are available for programmatic formatting the row titles and row groupings. For example, here I bold the row titles and make all the Wave 3 text blue and with Arial font. In documents where deviations from strict APA style are allowed, such stylings can be useful to highlight a point.</p>
-<div class="cell FigureWithoutNote" prefix="" data-tblnum="3" data-custom-style="FigureWithoutNote">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">ft_71 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb3-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">style</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,</span>
-<span id="cb3-3">                   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pr_t =</span> officer<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fp_text</span>(</span>
-<span id="cb3-4">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"dodgerblue"</span>, </span>
-<span id="cb3-5">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">font.family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Arial"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb3-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">bold</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(row_title))</span></code></pre></div></div>
-<div id="tbl-preliminary72" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="3">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-preliminary72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="FigureTitle" data-custom-style="FigureTitle">
-<p>Table&nbsp;3</p>
-</div>
-<div class="Caption" data-custom-style="Caption">
-<p>Table with Conditional Formatting</p>
-</div>
-</figcaption>
-<div aria-describedby="tbl-preliminary72-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-626e69a8{}.cl-6266b4c4{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6266b4ce{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6266b4d8{font-family:'Times New Roman';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6266b4d9{font-family:'Arial';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(30, 144, 255, 1.00);background-color:transparent;}.cl-6266b4da{font-family:'Arial';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(30, 144, 255, 1.00);background-color:transparent;}.cl-6269b548{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-6269d2e4{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d2ee{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d2ef{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d2f0{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d2f8{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d2f9{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d302{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d303{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d304{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d305{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d306{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d30c{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d30d{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d30e{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d30f{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d316{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d317{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d320{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d321{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d322{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d32a{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d32b{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6269d32c{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-626e69a8"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-6269d2e4"><p class="cl-6269b548"><span class="cl-6266b4c4">Grade</span></p></th><th colspan="2" class="cl-6269d2ee"><p class="cl-6269b548"><span class="cl-6266b4c4">Girls</span></p></th><th rowspan="2" class="cl-6269d2f0"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></th><th colspan="2" class="cl-6269d2ee"><p class="cl-6269b548"><span class="cl-6266b4c4">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-6269d2ee"><p class="cl-6269b548"><span class="cl-6266b4c4">With</span></p></th><th class="cl-6269d2ef"><p class="cl-6269b548"><span class="cl-6266b4c4">Without</span></p></th><th class="cl-6269d2ee"><p class="cl-6269b548"><span class="cl-6266b4c4">With</span></p></th><th class="cl-6269d2ef"><p class="cl-6269b548"><span class="cl-6266b4c4">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-6269d2f8"><p class="cl-6269b548"><span class="cl-6266b4d8">Wave</span><span class="cl-6266b4d8"> </span><span class="cl-6266b4d8">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d2f8"><p class="cl-6269b548"><span class="cl-6266b4c4">3</span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4c4">111</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4c4">240</span></p></td><td class="cl-6269d303"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4c4">281</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4c4">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d2f8"><p class="cl-6269b548"><span class="cl-6266b4c4">4</span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4c4">297</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4c4">251</span></p></td><td class="cl-6269d303"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4c4">290</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4c4">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d304"><p class="cl-6269b548"><span class="cl-6266b4c4">5</span></p></td><td class="cl-6269d305"><p class="cl-6269b548"><span class="cl-6266b4c4">301</span></p></td><td class="cl-6269d306"><p class="cl-6269b548"><span class="cl-6266b4c4">260</span></p></td><td class="cl-6269d30c"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d305"><p class="cl-6269b548"><span class="cl-6266b4c4">306</span></p></td><td class="cl-6269d306"><p class="cl-6269b548"><span class="cl-6266b4c4">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d30d"><p class="cl-6269b548"><span class="cl-6266b4c4">Total</span></p></td><td class="cl-6269d30e"><p class="cl-6269b548"><span class="cl-6266b4c4">709</span></p></td><td class="cl-6269d30f"><p class="cl-6269b548"><span class="cl-6266b4c4">751</span></p></td><td class="cl-6269d316"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d30e"><p class="cl-6269b548"><span class="cl-6266b4c4">877</span></p></td><td class="cl-6269d30f"><p class="cl-6269b548"><span class="cl-6266b4c4">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-6269d317"><p class="cl-6269b548"><span class="cl-6266b4d9">Wave</span><span class="cl-6266b4d9"> </span><span class="cl-6266b4d9">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d2f8"><p class="cl-6269b548"><span class="cl-6266b4da">3</span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4da">201</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4da">189</span></p></td><td class="cl-6269d303"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4da">210</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4da">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d2f8"><p class="cl-6269b548"><span class="cl-6266b4da">4</span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4da">214</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4da">194</span></p></td><td class="cl-6269d303"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d2f9"><p class="cl-6269b548"><span class="cl-6266b4da">236</span></p></td><td class="cl-6269d302"><p class="cl-6269b548"><span class="cl-6266b4da">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d304"><p class="cl-6269b548"><span class="cl-6266b4da">5</span></p></td><td class="cl-6269d305"><p class="cl-6269b548"><span class="cl-6266b4da">221</span></p></td><td class="cl-6269d306"><p class="cl-6269b548"><span class="cl-6266b4da">216</span></p></td><td class="cl-6269d30c"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d305"><p class="cl-6269b548"><span class="cl-6266b4da">239</span></p></td><td class="cl-6269d306"><p class="cl-6269b548"><span class="cl-6266b4da">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6269d322"><p class="cl-6269b548"><span class="cl-6266b4da">Total</span></p></td><td class="cl-6269d32a"><p class="cl-6269b548"><span class="cl-6266b4da">636</span></p></td><td class="cl-6269d32b"><p class="cl-6269b548"><span class="cl-6266b4da">599</span></p></td><td class="cl-6269d32c"><p class="cl-6269b548"><span class="cl-6266b4ce"></span></p></td><td class="cl-6269d32a"><p class="cl-6269b548"><span class="cl-6266b4da">685</span></p></td><td class="cl-6269d32b"><p class="cl-6269b548"><span class="cl-6266b4da">622</span></p></td></tr></tbody></table></div>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<section id="tables-notes" class="level2">
-<h2 data-anchor-id="tables-notes">Tables Notes</h2>
-<p>APA style distinguishes between three types of table notes, each of which need to be in separate paragraphs:</p>
-<ul>
-<li><em>General Note.</em> Contains definitions, abbreviations, and other information needed to understand the table, as well as copyright information.</li>
-<li><em>Specific Note.</em> These are notes about specific cells in the table, often in form of footnotes with lowercase letters as markers. Each footnote is in the same paragraph. The <em>APA Manual</em> recommends making the the footnote marker in superscript. The space that separates the marker from the the explanatory text should also be in superscript, hence the non-breaking space <code>^\u00A0^</code> at the beginning of th footnote text.</li>
-<li><em>Probability Note.</em> This note explains the meanings of probability markers (e.g., * <em>p</em> &lt; .05; ** <em>p</em> &lt; .001; *** <em>p</em> &lt; .001).</li>
-</ul>
-</section>
-<section id="adding-table-notes-with-flextable" class="level2">
-<h2 data-anchor-id="adding-table-notes-with-flextable">Adding Table Notes with flextable</h2>
-<p>Adding footnotes with flextable functions might look like a lot of code in Table&nbsp;4, but it is mostly straightforward.</p>
-<p>The general note can be created with the <code>footer_lines</code> function. The note itself can be written inside <code>flextable::as_paragraph</code> or <code>ftExtra::as_paragraph_md</code>. The <code>ftExtra::as_paragraph_md</code> function can make moderately complex formatting a little easier because it uses markdown syntax. If precise fine-tuning is needed, the flextable package has many formatting functions that can be used inside <code>flextable::as_paragraph</code>.</p>
-<p>Getting everything to display in <em>perfect</em> APA style is not always possible with the <code>footnote</code> function. The footnotes are supposed to go in a single paragraph that is separate from the general note. We can make footnotes appear in their own paragraph by setting the <code>inline</code> argument in <code>footnote</code> to <code>TRUE</code>, but this makes the general note also in the same paragraph.</p>
-<p>I did not use the <code>footnote</code> function to create the probability note because I did not want the asterisk to be in superscript. Instead the asterisk is placed in the table with the <code>append_chunk</code> function, and the probability note is added separately with the <code>footer_lines</code> function.</p>
-<div class="cell FigureWithoutNote" prefix="" data-tblnum="4" data-custom-style="FigureWithoutNote">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```{r}</span></span>
-<span id="cb4-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| label: tbl-71b</span></span>
-<span id="cb4-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| tbl-cap: Numbers of Children With and Without Proof of Parental Citizenship</span></span>
-<span id="cb4-4"></span>
-<span id="cb4-5">d_citizenship <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb4-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_column =</span> Wave, </span>
-<span id="cb4-7">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_prefix =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Wave"</span>, </span>
-<span id="cb4-8">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_align =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"center"</span>,</span>
-<span id="cb4-9">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.5</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb4-10">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">surround</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Total"</span>,</span>
-<span id="cb4-11">                      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">border.top =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray"</span>, </span>
-<span id="cb4-12">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, </span>
-<span id="cb4-13">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"solid"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb4-14">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">add_footer_lines</span>(</span>
-<span id="cb4-15">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_paragraph_md</span>(</span>
-<span id="cb4-16">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"*Note*. This table demonstrates the elements of a</span></span>
-<span id="cb4-17"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    prototypical table. A *general note* to a table appears</span></span>
-<span id="cb4-18"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    first and contains information needed to understand the</span></span>
-<span id="cb4-19"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    table, including definitions of abbreviations (see Sections</span></span>
-<span id="cb4-20"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    7.14–7.15) and the copyright attribution for a reprinted or</span></span>
-<span id="cb4-21"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    adapted table (see Section 7.7)."</span></span>
-<span id="cb4-22">  )</span>
-<span id="cb4-23">) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb4-24"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">footnote</span>(</span>
-<span id="cb4-25">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span></span>
-<span id="cb4-26">    Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,</span>
-<span id="cb4-27">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Girls_With"</span>,</span>
-<span id="cb4-28">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_paragraph_md</span>(</span>
-<span id="cb4-29">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^\u00A0^A *specific note* appears in a separate </span></span>
-<span id="cb4-30"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">      paragraph below the general note. "</span>),</span>
-<span id="cb4-31">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ref_symbols =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"a"</span></span>
-<span id="cb4-32">) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb4-33">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">footnote</span>(</span>
-<span id="cb4-34">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span></span>
-<span id="cb4-35">    Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,</span>
-<span id="cb4-36">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Girls_Without"</span>,</span>
-<span id="cb4-37">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_paragraph_md</span>(</span>
-<span id="cb4-38">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^\u00A0^Subsequent specific notes follow in the </span></span>
-<span id="cb4-39"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    same paragraph (see Section 7.14)."</span>),</span>
-<span id="cb4-40">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ref_symbols =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"b"</span>, </span>
-<span id="cb4-41">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">inline =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>, </span>
-<span id="cb4-42">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span></span>
-<span id="cb4-43">) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb4-44"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">add_footer_lines</span>(</span>
-<span id="cb4-45">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_paragraph_md</span>(</span>
-<span id="cb4-46">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">* A *probability note* (for *p*-values) appears as a </span></span>
-<span id="cb4-47"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    separate paragraph below any specific notes; subsequent </span></span>
-<span id="cb4-48"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    probability notes follow in the same paragraph (see </span></span>
-<span id="cb4-49"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">    Section 7.14)."</span></span>
-<span id="cb4-50">    )) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb4-51">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">append_chunks</span>(</span>
-<span id="cb4-52">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Wave <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Total"</span>,</span>
-<span id="cb4-53">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Boys_With"</span>, </span>
-<span id="cb4-54">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_chunk</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"*"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb4-55">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">line_spacing</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">space =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.5</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">part =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"footer"</span>)</span>
-<span id="cb4-56"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-71b" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="4">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="FigureTitle" data-custom-style="FigureTitle">
-<p>Table&nbsp;4</p>
-</div>
-<div class="Caption" data-custom-style="Caption">
-<p>Numbers of Children With and Without Proof of Parental Citizenship</p>
-</div>
-</figcaption>
-<div aria-describedby="tbl-71b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-6535c83e{}.cl-652d4e66{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-652d4e70{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-652d4e71{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-652d4e72{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-652d4e7a{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-652d4e7b{font-family:'Times New Roman';font-size:6.6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-65307906{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-65307910{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1.5;background-color:transparent;}.cl-653097ba{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097c4{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097c5{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097c6{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097ce{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097cf{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097d0{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097d8{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097d9{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097da{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097e2{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097e3{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097e4{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097e5{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097e6{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097ec{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097ed{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097f6{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097f7{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097f8{width:1.228in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097f9{width:1.053in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-653097fa{width:1.558in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-65309800{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-65309801{width:1.228in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-65309802{width:1.053in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-65309803{width:1.558in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6530980a{width:0.05in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-6535c83e"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-653097ba"><p class="cl-65307906"><span class="cl-652d4e66">Grade</span></p></th><th colspan="2" class="cl-653097c4"><p class="cl-65307906"><span class="cl-652d4e66">Girls</span></p></th><th rowspan="2" class="cl-653097c6"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></th><th colspan="2" class="cl-653097c4"><p class="cl-65307906"><span class="cl-652d4e66">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-653097c4"><p class="cl-65307906"><span class="cl-652d4e66">With</span></p></th><th class="cl-653097c5"><p class="cl-65307906"><span class="cl-652d4e66">Without</span></p></th><th class="cl-653097c4"><p class="cl-65307906"><span class="cl-652d4e66">With</span></p></th><th class="cl-653097c5"><p class="cl-65307906"><span class="cl-652d4e66">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-653097ce"><p class="cl-65307906"><span class="cl-652d4e66">Wave</span><span class="cl-652d4e66"> </span><span class="cl-652d4e66">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097ce"><p class="cl-65307906"><span class="cl-652d4e66">3</span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">111</span><span class="cl-652d4e71">a</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">240</span><span class="cl-652d4e71">b</span></p></td><td class="cl-653097d8"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">281</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097ce"><p class="cl-65307906"><span class="cl-652d4e66">4</span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">297</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">251</span></p></td><td class="cl-653097d8"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">290</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097d9"><p class="cl-65307906"><span class="cl-652d4e66">5</span></p></td><td class="cl-653097da"><p class="cl-65307906"><span class="cl-652d4e66">301</span></p></td><td class="cl-653097e2"><p class="cl-65307906"><span class="cl-652d4e66">260</span></p></td><td class="cl-653097e3"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097da"><p class="cl-65307906"><span class="cl-652d4e66">306</span></p></td><td class="cl-653097e2"><p class="cl-65307906"><span class="cl-652d4e66">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097e4"><p class="cl-65307906"><span class="cl-652d4e66">Total</span></p></td><td class="cl-653097e5"><p class="cl-65307906"><span class="cl-652d4e66">709</span></p></td><td class="cl-653097e6"><p class="cl-65307906"><span class="cl-652d4e66">751</span></p></td><td class="cl-653097ec"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097e5"><p class="cl-65307906"><span class="cl-652d4e66">877</span></p></td><td class="cl-653097e6"><p class="cl-65307906"><span class="cl-652d4e66">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-653097ed"><p class="cl-65307906"><span class="cl-652d4e66">Wave</span><span class="cl-652d4e66"> </span><span class="cl-652d4e66">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097ce"><p class="cl-65307906"><span class="cl-652d4e66">3</span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">201</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">189</span></p></td><td class="cl-653097d8"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">210</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097ce"><p class="cl-65307906"><span class="cl-652d4e66">4</span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">214</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">194</span></p></td><td class="cl-653097d8"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097cf"><p class="cl-65307906"><span class="cl-652d4e66">236</span></p></td><td class="cl-653097d0"><p class="cl-65307906"><span class="cl-652d4e66">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097d9"><p class="cl-65307906"><span class="cl-652d4e66">5</span></p></td><td class="cl-653097da"><p class="cl-65307906"><span class="cl-652d4e66">221</span></p></td><td class="cl-653097e2"><p class="cl-65307906"><span class="cl-652d4e66">216</span></p></td><td class="cl-653097e3"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097da"><p class="cl-65307906"><span class="cl-652d4e66">239</span></p></td><td class="cl-653097e2"><p class="cl-65307906"><span class="cl-652d4e66">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-653097f8"><p class="cl-65307906"><span class="cl-652d4e66">Total</span></p></td><td class="cl-653097f9"><p class="cl-65307906"><span class="cl-652d4e66">636</span></p></td><td class="cl-653097fa"><p class="cl-65307906"><span class="cl-652d4e66">599</span></p></td><td class="cl-65309800"><p class="cl-65307906"><span class="cl-652d4e70"></span></p></td><td class="cl-653097f9"><p class="cl-65307906"><span class="cl-652d4e66">685</span><span class="cl-652d4e66">*</span></p></td><td class="cl-653097fa"><p class="cl-65307906"><span class="cl-652d4e66">622</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-65309801"><p class="cl-65307910"><span class="cl-652d4e72">Note</span><span class="cl-652d4e7a">.</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">This</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">table</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">demonstrates</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">the</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">elements</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">of</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">a</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">prototypical</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">table.</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">A</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e72">general</span><span class="cl-652d4e72"> </span><span class="cl-652d4e72">note</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">to</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">a</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">table</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">appears</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">first</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">and</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">contains</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">information</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">needed</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">to</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">understand</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">the</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">table,</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">including</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">definitions</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">of</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">abbreviations</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">(see</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">Sections</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">7.14–7.15)</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">and</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">the</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">copyright</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">attribution</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">for</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">a</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">reprinted</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">or</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">adapted</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">table</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">(see</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">Section</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">7.7).</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-65309801"><p class="cl-65307910"><span class="cl-652d4e7b">a</span><span class="cl-652d4e7b">&nbsp;</span><span class="cl-652d4e7a">A</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e72">specific</span><span class="cl-652d4e72"> </span><span class="cl-652d4e72">note</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">appears</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">in</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">a</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">separate</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">paragraph</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">below</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">the</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">general</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">note.</span><span class="cl-652d4e7b">b</span><span class="cl-652d4e7b">&nbsp;</span><span class="cl-652d4e7a">Subsequent</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">specific</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">notes</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">follow</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">in</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">the</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">same</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">paragraph</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">(see</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">Section</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">7.14).</span><span class="cl-652d4e7a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-65309801"><p class="cl-65307910"><span class="cl-652d4e7a">*</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">A</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e72">probability</span><span class="cl-652d4e72"> </span><span class="cl-652d4e72">note</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">(for</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e72">p</span><span class="cl-652d4e7a">-values)</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">appears</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">as</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">a</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">separate</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">paragraph</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">below</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">any</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">specific</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">notes;</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">subsequent</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">probability</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">notes</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">follow</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">in</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">the</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">same</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">paragraph</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">(see</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">Section</span><span class="cl-652d4e7a"> </span><span class="cl-652d4e7a">7.14).</span></p></td></tr></tfoot></table></div>
-</div>
-</div>
-</figure>
-</div>
-</div>
-</section>
-<section id="adding-table-notes-with-apaquartos-apa-note-chunk-option" class="level2">
-<h2 data-anchor-id="adding-table-notes-with-apaquartos-apa-note-chunk-option">Adding Table Notes with apaquarto’s <code>apa-note</code> Chunk Option</h2>
-<p>In some formats (e.g., .pdf), long table notes can mess with the column widths and make the table unreadable.</p>
-<p>If you are rendering with the apaquarto extension, you can append table notes with the <code>apa-note</code> chunk option. Recent versions of apaquarto can separate <code>apa-note</code> text into multiple paragraphs as shown in the chunk below.</p>
-<p>Also, it bothers me that the footnote symbols mess up the number alignment. I decided to add them in myself. In the same columns that have footnotes, I padded the numbers that do not have footnotes with the <code>numbsp;</code> character (Figure Space) to maintain the alignment.</p>
-<p>As a final polishing move, I rejiggered the column widths to make everything center correctly. Table&nbsp;5 is as good as I can make a table in APA Style.</p>
-<div class="cell FigureWithNote" data-image-preview="true" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" prefix="" data-tblnum="5" data-custom-style="FigureWithNote">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```{r}</span></span>
-<span id="cb5-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| label: tbl-71c</span></span>
-<span id="cb5-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| image-preview: true</span></span>
-<span id="cb5-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| tbl-cap: Numbers of Children With and Without Proof of Parental Citizenship</span></span>
-<span id="cb5-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| apa-note: </span></span>
-<span id="cb5-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|   - This table demonstrates the elements of a prototypical </span></span>
-<span id="cb5-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     table. A *general note* to a table appears first and </span></span>
-<span id="cb5-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     contains information needed to understand the table, </span></span>
-<span id="cb5-9"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     including definitions of abbreviations (see Sections </span></span>
-<span id="cb5-10"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     7.14--7.15) and the copyright attribution for a </span></span>
-<span id="cb5-11"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     reprinted or adapted table (see Section 7.7).</span></span>
-<span id="cb5-12"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|   - ^a^ Subsequent specific notes follow in the same </span></span>
-<span id="cb5-13"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     paragraph (see Section 7.14). ^b^ Subsequent specific </span></span>
-<span id="cb5-14"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     notes follow in the same paragraph (see Section 7.14).</span></span>
-<span id="cb5-15"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|   - \* A *probability note* (for *p* values) appears as a </span></span>
-<span id="cb5-16"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     separate paragraph below any specific notes; subsequent </span></span>
-<span id="cb5-17"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     probability notes follow in the same paragraph (see </span></span>
-<span id="cb5-18"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#|     Section 7.14).</span></span>
-<span id="cb5-19"></span>
-<span id="cb5-20">d_citizenship <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb5-21">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Girls_With =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb5-22">    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^&amp;numsp;^"</span>,</span>
-<span id="cb5-23">    Girls_With, </span>
-<span id="cb5-24">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(Wave <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, </span>
-<span id="cb5-25">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^a^"</span>, </span>
-<span id="cb5-26">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^&amp;numsp;^"</span>)),</span>
-<span id="cb5-27">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Girls_Without =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb5-28">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^&amp;numsp;^"</span>,</span>
-<span id="cb5-29">    Girls_Without, </span>
-<span id="cb5-30">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(Wave <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, </span>
-<span id="cb5-31">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^b^"</span>, </span>
-<span id="cb5-32">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^&amp;numsp;^"</span>)),</span>
-<span id="cb5-33">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Boys_With =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(</span>
-<span id="cb5-34">      <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^&amp;numsp;^"</span>,</span>
-<span id="cb5-35">    Boys_With, </span>
-<span id="cb5-36">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(Wave <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Total"</span>, </span>
-<span id="cb5-37">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">\\</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">*^"</span>, </span>
-<span id="cb5-38">           <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^&amp;numsp;^"</span>))</span>
-<span id="cb5-39">    ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb5-40">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">apa_flextable</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_column =</span> Wave, </span>
-<span id="cb5-41">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_prefix =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Wave"</span>, </span>
-<span id="cb5-42">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">row_title_align =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"center"</span>,</span>
-<span id="cb5-43">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">table_width =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, </span>
-<span id="cb5-44">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">line_spacing =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.5</span>, </span>
-<span id="cb5-45">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">layout =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"fixed"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb5-46">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">surround</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Total"</span>,</span>
-<span id="cb5-47">                      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">border.top =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"gray"</span>, </span>
-<span id="cb5-48">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, </span>
-<span id="cb5-49">                                        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"solid"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb5-50">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">width</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.34</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.28</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.28</span>, .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">05</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.28</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.28</span>)) </span>
-<span id="cb5-51"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```</span></span></code></pre></div></div>
-<div id="tbl-71c" class="cell quarto-float quarto-figure quarto-figure-center" data-image-preview="true" data-apa-note="[&quot;This table demonstrates the elements of a prototypical table. A *general note* to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14--7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).&quot;,&quot;^a^ Subsequent specific notes follow in the same paragraph (see Section 7.14). ^b^ Subsequent specific notes follow in the same paragraph (see Section 7.14).&quot;,&quot;\* A *probability note* (for *p* values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).&quot;]" prefix="" data-tblnum="5">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-71c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="FigureTitle" data-custom-style="FigureTitle">
-<p>Table&nbsp;5</p>
-</div>
-<div class="Caption" data-custom-style="Caption">
-<p>Numbers of Children With and Without Proof of Parental Citizenship</p>
-</div>
-</figcaption>
-<div aria-describedby="tbl-71c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-66614346{}.cl-6658fbb4{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6658fbc8{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6658fbc9{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-665c25c8{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-665c4378{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c4379{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c4382{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c4383{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c438c{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c438d{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c438e{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c438f{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c4396{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(190, 190, 190, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c4397{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c4398{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(51, 51, 51, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c43a0{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c43a1{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c43a2{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 1pt solid rgba(51, 51, 51, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c43a3{width:1.34in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c43aa{width:1.28in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665c43ab{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(190, 190, 190, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-66614346"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-665c4378"><p class="cl-665c25c8"><span class="cl-6658fbb4">Grade</span></p></th><th colspan="2" class="cl-665c4379"><p class="cl-665c25c8"><span class="cl-6658fbb4">Girls</span></p></th><th rowspan="2" class="cl-665c4382"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></th><th colspan="2" class="cl-665c4379"><p class="cl-665c25c8"><span class="cl-6658fbb4">Boys</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-665c4379"><p class="cl-665c25c8"><span class="cl-6658fbb4">With</span></p></th><th class="cl-665c4379"><p class="cl-665c25c8"><span class="cl-6658fbb4">Without</span></p></th><th class="cl-665c4379"><p class="cl-665c25c8"><span class="cl-6658fbb4">With</span></p></th><th class="cl-665c4379"><p class="cl-665c25c8"><span class="cl-6658fbb4">Without</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-665c4383"><p class="cl-665c25c8"><span class="cl-6658fbb4">Wave</span><span class="cl-6658fbb4"> </span><span class="cl-6658fbb4">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c4383"><p class="cl-665c25c8"><span class="cl-6658fbb4">3</span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">111</span><span class="cl-6658fbc9">a</span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">240</span><span class="cl-6658fbc9">b</span></p></td><td class="cl-665c438d"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">281</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbb4">232</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c4383"><p class="cl-665c25c8"><span class="cl-6658fbb4">4</span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">297</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">251</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438d"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">290</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbb4">264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c438e"><p class="cl-665c25c8"><span class="cl-6658fbb4">5</span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">301</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">260</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c4396"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">306</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbb4">221</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c4397"><p class="cl-665c25c8"><span class="cl-6658fbb4">Total</span></p></td><td class="cl-665c4398"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">709</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c4398"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">751</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c43a0"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c4398"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">877</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c4398"><p class="cl-665c25c8"><span class="cl-6658fbb4">717</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="6" class="cl-665c43a1"><p class="cl-665c25c8"><span class="cl-6658fbb4">Wave</span><span class="cl-6658fbb4"> </span><span class="cl-6658fbb4">2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c4383"><p class="cl-665c25c8"><span class="cl-6658fbb4">3</span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">201</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">189</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438d"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">210</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbb4">199</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c4383"><p class="cl-665c25c8"><span class="cl-6658fbb4">4</span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">214</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">194</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438d"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">236</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438c"><p class="cl-665c25c8"><span class="cl-6658fbb4">210</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c438e"><p class="cl-665c25c8"><span class="cl-6658fbb4">5</span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">221</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">216</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c4396"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">239</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c438f"><p class="cl-665c25c8"><span class="cl-6658fbb4">213</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-665c43a3"><p class="cl-665c25c8"><span class="cl-6658fbb4">Total</span></p></td><td class="cl-665c43aa"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">636</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c43aa"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">599</span><span class="cl-6658fbc9"> </span></p></td><td class="cl-665c43ab"><p class="cl-665c25c8"><span class="cl-6658fbc8"></span></p></td><td class="cl-665c43aa"><p class="cl-665c25c8"><span class="cl-6658fbc9"> </span><span class="cl-6658fbb4">685</span><span class="cl-6658fbc9">*</span></p></td><td class="cl-665c43aa"><p class="cl-665c25c8"><span class="cl-6658fbb4">622</span></p></td></tr></tbody></table></div>
-</div>
-</div>
-</figure>
-</div>
-<div>
-<div class="FigureNote NoIndent" data-custom-style="FigureNote">
-<em>Note</em>. This table demonstrates the elements of a prototypical table. A <em>general note</em> to a table appears first and contains information needed to understand the table, including definitions of abbreviations (see Sections 7.14–7.15) and the copyright attribution for a reprinted or adapted table (see Section 7.7).
-</div>
-<div class="FigureNote NoIndent" data-custom-style="FigureNote">
-<sup>a</sup> Subsequent specific notes follow in the same paragraph (see Section 7.14). <sup>b</sup> Subsequent specific notes follow in the same paragraph (see Section 7.14).
-</div>
-<div class="FigureNote NoIndent" data-custom-style="FigureNote">
-* A <em>probability note</em> (for <em>p</em> values) appears as a separate paragraph below any specific notes; subsequent probability notes follow in the same paragraph (see Section 7.14).
-</div>
-</div>
-</div>
-<p>Note that in Figure&nbsp;1, the <code>Total</code> row is left-aligned in the <code>Grade</code> column. I did not do this because I think it looks bad, and there was no note saying that I had to do it to remain in strict APA style. If you think you need it, you would add this line to your table pipeline:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">align</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">i =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> Grade <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Total"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">j =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Grade"</span>) </span></code></pre></div></div>
-</div>
-
-
-
-</section>
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
-  author = {Schneider, W. Joel},
-  title = {Recreating {APA} {Manual} {Table} 7.1 in {R} with Apa7},
-  date = {2025-09-10},
-  url = {https://wjschne.github.io/posts/apatables/apa701.html},
-  langid = {en}
-}
-</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas">
-Schneider, W. J. (2025, September 10). Recreating APA Manual Table 7.1
-in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa701.html">https://wjschne.github.io/posts/apatables/apa701.html</a>
-</div></div></section></div> ]]></description>
-  <category>R</category>
-  <category>APA Style</category>
-  <guid>https://wjschne.github.io/posts/apatables/apa701.html</guid>
-  <pubDate>Wed, 10 Sep 2025 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

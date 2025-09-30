@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="W. Joel Schneider">
-<meta name="dcterms.date" content="2025-09-19">
+<meta name="dcterms.date" content="2025-10-01">
 <meta name="description" content="W. Joel Schneider is a professor at Temple University.">
 
 <title>W. Joel Schneider</title>
@@ -110,18 +110,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
 
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="W. Joel Schneider">
 <meta property="og:description" content="Demonstration of the apa7 package, a flextable extension package">
 <meta property="og:image" content="https://wjschne.github.io/posts/apatables/data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==">
 <meta property="og:site_name" content="W. Joel Schneider">
-<meta name="citation_title" content="Recreating APA Manual Table 7.9 in R with apa7">
+<meta name="citation_title" content="Recreating APA Manual Table 7.21 in R with apa7">
 <meta name="citation_author" content="W. Joel Schneider">
-<meta name="citation_publication_date" content="2025-09-19">
-<meta name="citation_cover_date" content="2025-09-19">
+<meta name="citation_publication_date" content="2025-10-01">
+<meta name="citation_cover_date" content="2025-10-01">
 <meta name="citation_year" content="2025">
-<meta name="citation_online_date" content="2025-09-19">
-<meta name="citation_fulltext_html_url" content="https://wjschne.github.io/posts/apatables/apa709.html">
+<meta name="citation_online_date" content="2025-10-01">
+<meta name="citation_fulltext_html_url" content="https://wjschne.github.io/posts/apatables/apa721.html">
 <meta name="citation_language" content="en">
 <meta name="citation_journal_title" content="Schneirographs">
 </head>
@@ -201,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Recreating APA Manual Table 7.9 in R with apa7</h1>
+      <h1 class="title">Recreating APA Manual Table 7.21 in R with apa7</h1>
                   <div>
         <div class="description">
           Demonstration of the apa7 package, a flextable extension package
@@ -236,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">September 19, 2025</p>
+        <p class="date">October 1, 2025</p>
       </div>
     </div>
     
@@ -251,7 +294,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Sections</h2>
    
   <ul>
-  <li><a href="#making-tables-in-apa-style-part-9-of-24" id="toc-making-tables-in-apa-style-part-9-of-24" class="nav-link active" data-scroll-target="#making-tables-in-apa-style-part-9-of-24">Making tables in APA style (Part 9 of 24)</a></li>
+  <li><a href="#making-tables-in-apa-style-part-21-of-24" id="toc-making-tables-in-apa-style-part-21-of-24" class="nav-link active" data-scroll-target="#making-tables-in-apa-style-part-21-of-24">Making tables in APA style (Part 21 of 24)</a></li>
   </ul>
 </nav>
 </nav>
@@ -266,8 +309,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="making-tables-in-apa-style-part-9-of-24" class="level1">
-<h1>Making tables in APA style (Part 9 of 24)</h1>
+<section id="making-tables-in-apa-style-part-21-of-24" class="level1">
+<h1>Making tables in APA style (Part 21 of 24)</h1>
 <p>In this 24-part series, each of the tables in Chapter 7 of the <em>Publication Manual of the American Psychological Association</em> (7th Edition) is recreated with <a href="https://wjschne.github.io/apa7/">apa7</a>, <a href="https://ardata-fr.github.io/flextable-book/">flextable</a>, <a href="https://easystats.github.io/easystats/">easystats</a>, and <a href="https://www.tidyverse.org/packages/">tidyverse</a> functions.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -280,8 +323,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>Use custom <code>column_formats</code></li>
-<li>Use <code>footnote</code></li>
+<li>Use of <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a></li>
+<li>Use of thin spaces <code>&amp;thinsp;</code> for footnote superscripts.</li>
 </ul>
 </div>
 </div>
@@ -290,121 +333,96 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ftExtra)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set_flextable_defaults</span>(<span class="at">theme_fun =</span> theme_apa, </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">font.family =</span> <span class="st">"Times New Roman"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set_flextable_defaults</span>(<span class="at">theme_fun =</span> theme_apa, </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">font.family =</span> <span class="st">"Times New Roman"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="fig-79" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
+<div id="fig-721" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-fignum="1" prefix="" data-custom-style="FigureWithoutNote">
 <figure class="quarto-float quarto-float-fig figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
 <p>Figure&nbsp;1</p>
 </div>
 <div class="Caption" data-custom-style="Caption">
-<p>Screenshot of the <em>APA Manual</em>’s Table 7.9</p>
+<p>Screenshot of the <em>APA Manual</em>’s Table 7.21</p>
 </div>
 </figcaption>
-<div aria-describedby="fig-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="table79.png" class="img-fluid figure-img" style="width:100.0%">
+<div aria-describedby="fig-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="table721.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 </figure>
 </div>
-<p>Setting up the data was harder than creating the table. Once the data were ready, I needed to set the rounding of the variables and alter the column header of the <code>F</code> column.</p>
-<p>The <a href="https://wjschne.github.io/apa7/reference/column_formats.html"><code>column_formats</code></a> function creates a modifiable copy of the default column formatters. After creating a <code>column_formats</code> object, I set the rounding accuracy of column <code>p</code> to .001 using [<code>purrr::partial</code>], which creates a copy of a function with new defaults.</p>
-<p>I also set the header of the <code>F</code> column to <code>*F* ratio</code>.</p>
-<div class="cell FigureWithNote" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test." prefix="" data-tblnum="1" data-custom-style="FigureWithNote">
+<p>I did not have enough information to simulate the three models, so I input the data directly. This made it comparatively easy to recreate. Adding stars to the <span class="math inline">\chi^2</span> column was made easier by creating a temporary p-value column with values less than .001 and then applying <a href="https://wjschne.github.io/apa7/reference/add_star_column.html"><code>add_star_column</code></a>.</p>
+<p>The APA Publication Manual recommends following the footnote symbols with a superscripted space. In the <code>apa-note</code>, the superscript symbols a, b, and c are followed by a thin space within the superscript. This gives a pleasing amount of separation.</p>
+<div class="cell FigureWithNote" data-apa-note="[&quot;Structural equation modeling was used for the analysis. NFI&nbsp;=&nbsp;normed fit index; CFI&nbsp;=&nbsp;comparative fit index; RMSEA&nbsp;=&nbsp;root-mean-square error of approximation.&quot;,&quot;^a ^In Model A, all 57 items of social intelligence, emotional intelligence, and cultural intelligence were loaded onto one factor. ^b ^In Model B, the 21 items of social intelligence were loaded onto one factor, and the 16 items of emotional intelligence and the 20 items of cultural intelligence were loaded onto another factor. ^c ^In Model C, the 21 items of social intelligence were loaded onto one factor, the 16 items of emotional intelligence were loaded onto a second factor, and the 20 items of cultural intelligence were loaded onto a third factor.&quot;,&quot;^\*\*\*^*p* < .001.&quot;]" prefix="" data-tblnum="1" data-custom-style="FigureWithNote">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-79</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Analyses for the Interaction of Professor </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#|           Type and Timing of Response on Perceptions </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#|           of Professor Traits"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| apa-note: "Means with different subscripts differ at </span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#|            the *p*&amp;nbsp;=&amp;nbsp;.05 level by Duncan’s </span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#|            new multiple range test."</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Descriptives</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>d_mean <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">Professor trait     Semester    Type        Mean    Subscript</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="st">Dedicated           End         Typical     4.706   b        </span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="st">Easy to understand  End         Typical     3.059   c        </span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="st">Fair                End         Typical     4.000   b        </span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="st">Manipulative        End         Typical     1.471   a        </span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="st">Insensitive         End         Typical     2.059   b        </span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="st">Dedicated           End         Effective   4.789   b        </span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="st">Easy to understand  End         Effective   4.895   a        </span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="st">Fair                End         Effective   4.263   b        </span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="st">Manipulative        End         Effective   1.632   a        </span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="st">Insensitive         End         Effective   1.526   c        </span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="st">Dedicated           Start       Typical     4.154   c        </span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="st">Easy to understand  Start       Typical     3.231   c        </span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="st">Fair                Start       Typical     3.731   c        </span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="st">Manipulative        Start       Typical     1.731   a        </span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="st">Insensitive         Start       Typical     2.538   a        </span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="st">Dedicated           Start       Effective   5.000   a        </span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="st">Easy to understand  Start       Effective   4.429   b        </span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="st">Fair                Start       Effective   4.667   a        </span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="st">Manipulative        Start       Effective   1.238   a        </span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="st">Insensitive         Start       Effective   1.143   c"</span> <span class="sc">|&gt;</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    readr<span class="sc">::</span><span class="fu">read_tsv</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressMessages</span>()</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Statistics</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>d_test <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="st">Professor trait     F       p       eta2</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="st">Dedicated           19.26   0.001   0.15</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="st">Easy to understand  5.01    0.028   0.03</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="st">Fair                5.75    0.019   0.06</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="st">Manipulative        3.92    0.051   0.05</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="st">Insensitive         8.12    0.006   0.06"</span> <span class="sc">|&gt;</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  readr<span class="sc">::</span><span class="fu">read_tsv</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressMessages</span>() </span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Format data</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>d_formatted <span class="ot">&lt;-</span> d_mean <span class="sc">|&gt;</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Semester =</span> <span class="fu">paste0</span>(</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    Semester, </span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="st">" of semester</span><span class="sc">\\\n</span><span class="st">professor type"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Mean =</span> scales<span class="sc">::</span><span class="fu">number</span>(Mean, <span class="at">accuracy =</span> .<span class="dv">001</span>),</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>         <span class="at">Subscript =</span> <span class="fu">paste0</span>(<span class="st">"~"</span>, Subscript, <span class="st">"~"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(Mean, <span class="fu">c</span>(Mean, Subscript), <span class="at">sep =</span> <span class="st">""</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(Semester, <span class="fu">c</span>(Semester, Type)) <span class="sc">|&gt;</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Semester, </span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> Mean) <span class="sc">|&gt;</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d_test, <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">`</span><span class="at">Professor trait</span><span class="st">`</span>)) </span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="co"># custom formatter</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>my_formatter <span class="ot">&lt;-</span>  <span class="fu">column_formats</span>()</span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="do">## change p column's accuracy to 0.001</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>my_formatter<span class="sc">$</span>p<span class="sc">@</span>formatter <span class="ot">&lt;-</span> my_formatter<span class="sc">$</span>p<span class="sc">@</span>formatter <span class="sc">|&gt;</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">partial</span>(<span class="at">accuracy =</span> .<span class="dv">001</span>)</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="do">## set F column header to "*F* ratio"</span></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>my_formatter<span class="sc">$</span><span class="st">`</span><span class="at">F</span><span class="st">`</span><span class="sc">@</span>header <span class="ot">&lt;-</span> <span class="st">"*F* ratio"</span></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Make table</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="fu">apa_flextable</span>(d_formatted, <span class="at">column_formats =</span> my_formatter) </span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="tbl-79" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1" data-apa-note="Means with different subscripts differ at the *p*&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test.">
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-721</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Results of Confirmatory Factor Analysis for the </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#|   Relationships Among Three Types of Intelligence"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#| apa-note: </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Structural equation modeling was used for the analysis. </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#|     NFI&amp;nbsp;=&amp;nbsp;normed fit index; </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#|     CFI&amp;nbsp;=&amp;nbsp;comparative fit index; </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#|     RMSEA&amp;nbsp;=&amp;nbsp;root-mean-square error of </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#|     approximation."</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "^a&amp;thinsp;^In Model A, all 57 items of social </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#|    intelligence, emotional intelligence, and cultural </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#|    intelligence were loaded onto one factor. ^b&amp;thinsp;^In</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#|    Model B, the 21 items of social intelligence were </span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#|    loaded onto one factor, and the 16 items of emotional </span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#|    intelligence and the 20 items of cultural intelligence </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#|    were loaded onto another factor. ^c&amp;thinsp;^In Model C, </span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#|    the 21 items of social intelligence were loaded onto one </span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#|    factor, the 16 items of emotional intelligence were </span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#|    loaded onto a second factor, and the 20 items of </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#|    cultural intelligence were loaded onto a third factor."</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "^\\*\\*\\*^*p* &lt; .001."</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">Model =</span> <span class="fu">c</span>(</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"A: One-intelligence model^&amp;thinsp;a^"</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"B: Two-intelligences mode^&amp;thinsp;b^"</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"C: Three-intelligences model^&amp;thinsp;c^"</span>),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">Chi2 =</span> <span class="fu">c</span>(<span class="fl">10994.664</span>, <span class="fl">10091.236</span>, <span class="fl">8640.066</span>),</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">df =</span> <span class="fu">c</span>(<span class="dv">1539</span>L, <span class="dv">1538</span>L, <span class="dv">1536</span>L),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">NFI =</span> <span class="fu">c</span>(<span class="fl">0.296</span>, <span class="fl">0.354</span>, <span class="fl">0.447</span>),</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">CFI =</span> <span class="fu">c</span>(<span class="fl">0.326</span>, <span class="fl">0.39</span>, <span class="fl">0.494</span>),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">RMSEA =</span> <span class="fu">c</span>(<span class="fl">0.115</span>, <span class="fl">0.109</span>, <span class="fl">0.1</span>),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> .<span class="dv">0001</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_star_column</span>(Chi2, <span class="at">merge =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>p) <span class="sc">|&gt;</span> </span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apa_flextable</span>(<span class="at">column_formats =</span> <span class="fu">column_formats</span>(</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">accuracy =</span> <span class="fl">0.001</span>),</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"fixed"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">width</span>(<span class="at">width =</span> <span class="fu">c</span>(<span class="fl">2.15</span>, <span class="fl">1.15</span>, <span class="fu">rep</span>(<span class="fl">3.2</span> <span class="sc">/</span> <span class="dv">4</span>, <span class="dv">4</span>)))</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-721" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" data-apa-note="[&quot;Structural equation modeling was used for the analysis. NFI&nbsp;=&nbsp;normed fit index; CFI&nbsp;=&nbsp;comparative fit index; RMSEA&nbsp;=&nbsp;root-mean-square error of approximation.&quot;,&quot;^a ^In Model A, all 57 items of social intelligence, emotional intelligence, and cultural intelligence were loaded onto one factor. ^b ^In Model B, the 21 items of social intelligence were loaded onto one factor, and the 16 items of emotional intelligence and the 20 items of cultural intelligence were loaded onto another factor. ^c ^In Model C, the 21 items of social intelligence were loaded onto one factor, the 16 items of emotional intelligence were loaded onto a second factor, and the 20 items of cultural intelligence were loaded onto a third factor.&quot;,&quot;^\*\*\*^*p* < .001.&quot;]" prefix="">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
 <p>Table&nbsp;1</p>
 </div>
 <div class="Caption" data-custom-style="Caption">
-<p>Analyses for the Interaction of Professor Type and Timing of Response on Perceptions of Professor Traits</p>
+<p>Results of Confirmatory Factor Analysis for the Relationships Among Three Types of Intelligence</p>
 </div>
 </figcaption>
-<div aria-describedby="tbl-79-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-721-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="tabwid tabwid_left"><style>.cl-c7759660{}.cl-c76210a4{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c76210ae{font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c76210b8{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c76210b9{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-c76210ba{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;top:3.6pt;}.cl-c770ca68{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-c770ca72{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-c770eac0{width:1.664in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaca{width:0.748in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead4{width:0.871in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead5{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead6{width:0.676in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770ead7{width:0.486in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eade{width:0.385in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eadf{width:1.664in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eae0{width:0.748in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eae8{width:0.871in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eae9{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaea{width:0.676in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaeb{width:0.486in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaf2{width:0.385in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaf3{width:1.664in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eaf4{width:0.748in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eafc{width:0.871in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eafd{width:0.05in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eafe{width:0.676in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eb06{width:0.486in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c770eb07{width:0.385in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-c7759660"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-c770eac0"><p class="cl-c770ca68"><span class="cl-c76210a4">Professor</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">trait</span></p></th><th colspan="2" class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">End</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">of</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">semester</span><br><span class="cl-c76210a4">professor</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">type</span></p></th><th rowspan="2" class="cl-c770ead5"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></th><th colspan="2" class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">Start</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">of</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">semester</span><br><span class="cl-c76210a4">professor</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">type</span></p></th><th rowspan="2" class="cl-c770ead6"><p class="cl-c770ca68"><span class="cl-c76210b8">F</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">ratio</span></p></th><th rowspan="2" class="cl-c770ead7"><p class="cl-c770ca68"><span class="cl-c76210b8">p</span></p></th><th rowspan="2" class="cl-c770eade"><p class="cl-c770ca68"><span class="cl-c76210b8">η</span><span class="cl-c76210b9">2</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">Typical</span></p></th><th class="cl-c770ead4"><p class="cl-c770ca68"><span class="cl-c76210a4">Effective</span></p></th><th class="cl-c770eaca"><p class="cl-c770ca68"><span class="cl-c76210a4">Typical</span></p></th><th class="cl-c770ead4"><p class="cl-c770ca68"><span class="cl-c76210a4">Effective</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Dedicated</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">4.706</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.789</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">4.154</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">5.000</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4">19.26</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.001</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.15</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Easy</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">to</span><span class="cl-c76210a4"> </span><span class="cl-c76210a4">understand</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">3.059</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.895</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">3.231</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.429</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4"> 5.01</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.028</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.03</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Fair</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">4.000</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.263</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">3.731</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">4.667</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4"> 5.75</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.019</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.06</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eadf"><p class="cl-c770ca72"><span class="cl-c76210a4">Manipulative</span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">1.471</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">1.632</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae9"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eae0"><p class="cl-c770ca68"><span class="cl-c76210a4">1.731</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eae8"><p class="cl-c770ca68"><span class="cl-c76210a4">1.238</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eaea"><p class="cl-c770ca68"><span class="cl-c76210a4"> 3.92</span></p></td><td class="cl-c770eaeb"><p class="cl-c770ca68"><span class="cl-c76210a4">.051</span></p></td><td class="cl-c770eaf2"><p class="cl-c770ca68"><span class="cl-c76210a4">.05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c770eaf3"><p class="cl-c770ca72"><span class="cl-c76210a4">Insensitive</span></p></td><td class="cl-c770eaf4"><p class="cl-c770ca68"><span class="cl-c76210a4">2.059</span><span class="cl-c76210ba">b</span></p></td><td class="cl-c770eafc"><p class="cl-c770ca68"><span class="cl-c76210a4">1.526</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eafd"><p class="cl-c770ca68"><span class="cl-c76210ae"></span></p></td><td class="cl-c770eaf4"><p class="cl-c770ca68"><span class="cl-c76210a4">2.538</span><span class="cl-c76210ba">a</span></p></td><td class="cl-c770eafc"><p class="cl-c770ca68"><span class="cl-c76210a4">1.143</span><span class="cl-c76210ba">c</span></p></td><td class="cl-c770eafe"><p class="cl-c770ca68"><span class="cl-c76210a4"> 8.12</span></p></td><td class="cl-c770eb06"><p class="cl-c770ca68"><span class="cl-c76210a4">.006</span></p></td><td class="cl-c770eb07"><p class="cl-c770ca68"><span class="cl-c76210a4">.06</span></p></td></tr></tbody></table></div>
+<div class="tabwid tabwid_left"><style>.cl-1cc0bd44{}.cl-1c62adee{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1c62ae02{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1c62ae03{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3.6pt;}.cl-1cbbba10{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-1cbbba1a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:8pt;padding-top:8pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;}.cl-1cbbde14{width:2.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde1e{width:1.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde1f{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde20{width:2.15in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde28{width:1.15in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde29{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde32{width:2.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde33{width:1.15in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cbbde34{width:0.8in;background-color:transparent;vertical-align: top;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1cc0bd44"><thead><tr style="overflow-wrap:break-word;"><th class="cl-1cbbde14"><p class="cl-1cbbba10"><span class="cl-1c62adee">Model</span></p></th><th class="cl-1cbbde1e"><p class="cl-1cbbba10"><span class="cl-1c62ae02">χ</span><span class="cl-1c62ae03">2</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62ae02">df</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62adee">NFI</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62adee">CFI</span></p></th><th class="cl-1cbbde1f"><p class="cl-1cbbba10"><span class="cl-1c62adee">RMSEA</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-1cbbde20"><p class="cl-1cbbba1a"><span class="cl-1c62adee">A:</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">One-intelligence</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">model</span><span class="cl-1c62ae03"> a</span></p></td><td class="cl-1cbbde28"><p class="cl-1cbbba10"><span class="cl-1c62ae03">   </span><span class="cl-1c62adee">10994.664</span><span class="cl-1c62ae03">***</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">1,539</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.296</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.326</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.115</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cbbde20"><p class="cl-1cbbba1a"><span class="cl-1c62adee">B:</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">Two-intelligences</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">mode</span><span class="cl-1c62ae03"> b</span></p></td><td class="cl-1cbbde28"><p class="cl-1cbbba10"><span class="cl-1c62ae03">   </span><span class="cl-1c62adee">10091.236</span><span class="cl-1c62ae03">***</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">1,538</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.354</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.390</span></p></td><td class="cl-1cbbde29"><p class="cl-1cbbba10"><span class="cl-1c62adee">.109</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cbbde32"><p class="cl-1cbbba1a"><span class="cl-1c62adee">C:</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">Three-intelligences</span><span class="cl-1c62adee"> </span><span class="cl-1c62adee">model</span><span class="cl-1c62ae03"> c</span></p></td><td class="cl-1cbbde33"><p class="cl-1cbbba10"><span class="cl-1c62adee"> </span><span class="cl-1c62ae03">   </span><span class="cl-1c62adee">8640.066</span><span class="cl-1c62ae03">***</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">1,536</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">.447</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">.494</span></p></td><td class="cl-1cbbde34"><p class="cl-1cbbba10"><span class="cl-1c62adee">.100</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </figure>
 </div>
 <div>
 <div class="FigureNote NoIndent" data-custom-style="FigureNote">
-<em>Note</em>. Means with different subscripts differ at the <em>p</em>&nbsp;=&nbsp;.05 level by Duncan’s new multiple range test.
+<em>Note</em>. Structural equation modeling was used for the analysis. NFI&nbsp;=&nbsp;normed fit index; CFI&nbsp;=&nbsp;comparative fit index; RMSEA&nbsp;=&nbsp;root-mean-square error of approximation.
+</div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<sup>a </sup>In Model A, all 57 items of social intelligence, emotional intelligence, and cultural intelligence were loaded onto one factor. <sup>b </sup>In Model B, the 21 items of social intelligence were loaded onto one factor, and the 16 items of emotional intelligence and the 20 items of cultural intelligence were loaded onto another factor. <sup>c </sup>In Model C, the 21 items of social intelligence were loaded onto one factor, the 16 items of emotional intelligence were loaded onto a second factor, and the 20 items of cultural intelligence were loaded onto a third factor.
+</div>
+<div class="FigureNote NoIndent" data-custom-style="FigureNote">
+<sup>***</sup><em>p</em> &lt; .001.
 </div>
 </div>
 </div>
@@ -414,10 +432,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <a class="page-link" href="apa701.html">First</a>
 </li>
 <li class="page-item">
-<a class="page-link" href="apa708.html">Previous</a>
+<a class="page-link" href="apa720.html">Previous</a>
 </li>
 <li class="page-item">
-<a class="page-link" href="apa710.html">Next</a>
+<a class="page-link" href="apa722.html">Next</a>
 </li>
 <li class="page-item">
 <a class="page-link" href="apa724.html">Last</a>
@@ -430,14 +448,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2025,
   author = {Schneider, W. Joel},
-  title = {Recreating {APA} {Manual} {Table} 7.9 in {R} with Apa7},
-  date = {2025-09-19},
-  url = {https://wjschne.github.io/posts/apatables/apa709.html},
+  title = {Recreating {APA} {Manual} {Table} 7.21 in {R} with Apa7},
+  date = {2025-10-01},
+  url = {https://wjschne.github.io/posts/apatables/apa721.html},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2025" class="csl-entry quarto-appendix-citeas" role="listitem">
-Schneider, W. J. (2025, September 19). Recreating APA Manual Table 7.9
-in R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa709.html">https://wjschne.github.io/posts/apatables/apa709.html</a>
+Schneider, W. J. (2025, October 1). Recreating APA Manual Table 7.21 in
+R with apa7. <em>Schneirographs</em>. <a href="https://wjschne.github.io/posts/apatables/apa721.html">https://wjschne.github.io/posts/apatables/apa721.html</a>
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
