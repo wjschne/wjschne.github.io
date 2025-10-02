@@ -52,10 +52,10 @@ format:
 In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
 
 :::{.callout-note}
+
 # Highlights
 
 * Use of `hanging_indent`
-* Use of `merge_v` to remove redundant content
 
 :::
 
@@ -126,12 +126,12 @@ tibble(
 ) |> 
   mutate(
     `Quantitative result` = hanging_indent(
-      `Quantitative result`, width = 29),
+      `Quantitative result`, width = 25),
     `Qualitative result` = hanging_indent(
-      `Qualitative result`, width = 29),
+      `Qualitative result`, width = 25),
     `Example quote` = hanging_indent(
-      `Example quote`, width = 38)) |>
-  apa_flextable(line_spacing = 1.5, font_size = 10) |>
+      `Example quote`, width = 32)) |>
+  apa_flextable(line_spacing = 1.5, font_size = 12) |>
   align() |>
   width(width = c(2,2,2.5))
 ```
