@@ -64,101 +64,103 @@ knitr::opts_chunk$set(echo = F, cache = F, dev = "svg")
 options(knitr.kable.NA = "")
 # Set table column width
 # https://github.com/rstudio/bookdown/issues/122#issuecomment-221101375
-html_table_width <- function(kable_output, width, class = ""){
+html_table_width <- function(kable_output, width, class = "") {
   width_html <- paste0(
-    paste0('<col width="',
-           width,
-           '">'),
-    collapse = "\n")
-  sub("<table>",
-      paste0(paste0("<table class='", class, "'>"),
-             "\n",
-             width_html),
-      kable_output)
+    paste0('<col width="', width, '">'),
+    collapse = "\n"
+  )
+  sub(
+    "<table>",
+    paste0(paste0("<table class='", class, "'>"), "\n", width_html),
+    kable_output
+  )
 }
 
 make_citation_button <- function(cites, cid, date) {
   s <- ifelse(cites > 1, "s", "")
- ifelse(is.na(cites) | cites == 0, 
-        "", 
-        glue::glue(
-          ' <a target="_blank" title="{cites} citation{s}"  href="https://scholar.google.com/scholar?as_ylo={date}&oi=bibs&hl=en&cites={cid}"><i class="ai ai-google-scholar"></i></a>')) 
+  ifelse(
+    is.na(cites) | cites == 0,
+    "",
+    glue::glue(
+      ' <a target="_blank" title="{cites} citation{s}"  href="https://scholar.google.com/scholar?as_ylo={date}&oi=bibs&hl=en&cites={cid}"><i class="ai ai-google-scholar"></i></a>'
+    )
+  )
 }
 
-paste_and <- function(words, 
-                      sep = ", ", 
-                      and = ", & ", 
-                      and2 = and) {
-   k <- length(words)
-   sp <- rep(sep, k)
-   sp[k] <- ""
-   if (k > 1) sp[k - 1] <- and
-   if (k == 2) sp[1] <- and2
-   paste0(words, sp, collapse = "")
+paste_and <- function(words, sep = ", ", and = ", & ", and2 = and) {
+  k <- length(words)
+  sp <- rep(sep, k)
+  sp[k] <- ""
+  if (k > 1) {
+    sp[k - 1] <- and
+  }
+  if (k == 2) {
+    sp[1] <- and2
+  }
+  paste0(words, sp, collapse = "")
 }
 
 make_authors <- function(authors) {
-  map_chr(authors, function(d) mutate(d, 
-                         given = str_extract_all(
-                           given, 
-                           "\\b[a-zA-Z]") %>% 
-                           map_chr(~paste0(.x, 
-                                           ".", 
-                                           collapse = " ")),
-                         author = paste0(family, ", ", given)) %>% 
-        pull(author) %>% 
-        paste_and())
-  
+  map_chr(authors, function(d) {
+    mutate(
+      d,
+      given = str_extract_all(
+        given,
+        "\\b[a-zA-Z]"
+      ) %>%
+        map_chr(~ paste0(.x, ".", collapse = " ")),
+      author = paste0(family, ", ", given)
+    ) %>%
+      pull(author) %>%
+      paste_and()
+  })
 }
 
 make_editors <- function(editors) {
   map_chr(editors, function(d) {
     s <- ifelse(nrow(d) > 1, "s", "")
-    mutate(d, 
-                         given = str_extract_all(
-                           given, 
-                           "\\b[a-zA-Z]") %>% 
-                           map_chr(~paste0(.x, 
-                                           ".", 
-                                           collapse = " ")),
-                         editors = paste0(given, " ", family)) %>% 
-        pull(editors) %>% 
-        paste_and() %>% 
+    mutate(
+      d,
+      given = str_extract_all(
+        given,
+        "\\b[a-zA-Z]"
+      ) %>%
+        map_chr(~ paste0(.x, ".", collapse = " ")),
+      editors = paste0(given, " ", family)
+    ) %>%
+      pull(editors) %>%
+      paste_and() %>%
       paste0(., " (Ed", s, ".)")
-    }
-        )
-  
+  })
 }
 
 make_chairs <- function(d) {
-  
-    if (all(is.na(d))) return(NA_character_)
-    
-    s <- ifelse(nrow(d) > 1, "s", "")
-    
-    as_tibble(d) %>% 
-      mutate( 
-        given = str_extract_all(
-          given, 
-          "\\b[a-zA-Z]") %>% 
-          map_chr(~paste0(.x, 
-                          ".", 
-                          collapse = " ")),
-        editors = paste0(given, " ", family)) %>% 
-      pull(editors) %>% 
-      paste_and() %>% 
-      paste0(". In ", ., " (Chair", s, "), ")
-    
+  if (all(is.na(d))) {
+    return(NA_character_)
+  }
+
+  s <- ifelse(nrow(d) > 1, "s", "")
+
+  as_tibble(d) %>%
+    mutate(
+      given = str_extract_all(
+        given,
+        "\\b[a-zA-Z]"
+      ) %>%
+        map_chr(~ paste0(.x, ".", collapse = " ")),
+      editors = paste0(given, " ", family)
+    ) %>%
+    pull(editors) %>%
+    paste_and() %>%
+    paste0(". In ", ., " (Chair", s, "), ")
 }
 
 doi2link <- function(s) {
-  ifelse(is.na(s) | s == "", 
-         "", 
-         paste0('<a href="https://doi.org/', 
-                s, 
-                '">https://doi.org/',
-                s,
-                '</a> '))
+  ifelse(
+    is.na(s) | s == "",
+    "",
+    paste0('<a href="https://doi.org/', s, '">https://doi.org/', s, '</a> ')
+  )
 }
 
 
@@ -171,10 +173,12 @@ na2emph <- function(s) {
 }
 
 na2link <- function(s, href, prefix = "", suffix = ".") {
-  ifelse(is.na(href), 
-         paste0(na2empty(s), suffix), 
-         glue::glue('{prefix}<a target="_blank" href="{href}">{s}</a>{suffix}'))
-  }
+  ifelse(
+    is.na(href),
+    paste0(na2empty(s), suffix),
+    glue::glue('{prefix}<a target="_blank" href="{href}">{s}</a>{suffix}')
+  )
+}
 
 title_suffix <- function(s) {
   period <- str_detect(s, "\\.$")
@@ -214,22 +218,28 @@ Philadelphia, PA 19122-6091
 #| class-output: vitatable
 
 tibble(
-              Year = c("1996–2003", "", "1989–1994"),
-         University = c("**Texas A&M University**","", 
-                       "**University of California, Berkeley**"),
-            Major = c("Ph.D. in Clinical Psychology [(2003)]{.smalldate}",
-                       "M.S. in Clinical Psychology [(1999)]{.smalldate}",
-                      "B.S. in Psychology [(1994)]{.smalldate}"),
-              Note = c("Dissertation: *The Transtheoretical Model of Change in Couples*",
-                       "Thesis: *The Moderating Influence of Perceived Containment on the Relation between Child Externalizing Behaviors and Parenting Practices*",
-                       "")
-) %>% 
+  Year = c("1996–2003", "", "1989–1994"),
+  University = c(
+    "**Texas A&M University**",
+    "",
+    "**University of California, Berkeley**"
+  ),
+  Major = c(
+    "Ph.D. in Clinical Psychology [(2003)]{.smalldate}",
+    "M.S. in Clinical Psychology [(1999)]{.smalldate}",
+    "B.S. in Psychology [(1994)]{.smalldate}"
+  ),
+  Note = c(
+    "Dissertation: *The Transtheoretical Model of Change in Couples*",
+    "Thesis: *The Moderating Influence of Perceived Containment on the Relation between Child Externalizing Behaviors and Parenting Practices*",
+    ""
+  )
+) %>%
   unite(University, University, Major, Note, sep = "<br>") %>%
-  mutate(University = str_remove(University, "^<br>")) %>% 
-  knitr::kable(align = "ll", escape = F, col.names = NULL) 
-  
-  # html_table_width(width = c("20%", "80%"), class = "align-top w-100")
+  mutate(University = str_remove(University, "^<br>")) %>%
+  knitr::kable(align = "ll", escape = F, col.names = NULL)
 
+# html_table_width(width = c("20%", "80%"), class = "align-top w-100")
 
 ```
 
@@ -243,28 +253,26 @@ tibble(
 #| class-output: vitatable
 
 tibble::tribble(
-           ~Date,                          ~Location,                         ~Position,
-  "2017–",            "**Temple University**",             "Professor [(2021–)]{.smalldate}", 
-              NA,                  "Philadelphia PA",             "Associate Professor [(2017–2021)]{.smalldate}",
-     "2002–2017",    "**Illinois State University**",           "Professor [(2014–2017)]{.smalldate}",
-              NA,                        "Normal IL", "Associate Professor [(2010–2014)]{.smalldate}",
-              NA,                                 NA, "Assistant Professor [(2004–2010)]{.smalldate}",
-              NA,                                 NA,  "Full-time Lecturer [(2002–2004)]{.smalldate}",
-     "2001–2002",              "**Dutchess County**",               "Psychology Intern",
-              NA, "**Department of Mental Hygiene**",                                NA,
-              NA,                 "Poughkeepsie, NY",                                NA
-  ) %>% 
+  ~Date         , ~Location                          , ~Position                                         ,
+  "2017–"     , "**Temple University**"            , "Professor [(2021–)]{.smalldate}"               ,
+  NA            , "Philadelphia PA"                  , "Associate Professor [(2017–2021)]{.smalldate}" ,
+  "2002–2017" , "**Illinois State University**"    , "Professor [(2014–2017)]{.smalldate}"           ,
+  NA            , "Normal IL"                        , "Associate Professor [(2010–2014)]{.smalldate}" ,
+  NA            , NA                                 , "Assistant Professor [(2004–2010)]{.smalldate}" ,
+  NA            , NA                                 , "Full-time Lecturer [(2002–2004)]{.smalldate}"  ,
+  "2001–2002" , "**Dutchess County**"              , "Psychology Intern"                               ,
+  NA            , "**Department of Mental Hygiene**" , NA                                                ,
+  NA            , "Poughkeepsie, NY"                 , NA
+) %>%
   mutate(across(
     everything(),
-    .fns = ~ str_replace_all(.x,
-                             "–",
-                             "&NoBreak;&ndash;&NoBreak;")
+    .fns = ~ str_replace_all(.x, "–", "&NoBreak;&ndash;&NoBreak;")
   )) %>%
   knitr::kable(
     align = "lll",
     escape = T,
     col.names = NULL
-  ) 
+  )
 
 
 ```
@@ -286,44 +294,46 @@ library(scholar)
 id <- "aojOxP4AAAAJ"
 l <- get_profile(id)
 d_pubs <- scholar::get_publications(id)
-j <- d_pubs  %>% 
-  filter(number != "") %>% 
-  filter(!(journal %in% c("Handbook of educational theories", 
-                          "Human Intelligence: An Introduction",
-                          "Scientific American",
-                          "Contemporary intellectual assessment: Theories, tests, and issues",
-                          "Clinical handbook of couple therapy",
-                          "Human intelligence: An introduction",
-                          "WJ IV clinical use and interpretation",
-                          "Best practices in school psychology V",
-                          "Institute for Applied Psychometrics (IAP)",
-                          "The Oxford Handbook of Child Psychological Assessment",
-                          "Handbook of educational theories"
-                          ))) %>% 
-  pull(journal) %>% 
-  unique 
+j <- d_pubs %>%
+  filter(number != "") %>%
+  filter(
+    !(journal %in%
+      c(
+        "Handbook of educational theories",
+        "Human Intelligence: An Introduction",
+        "Scientific American",
+        "Contemporary intellectual assessment: Theories, tests, and issues",
+        "Clinical handbook of couple therapy",
+        "Human intelligence: An introduction",
+        "WJ IV clinical use and interpretation",
+        "Best practices in school psychology V",
+        "Institute for Applied Psychometrics (IAP)",
+        "The Oxford Handbook of Child Psychological Assessment",
+        "Handbook of educational theories"
+      ))
+  ) %>%
+  pull(journal) %>%
+  unique
 
-# d_impact <- scholar::get_impactfactor(j) %>% 
-#   filter(!is.na(Journal)) %>% 
+# d_impact <- scholar::get_impactfactor(j) %>%
+#   filter(!is.na(Journal)) %>%
 #   mutate(linkJournal = str_to_lower(Journal))
-# 
-# d_impact <- scholar::get_journalrank(j) |> 
+#
+# d_impact <- scholar::get_journalrank(j) |>
 #   filter(Type == "journal")
 
+d_pubs_link <- d_pubs %>%
+  mutate(linkJournal = str_to_lower(journal)) %>%
+  # left_join(d_impact %>% select(-Journal, -Cites), by = "linkJournal") %>%
+  select(-linkJournal) %>%
+  arrange(desc(year)) %>%
+  as_tibble() %>%
+  select(title, author, year, cites) %>%
+  unique
 
-d_pubs_link <- d_pubs %>% 
-  mutate(linkJournal = str_to_lower(journal)) %>% 
-  # left_join(d_impact %>% select(-Journal, -Cites), by = "linkJournal") %>% 
-  select(-linkJournal) %>% 
-  arrange(desc(year)) %>% 
-  as_tibble() %>% 
-  select(title, author, year, cites) %>% 
-  unique 
 
-
-ct <- get_citation_history(id) %>% 
+ct <- get_citation_history(id) %>%
   mutate(cumulative_citations = cumsum(cites))
-
 
 
 ```
@@ -339,21 +349,26 @@ ct <- get_citation_history(id) %>%
 ```{r scholarplot, dev="svg", fig.height=8, fig.width=8, fig.cap="Google Scholar Citations of My Work", out.width="800px"}
 ## Plot citation trend
 
-ggplot(ct, aes(year, cumulative_citations)) + 
-  geom_step(linetype = 1, color = "gray50") + 
+ggplot(ct, aes(year, cumulative_citations)) +
+  geom_step(linetype = 1, color = "gray50") +
   geom_point(color = "gray20") +
-  geom_richtext(aes(label = paste0("+", cites, "<span style='color:white'>0</span>")), 
-             hjust = 0.5, 
-             vjust = 0, 
-             label.color = NA, 
-             label.padding = margin(1,0,0,0, "pt"), 
-             label.margin = margin(0,0,3,0, "pt"),
-             family = "Rubik", 
-             size = 4.0, 
-             color = "gray30", 
-             fill = "white") +
+  geom_richtext(
+    aes(label = paste0("+", cites, "<span style='color:white'>0</span>")),
+    hjust = 0.5,
+    vjust = 0,
+    label.color = NA,
+    label.padding = margin(1, 0, 0, 0, "pt"),
+    label.margin = margin(0, 0, 3, 0, "pt"),
+    family = "Rubik",
+    size = 4.0,
+    color = "gray30",
+    fill = "white"
+  ) +
   scale_x_continuous("Publication Year", minor_breaks = 2000:2025) +
-  scale_y_continuous("Cumulative Citation Count",expand = expansion(mult = c(0.02,0.052))) +
+  scale_y_continuous(
+    "Cumulative Citation Count",
+    expand = expansion(mult = c(0.02, 0.052))
+  ) +
   theme_minimal(base_size = 16, base_family = "Rubik") +
   coord_cartesian(clip = 'off') +
   theme(plot.title.position = "plot")
@@ -363,33 +378,43 @@ ggplot(ct, aes(year, cumulative_citations)) +
 ## Books
 
 ```{r books, results='asis'}
-jsonlite::read_json("data/My Books.json", simplifyVector = T) %>% 
-  as_tibble() %>% 
-  mutate(issued = flatten(issued) %>% as.integer(),
-         edition = ifelse(is.na(edition), "", paste0(" (",scales::ordinal(as.numeric(edition)), " ed.)"))) %>% 
-  unnest(author) %>% 
-  mutate(given = str_extract_all(given, "\\b[a-zA-Z]") %>% 
-           map_chr(~paste0(.x, ".", 
-                           collapse = " ")),
-         author = paste0(family, ", ", given)) %>% 
-  group_by(id) %>% 
-  summarise(author = knitr::combine_words(words = author, 
-                                          sep = ", ", 
-                                          and = " & "),
-            source = first(source),
-            title = first(title),
-            publisher = first(publisher),
-            URL = first(URL),
-            edition = first(edition),
-            year = first(issued),
-            note = first(note)
-            ) %>% 
-  mutate(pubid = str_remove(note, "pubid:")) %>% 
-  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>% 
-  mutate(citations = make_citation_button(cites, cid, year)) %>% 
-  mutate(citation = glue::glue('<div class="csl-entry">{author} ({year}). <a href="{URL}"><em>{title}</em>{edition}</a>. {publisher}.{citations}</div>')) %>% 
- arrange(-year, author) %>% 
-  pull(citation) %>% 
+jsonlite::read_json("data/My Books.json", simplifyVector = T) %>%
+  as_tibble() %>%
+  mutate(
+    issued = flatten(issued) %>% as.integer(),
+    edition = ifelse(
+      is.na(edition),
+      "",
+      paste0(" (", scales::ordinal(as.numeric(edition)), " ed.)")
+    )
+  ) %>%
+  unnest(author) %>%
+  mutate(
+    given = str_extract_all(given, "\\b[a-zA-Z]") %>%
+      map_chr(~ paste0(.x, ".", collapse = " ")),
+    author = paste0(family, ", ", given)
+  ) %>%
+  group_by(id) %>%
+  summarise(
+    author = knitr::combine_words(words = author, sep = ", ", and = " & "),
+    source = first(source),
+    title = first(title),
+    publisher = first(publisher),
+    URL = first(URL),
+    edition = first(edition),
+    year = first(issued),
+    note = first(note)
+  ) %>%
+  mutate(pubid = str_remove(note, "pubid:")) %>%
+  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>%
+  mutate(citations = make_citation_button(cites, cid, year)) %>%
+  mutate(
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({year}). <a href="{URL}"><em>{title}</em>{edition}</a>. {publisher}.{citations}</div>'
+    )
+  ) %>%
+  arrange(-year, author) %>%
+  pull(citation) %>%
   cat
 
 
@@ -398,25 +423,32 @@ jsonlite::read_json("data/My Books.json", simplifyVector = T) %>%
 ## Journal Articles
 
 ```{r articles, results='asis'}
-jsonlite::read_json("data/My Articles.json", simplifyVector = T) %>% 
-  as_tibble() %>% 
-  rename(journal = `container-title`,
-         year = issued) %>% 
-  mutate(year = flatten(year) %>% map(`[[`, 1) %>% as.integer(),
-         author = make_authors(author),
-         title = na2link(title, 
-                         href = URL, 
-                         suffix = title_suffix(title)),
-         pubid = str_remove(note, "pubid:"),
-         issue = na2empty(issue, paste0("(", issue, ")")),
-         page = ifelse(is.na(page), "", paste0(", ", str_replace(page, "-", "&ndash;"))),
-         volume = ifelse(is.na(volume), "", paste0(", ", volume))) %>% 
-  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>% 
-  mutate(citations = make_citation_button(cites, cid, year)) %>% 
-  mutate(citation = glue::glue('<div class="csl-entry">{author} ({year}). {title} <em>{journal}{volume}</em>{issue}{page}. {doi2link(DOI)}{citations}</div>')) %>% 
- arrange(-year, author) %>%  
-  pull(citation) %>% 
-  str_replace("\\. ,", ".") %>% 
+jsonlite::read_json("data/My Articles.json", simplifyVector = T) %>%
+  as_tibble() %>%
+  rename(journal = `container-title`, year = issued) %>%
+  mutate(
+    year = flatten(year) %>% map(`[[`, 1) %>% as.integer(),
+    author = make_authors(author),
+    title = na2link(title, href = URL, suffix = title_suffix(title)),
+    pubid = str_remove(note, "pubid:"),
+    issue = na2empty(issue, paste0("(", issue, ")")),
+    page = ifelse(
+      is.na(page),
+      "",
+      paste0(", ", str_replace(page, "-", "&ndash;"))
+    ),
+    volume = ifelse(is.na(volume), "", paste0(", ", volume))
+  ) %>%
+  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>%
+  mutate(citations = make_citation_button(cites, cid, year)) %>%
+  mutate(
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({year}). {title} <em>{journal}{volume}</em>{issue}{page}. {doi2link(DOI)}{citations}</div>'
+    )
+  ) %>%
+  arrange(-year, author) %>%
+  pull(citation) %>%
+  str_replace("\\. ,", ".") %>%
   cat()
 
 ```
@@ -426,29 +458,34 @@ jsonlite::read_json("data/My Articles.json", simplifyVector = T) %>%
 ## Chapters
 
 ```{r chapters, results='asis'}
-jsonlite::read_json("data/My Chapters.json", simplifyVector = T) %>% 
-  rename(book = `container-title`,
-         year = issued) %>% 
-  as_tibble() %>% 
-  mutate(year = flatten(year) %>% as.integer(),
-         author = make_authors(author),
-         editor = make_editors(editor),
-         pubid = str_remove(note, "pubid:"),
-         page = str_replace(page, "-", "&ndash;"),
-         edition = na2empty(edition, 
-                            paste0(
-                              scales::ordinal(as.numeric(edition)),
-                              " ed., ")),
-         volume = na2empty(volume, paste0("Vol. ", volume, ", ")),
-         title = na2link(title, 
-                         URL, 
-                         suffix = title_suffix(title)))  %>%   
-  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>% 
-  mutate(citations = make_citation_button(cites, cid, year)) %>% 
-  mutate(citation = glue::glue(
-    '<div class="csl-entry">{author} ({year}). {title} In {editor} <em>{book}</em> ({volume}{edition}pp. {page}). {publisher}. {doi2link(DOI)}{citations} </div>')) %>% 
- arrange(-year, author) %>% 
-  pull(citation) %>% 
+jsonlite::read_json("data/My Chapters.json", simplifyVector = T) %>%
+  rename(book = `container-title`, year = issued) %>%
+  as_tibble() %>%
+  mutate(
+    year = flatten(year) %>% as.integer(),
+    author = make_authors(author),
+    editor = make_editors(editor),
+    pubid = str_remove(note, "pubid:"),
+    page = str_replace(page, "-", "&ndash;"),
+    edition = na2empty(
+      edition,
+      paste0(
+        scales::ordinal(as.numeric(edition)),
+        " ed., "
+      )
+    ),
+    volume = na2empty(volume, paste0("Vol. ", volume, ", ")),
+    title = na2link(title, URL, suffix = title_suffix(title))
+  ) %>%
+  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>%
+  mutate(citations = make_citation_button(cites, cid, year)) %>%
+  mutate(
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({year}). {title} In {editor} <em>{book}</em> ({volume}{edition}pp. {page}). {publisher}. {doi2link(DOI)}{citations} </div>'
+    )
+  ) %>%
+  arrange(-year, author) %>%
+  pull(citation) %>%
   cat
 
 ```
@@ -457,17 +494,19 @@ jsonlite::read_json("data/My Chapters.json", simplifyVector = T) %>%
 ## Test Reviews
 
 ```{r testreviews, results='asis'}
-jsonlite::read_json("data/My Testreviews.json", simplifyVector = T) %>% 
-  rename(book = `container-title`,
-         year = issued) %>% 
-  as_tibble() %>% 
-  mutate(year = flatten(year) %>% as.integer(),
-         author = make_authors(author),
-         editor = make_editors(editor),
-         citation = glue::glue(
-    '<div class="csl-entry">{author} ({year}). {title}. In {editor} <em>{book}</em>. {publisher}.</div>')) %>% 
- arrange(-year, author) %>% 
-  pull(citation) %>% 
+jsonlite::read_json("data/My Testreviews.json", simplifyVector = T) %>%
+  rename(book = `container-title`, year = issued) %>%
+  as_tibble() %>%
+  mutate(
+    year = flatten(year) %>% as.integer(),
+    author = make_authors(author),
+    editor = make_editors(editor),
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({year}). {title}. In {editor} <em>{book}</em>. {publisher}.</div>'
+    )
+  ) %>%
+  arrange(-year, author) %>%
+  pull(citation) %>%
   cat
 ```
 
@@ -476,22 +515,30 @@ jsonlite::read_json("data/My Testreviews.json", simplifyVector = T) %>%
 
 ```{r reports, results='asis'}
 
-
-jsonlite::read_json("data/My Reports.json", simplifyVector = T) %>% 
-    as_tibble() %>% 
-  rename(year = issued) %>% 
-  mutate(year = flatten(year) %>% as.integer(),
-         author = make_authors(author),
-         pubid = str_remove(note, "pubid:"),
-         publisher = paste0(na2empty(publisher), na2empty(`collection-title`), na2empty(`container-title`)),
-         title = map2(title, URL, na2link)) %>% 
-  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>% 
-  mutate(citations = make_citation_button(cites, cid, year),
-         citation = glue::glue(
-    '<div class="csl-entry">{author} ({year}). <em>{title}</em> {publisher}. {citations}</div>')) %>% 
- arrange(-year, author) %>% 
-  pull(citation) %>% 
-  paste0(collapse = "\n") %>% 
+jsonlite::read_json("data/My Reports.json", simplifyVector = T) %>%
+  as_tibble() %>%
+  rename(year = issued) %>%
+  mutate(
+    year = flatten(year) %>% as.integer(),
+    author = make_authors(author),
+    pubid = str_remove(note, "pubid:"),
+    publisher = paste0(
+      na2empty(publisher),
+      na2empty(`collection-title`),
+      na2empty(`container-title`)
+    ),
+    title = map2(title, URL, na2link)
+  ) %>%
+  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>%
+  mutate(
+    citations = make_citation_button(cites, cid, year),
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({year}). <em>{title}</em> {publisher}. {citations}</div>'
+    )
+  ) %>%
+  arrange(-year, author) %>%
+  pull(citation) %>%
+  paste0(collapse = "\n") %>%
   cat
 ```
 
@@ -499,13 +546,12 @@ jsonlite::read_json("data/My Reports.json", simplifyVector = T) %>%
 
 ```{r software, results='asis'}
 
-
 jsonlite::read_json("data/My Software.json", simplifyVector = T) %>%
   as_tibble() %>%
-  unnest(issued) |> 
-  rename(issued = `date-parts`) |> 
-  mutate(year = map_chr(issued, \(x) x[1]) |> map_int(as.integer)) |>  
-  # select(issued, year) |> 
+  unnest(issued) |>
+  rename(issued = `date-parts`) |>
+  mutate(year = map_chr(issued, \(x) x[1]) |> map_int(as.integer)) |>
+  # select(issued, year) |>
   # rename(year = issued) %>%
   mutate(id = row_number()) |>
   mutate(
@@ -539,34 +585,45 @@ list2date <- function(l) {
   year <- l[[1]]
   month <- l[[2]]
   day <- l[[3]]
-  
+
   date <- lubridate::as_date(glue::glue("{year}-{month}-{day}"))
-  
+
   format(date, format = "%Y, %B %e")
-  
 }
 
 
-jsonlite::read_json("data/My Talks.json", simplifyVector = T) %>% 
-    as_tibble() %>% 
-  mutate(date = flatten(issued) %>% map_chr(list2date),
-         year = flatten(issued) %>% map(1) %>% as.integer(),
-         month = flatten(issued) %>% map(2) %>% as.integer(),
-         day = flatten(issued) %>% map(3) %>% as.integer(),
-         author = make_authors(author),
-         chair = map_chr(`container-author`, make_chairs) %>% na2empty(),
-         title = na2link(title, URL,suffix = title_suffix(title)),
-         URL = na2empty(URL),
-         `container-title` = na2emph(`container-title`)
-         ) %>% 
-  mutate(title = ifelse(`container-title` == "", paste0("<em>", title, "</em>"), title)
-         ) %>% 
-  mutate(title = paste0(title, chair, `container-title`) %>% str_replace_all("\\.\\.", ".")) %>% 
-  mutate(citation = glue::glue(
-    '<div class="csl-entry">{author} ({date}). {title} [{genre}]. {`event-title`} {na2empty(`event-place`, paste0(", ", `event-place`))}. {na2empty(URL, paste0("<a href=",URL,">",URL,"</a>"))}</div>')) %>% 
- arrange(-year, -month, -day, author) %>% 
-  pull(citation) %>% 
-  paste0(collapse = "\n") %>% 
+jsonlite::read_json("data/My Talks.json", simplifyVector = T) %>%
+  as_tibble() %>%
+  mutate(
+    date = flatten(issued) %>% map_chr(list2date),
+    year = flatten(issued) %>% map(1) %>% as.integer(),
+    month = flatten(issued) %>% map(2) %>% as.integer(),
+    day = flatten(issued) %>% map(3) %>% as.integer(),
+    author = make_authors(author),
+    chair = map_chr(`container-author`, make_chairs) %>% na2empty(),
+    title = na2link(title, URL, suffix = title_suffix(title)),
+    URL = na2empty(URL),
+    `container-title` = na2emph(`container-title`)
+  ) %>%
+  mutate(
+    title = ifelse(
+      `container-title` == "",
+      paste0("<em>", title, "</em>"),
+      title
+    )
+  ) %>%
+  mutate(
+    title = paste0(title, chair, `container-title`) %>%
+      str_replace_all("\\.\\.", ".")
+  ) %>%
+  mutate(
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({date}). {title} [{genre}]. {`event-title`} {na2empty(`event-place`, paste0(", ", `event-place`))}. {na2empty(URL, paste0("<a href=",URL,">",URL,"</a>"))}</div>'
+    )
+  ) %>%
+  arrange(-year, -month, -day, author) %>%
+  pull(citation) %>%
+  paste0(collapse = "\n") %>%
   cat
 
 ```
@@ -574,21 +631,25 @@ jsonlite::read_json("data/My Talks.json", simplifyVector = T) %>%
 ## Posters and Papers
 
 ```{r posters, results='asis'}
-jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>% 
-    as_tibble() %>% 
-  mutate(date = flatten(issued) %>% map_chr(list2date),
-         year = flatten(issued) %>% map(1) %>% as.integer(),
-         month = flatten(issued) %>% map(2) %>% as.integer(),
-         day = flatten(issued) %>% map(3) %>% as.integer(),
-         author = make_authors(author),
-         title = na2link(title, URL, suffix = ""),
-         URL = na2empty(URL)
-         ) %>% 
-  mutate(citation = glue::glue(
-    '<div class="csl-entry">{author} ({date}). <em>{title}</em> [{genre}]. {`event-title`}, {`event-place`}.   {URL}</div>')) %>% 
- arrange(-year, -month, -day, author) %>% 
-  pull(citation) %>% 
-  paste0(collapse = "\n") %>% 
+jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>%
+  as_tibble() %>%
+  mutate(
+    date = flatten(issued) %>% map_chr(list2date),
+    year = flatten(issued) %>% map(1) %>% as.integer(),
+    month = flatten(issued) %>% map(2) %>% as.integer(),
+    day = flatten(issued) %>% map(3) %>% as.integer(),
+    author = make_authors(author),
+    title = na2link(title, URL, suffix = ""),
+    URL = na2empty(URL)
+  ) %>%
+  mutate(
+    citation = glue::glue(
+      '<div class="csl-entry">{author} ({date}). <em>{title}</em> [{genre}]. {`event-title`}, {`event-place`}.   {URL}</div>'
+    )
+  ) %>%
+  arrange(-year, -month, -day, author) %>%
+  pull(citation) %>%
+  paste0(collapse = "\n") %>%
   cat
 ```
 
@@ -731,30 +792,36 @@ jsonlite::read_json("data/My Posters.json", simplifyVector = T) %>%
 ```{r service, results="asis", message=FALSE}
 
 make_service <- function(L2, L3, data) {
-  if (L2 != "") cat(paste0("\n\n## ", L2, "\n\n"))
-  if (!is.na(L3)) cat(paste0("\n\n### ", L3, "\n\n"))
-  
-  data %>% 
-  mutate(across(.cols = everything(),
-                .fns = ~str_replace_all(.x, 
-                                        "–", 
-                                        "&NoBreak;&ndash;&NoBreak;"))) %>% 
-    mutate(Date = str_replace_all(Date, "-", "&ndash;")) %>% 
-  knitr::kable(format = "html", align = "lll", escape = F, col.names = NULL) %>% 
-  html_table_width(width = c("20%", "80%"), class = "align-top w-100") %>% 
+  if (L2 != "") {
+    cat(paste0("\n\n## ", L2, "\n\n"))
+  }
+  if (!is.na(L3)) {
+    cat(paste0("\n\n### ", L3, "\n\n"))
+  }
+
+  data %>%
+    mutate(across(
+      .cols = everything(),
+      .fns = ~ str_replace_all(.x, "–", "&NoBreak;&ndash;&NoBreak;")
+    )) %>%
+    mutate(Date = str_replace_all(Date, "-", "&ndash;")) %>%
+    knitr::kable(
+      format = "html",
+      align = "lll",
+      escape = F,
+      col.names = NULL
+    ) %>%
+    html_table_width(width = c("20%", "80%"), class = "align-top w-100") %>%
     cat()
-  
-  
 }
 
 
-readr::read_csv("data/service.csv") %>% 
-  group_by(L2, L3) %>% 
-  nest() %>% 
-  ungroup %>% 
-  mutate(L2 = ifelse(L2 == lag(L2,default = ""), "", L2)) %>% 
+readr::read_csv("data/service.csv") %>%
+  group_by(L2, L3) %>%
+  nest() %>%
+  ungroup %>%
+  mutate(L2 = ifelse(L2 == lag(L2, default = ""), "", L2)) %>%
   pwalk(make_service)
-
 
 
 ```
@@ -764,16 +831,16 @@ readr::read_csv("data/service.csv") %>%
 
 ```{r editorialpositions}
 tibble::tribble(
-           ~Date,                                  ~Journal,             ~Position,
-  "2019–2020", "Journal of Psychoeducational Assessment",    "Associate Editor",
-          "2015",            "Journal of School Psychology", "Guest Action Editor"
-  ) %>% 
-  mutate(Journal = paste0("<em>", Journal, "</em>")) %>% 
-  mutate(across(.cols = everything(),
-                .fns = ~str_replace_all(.x, 
-                                        "–", 
-                                        "&NoBreak;&ndash;&NoBreak;"))) %>% 
-  knitr::kable(format = "html", align = "lll", escape = F, col.names = NULL) %>% 
+  ~Date         , ~Journal                                  , ~Position             ,
+  "2019–2020" , "Journal of Psychoeducational Assessment" , "Associate Editor"    ,
+  "2015"        , "Journal of School Psychology"            , "Guest Action Editor"
+) %>%
+  mutate(Journal = paste0("<em>", Journal, "</em>")) %>%
+  mutate(across(
+    .cols = everything(),
+    .fns = ~ str_replace_all(.x, "–", "&NoBreak;&ndash;&NoBreak;")
+  )) %>%
+  knitr::kable(format = "html", align = "lll", escape = F, col.names = NULL) %>%
   html_table_width(width = c("20%", "45%", "35%"), class = "align-top w-100")
 
 
@@ -784,20 +851,20 @@ tibble::tribble(
 
 ```{r editorial}
 tibble::tribble(
-             ~Date,                                  ~Journal,             ~Position,
-  "2018–",                  "Journal of Intelligence",      "Editorial Board",
-   "2011–",            "Journal of School Psychology",     "Editorial Board",
-   "2010–", "Journal of Psychoeducational Assessment",     "Editorial Board",
-   "2017–2021",       "Archives of Scientific Psychology",   "Consulting Editor",
-      "2009–2018",                "Psychological Assessment",   "Consulting Editor",
-      "1997–2000",             "Clinician's Research Digest", "Editorial Associate"
-  ) %>% 
-  mutate(Journal = paste0("<em>", Journal, "</em>")) %>% 
-  mutate(across(.cols = everything(),
-                .fns = ~str_replace_all(.x, 
-                                        "–", 
-                                        "&NoBreak;&ndash;&NoBreak;"))) %>% 
-  knitr::kable(format = "html", align = "lll", escape = F, col.names = NULL) %>% 
+  ~Date         , ~Journal                                  , ~Position             ,
+  "2018–"     , "Journal of Intelligence"                 , "Editorial Board"     ,
+  "2011–"     , "Journal of School Psychology"            , "Editorial Board"     ,
+  "2010–"     , "Journal of Psychoeducational Assessment" , "Editorial Board"     ,
+  "2017–2021" , "Archives of Scientific Psychology"       , "Consulting Editor"   ,
+  "2009–2018" , "Psychological Assessment"                , "Consulting Editor"   ,
+  "1997–2000" , "Clinician's Research Digest"             , "Editorial Associate"
+) %>%
+  mutate(Journal = paste0("<em>", Journal, "</em>")) %>%
+  mutate(across(
+    .cols = everything(),
+    .fns = ~ str_replace_all(.x, "–", "&NoBreak;&ndash;&NoBreak;")
+  )) %>%
+  knitr::kable(format = "html", align = "lll", escape = F, col.names = NULL) %>%
   html_table_width(width = c("20%", "45%", "35%"), class = "align-top w-100")
 
 ```
