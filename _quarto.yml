@@ -7,12 +7,13 @@ project:
     navigate: true
 
 engine: knitr
+bibliography: bibliography.bib
+csl: apa.csl
 knitr:
   opts_chunk: 
     dev: "ragg_png"
 execute: 
   freeze: auto
-csl: apa.csl
 website:
   title: "W. Joel Schneider"
   description: "{{< meta description-meta >}}"
@@ -60,6 +61,9 @@ format:
     toc-location: left
     html-math-method: katex
     code-copy: true
+    reference-location: margin
+    cap-location: margin
+    citation-location: margin
     resources: 
       - shinylive-sw.js
 
