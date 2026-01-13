@@ -69879,5 +69879,355 @@ font-style: inherit;">"my_data.csv"</span>)</span></code></pre></div></div>
   <guid>https://wjschne.github.io/tutorials/GettingReady/getting_ready_to_use_RStudio.html</guid>
   <pubDate>Sat, 20 Jan 2024 05:00:00 GMT</pubDate>
 </item>
+<item>
+  <title>Distributions</title>
+  <link>https://wjschne.github.io/tutorials/StatsIntro/Distributions.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="jamovi-and-r" class="level1">
+<h1>Jamovi and R</h1>
+<p>The statistical program R is a free, open-source project that is used by millions of people all over the world. It is so good that I would prefer it over other programs even if it were not free. The fact that it will always be free is simply amazing.</p>
+<p>The downside of R is that it can be intimidating for beginners. It can be finicky in ways that can frustrate even advanced users. Fortunately, R can be extended and adapted by anyone (including you). These extensions are called <em>packages</em>. The program we use, Jamovi, is built atop R, and has a number of R packages associated with it to make Jamovi a free and easy-to-use alternative to commercial statistical programs that can be quite costly. Think of Jamovi as an interface that makes R much easier way to interact with R. In fact, to use Jamovi, you do not need to know anything about R at all. However, if you need Jamovi to do something that it does not do out of the box, you can ask Jamovi to ask R to do it.</p>
+</section>
+<section id="install-jamovi" class="level1">
+<h1>Install Jamovi</h1>
+<p>Check the <a href="https://www.jamovi.org/user-manual.html">Jamovi user guide</a> for instructions to install Jamovi on your machine.</p>
+<p>You can also use <a href="https://www.jamovi.org/cloud.html">Jamovi on the cloud</a> online for free, which is amazing. Unfortunately, only a finite number of users can use the free cloud version at once. If too many users are logged in, you may not be able to log in when you want to. There is a paid subscription that make sure you can always log in, but I think that installing it on your machine is a better solution. The desktop version of Jamovi on your machine is always free and always available.</p>
+</section>
+<section id="the-bechdel-test" class="level1 page-columns page-full">
+<h1>The Bechdel Test</h1>
+<p>For this tutorial we will use a data file that first appeared in a 2013 blog post by Walt Hickey. The data set was made available to the public via the <a href="https://rudeboybert.github.io/fivethirtyeight/reference/bechdel.html">fivethirtyeight</a> package. I have simplified the data and saved it to the Jamovi data format.</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Bechdel_test">Bechdel test</a> orginated from a specific 1985 comic stip by Alison Bechdel. She was inspired by a conversation about Virginia Woolf that she had with her friend Liz Wallace, and adapted the conversation into her comic strip, <em>Dykes to Watch Out For</em>.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="https://wjschne.github.io/tutorials/StatsIntro/Dykes_to_Watch_Out_For_(Bechdel_test_origin).jpg" class="img-fluid figure-img" data-fig.alt="A character in Dykes to Watch Out For explains the rules that later came to be known as the Bechdel test"></p>
+<figcaption class="margin-caption">A character in <em>Dykes to Watch Out For</em> explains the rules that later came to be known as the Bechdel test (1985).</figcaption>
+</figure>
+</div>
+<p>The test eventually caught on as a sort of minimal requirement for the representation of women in film. Walt Hickey, in 2013, assembled a large data set of films from the 1970s to 2013 and rated them according to the Bechdel test criteria:</p>
+<ol type="1">
+<li>Are there at least two named women in the film?</li>
+<li>Do any of the women talk to each other?</li>
+<li>Do any of the women talk to each about something other than a man?</li>
+</ol>
+<p>If the answer is yes to all three questions, the film passes the Bechdel test. There were many films in which the answer was not clear. To make things simple, I have included the test result with the most generous rating. Hickey wanted to know if newer films (i.e., newer in 2013) were more likely to pass the Bechdel test. 2013 is now a while ago. If you want to investigate more recent data on your own, check out the user-edited database, <a href="https://bechdeltest.com/">Bechdel Test Movie List</a>.</p>
+</section>
+<section id="download-data" class="level1">
+<h1>Download Data</h1>
+<ol type="1">
+<li>Right-click <a href="https://github.com/wjschne/EDUC5325/raw/master/bechdel.omv">MeasurementScales.omv</a> and then save it somewhere you will be able to access it again. I recommend make a folder just for files you need for this course.</li>
+<li>Open Jamovi</li>
+<li>In the top left corner, click the 3 horizontal bars.</li>
+<li>Click Open</li>
+<li>Make sure that “This PC” is selected.</li>
+<li>Navigate to where you have saved the bechdel.omv file, and open the file.</li>
+</ol>
+<p>In this file there are a number of variables:</p>
+<ul>
+<li><code>title</code> Film title</li>
+<li><code>test</code> Outcome of the Bechdel Test</li>
+<li><code>budget</code> Film budget in 2013 dollars</li>
+<li><code>gross</code> Gross earnings in 2013 dollars</li>
+<li><code>Decade</code> Decade in which film was released</li>
+<li><code>Year</code> Year in which film was released</li>
+</ul>
+<p>For now we will just look at the <code>test</code> variable. We will look at a frequency distribution table for each of these variables and to compare them to get a feel for some of the features of distributions.</p>
+<p>We can start by looking at <code>Quiz1</code>. Think about each of the following questions.</p>
+<ol type="1">
+<li>What kind of variable is <code>Quiz1</code>?</li>
+<li>What is the most typical score on <code>Quiz1</code>?</li>
+<li>What is the range of scores on <code>Quiz1</code>?</li>
+<li>Did some people do a lot worse or better than the rest of the class?</li>
+<li>Overall, was the quiz easy or hard?</li>
+</ol>
+<p>It is hard to answer these last 4 questions just by looking at the numbers in the data file. Instead we can start using some statistical procedures to organize the data, to make it easier to understand the data.</p>
+</section>
+<section id="frequency-distribution-tables" class="level1 page-columns page-full">
+<h1>Frequency Distribution Tables</h1>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>A <strong>frequency distribution table</strong> is an organized tabulation of the number of individuals located in each category on the scale of measurement.</p>
+</div></div><p>If we want to know a lot detail about a distribution, just sorting the variable is not enough, especially when the data set is very large. It is just too many numbers to process at once! A statistical tool to help “see” the distribution is to make a <strong>frequency distribution table</strong>.</p>
+<section id="making-frequency-distribution-tables-with-jamovi" class="level2">
+<h2 class="anchored" data-anchor-id="making-frequency-distribution-tables-with-jamovi">Making Frequency Distribution Tables with Jamovi</h2>
+<p>In the menu, select <strong>Analyses→Exploration→Descriptions</strong>. That is, select the <strong>Analyses</strong> tab, then the <strong>Exploration</strong> icon, then the <strong>Descriptives</strong> menu item.</p>
+<p><img src="https://wjschne.github.io/tutorials/StatsIntro/jamovimenu.png" class="img-fluid"></p>
+<p>Now drag the <code>Quiz1</code> variable into the <strong>Variables</strong> box. Alternately, you can select <code>Quiz1</code> and then click the arrow next to the <strong>Variables</strong> box.</p>
+<p>Check the <strong>Frequency tables</strong> checkbox.</p>
+<p><img src="https://wjschne.github.io/tutorials/StatsIntro/quiz1frequencies.png" class="img-fluid"></p>
+<p>In the Results pane, you should see <em>Descriptives</em> with some summary statistics for <code>Quiz1</code> and a <em>Frequencies</em> table for <code>Quiz1</code></p>
+<p><img src="https://wjschne.github.io/tutorials/StatsIntro/quiz1frequenciesresults.png" class="img-fluid"></p>
+<p>The <em>Levels</em> are the values the variables has. The <em>Counts</em> are the frequencies of the each level. The <em>% of Total</em> column is the <em>Counts</em> divided by the sample size. The <em>Cumulative %</em> column tells the percentage of scores at that level or less.</p>
+</section>
+</section>
+<section id="canvas" class="level1 Canvas">
+<h1>Canvas</h1>
+<p>What percentage of the scores is at or below a score of 7?</p>
+<p>Which was the most frequent score in <code>Quiz1</code>?</p>
+<p>What percent of people scored a 5?</p>
+</section>
+<section id="graphing-frequency-distributions" class="level1">
+<h1>Graphing Frequency Distributions</h1>
+<p>In the sections we saw that one way to summarize and simplify an entire distribution of scores is by organizing the scores in a frequency distribution table. In this section we will learn about other ways to represent distributions, focusing primarily on bar charts and histograms.</p>
+<section id="bar-plots" class="level2">
+<h2 class="anchored" data-anchor-id="bar-plots">Bar Plots</h2>
+<p>To display the distribution of a categorical variable one should use a bar plot. These are used most often to display the distribution of subjects or cases in certain categories, such as the number of A, B, C, D, and F grades in a given class.</p>
+<p>Let’s start with looking at the distribution of ethnicity in our data file. So what our graph will show are the <em>counts</em> (or <em>frequency</em>) for each of ethnic category.</p>
+<ol type="1">
+<li>From the menu click <strong>Analyses→Exploration→Descriptives</strong>.</li>
+<li>Drag the <code>Ethnicity</code> variable into the <strong>Variables</strong> box.</li>
+<li>Click <strong>Plots</strong></li>
+<li>Check <strong>Bar plot</strong>.</li>
+</ol>
+<p>You should get a bar chart that looks something like this.</p>
+<p><img src="https://wjschne.github.io/tutorials/StatsIntro/EthnicityBarGraph.svg" class="img-fluid"></p>
+<p>Make a bar graph of the counts of the final grades (called <code>FinalClassGrade</code> in the file) in the class (i.e.&nbsp;A, B, C,…).</p>
+<p>Make a bar graph of the counts of the final grades in the class (i.e.&nbsp;A, B, C,…), further broken down by whether they attended the review session or not.</p>
+<p>Drag the <code>Review</code> variable into the <strong>SplitBy</strong> box.</p>
+</section>
+</section>
+<section id="canvas-1" class="level1 Canvas">
+<h1>Canvas</h1>
+<p>Canvas: Based on the graph, does it appear that attending the review session was associated with higher final grades?</p>
+</section>
+<section id="histograms" class="level2">
+<h2 class="anchored" data-anchor-id="histograms">Histograms</h2>
+<p>Suppose that we wish to know how the students did on quiz 1. We could try looking at all of the scores, but that’s a lot of numbers. Instead, it is better to try to look at the entire distribution, rather than all of the individual scores. We should use a histogram because our variable (score on <code>Quiz1</code>) is a continuous variable.</p>
+<p>Histogram: A histogram is a pictorial representation of the distribution of values for a particular variable. The bars represent the number of occurrences of each value. These look similar to bar graphs except they are used more often to indicate the number of subjects or cases in ranges of values for a continuous variable, such as the number of subjects or cases in ranges of values for a continuous variable.</p>
+</section>
+<section id="using-jamovi-to-create-a-histogram" class="level2">
+<h2 class="anchored" data-anchor-id="using-jamovi-to-create-a-histogram">Using Jamovi to create a histogram:</h2>
+<ol type="1">
+<li>From the menu click <strong>Analyses→Exploration→Descriptives</strong>.</li>
+<li>Drag the <code>TotalPercent</code> variable into the <strong>Variables</strong> box.</li>
+<li>Click <strong>Plots</strong></li>
+<li>Check <strong>Histogram</strong>.</li>
+</ol>
+</section>
+<section id="canvas-2" class="level1 Canvas">
+<h1>Canvas</h1>
+<p>Canvas: Based on the histogram, does it appear that anyone earned 100% in the course?</p>
+</section>
+<section id="video-overview" class="level1">
+<h1>Video Overview</h1>
+<p>If you missed the lecture, you can view <a href="https://www.youtube.com/watch?v=avI5ggV71nk">this video</a></p>
+</section>
+<section id="beyond-educ-5325-probability-density-functions" class="level1">
+<h1>Beyond EDUC 5325: Probability Density Functions</h1>
+<p>If you are interested, you can check out an introduction to a related topic, the <a href="https://www.youtube.com/watch?v=FfkGU7yx5nc&amp;t=10s"><strong>probability density function</strong></a>. The ideas in this video are not on any exams for this course.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://wjschne.github.io/tutorials/StatsIntro/Distributions.html</guid>
+  <pubDate>Tue, 13 Jan 2026 17:19:54 GMT</pubDate>
+</item>
+<item>
+  <title>Measurement Scales</title>
+  <dc:creator>W. Joel Schneider</dc:creator>
+  <link>https://wjschne.github.io/tutorials/StatsIntro/MeasurementScales.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="variables" class="level1 page-columns page-full">
+<h1>Variables</h1>
+<p>In science and mathematics, there are fundamental <strong>constants</strong>—things that always remain the same (e.g., <img src="https://latex.codecogs.com/png.latex?c"> the speed of light in a vacuum, or <img src="https://latex.codecogs.com/png.latex?%5Cpi">, the ratio of a circle’s circumference to its diameter). However, most phenomena we study are capable of change. Indeed, must of scientific investigation consists of discovering how change in one process affects changes in other processes. Any process or quantity that can change is called a <strong>variable.</strong></p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>A <strong>constant</strong> is a state or quantity that remains the same.</p>
+<p>A <strong>variable</strong> is an abstract category of information that can assume different values.</p>
+</div></div><section id="algebraic-variables" class="level2">
+<h2 class="anchored" data-anchor-id="algebraic-variables">Algebraic Variables</h2>
+<p>An <strong>algebraic variable</strong> usually takes on any value, but it can be constrained by equations and other kinds of relationships. Consider this equation:</p>
+<p><span id="eq-algebra"><img src="https://latex.codecogs.com/png.latex?2x-6=0%20%5Ctag%7B1%7D"></span></p>
+<p>In isolation, the variable <img src="https://latex.codecogs.com/png.latex?x"> could be any real number. However, once inserted in an equation, <img src="https://latex.codecogs.com/png.latex?x"> is constrained in some way. In Equation&nbsp;1, <img src="https://latex.codecogs.com/png.latex?x"> must equal 3.</p>
+</section>
+<section id="random-variables" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="random-variables">Random variables</h2>
+<p><strong>Random variables</strong> are not like algebraic variables. The values that random variables can take on are determined by one or more random processes. For example, the outcome of a coin toss is a random variable. It can either be <em>heads</em> or <em>tails</em>. Think of a random variable as forever spitting out new values. In Figure&nbsp;1, the random variable is an endless cascade of coins.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div id="fig-coin" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A random sequence of coin flips showing heads and tails">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-coin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/StatsIntro/Coin.gif" class="img-fluid figure-img" alt="A random sequence of coin flips showing heads and tails" width="150">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig" id="fig-coin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: An endless sequence of fair coin tosses is a random variable.
+</figcaption>
+</figure>
+</div>
+</div></div><p>In this case, the set of possible values {<em>heads</em>,<em>tails</em>} is the sample space of the outcome of a coin toss. A random variable's <strong>sample space</strong> is the set of all possible values that the variable can assume. In the case of the roll of a six-sided die, the sample space is {1,2,3,4,5,6}. This sample space has a finite number of values. However, some sample spaces are infinite. For example, the number of siblings one can have is the set of all non-negative integers {0,1,2,3,...}. Of course, because there are limits as to how many children people can have, the probability of very high numbers is very low. A different kind of infinity is observed in the sample space of variables that are continuous. The length of one's foot in centimeters can be any positive real number. Between any two real numbers, (e.g., 20cm and 30cm) there is an infinite number of possibilities because real numbers can be sliced as thinly as needed (e.g., 28.465570098756642111cm).</p>
+</section>
+</section>
+<section id="measurement-scales-metrics" class="level1 page-columns page-full">
+<h1>Measurement scales (metrics)</h1>
+<p>The classic <strong>taxonomy</strong> for discussing different types of measurement scales was proposed by <span class="citation" data-cites="stevensTheoryScalesMeasurement1946">Stevens (1946)</span>. Other taxonomies exist but Stevens’ system is familiar to everyone who has been trained in the social sciences. In Stevens’ system in Figure&nbsp;2, there are four types of scales, <strong>N</strong>ominal, <strong>O</strong>rdinal, <strong>I</strong>nterval, and <strong>R</strong>atio, which can remembered using the acronym <strong>NOIR</strong> (French for <em>black</em>).</p>
+<div class="no-row-height column-margin column-container"><div id="ref-stevensTheoryScalesMeasurement1946" class="csl-entry">
+Stevens, S. S. (1946). On the theory of scales of measurement. <em>Science</em>, <em>103</em>(2684), 677–680. <a href="https://doi.org/10.1126/science.103.2684.677">https://doi.org/10.1126/science.103.2684.677</a>
+</div><div class="">
+<p>A <strong>taxonomy</strong> is a system of classifying things. For example, the Periodic Table of Elements is a taxonomy of the elements.</p>
+</div></div>
+<div id="fig-stevens" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" alt="A hierarchy of levels of measurments. There are two categorical levels: nominal and ordinal. The defining feature of nominal variables are distinct categories without order. The permissible operations for nominal variables are = (equality) and ≠ (inequality). The defining feature of ordinal variables are ordered categories. Permissible operations include < (less than) and > (greater than) operations. There are two quantitative measurement levels: interval and ratio. The defining feature of interval variables is that of meaningful distances between categories. Interval variables permit addition and subtraction. The defining feature of ratio variables is the absolute or true zero. Ratio variables permit multiplication and division.">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-stevens-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/StatsIntro/Stevens.svg" class="img-fluid figure-img" style="width:100.0%" alt="A hierarchy of levels of measurments. There are two categorical levels: nominal and ordinal. The defining feature of nominal variables are distinct categories without order. The permissible operations for nominal variables are = (equality) and ≠ (inequality). The defining feature of ordinal variables are ordered categories. Permissible operations include < (less than) and > (greater than) operations. There are two quantitative measurement levels: interval and ratio. The defining feature of interval variables is that of meaningful distances between categories. Interval variables permit addition and subtraction. The defining feature of ratio variables is the absolute or true zero. Ratio variables permit multiplication and division.">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-stevens-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Stevens’ (1946) levels of measurement
+</figcaption>
+</figure>
+</div>
+<section id="nominal-variables" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="nominal-variables">Nominal Variables</h2>
+<p>Nominal variables can take on any kind of value, including values that are not numbers. The values must constitute a set of <strong>mutually exclusive</strong> categories. For example, if I have a set of data about college students, I might record which major each person has. The variable <em>college major</em> consists of different labels (e.g., Accounting, Mathematics, and Psychology). Note that there is no true order to college majors, though we usually alphabetize them for convenience. There is no meaningful sense in which English majors are higher or lower than Biology majors. Nominal values are either the same or they are different. They are not less than or more than anything else.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>In a set of <strong>mutually exclusive</strong> categories, nothing belongs to more than one of the categories in the set at the same time.</p>
+</div></div><section id="examples-of-nominal-variables" class="level3">
+<h3 class="anchored" data-anchor-id="examples-of-nominal-variables">Examples of nominal variables</h3>
+<ul>
+<li>Biological sex {<em>male</em>, <em>female</em>}</li>
+<li>Race/Ethnicity {<em>African-American</em>, <em>Asian-American</em>,...}</li>
+<li>Type of school {<em>public</em>, <em>private</em>}</li>
+<li>Treatment group {<em>Untreated</em>, <em>Treated</em>}</li>
+<li>Down Syndrome {<em>present</em>, <em>not present</em>}</li>
+<li>Attachment Style {<em>dismissive-avoidant</em>, <em>anxious-preoccupied</em>, <em>secure</em>}</li>
+<li>Which emotion are you feeling right now? {<em>Happiness</em>, <em>Sadness</em>, <em>Anger</em>, <em>Fear</em>}</li>
+</ul>
+</section>
+</section>
+<section id="ordinal-variables" class="level2">
+<h2 class="anchored" data-anchor-id="ordinal-variables">Ordinal Variables</h2>
+<p>Like nominal variables, ordinal variables are categorical. Whereas the categories in nominal variables have no meaningful order, the categories in ordinal variables have a natural order. For example, questionnaires often ask multiple-choice questions like so:</p>
+<p>I like chatting with people I do not know.</p>
+<ul>
+<li>Strongly disagree</li>
+<li>Disagree</li>
+<li>Neutral</li>
+<li>Agree</li>
+<li>Strongly agree</li>
+</ul>
+<p>It is clear that the response choices have an order that would generate no controversy. Note, however, that there is no meaningful distance between the categories. Is the distance between strongly disagree and disagree the same as the distance between disagree and neutral? It is not a meaningful question because no distance as been defined. All we can do is say is which category is higher than the other.</p>
+<section id="examples-of-ordinal-variables" class="level3">
+<h3 class="anchored" data-anchor-id="examples-of-ordinal-variables">Examples of ordinal variables</h3>
+<ul>
+<li>Dosage {<em>placebo</em>, <em>low dose</em>, <em>high dose</em>}</li>
+<li>Order of finishing a race {<em>1st place</em>, <em>2nd place</em>, <em>3rd place</em>,…}</li>
+<li>ISAT category {<em>below standards, meets standards, exceeds standards</em>}</li>
+<li>Apgar score {0,1,…,10}</li>
+</ul>
+</section>
+</section>
+<section id="interval-scales" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="interval-scales">Interval scales</h2>
+<p>Interval scales are quantitative. The values that interval scales take on are almost always numbers. Furthermore, the distance between the numbers have a consistent meaning. The classic example of an interval scale is temperature on the Celsius or Fahrenheit scale. The distance between 25° and 35° is 10°. The distance between 90° and 100° is also 10°. In both cases, the difference involves the same amount of heat.</p>
+<p>Unlike with nominal and ordinal scales, we can add and subtract scores on an interval scale because there are meaningful distances between the numbers.</p>
+<p>Interestingly, the meaning of 0°C (or 0°F) is not what we are used to thinking about when we encounter the number zero. Usually, the number zero means the absence of something. Unfortunately, the number zero does not have this meaning in interval scales. When something has a temperature of 0°C, it does not mean that there is no heat. It just happens to be the temperature at which water freezes at sea level. It can get much, much colder. Thus, interval scales lack a <strong>true zero</strong> in which zero indicates a complete absence of something.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>A <strong>true zero</strong> indicates the absence of the quantity being measured.</p>
+</div></div><p>Lacking a true zero, interval scales cannot be used to create meaningful ratios. For example, 20°C is not “twice as hot” as 10°C. Also, 110°F is not “10% hotter” than 100°F.</p>
+<section id="nearly-interval-scales" class="level3">
+<h3 class="anchored" data-anchor-id="nearly-interval-scales">Nearly interval scales</h3>
+<p>In truth, there are very, very few examples of variables with a true interval scale. However, a large percentage of variables used in the social sciences are treated as if they are interval scales. It turns out that with a bit of fancy math, many ordinal variables can be transformed, weighted, and summed in such a way that the resulting score is reasonably close to having interval properties. The advantage of doing this is that, unlike with nominal and ordinal scales, you can calculate means, standard deviations, and a host of other statistics that depend on there being meaningful distances between numbers.</p>
+<p>Psychological and educational measures regularly make use of these procedures. For example, on tests like the ACT, we take information about which questions were answered correctly and then transform the scores into a scale that ranges from 1 to 36. As a group, people who score a higher on the ACT tend to perform better in college than people who score lower. Of course, many individuals perform much better than their ACT scores suggest. An equal number of individuals perform much worse than their ACT scores suggest. Among many other things, thirst for knowledge and hard work matter quite a bit. Even so, on average, individuals with a 10 on the ACT are likely to perform worse in college than people with a 20. Roughly by the same amount, people with a 30 on the ACT are likely to perform better in college than people with a 20. Again, we talking about averages, not individuals. Every day, some people beat expectations and some people fail to meet them, often by wide margins.</p>
+</section>
+<section id="examples-of-interval-scales" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="examples-of-interval-scales">Examples of interval scales</h3>
+<ul>
+<li><strong>Truly interval</strong>:</li>
+<li>Temperature on the Celsius and Fahrenheit scale (not on the Kelvin scale)</li>
+<li>Calendar year (e.g., 431BC, 1066AD)</li>
+<li>Notes on an even-tempered instrument such as a piano {A, A#, B, C, C#, D, D#, E, F, F#, G, G#}</li>
+<li>A ratio scale converted to a z-score metric (or any other kind of standard score metric)</li>
+<li><strong>Nearly interval</strong>:</li>
+<li>Most scores from well-constructed ability tests (e.g., IQ, ACT, GRE) and personality measures (e.g., self-esteem, extroversion).</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>A z-score metric has a mean of 0 and a standard deviation of 1. Thus, the zero indicates the mean of the variable, not the absence of the quantity.</p>
+</div></div></section>
+</section>
+<section id="ratio-scales" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="ratio-scales">Ratio Scales</h2>
+<p>A ratio scale has all of the properties of an interval scale. In addition, it has a true zero. When a ratio scale has a value of zero, it indicates the absence of the quantity being measured. For example, if I say that I have 0 coins in my pocket, there are no coins in my pocket. The fact that ratio scales have true zeroes means that ratios are meaningful. For example, if you have 2 coins and I have one, you have twice as many coins as I do. If I have 100 coins and then you give me 10 more, the number of coins I have has increased by 10%.</p>
+<section id="examples-of-ratio-scales" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="examples-of-ratio-scales">Examples of Ratio Scales</h3>
+<p>Ratio scales involve countable quantities, such as:</p>
+<ul>
+<li>coins</li>
+<li>marbles</li>
+<li>computers</li>
+<li>speeding tickets</li>
+<li>pregnancies</li>
+<li>soldiers</li>
+<li>planets</li>
+</ul>
+<p>Countable quantities are <strong>discrete variables</strong> like the scale in Figure&nbsp;3. Countable integers are discrete because they have particular values but not values between those values.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>A <strong>discrete variable</strong> can only take on exact, isolated values from a specified list.</p>
+</div></div><p>Many physical properties are also ratio scales, such as:</p>
+<ul>
+<li>distance</li>
+<li>mass</li>
+<li>force</li>
+<li>heat (on the Kelvin scale)</li>
+<li>pressure</li>
+<li>voltage</li>
+<li>acceleration</li>
+<li>proportions</li>
+</ul>
+<p>These dimensions are not discrete countable quantities like cars and bricks but are instead continuous quantities that can be measured with decimals and fractions.</p>
+<div id="fig-discrete" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fit-alt="A continuous scale from 1 to 10 can have any real value between and including 1 and 10. A discrete scale from 1 to 10 can only take on the values shown.">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-discrete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://wjschne.github.io/tutorials/StatsIntro/Continuous.svg" class="img-fluid figure-img" style="width:100.0%" data-fit-alt="A continuous scale from 1 to 10 can have any real value between and including 1 and 10. A discrete scale from 1 to 10 can only take on the values shown.">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-discrete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: A continuous scale from 1 to 10 can have any real value between and including 1 and 10. A discrete scale from 1 to 10 can only take on the values shown.
+</figcaption>
+</figure>
+</div>
+<p>Notice that even though ratio variables have a true zero, on some of them it is possible to have negative numbers. For example, negative acceleration would indicate a slowing down. A negative value in a checking account means that you owe the bank money.</p>
+<p>In the social sciences, there are many examples of ratio scales:</p>
+<ul>
+<li>Income</li>
+<li>Age</li>
+<li>Years of education</li>
+<li>Reaction time</li>
+<li>Family size</li>
+<li>Hours of study</li>
+<li>Percentage of household chores completed (compared to other members of the household)</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="video-overview" class="level1">
+<h1>Video Overview</h1>
+<p>If you missed the lecture on this topic, you can, outside of lab, review the material here:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/YyAwRGP2TZk" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="additional-reading" class="level1">
+<h1>Additional Reading</h1>
+<p>An expanded version of this tutorial can be seen in <a href="https://individual-psychometrics.rbind.io/variables">my free, online textbook</a>.</p>
+
+
+
+</section>
+
+ ]]></description>
+  <guid>https://wjschne.github.io/tutorials/StatsIntro/MeasurementScales.html</guid>
+  <pubDate>Tue, 13 Jan 2026 17:19:54 GMT</pubDate>
+</item>
 </channel>
 </rss>

@@ -1,0 +1,229 @@
+---
+title: "Distributions"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(tidyverse)
+```
+
+```{r}
+#| label: makedata
+#| eval: false
+d <- fivethirtyeight::bechdel
+d %>% 
+  as_tibble() %>% 
+  mutate(test = fct_recode(clean_test, `No Women` = "nowomen", `Women do not talk to each other` = "notalk", `Women only talk about men` = "men", `Pass` = "dubious", `Pass` = "ok"),
+         imdb = factor(imdb)) %>% 
+  select(title, year, test, budget = budget_2013, gross = domgross_2013) |> 
+  NojmvReadWrite::write_omv("bechdel.omv", frcWrt = T)
+
+```
+
+# Jamovi and R
+
+The statistical program R is a free, open-source project that is used by millions of people all over the world. It is so good that I would prefer it over other programs even if it were not free. The fact that it will always be free is simply amazing.  
+
+The downside of R is that it can be intimidating for beginners. It can be finicky in ways that can frustrate even advanced users. Fortunately, R can be extended and adapted by anyone (including you). These extensions are called *packages*. The program we use, Jamovi, is built atop R, and has a number of R packages associated with it to make Jamovi a free and easy-to-use alternative to commercial statistical programs that can be quite costly. Think of Jamovi as an interface that makes R much easier way to interact with R. In fact, to use Jamovi, you do not need to know anything about R at all. However, if you need Jamovi to do something that it does not do out of the box, you can ask Jamovi to ask R to do it. 
+
+# Install Jamovi
+
+Check the [Jamovi user guide](https://www.jamovi.org/user-manual.html) for instructions to install Jamovi on your machine. 
+
+You can also use [Jamovi on the cloud](https://www.jamovi.org/cloud.html) online for free, which is amazing. Unfortunately, only a finite number of users can use the free cloud version at once. If too many users are logged in, you may not be able to log in when you want to. There is a paid subscription that make sure you can always log in, but I think that installing it on your machine is a better solution. The desktop version of Jamovi on your machine is always free and always available.
+
+# The Bechdel Test
+
+For this tutorial we will use a data file that first appeared in a 2013 blog post by Walt Hickey. The data set was made available to the public via the  [fivethirtyeight](https://rudeboybert.github.io/fivethirtyeight/reference/bechdel.html) package. I have simplified the data and saved it to the Jamovi data format.
+
+The [Bechdel test](https://en.wikipedia.org/wiki/Bechdel_test) orginated from a specific 1985 comic stip by Alison Bechdel. She was inspired by a conversation about Virginia Woolf that she had with her friend Liz Wallace, and adapted the conversation into her comic strip, *Dykes to Watch Out For*. 
+
+![A character in *Dykes to Watch Out For* explains the rules that later came to be known as the Bechdel test (1985).](Dykes_to_Watch_Out_For_(Bechdel_test_origin).jpg){fig.alt="A character in Dykes to Watch Out For explains the rules that later came to be known as the Bechdel test"}
+
+The test eventually caught on as a sort of minimal requirement for the representation of women in film. Walt Hickey, in 2013, assembled a large data set of films from the 1970s to 2013 and rated them according to the Bechdel test criteria:
+
+1. Are there at least two named women in the film?
+2. Do any of the women talk to each other?
+3. Do any of the women talk to each about something other than a man?
+
+If the answer is yes to all three questions, the film passes the Bechdel test. There were many films in which the answer was not clear. To make things simple, I have included the test result with the most generous rating. Hickey wanted to know if newer films (i.e., newer in 2013) were more likely to pass the Bechdel test. 2013 is now a while ago. If you want to investigate more recent data on your own, check out the user-edited database, [Bechdel Test Movie List](https://bechdeltest.com/).
+
+
+# Download Data
+
+1. Right-click [MeasurementScales.omv](https://github.com/wjschne/EDUC5325/raw/master/bechdel.omv) and then save it somewhere you will be able to access it again. I recommend make a folder just for files you need for this course.
+2. Open Jamovi
+3. In the top left corner, click the 3 horizontal bars.
+4. Click Open
+5. Make sure that "This PC" is selected.
+6. Navigate to where you have saved the bechdel.omv file, and open the file.
+
+
+
+In this file there are a number of variables:
+
+* `title` Film title
+* `test` Outcome of the Bechdel Test
+* `budget` Film budget in 2013 dollars
+* `gross` Gross earnings in 2013 dollars
+* `Decade` Decade in which film was released
+* `Year` Year in which film was released
+
+For now we will just look at the `test` variable. We will look at a frequency distribution table for each of these variables and to
+compare them to get a feel for some of the features of distributions.
+
+We can start by looking at `Quiz1`. Think about each of the following
+questions.
+
+1.  What kind of variable is `Quiz1`?
+2.  What is the most typical score on `Quiz1`?
+3.  What is the range of scores on `Quiz1`?
+4.  Did some people do a lot worse or better than the rest of the class?
+5.  Overall, was the quiz easy or hard?
+
+It is hard to answer these last 4 questions just by looking at the
+numbers in the data file. Instead we can start using some statistical
+procedures to organize the data, to make it easier to understand the
+data.
+
+# Frequency Distribution Tables
+
+
+:::{.column-margin}
+A **frequency distribution table** is an organized tabulation of the number of individuals located in each category on the scale of measurement.
+:::
+
+
+If we want to know a lot detail about a distribution, just sorting the
+variable is not enough, especially when the data set is very large. It
+is just too many numbers to process at once! A statistical tool to
+help "see" the distribution is to make a **frequency distribution
+table**.
+
+
+
+## Making Frequency Distribution Tables with Jamovi
+
+In the menu, select **Analyses→Exploration→Descriptions**. That is,
+select the **Analyses** tab, then the **Exploration** icon, then the
+**Descriptives** menu item.
+
+![](jamovimenu.png)
+
+Now drag the `Quiz1` variable into the **Variables** box. Alternately,
+you can select `Quiz1` and then click the arrow next to the
+**Variables** box.
+
+Check the **Frequency tables** checkbox.
+
+![](quiz1frequencies.png)
+
+In the Results pane, you should see *Descriptives* with some summary
+statistics for `Quiz1` and a *Frequencies* table for `Quiz1`
+
+![](quiz1frequenciesresults.png)
+
+The *Levels* are the values the variables has. The *Counts* are the frequencies of the each level. The *% of Total* column is the *Counts* divided by the sample size. The *Cumulative %* column tells the percentage of scores at that level or less.
+
+:::{.Canvas}
+# Canvas
+
+What percentage of the scores is at or below a score of 7?
+
+Which was the most frequent score in `Quiz1`?
+
+What percent of people scored a 5?
+:::
+
+
+
+# Graphing Frequency Distributions
+
+In the sections we saw that one way to summarize and simplify an entire
+distribution of scores is by organizing the scores in a frequency
+distribution table. In this section we will learn about other ways to
+represent distributions, focusing primarily on bar charts and
+histograms.
+
+## Bar Plots
+
+To display the distribution of a categorical variable one should use a
+bar plot. These are used most
+often to display the distribution of subjects or cases in certain
+categories, such as the number of A, B, C, D, and F grades in a given
+class.
+
+Let's start with looking at the distribution of ethnicity in our
+data file. So what our graph will show are the *counts*
+(or *frequency*) for each of ethnic category.
+
+1.  From the menu click **Analyses→Exploration→Descriptives**.
+2.  Drag the `Ethnicity` variable into the **Variables** box.
+3.  Click **Plots**
+4.  Check **Bar plot**.
+
+
+You should get a bar chart that looks something like this.
+
+![](EthnicityBarGraph.svg)
+
+
+Make a bar graph of the counts of the final grades (called `FinalClassGrade` in
+the file) in the class (i.e. A, B, C,...).
+
+Make a bar graph of the counts of the final grades in the class (i.e. A,
+B, C,...), further broken down by whether they attended the review
+session or not. 
+
+Drag the `Review` variable into the **SplitBy** box.
+
+
+
+:::{.Canvas}
+# Canvas
+
+Canvas: Based on the graph, does it appear that attending the review
+session was associated with higher final grades?
+:::
+
+## Histograms
+
+Suppose that we wish to know how the students did on quiz 1. We could
+try looking at all of the scores, but that's a lot of numbers. Instead,
+it is better to try to look at the entire distribution, rather than all
+of the individual scores. We should use a histogram because our variable
+(score on `Quiz1`) is a continuous variable.
+
+Histogram: A histogram is a pictorial representation of the distribution
+of values for a particular variable. The bars represent the number of
+occurrences of each value. These look similar to bar graphs except they
+are used more often to indicate the number of subjects or cases in
+ranges of values for a continuous variable, such as the number of
+subjects or cases in ranges of values for a continuous variable.
+
+## Using Jamovi to create a histogram:
+
+
+1.  From the menu click **Analyses→Exploration→Descriptives**.
+2.  Drag the `TotalPercent` variable into the **Variables** box.
+3.  Click **Plots**
+4.  Check **Histogram**.
+
+
+:::{.Canvas}
+# Canvas
+Canvas: Based on the histogram, does it appear that anyone earned 100% in the course?
+:::
+
+# Video Overview
+
+If you missed the lecture, you can view [this
+video](https://www.youtube.com/watch?v=avI5ggV71nk)
+
+# Beyond EDUC 5325: Probability Density Functions
+
+If you are interested, you can check out an introduction to a related
+topic, the [**probability density
+function**](https://www.youtube.com/watch?v=FfkGU7yx5nc&t=10s). The
+ideas in this video are not on any exams for this course.
