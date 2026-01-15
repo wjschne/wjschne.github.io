@@ -12,7 +12,7 @@ library(tidyverse)
 #| label: makedata
 #| eval: false
 d <- fivethirtyeight::bechdel
-d %>% 
+# d %>% 
   as_tibble() %>% 
   mutate(test = fct_recode(clean_test, `No Women` = "nowomen", `Women do not talk to each other` = "notalk", `Women only talk about men` = "men", `Pass` = "dubious", `Pass` = "ok"),
          imdb = factor(imdb)) %>% 

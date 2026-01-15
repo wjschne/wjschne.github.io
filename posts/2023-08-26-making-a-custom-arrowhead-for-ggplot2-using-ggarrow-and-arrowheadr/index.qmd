@@ -23,7 +23,7 @@ font_opts <- list(dvisvgm.opts = "--font-format=woff")
 ragg_png <- function(..., res = 150) {
   ragg::agg_png(..., res = res, units = "in")
 }
-knitr::opts_chunk$set(dev = "ragg_png", cache = F)
+knitr::opts_chunk$set(dev = "ragg_png")
 update_geom_defaults("arrow_segment", aes(color = "gray50"))
 update_geom_defaults("segment", aes(color = "gray50"))
 ```
@@ -111,11 +111,10 @@ Nevertheless, I miss the variety of [arrows in available in TikZ](https://tikz.d
 
 
 ```{tikz fig-tkz, engine.opts=font_opts}
-#| fig-ext: svg
-#| out-width: 70%
-#| code-summary: "TikZ code with latex' arrow"
-#| fig-cap: The TikZ latex' arrow
-
+%| fig-ext: svg
+%| out-width: 70%
+%| code-summary: "TikZ code with latex' arrow"
+%| fig-cap: The TikZ latex' arrow%
 \usetikzlibrary{arrows}
 \begin{tikzpicture}
 \node[fill=violet!50!white, circle] (A) at (0,0) {A};

@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="W. Joel Schneider">
+<meta name="dcterms.date" content="2024-03-01">
+<meta name="description" content="W. Joel Schneider is a professor at Temple University.">
+
+<title>W. Joel Schneider</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//images/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-04c4e107efec5be477c7dc5d62d6de6d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<meta property="og:title" content="W. Joel Schneider">
+<meta property="og:description" content="Getting Data into Useable Formats">
+<meta property="og:image" content="https://wjschne.github.io/tutorials/DataWrangling/data_wrangling_files/figure-html/fig-polished-1.png">
+<meta property="og:site_name" content="W. Joel Schneider">
+<meta property="og:image:height" content="2304">
+<meta property="og:image:width" content="1536">
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">W. Joel Schneider</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">R Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../assessingpsyche.html"> 
+<span class="menu-text">Assessment Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../presentations.html"> 
+<span class="menu-text">Presentations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../tutorials.html"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="mailto:schneider@temple.edu" rel="noreferrer noopener" target="_blank"> <i class="bi bi-envelope" role="img" aria-label="Email">
+</i> 
+<span class="menu-text">Email</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/wjschne" rel="noreferrer noopener" target="_blank"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../blog.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Data Wrangling</h1>
+                  <div>
+        <div class="description">
+          Getting Data into Useable Formats
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>W. Joel Schneider </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 1, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#getting-used-to-working-with-data-in-r" id="toc-getting-used-to-working-with-data-in-r" class="nav-link active" data-scroll-target="#getting-used-to-working-with-data-in-r">Getting Used to Working with Data in R</a></li>
+  <li><a href="#all-the-code-in-one-place" id="toc-all-the-code-in-one-place" class="nav-link" data-scroll-target="#all-the-code-in-one-place">All the code in one place:</a></li>
+  <li><a href="#importing-data-from-a-file" id="toc-importing-data-from-a-file" class="nav-link" data-scroll-target="#importing-data-from-a-file">Importing Data from a file</a></li>
+  <li><a href="#inspecting-data" id="toc-inspecting-data" class="nav-link" data-scroll-target="#inspecting-data">Inspecting Data</a></li>
+  <li><a href="#study-design" id="toc-study-design" class="nav-link" data-scroll-target="#study-design">Study Design</a></li>
+  <li><a href="#tidy-data" id="toc-tidy-data" class="nav-link" data-scroll-target="#tidy-data">Tidy Data</a></li>
+  <li><a href="#data-filtering" id="toc-data-filtering" class="nav-link" data-scroll-target="#data-filtering">Data Filtering</a></li>
+  <li><a href="#column-selection" id="toc-column-selection" class="nav-link" data-scroll-target="#column-selection">Column selection</a></li>
+  <li><a href="#renaming-variables" id="toc-renaming-variables" class="nav-link" data-scroll-target="#renaming-variables">Renaming variables</a></li>
+  <li><a href="#data-restructuring" id="toc-data-restructuring" class="nav-link" data-scroll-target="#data-restructuring">Data Restructuring</a>
+  <ul class="collapse">
+  <li><a href="#restructuring-from-wide-to-long-format-with-pivot_longer" id="toc-restructuring-from-wide-to-long-format-with-pivot_longer" class="nav-link" data-scroll-target="#restructuring-from-wide-to-long-format-with-pivot_longer">Restructuring from wide to long format with <code>pivot_longer</code></a></li>
+  <li><a href="#restructuring-from-long-to-wide-format-with-pivot_wider" id="toc-restructuring-from-long-to-wide-format-with-pivot_wider" class="nav-link" data-scroll-target="#restructuring-from-long-to-wide-format-with-pivot_wider">Restructuring from long to wide format with <code>pivot_wider</code></a></li>
+  </ul></li>
+  <li><a href="#create-new-variables-with-mutate-and-case_when" id="toc-create-new-variables-with-mutate-and-case_when" class="nav-link" data-scroll-target="#create-new-variables-with-mutate-and-case_when">Create new variables with <code>mutate</code> and <code>case_when</code></a></li>
+  <li><a href="#plot-the-results" id="toc-plot-the-results" class="nav-link" data-scroll-target="#plot-the-results">Plot the results:</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+
+
+
+
+
+<section id="getting-used-to-working-with-data-in-r" class="level1">
+<h1>Getting Used to Working with Data in R</h1>
+<p>In programs like SPSS, the data seem to live in a spreadsheet that is always open and available to you. In R, you can see the data whenever you want, but usually it sits unseen inside a variable. It can be disconcerting at first, but think of your data as living in a file somewhere on your hard drive (or online!), and then the data just come for a short visit in R.</p>
+<p>The major benefit of working with data in R is that all of the changes, transformations, and restructuring happens in code—which can be recreated at any time. There is usually no need to “save” the data after you have transformed it. The next time you work with the data, you just run your code and all the calculations will transform the data exactly the same way as before.</p>
+<p>Why does this matter? If you feel the need to save your data all the time, you end up having multiple copies of it: <code>data.sav</code>, <code>data_restructured.sav</code>, <code>data_new.sav</code>, <code>data_new_final.sav</code>, <code>fixed_data_new_final.sav</code>, <code>restructued_final_with_missing_cases_removed.sav</code>, and so forth and so on. It can be hard to figure out where to start the next time you work with your data. You might not remember which version has errors and which version has what you need.</p>
+<p>In general, start with a completely raw data file (one that is exactly the way you started). Resist the temptation to make any changes to it directly. If you must, save a pristine copy somewhere and only then change it. Import your data and make all changes to it with code. One benefit of doing so is that the code documents any changes you would otherwise need to record in your lab notebook.</p>
+</section>
+<section id="all-the-code-in-one-place" class="level1">
+<h1>All the code in one place:</h1>
+<p>I am going to walk through these steps. You can run this all at once to make sure it works. Then I will explain it step by step.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>View All the Code
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/wjschne/EDUC5529/raw/master/on_task_multiple_baseline.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># View data</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>d</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(d)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(d)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Cases with fewer than 8 baseline sessions</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(baseline_sessions_n <span class="sc">&lt;</span> <span class="dv">8</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>baseline_sessions_n)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Students with `id` equal to 7</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">==</span> <span class="dv">7</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Students with scores above 10 on `time_1` AND `time_2`:</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(time_1 <span class="sc">&gt;</span> <span class="dv">10</span> <span class="sc">&amp;</span> time_2 <span class="sc">&gt;</span> <span class="dv">10</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Students with scores above 10 on `time_1` OR `time_2`:</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(time_1 <span class="sc">&gt;</span> <span class="dv">10</span> <span class="sc">|</span> time_2 <span class="sc">&gt;</span> <span class="dv">10</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting columns</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Select the id and time_1 variables</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, time_1)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="do">## Select 5 adjacent variables: time_1 throught time_5</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time_1<span class="sc">:</span>time_5)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="do">## Remove the id variable</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>id)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Select all variables that start with "time" </span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"time"</span>))</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Select all variables end with 0:</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"0"</span>))</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Select all variables that contain "_2"</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"_2"</span>))</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Renaming variables</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Rename id to become student_id, rename baseline_sessions_n to baseline</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>d_new <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">student_id =</span> id, </span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>         <span class="at">baseline =</span> baseline_sessions_n) </span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="do">## Rename rename all variables that start with "time_" </span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="do">## so that they start with "T_" instead</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(str_replace, <span class="at">pattern =</span> <span class="st">"time_"</span>, <span class="at">replace =</span> <span class="st">"T_"</span>)</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Make small data</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Select variables from id to time_3 and filter rows so that </span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="co"># id is less than 3 (not inclusive)</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>d_small <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> </span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>time_3) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">&lt;</span> <span class="dv">3</span>)</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>d_small</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Restructuring from wide to long format:</span></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>d_small_longer <span class="ot">&lt;-</span> d_small <span class="sc">%&gt;%</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_3,</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>,</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"time_"</span>, </span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_transform =</span> <span class="fu">list</span>(<span class="at">time =</span> as.integer)) </span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Restructing from long to wide format:</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>d_small_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> time, </span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> on_task, </span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>              <span class="at">names_prefix =</span> <span class="st">"time_"</span>)</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Restructure whole data from wide to long and create new variables</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>d_longer <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_60,</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>,</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"time_"</span>, </span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_transform =</span> <span class="fu">list</span>(<span class="at">time =</span> as.integer)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">phase =</span> <span class="fu">case_when</span>(</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>    time <span class="sc">&lt;=</span> baseline_sessions_n <span class="sc">~</span> <span class="st">"Pre-Intervention"</span>,</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>    time <span class="sc">&lt;=</span> baseline_sessions_n <span class="sc">+</span> intervention_sessions_n <span class="sc">~</span> <span class="st">"Intervention"</span>,</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>    time <span class="sc">&gt;</span> baseline_sessions_n <span class="sc">+</span> intervention_sessions_n <span class="sc">~</span> <span class="st">"Post-Intervention"</span> </span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">phase =</span> <span class="fu">fct_inorder</span>(phase))</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">factor</span>(id) <span class="sc">%&gt;%</span> <span class="fu">fct_reorder</span>(baseline_sessions_n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase)) <span class="sc">+</span> </span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(id))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="importing-data-from-a-file" class="level1">
+<h1>Importing Data from a file</h1>
+<p>For this task we will use a file that lives here on the web:</p>
+<p><a href="https://github.com/wjschne/EDUC5529/raw/master/on_task_multiple_baseline.csv">on_task_multiple_baseline.csv</a></p>
+<p>You can download it if you want, but you do not need to. You can import it over the web right into R.</p>
+<p>We have a .csv file, so we will use the tidyverse function <code>read_csv</code>, from the readr package, which can be loaded with the tidyverse package:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/wjschne/EDUC5529/raw/master/on_task_multiple_baseline.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Note that we have to assign the data to a variable—<code>d</code> in this case. Otherwise, the data will spill into the console, but R will not remember the data.</p>
+</section>
+<section id="inspecting-data" class="level1 page-columns page-full">
+<h1>Inspecting Data</h1>
+<p>The <code>read_csv</code> function imports a special data structure called a <code>tibble</code> which is a variation on the traditional <code>data.frame</code> structure. It has some useful defaults that make working with it more predictable and practical.</p>
+<p>If the data is too big to print in your console, the tibble will just show the first few rows, the first few columns, and then the remaining column names. The output also says which kind of data is in each column and how many rows and columns are in the data.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Whoa! That dataset has a lot of variables! When the there are more variables than rows, we say that the data is “wide.”</p>
+<p>An alternate way to view the data is to use the <code>glimpse</code> function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>If you really need to see all the data, use the <code>View</code> function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div></div><div class="cell" data-df-print="tibble">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>d</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 63
+     id baseline_sessions_n intervention_sessions_n time_1 time_2 time_3 time_4
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1                  22                      20  11.5   14.4    6.15   9.25
+2     2                  18                      19   9.11   8.59  11.0    9.36
+3     3                   5                      18   7.24  14.3    7.98  11.2 
+4     4                  32                      20  11.3   14.3   14.8    8.68
+5     5                  19                      20  10.7    6.80   8.30  14.5 
+6     6                  24                      20  13.0    7.47  13.7    5.77
+7     7                  10                      19   9.70   9.17  10.6    9.14
+8     8                  13                      20  10.6   11.7   10.9   11.4 
+# ℹ 56 more variables: time_5 &lt;dbl&gt;, time_6 &lt;dbl&gt;, time_7 &lt;dbl&gt;, time_8 &lt;dbl&gt;,
+#   time_9 &lt;dbl&gt;, time_10 &lt;dbl&gt;, time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;,
+#   time_14 &lt;dbl&gt;, time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;,
+#   time_19 &lt;dbl&gt;, time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;,
+#   time_24 &lt;dbl&gt;, time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;,
+#   time_29 &lt;dbl&gt;, time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;,
+#   time_34 &lt;dbl&gt;, time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+</section>
+<section id="study-design" class="level1">
+<h1>Study Design</h1>
+<p>This dataset has 8 children, one in each row. Each child was given an intervention designed to increase “time on task” in the classroom so that the child will stay focused and complete his or her work. The study has a <a href="https://www.wikiwand.com/en/Multiple_baseline_design">multiple baseline design</a>. That is, each child was observed for a “baseline” period for a number days before the intervention was implemented. Each child’s baseline lasted a different length of time. Some children were observed for a short time before the intervention, and some were observed much longer. After the intervention ended, each child was observed for a number of days to see if the intervention’s effect diminished.</p>
+<p>The <code>id</code> column is just a number to identify each child. The <code>baseline_sessions_n</code> variable indicates how many days the child was observed before the intervention began. The <code>intervention_sessions_n</code> variable indications the number days the intervention lasted. The remainding variables <code>time_1</code>–<code>time_60</code> are the number of minutes the child stayed on task during the observation period each day for 60 days.</p>
+</section>
+<section id="tidy-data" class="level1">
+<h1>Tidy Data</h1>
+<p>You might think that the data is ready to be analyzed, but it isn’t. The data might be perfectly structured for data entry, but it is not quite “tidy” yet.</p>
+<p>The phrase <a href="https://r4ds.had.co.nz/tidy-data.html#tidy-data-1"><em>tidy data</em></a> was popularized by Hadley Wickham, but it mostly refers to something a little less catchy called <a href="https://www.wikiwand.com/en/Database_normalization"><em>database normalization</em></a>. In data analysis, we want:</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li>Each variable must have its own column.</li>
+<li>Each observation must have its own row.</li>
+<li>Each value must have its own cell.</li>
+</ol>
+</blockquote>
+<p>—From <a href="https://r4ds.had.co.nz/tidy-data.html#tidy-data-1">Wickham &amp; Grolemund (2017)</a>:</p>
+<p>This is how R likes its data. Whenever you find yourself fighting with confusing or tedious tasks in R, there is a good chance your data has violated one of these rules. Converting your data to this “tidy” format will likely simplify your task.</p>
+<p>In the current data, there are two primary sources of untidiness.</p>
+<ul>
+<li>We need a single variable to indicate <em>“<em>time on task.</em>”</em> Unfortunately, the <code>time on task</code> variable we would like to have is currently spread across 60 variables, <code>time_1</code>–<code>time_60</code>.</li>
+<li>We also would like a variable called “time” to indicate which day the observation took place. Right now, the time variable is lurking in the column names <code>time_1</code>–<code>time_60</code></li>
+</ul>
+<p>Later we need to identify which treatment phase the observation was conducted in, “pre-intervention,” “intervention,” or “post-intervention.” That information is sitting in an unusual form right right now in the <code>baseline_sessions_n</code> and <code>intervention_session_n</code> variables.</p>
+</section>
+<section id="data-filtering" class="level1 page-columns page-full">
+<h1>Data Filtering</h1>
+<p>The <code>filter</code> function selects rows that meet certain conditions. For example, suppose we want to see rows with <code>baseline_sessions_n</code> less than 8:</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The <code>%&gt;%</code> is the “pipe” function. It means “and then.” It inserts the output of the previous function into the next function. If we did not use the pipe, we would type <code>filter(d, baseline_sessions_n &lt; 8)</code> instead.</p>
+</div></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(baseline_sessions_n <span class="sc">&lt;</span> <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 63
+     id baseline_sessions_n intervention_sessions_n time_1 time_2 time_3 time_4
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     3                   5                      18   7.24   14.3   7.98   11.2
+# ℹ 56 more variables: time_5 &lt;dbl&gt;, time_6 &lt;dbl&gt;, time_7 &lt;dbl&gt;, time_8 &lt;dbl&gt;,
+#   time_9 &lt;dbl&gt;, time_10 &lt;dbl&gt;, time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;,
+#   time_14 &lt;dbl&gt;, time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;,
+#   time_19 &lt;dbl&gt;, time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;,
+#   time_24 &lt;dbl&gt;, time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;,
+#   time_29 &lt;dbl&gt;, time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;,
+#   time_34 &lt;dbl&gt;, time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>In this example, there is little advantage to using the pipe because there is only one step. However, when many steps are strung together, the pipe makes the code much easier to understand.</p>
+<p>The double equal sign <code>==</code> performs a test to see if two things are the same. Forgetting that you need two equal signs is a really common error.</p>
+<p>Students with <code>id</code> equal to 7:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">==</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 63
+     id baseline_sessions_n intervention_sessions_n time_1 time_2 time_3 time_4
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     7                  10                      19   9.70   9.17   10.6   9.14
+# ℹ 56 more variables: time_5 &lt;dbl&gt;, time_6 &lt;dbl&gt;, time_7 &lt;dbl&gt;, time_8 &lt;dbl&gt;,
+#   time_9 &lt;dbl&gt;, time_10 &lt;dbl&gt;, time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;,
+#   time_14 &lt;dbl&gt;, time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;,
+#   time_19 &lt;dbl&gt;, time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;,
+#   time_24 &lt;dbl&gt;, time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;,
+#   time_29 &lt;dbl&gt;, time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;,
+#   time_34 &lt;dbl&gt;, time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>You can filter for more than one condition.</p>
+<p>Students with scores above 10 on <code>time_1</code> AND <code>time_2</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(time_1 <span class="sc">&gt;</span> <span class="dv">10</span> <span class="sc">&amp;</span> time_2 <span class="sc">&gt;</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 63
+     id baseline_sessions_n intervention_sessions_n time_1 time_2 time_3 time_4
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1                  22                      20   11.5   14.4   6.15   9.25
+2     4                  32                      20   11.3   14.3  14.8    8.68
+3     8                  13                      20   10.6   11.7  10.9   11.4 
+# ℹ 56 more variables: time_5 &lt;dbl&gt;, time_6 &lt;dbl&gt;, time_7 &lt;dbl&gt;, time_8 &lt;dbl&gt;,
+#   time_9 &lt;dbl&gt;, time_10 &lt;dbl&gt;, time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;,
+#   time_14 &lt;dbl&gt;, time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;,
+#   time_19 &lt;dbl&gt;, time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;,
+#   time_24 &lt;dbl&gt;, time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;,
+#   time_29 &lt;dbl&gt;, time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;,
+#   time_34 &lt;dbl&gt;, time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>Students with scores above 10 on <code>time_1</code> OR <code>time_2</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(time_1 <span class="sc">&gt;</span> <span class="dv">10</span> <span class="sc">|</span> time_2 <span class="sc">&gt;</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 63
+     id baseline_sessions_n intervention_sessions_n time_1 time_2 time_3 time_4
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1                  22                      20  11.5   14.4    6.15   9.25
+2     3                   5                      18   7.24  14.3    7.98  11.2 
+3     4                  32                      20  11.3   14.3   14.8    8.68
+4     5                  19                      20  10.7    6.80   8.30  14.5 
+5     6                  24                      20  13.0    7.47  13.7    5.77
+6     8                  13                      20  10.6   11.7   10.9   11.4 
+# ℹ 56 more variables: time_5 &lt;dbl&gt;, time_6 &lt;dbl&gt;, time_7 &lt;dbl&gt;, time_8 &lt;dbl&gt;,
+#   time_9 &lt;dbl&gt;, time_10 &lt;dbl&gt;, time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;,
+#   time_14 &lt;dbl&gt;, time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;,
+#   time_19 &lt;dbl&gt;, time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;,
+#   time_24 &lt;dbl&gt;, time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;,
+#   time_29 &lt;dbl&gt;, time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;,
+#   time_34 &lt;dbl&gt;, time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+</section>
+<section id="column-selection" class="level1">
+<h1>Column selection</h1>
+<p>We can select columns by naming just the columns we want:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, time_1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+     id time_1
+  &lt;dbl&gt;  &lt;dbl&gt;
+1     1  11.5 
+2     2   9.11
+3     3   7.24
+4     4  11.3 
+5     5  10.7 
+6     6  13.0 
+7     7   9.70
+8     8  10.6 </code></pre>
+</div>
+</div>
+<p>If the columns we want are adjacent, we can use the <code>:</code> operator to select a sequence:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time_1<span class="sc">:</span>time_5)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 5
+  time_1 time_2 time_3 time_4 time_5
+   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1  11.5   14.4    6.15   9.25   9.58
+2   9.11   8.59  11.0    9.36   8.09
+3   7.24  14.3    7.98  11.2   12.3 
+4  11.3   14.3   14.8    8.68   9.53
+5  10.7    6.80   8.30  14.5    6.87
+6  13.0    7.47  13.7    5.77  10.8 
+7   9.70   9.17  10.6    9.14   7.36
+8  10.6   11.7   10.9   11.4    8.26</code></pre>
+</div>
+</div>
+<p>If want everything but a particular column (or columns), use the <code>-</code> operator:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 62
+  baseline_sessions_n intervention_sessions_n time_1 time_2 time_3 time_4 time_5
+                &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1                  22                      20  11.5   14.4    6.15   9.25   9.58
+2                  18                      19   9.11   8.59  11.0    9.36   8.09
+3                   5                      18   7.24  14.3    7.98  11.2   12.3 
+4                  32                      20  11.3   14.3   14.8    8.68   9.53
+5                  19                      20  10.7    6.80   8.30  14.5    6.87
+6                  24                      20  13.0    7.47  13.7    5.77  10.8 
+7                  10                      19   9.70   9.17  10.6    9.14   7.36
+8                  13                      20  10.6   11.7   10.9   11.4    8.26
+# ℹ 55 more variables: time_6 &lt;dbl&gt;, time_7 &lt;dbl&gt;, time_8 &lt;dbl&gt;, time_9 &lt;dbl&gt;,
+#   time_10 &lt;dbl&gt;, time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;, time_14 &lt;dbl&gt;,
+#   time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;, time_19 &lt;dbl&gt;,
+#   time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;, time_24 &lt;dbl&gt;,
+#   time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;, time_29 &lt;dbl&gt;,
+#   time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;, time_34 &lt;dbl&gt;,
+#   time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, time_38 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>If columns have similar names, we can use the <code>starts_with</code>, <code>ends_width</code>, or <code>contains</code> functions.</p>
+<p>Select all variables that start with the phrase <code>time</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"time"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 60
+  time_1 time_2 time_3 time_4 time_5 time_6 time_7 time_8 time_9 time_10 time_11
+   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1  11.5   14.4    6.15   9.25   9.58   8.16  10.1   11.1    9.20   10.8     9.18
+2   9.11   8.59  11.0    9.36   8.09   8.77   8.95   7.44  11.1     7.59   11.1 
+3   7.24  14.3    7.98  11.2   12.3   13.1   11.7   19.0   16.1    20.3    21.9 
+4  11.3   14.3   14.8    8.68   9.53   7.82   9.56   8.21  12.9     8.24    8.55
+5  10.7    6.80   8.30  14.5    6.87  12.4    9.41   9.44   8.74   14.3    11.0 
+6  13.0    7.47  13.7    5.77  10.8    8.70   9.32   8.31  12.9     9.97    6.93
+7   9.70   9.17  10.6    9.14   7.36  14.3    9.45  12.4    6.09    5.85    9.54
+8  10.6   11.7   10.9   11.4    8.26   7.59   8.23   7.29  10.0    10.1     9.80
+# ℹ 49 more variables: time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;, time_14 &lt;dbl&gt;,
+#   time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;, time_19 &lt;dbl&gt;,
+#   time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;, time_24 &lt;dbl&gt;,
+#   time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;, time_29 &lt;dbl&gt;,
+#   time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;, time_34 &lt;dbl&gt;,
+#   time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, time_38 &lt;dbl&gt;, time_39 &lt;dbl&gt;,
+#   time_40 &lt;dbl&gt;, time_41 &lt;dbl&gt;, time_42 &lt;dbl&gt;, time_43 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>Select all variables end with <code>0</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"0"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 6
+  time_10 time_20 time_30 time_40 time_50 time_60
+    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1   10.8    11.5    30.2     44.6    48.7    50.0
+2    7.59   14.8    34.8     47.5    43.7    50.3
+3   20.3    43.8    43.6     47.1    47.1    44.9
+4    8.24   10.5     8.55    27.1    45.5    50.3
+5   14.3    14.4    31.4     50.3    47.0    50.8
+6    9.97    9.09   21.5     41.4    48.1    48.7
+7    5.85   30.8    48.8     49.1    45.4    52.8
+8   10.1    26.0    42.5     48.4    45.6    50.3</code></pre>
+</div>
+</div>
+<p>Select all variables that contain the phrase “_2”</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"_2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 11
+  time_2 time_20 time_21 time_22 time_23 time_24 time_25 time_26 time_27 time_28
+   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1  14.4    11.5     8.57   10.6     11.0    13.1    18.0   13.0    23.8     21.4
+2   8.59   14.8    13.1    18.2     21.7    22.8    24.8   25.2    29.2     31.5
+3  14.3    43.8    44.8    43.4     46.3    47.0    44.5   46.5    44.0     47.0
+4  14.3    10.5     9.03    7.85    12.3    10.1    12.2    7.87    8.83    10.4
+5   6.80   14.4    13.0    16.1     18.2    17.9    23.9   22.6    23.1     25.6
+6   7.47    9.09    9.93   10.5     12.3    11.8    10.4   13.4    16.2     17.0
+7   9.17   30.8    31.6    34.4     36.1    40.9    39.4   41.1    43.0     46.8
+8  11.7    26.0    26.9    30.1     29.6    31.2    34.3   36.2    38.3     42.6
+# ℹ 1 more variable: time_29 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>The <code>-</code> operator works with these selection functions to exclude variables:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"time_"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 3
+     id baseline_sessions_n intervention_sessions_n
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;
+1     1                  22                      20
+2     2                  18                      19
+3     3                   5                      18
+4     4                  32                      20
+5     5                  19                      20
+6     6                  24                      20
+7     7                  10                      19
+8     8                  13                      20</code></pre>
+</div>
+</div>
+</section>
+<section id="renaming-variables" class="level1">
+<h1>Renaming variables</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">student_id =</span> id, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">baseline =</span> baseline_sessions_n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 63
+  student_id baseline intervention_sessions_n time_1 time_2 time_3 time_4 time_5
+       &lt;dbl&gt;    &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1          1       22                      20  11.5   14.4    6.15   9.25   9.58
+2          2       18                      19   9.11   8.59  11.0    9.36   8.09
+3          3        5                      18   7.24  14.3    7.98  11.2   12.3 
+4          4       32                      20  11.3   14.3   14.8    8.68   9.53
+5          5       19                      20  10.7    6.80   8.30  14.5    6.87
+6          6       24                      20  13.0    7.47  13.7    5.77  10.8 
+7          7       10                      19   9.70   9.17  10.6    9.14   7.36
+8          8       13                      20  10.6   11.7   10.9   11.4    8.26
+# ℹ 55 more variables: time_6 &lt;dbl&gt;, time_7 &lt;dbl&gt;, time_8 &lt;dbl&gt;, time_9 &lt;dbl&gt;,
+#   time_10 &lt;dbl&gt;, time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;, time_14 &lt;dbl&gt;,
+#   time_15 &lt;dbl&gt;, time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;, time_19 &lt;dbl&gt;,
+#   time_20 &lt;dbl&gt;, time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;, time_24 &lt;dbl&gt;,
+#   time_25 &lt;dbl&gt;, time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;, time_29 &lt;dbl&gt;,
+#   time_30 &lt;dbl&gt;, time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;, time_34 &lt;dbl&gt;,
+#   time_35 &lt;dbl&gt;, time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, time_38 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>We can rename many columns at once with a function. The <code>str_replace</code> function usually works like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"time_1"</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(x, <span class="at">pattern =</span> <span class="st">"time_"</span>, <span class="at">replace =</span> <span class="st">"Time "</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Time 1"</code></pre>
+</div>
+</div>
+<p>The <code>rename_with</code> is a function that applies a function to all variable names at once. It can take that function’s arguments, too. For example,</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> <span class="fu">rename_with</span>(str_replace, <span class="at">pattern =</span> <span class="st">"time_"</span>, <span class="at">replace =</span> <span class="st">"Time "</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 63
+     id baseline_sessions_n intervention_sessions_n `Time 1` `Time 2` `Time 3`
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1     1                  22                      20    11.5     14.4      6.15
+2     2                  18                      19     9.11     8.59    11.0 
+3     3                   5                      18     7.24    14.3      7.98
+4     4                  32                      20    11.3     14.3     14.8 
+5     5                  19                      20    10.7      6.80     8.30
+6     6                  24                      20    13.0      7.47    13.7 
+7     7                  10                      19     9.70     9.17    10.6 
+8     8                  13                      20    10.6     11.7     10.9 
+# ℹ 57 more variables: `Time 4` &lt;dbl&gt;, `Time 5` &lt;dbl&gt;, `Time 6` &lt;dbl&gt;,
+#   `Time 7` &lt;dbl&gt;, `Time 8` &lt;dbl&gt;, `Time 9` &lt;dbl&gt;, `Time 10` &lt;dbl&gt;,
+#   `Time 11` &lt;dbl&gt;, `Time 12` &lt;dbl&gt;, `Time 13` &lt;dbl&gt;, `Time 14` &lt;dbl&gt;,
+#   `Time 15` &lt;dbl&gt;, `Time 16` &lt;dbl&gt;, `Time 17` &lt;dbl&gt;, `Time 18` &lt;dbl&gt;,
+#   `Time 19` &lt;dbl&gt;, `Time 20` &lt;dbl&gt;, `Time 21` &lt;dbl&gt;, `Time 22` &lt;dbl&gt;,
+#   `Time 23` &lt;dbl&gt;, `Time 24` &lt;dbl&gt;, `Time 25` &lt;dbl&gt;, `Time 26` &lt;dbl&gt;,
+#   `Time 27` &lt;dbl&gt;, `Time 28` &lt;dbl&gt;, `Time 29` &lt;dbl&gt;, `Time 30` &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>If you have a vector with names in it, you can rename many variables at once:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>v_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">ID =</span> <span class="st">"id"</span>, </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">Baseline =</span> <span class="st">"baseline_sessions_n"</span>,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">Intervention =</span> <span class="st">"intervention_sessions_n"</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="fu">any_of</span>(v_names))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 63
+     ID Baseline Intervention time_1 time_2 time_3 time_4 time_5 time_6 time_7
+  &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1       22           20  11.5   14.4    6.15   9.25   9.58   8.16  10.1 
+2     2       18           19   9.11   8.59  11.0    9.36   8.09   8.77   8.95
+3     3        5           18   7.24  14.3    7.98  11.2   12.3   13.1   11.7 
+4     4       32           20  11.3   14.3   14.8    8.68   9.53   7.82   9.56
+5     5       19           20  10.7    6.80   8.30  14.5    6.87  12.4    9.41
+6     6       24           20  13.0    7.47  13.7    5.77  10.8    8.70   9.32
+7     7       10           19   9.70   9.17  10.6    9.14   7.36  14.3    9.45
+8     8       13           20  10.6   11.7   10.9   11.4    8.26   7.59   8.23
+# ℹ 53 more variables: time_8 &lt;dbl&gt;, time_9 &lt;dbl&gt;, time_10 &lt;dbl&gt;,
+#   time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;, time_14 &lt;dbl&gt;, time_15 &lt;dbl&gt;,
+#   time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;, time_19 &lt;dbl&gt;, time_20 &lt;dbl&gt;,
+#   time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;, time_24 &lt;dbl&gt;, time_25 &lt;dbl&gt;,
+#   time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;, time_29 &lt;dbl&gt;, time_30 &lt;dbl&gt;,
+#   time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;, time_34 &lt;dbl&gt;, time_35 &lt;dbl&gt;,
+#   time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, time_38 &lt;dbl&gt;, time_39 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>In this example, there is no advantage over just applying the transformations directly in <code>rename</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">ID =</span> <span class="st">"id"</span>, </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Baseline =</span> <span class="st">"baseline_sessions_n"</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intervention =</span> <span class="st">"intervention_sessions_n"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 63
+     ID Baseline Intervention time_1 time_2 time_3 time_4 time_5 time_6 time_7
+  &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1       22           20  11.5   14.4    6.15   9.25   9.58   8.16  10.1 
+2     2       18           19   9.11   8.59  11.0    9.36   8.09   8.77   8.95
+3     3        5           18   7.24  14.3    7.98  11.2   12.3   13.1   11.7 
+4     4       32           20  11.3   14.3   14.8    8.68   9.53   7.82   9.56
+5     5       19           20  10.7    6.80   8.30  14.5    6.87  12.4    9.41
+6     6       24           20  13.0    7.47  13.7    5.77  10.8    8.70   9.32
+7     7       10           19   9.70   9.17  10.6    9.14   7.36  14.3    9.45
+8     8       13           20  10.6   11.7   10.9   11.4    8.26   7.59   8.23
+# ℹ 53 more variables: time_8 &lt;dbl&gt;, time_9 &lt;dbl&gt;, time_10 &lt;dbl&gt;,
+#   time_11 &lt;dbl&gt;, time_12 &lt;dbl&gt;, time_13 &lt;dbl&gt;, time_14 &lt;dbl&gt;, time_15 &lt;dbl&gt;,
+#   time_16 &lt;dbl&gt;, time_17 &lt;dbl&gt;, time_18 &lt;dbl&gt;, time_19 &lt;dbl&gt;, time_20 &lt;dbl&gt;,
+#   time_21 &lt;dbl&gt;, time_22 &lt;dbl&gt;, time_23 &lt;dbl&gt;, time_24 &lt;dbl&gt;, time_25 &lt;dbl&gt;,
+#   time_26 &lt;dbl&gt;, time_27 &lt;dbl&gt;, time_28 &lt;dbl&gt;, time_29 &lt;dbl&gt;, time_30 &lt;dbl&gt;,
+#   time_31 &lt;dbl&gt;, time_32 &lt;dbl&gt;, time_33 &lt;dbl&gt;, time_34 &lt;dbl&gt;, time_35 &lt;dbl&gt;,
+#   time_36 &lt;dbl&gt;, time_37 &lt;dbl&gt;, time_38 &lt;dbl&gt;, time_39 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>The reason one might use the named-vector method is that one already has the named vector handy, and retyping it would be an error-prone waste of time.</p>
+</section>
+<section id="data-restructuring" class="level1">
+<h1>Data Restructuring</h1>
+<p>We need to make our wide data long. To make the illustration simple to see, let’s make a smaller version of the data. We will select just times 1–3 for the first 2 children:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>d_small <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>time_3) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">&lt;</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Breaking down each step, the code above does these three things:</p>
+<ol type="1">
+<li>Create a new tibble called <code>d_small</code> starting with the tibble <code>d</code> “and then” (i..e, <code>%&gt;%</code>)…</li>
+<li><code>select</code> variables <code>id</code> through <code>time_3</code> “and then”…</li>
+<li><code>filter</code> the rows to find only the cases in which id is less than 3.</li>
+</ol>
+<p>Let’s display <code>d_small</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>d_small</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "| id| baseline_sessions_n| intervention_sessions_n| time_1| time_2| time_3|"
+[2] "|--:|-------------------:|-----------------------:|------:|------:|------:|"
+[3] "|  1|                  22|                      20| 11.481| 14.402|  6.151|"
+[4] "|  2|                  18|                      19|  9.114|  8.586| 11.010|"</code></pre>
+</div>
+</div>
+<p>What we need is:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+     id baseline_sessions_n intervention_sessions_n  time on_task
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+1     1                  22                      20     1   11.5 
+2     1                  22                      20     2   14.4 
+3     1                  22                      20     3    6.15
+4     2                  18                      19     1    9.11
+5     2                  18                      19     2    8.59
+6     2                  18                      19     3   11.0 </code></pre>
+</div>
+</div>
+<section id="restructuring-from-wide-to-long-format-with-pivot_longer" class="level2">
+<h2 class="anchored" data-anchor-id="restructuring-from-wide-to-long-format-with-pivot_longer">Restructuring from wide to long format with <code>pivot_longer</code></h2>
+<p>Use the <code>pivot_longer</code> function to pivot the three time variables to long format:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>d_small <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+     id baseline_sessions_n intervention_sessions_n name   value
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;
+1     1                  22                      20 time_1 11.5 
+2     1                  22                      20 time_2 14.4 
+3     1                  22                      20 time_3  6.15
+4     2                  18                      19 time_1  9.11
+5     2                  18                      19 time_2  8.59
+6     2                  18                      19 time_3 11.0 </code></pre>
+</div>
+</div>
+<p>To avoid the hassle of renaming our columns, we can specify what the <code>name</code> and <code>value</code> columns should be called:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>d_small <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_3,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+     id baseline_sessions_n intervention_sessions_n time   on_task
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
+1     1                  22                      20 time_1   11.5 
+2     1                  22                      20 time_2   14.4 
+3     1                  22                      20 time_3    6.15
+4     2                  18                      19 time_1    9.11
+5     2                  18                      19 time_2    8.59
+6     2                  18                      19 time_3   11.0 </code></pre>
+</div>
+</div>
+<p>Notice that the <code>time</code> variable is text, not a number, like we want. There are many ways to get rid of the prefix. The simplest is to tell <code>pivot_longer</code> to strip away the prefix “time_”.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>d_small <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_3,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"time_"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+     id baseline_sessions_n intervention_sessions_n time  on_task
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+1     1                  22                      20 1       11.5 
+2     1                  22                      20 2       14.4 
+3     1                  22                      20 3        6.15
+4     2                  18                      19 1        9.11
+5     2                  18                      19 2        8.59
+6     2                  18                      19 3       11.0 </code></pre>
+</div>
+</div>
+<p>Unfortunately, R thinks that <code>time</code> is a text variable. We want it to be an integer, so we transform it using the <code>as.integer</code> function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>d_small <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_3,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"time_"</span>, </span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_transform =</span> <span class="fu">list</span>(<span class="at">time =</span> as.integer)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+     id baseline_sessions_n intervention_sessions_n  time on_task
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+1     1                  22                      20     1   11.5 
+2     1                  22                      20     2   14.4 
+3     1                  22                      20     3    6.15
+4     2                  18                      19     1    9.11
+5     2                  18                      19     2    8.59
+6     2                  18                      19     3   11.0 </code></pre>
+</div>
+</div>
+<p>Alternatively, we can do all these transformations after pivoting:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>d_small <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_3,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time =</span> <span class="fu">str_remove</span>(time, <span class="st">"time_"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>           <span class="fu">as.integer</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+     id baseline_sessions_n intervention_sessions_n  time on_task
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+1     1                  22                      20     1   11.5 
+2     1                  22                      20     2   14.4 
+3     1                  22                      20     3    6.15
+4     2                  18                      19     1    9.11
+5     2                  18                      19     2    8.59
+6     2                  18                      19     3   11.0 </code></pre>
+</div>
+</div>
+</section>
+<section id="restructuring-from-long-to-wide-format-with-pivot_wider" class="level2">
+<h2 class="anchored" data-anchor-id="restructuring-from-long-to-wide-format-with-pivot_wider">Restructuring from long to wide format with <code>pivot_wider</code></h2>
+<p>Let’s pivot the data from long format to wide. First let’s assign the restructured <code>d_small</code> data as <code>d_small_longer</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>d_small_longer <span class="ot">&lt;-</span> d_small <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_3,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"time_"</span>,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_transform =</span> <span class="fu">list</span>(<span class="at">time =</span> as.integer))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now let’s move it back to where it was with <code>pivot_wider</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>d_small_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> time, </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> on_task, </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">names_prefix =</span> <span class="st">"time_"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+     id baseline_sessions_n intervention_sessions_n time_1 time_2 time_3
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1                  22                      20  11.5   14.4    6.15
+2     2                  18                      19   9.11   8.59  11.0 </code></pre>
+</div>
+</div>
+<p>Perfect! Now lets move back to the the original large tibble <code>d</code>.</p>
+</section>
+</section>
+<section id="create-new-variables-with-mutate-and-case_when" class="level1">
+<h1>Create new variables with <code>mutate</code> and <code>case_when</code></h1>
+<p>First, let’s pivot the entire data and assign it to <code>d_longer</code>. We need to select <code>time_1</code>–<code>time_60</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> time_1<span class="sc">:</span>time_60,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"time"</span>,</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"on_task"</span>,</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"time_"</span>,</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_transform =</span> <span class="fu">list</span>(<span class="at">time =</span> as.integer))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To create a new variable in <code>d_longer</code>, we “mutate” the tibble. For example, if we want to add 1 to <code>on_task</code>,</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ontask_plus_1 =</span> on_task <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+     id baseline_sessions_n intervention_sessions_n  time on_task ontask_plus_1
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;         &lt;dbl&gt;
+1     1                  22                      20     1   11.5          12.5 
+2     1                  22                      20     2   14.4          15.4 
+3     1                  22                      20     3    6.15          7.15
+4     1                  22                      20     4    9.25         10.3 
+5     1                  22                      20     5    9.58         10.6 
+6     1                  22                      20     6    8.16          9.16</code></pre>
+</div>
+</div>
+<p>Notice that the variable is not saved anywhere because we did not assign the output to a variable:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+     id baseline_sessions_n intervention_sessions_n  time on_task
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+1     1                  22                      20     1   11.5 
+2     1                  22                      20     2   14.4 
+3     1                  22                      20     3    6.15
+4     1                  22                      20     4    9.25
+5     1                  22                      20     5    9.58
+6     1                  22                      20     6    8.16</code></pre>
+</div>
+</div>
+<p>We need to identify which rows are part of the pre-intervention phase, which are in the intervention phase, and which are in the post-intervention phase. Let’s use the <code>case_when</code> function, which is like a series of “if-then” statements followed by the desired result.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="ot">&lt;-</span> d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">phase =</span> <span class="fu">case_when</span>(</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>    time <span class="sc">&lt;=</span> baseline_sessions_n <span class="sc">~</span> <span class="st">"Pre-Intervention"</span>,</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>    time <span class="sc">&lt;=</span> baseline_sessions_n <span class="sc">+</span> intervention_sessions_n <span class="sc">~</span> <span class="st">"Intervention"</span>,</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>    time <span class="sc">&gt;</span> baseline_sessions_n <span class="sc">+</span> intervention_sessions_n <span class="sc">~</span> <span class="st">"Post-Intervention"</span> </span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+     id baseline_sessions_n intervention_sessions_n  time on_task phase         
+  &lt;dbl&gt;               &lt;dbl&gt;                   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;         
+1     1                  22                      20     1   11.5  Pre-Intervent…
+2     1                  22                      20     2   14.4  Pre-Intervent…
+3     1                  22                      20     3    6.15 Pre-Intervent…
+4     1                  22                      20     4    9.25 Pre-Intervent…
+5     1                  22                      20     5    9.58 Pre-Intervent…
+6     1                  22                      20     6    8.16 Pre-Intervent…</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-the-results" class="level1 page-columns page-full">
+<h1>Plot the results:</h1>
+<p>Plotting is rarely done all at once. We usually build it step-by-step and layer-by-layer. <a href="#fig-firstattempt" class="quarto-xref">Figure&nbsp;1</a> is the first attempt.</p>
+<div class="cell page-columns page-full">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-firstattempt" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-firstattempt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="data_wrangling_files/figure-html/fig-firstattempt-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: First attempt at plotting. Messy, messy, messy!"><img src="data_wrangling_files/figure-html/fig-firstattempt-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-firstattempt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: First attempt at plotting. Messy, messy, messy!
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>That was not so great! Let’s make a separate plot for each person in <a href="#fig-plotfacet" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<div class="cell page-columns page-full">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase)) <span class="sc">+</span> </span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(id))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plotfacet" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plotfacet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="data_wrangling_files/figure-html/fig-plotfacet-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Plot each person’s data on separate facet plots"><img src="data_wrangling_files/figure-html/fig-plotfacet-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-plotfacet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Plot each person’s data on separate facet plots
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Better!</p>
+<p>Let’s reorder the cases by the order in which the intervention is first implemented. The <code>fct_reorder</code> function is incredibly useful for creating plots. Because the <code>id</code> variable is just a number, we need to change it to a <code>factor</code> variable first. A <code>factor</code> is R’s way of grouping categorical data in any order we wish.</p>
+<p>We need to reorder the <code>id</code> variable so that people with shorter baselines come before people with longer baselines. The first slot in the <code>fct_reorder</code> function is the variable we want to transform into a reordered factor. The second slot is another variable we want to order the factor factor by. Thus, the <code>fct_reorder</code> function usually takes this form: <code>fct_reorder(variable_to_be_reordered, variable_to_sort_by)</code></p>
+<p>In this case, we are assigning the reordered variable back to the same variable <code>id</code> that we started with. Putting it all together, we get <a href="#fig-plotreorder" class="quarto-xref">Figure&nbsp;3</a>.</p>
+<div class="cell page-columns page-full">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">fct_reorder</span>(<span class="fu">factor</span>(id), baseline_sessions_n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase)) <span class="sc">+</span> </span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(id))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-plotreorder" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-plotreorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="data_wrangling_files/figure-html/fig-plotreorder-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Reordered facet plots"><img src="data_wrangling_files/figure-html/fig-plotreorder-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-plotreorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Reordered facet plots
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Looks even better!</p>
+<p>If I wanted a more polished plot for publication, I might create something like <a href="#fig-polished" class="quarto-xref">Figure&nbsp;4</a>. My priorities for a plot in a publication are quite different than a plot I am making just for my own use. I want the plot to be nearly self-explanatory. I want reader to understand the plot without needing to work hard. Thus, I prefer direct labels rather than plot legends that require looking things up. I also want my plot to be inclusive, so I choose a large font size from a legible font family. I also choose colors that are distinguishable by people different kinds of color blindness.</p>
+<div class="cell preview-image page-columns page-full">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66" data-cap-location="margin"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Some pre-processing for easier plotting</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>d_longer_processed <span class="ot">&lt;-</span> d_longer <span class="sc">%&gt;%</span> </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">factor</span>(id) <span class="sc">%&gt;%</span> <span class="fu">fct_reorder</span>(baseline_sessions_n),</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">phase =</span> <span class="fu">fct_inorder</span>(phase)) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(phase) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">factor</span>(id, <span class="at">labels =</span> <span class="fu">paste0</span>(<span class="st">"Child "</span>, LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])))</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="co"># data for phase rectangles</span></span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>d_phases <span class="ot">&lt;-</span> d_longer_processed <span class="sc">%&gt;%</span> </span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">.by =</span> <span class="fu">c</span>(id, phase),</span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">begin =</span> <span class="fu">min</span>(time),</span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">end =</span> <span class="fu">max</span>(time)) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">begin =</span> <span class="fu">ifelse</span>(begin <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">0</span>, begin),</span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">end =</span> end <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-16"><a href="#cb66-16" aria-hidden="true" tabindex="-1"></a>d_longer_processed <span class="sc">%&gt;%</span></span>
+<span id="cb66-17"><a href="#cb66-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, on_task)) <span class="sc">+</span></span>
+<span id="cb66-18"><a href="#cb66-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">55</span>,<span class="dv">5</span>), <span class="at">each =</span> <span class="dv">4</span>), <span class="at">linewidth =</span> <span class="fu">unit</span>(.<span class="dv">1</span>, <span class="st">"mm"</span>), <span class="at">color =</span> <span class="st">"gray80"</span>) <span class="sc">+</span></span>
+<span id="cb66-19"><a href="#cb66-19" aria-hidden="true" tabindex="-1"></a>  ggtext<span class="sc">::</span><span class="fu">geom_richtext</span>(</span>
+<span id="cb66-20"><a href="#cb66-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id <span class="sc">==</span> <span class="st">"Child E"</span>, time <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)),</span>
+<span id="cb66-21"><a href="#cb66-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> phase, <span class="at">color =</span> phase),</span>
+<span id="cb66-22"><a href="#cb66-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.color =</span> <span class="cn">NA</span>,</span>
+<span id="cb66-23"><a href="#cb66-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> scales<span class="sc">::</span><span class="fu">alpha</span>(<span class="st">"white"</span>, .<span class="dv">5</span>),</span>
+<span id="cb66-24"><a href="#cb66-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">"mm"</span>),</span>
+<span id="cb66-25"><a href="#cb66-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.margin =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">"mm"</span>),</span>
+<span id="cb66-26"><a href="#cb66-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb66-27"><a href="#cb66-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">angle =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">24</span>, <span class="dv">0</span>),</span>
+<span id="cb66-28"><a href="#cb66-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">5.5</span>,</span>
+<span id="cb66-29"><a href="#cb66-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="st">"Roboto Condensed"</span></span>
+<span id="cb66-30"><a href="#cb66-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb66-31"><a href="#cb66-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(</span>
+<span id="cb66-32"><a href="#cb66-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> d_phases,</span>
+<span id="cb66-33"><a href="#cb66-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb66-34"><a href="#cb66-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin =</span> begin,</span>
+<span id="cb66-35"><a href="#cb66-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmax =</span> end,</span>
+<span id="cb66-36"><a href="#cb66-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> <span class="dv">0</span>,</span>
+<span id="cb66-37"><a href="#cb66-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax =</span> <span class="dv">60</span>,</span>
+<span id="cb66-38"><a href="#cb66-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> phase</span>
+<span id="cb66-39"><a href="#cb66-39" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb66-40"><a href="#cb66-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb66-41"><a href="#cb66-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb66-42"><a href="#cb66-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> id, <span class="at">color =</span> phase), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb66-43"><a href="#cb66-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(id)) <span class="sc">+</span></span>
+<span id="cb66-44"><a href="#cb66-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>),</span>
+<span id="cb66-45"><a href="#cb66-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb66-46"><a href="#cb66-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Day"</span>, <span class="at">y =</span> <span class="st">"Time on Task"</span>)  <span class="sc">+</span></span>
+<span id="cb66-47"><a href="#cb66-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_family =</span> <span class="st">"Roboto Condensed"</span>, <span class="at">base_size =</span> <span class="dv">18</span>) <span class="sc">+</span></span>
+<span id="cb66-48"><a href="#cb66-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb66-49"><a href="#cb66-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb66-50"><a href="#cb66-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>), </span>
+<span id="cb66-51"><a href="#cb66-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="fu">c</span>(<span class="dv">0</span>))) <span class="sc">+</span></span>
+<span id="cb66-52"><a href="#cb66-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">alpha =</span> .<span class="dv">9</span>, <span class="at">begin =</span> .<span class="dv">1</span>, <span class="at">end =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb66-53"><a href="#cb66-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">alpha =</span> .<span class="dv">15</span>, <span class="at">begin =</span> .<span class="dv">1</span>, <span class="at">end =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb66-54"><a href="#cb66-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb66-55"><a href="#cb66-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>),</span>
+<span id="cb66-56"><a href="#cb66-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">10</span>),</span>
+<span id="cb66-57"><a href="#cb66-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="dv">0</span>)</span>
+<span id="cb66-58"><a href="#cb66-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb66-59"><a href="#cb66-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">61</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">60</span>, <span class="dv">10</span>), <span class="at">minor_breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">60</span>, <span class="dv">5</span>), <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb66-60"><a href="#cb66-60" aria-hidden="true" tabindex="-1"></a>   <span class="fu">guides</span>(</span>
+<span id="cb66-61"><a href="#cb66-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">guide_axis</span>(<span class="at">minor.ticks =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb66-62"><a href="#cb66-62" aria-hidden="true" tabindex="-1"></a>    <span class="co"># y = guide_axis(minor.ticks = TRUE)</span></span>
+<span id="cb66-63"><a href="#cb66-63" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb66-64"><a href="#cb66-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-polished" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-polished-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="data_wrangling_files/figure-html/fig-polished-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Effect on Intervention on Time on Task for Eight Children"><img src="data_wrangling_files/figure-html/fig-polished-1.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-polished-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Effect on Intervention on Time on Task for Eight Children
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For practice data wrangling, download <a href="https://raw.githubusercontent.com/wjschne/EDUC8825/master/data_wrangling_exercise.qmd">this quarto document</a> and complete the data-wrangling exercises therein.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/wjschne\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
