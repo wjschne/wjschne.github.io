@@ -590,7 +590,7 @@ Predicted Distribution of Response
 <div class="cell page-columns page-full">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_distribution</span>(m_0))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display page-columns page-full">
-<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="100%" height="100%">
+<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" height="100%" width="100%">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-checkdistribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="random_intercepts_files/figure-html/fig-checkdistribution-1.png" id="fig-checkdistribution" style="width:100.0%;height:100.0%" class="figure-img">
@@ -610,7 +610,7 @@ Figure&nbsp;3
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_autocorrelation</span>(m_0) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.242).</code></pre>
+<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.240).</code></pre>
 </div>
 </div>
 <p>Fortunately, there is no evidence of autocorrelation here.</p>
@@ -656,7 +656,7 @@ Figure&nbsp;4: Checking the homoscedasticity assumption
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for outliers</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(m_0))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display page-columns page-full">
-<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="100%" height="100%">
+<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" height="100%" width="100%">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-checkoutlier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="random_intercepts_files/figure-html/fig-checkoutlier-1.png" id="fig-checkoutlier" style="width:100.0%;height:100.0%" class="figure-img">
@@ -671,7 +671,16 @@ Figure&nbsp;5
 <p>This plot looks squished because none of the points have extreme leverage. Observations with high leverage are not necessarily bad. What we do not want to see is the combination of extreme residuals with extreme leverage.</p>
 <p>An extreme residual is, by definition, far from the regression line. An observation with extreme leverage, by definition, is an outlier in terms of the predictor variables (i.e., in multiple regression, it is a multivariate outlier in the <em>predictor space</em>).</p>
 <p>In the plot below, the blue line is the estimated regression line before the red outlier is added. The red line hows how the estimated regression line changes in the presence of the red outlier point.</p>
-<p><img src="leverage.gif" class="img-fluid" alt="A point with high leverage and a large residual can cause large changes in the regession coefficients.">{fig-leverageplot}</p>
+<div id="fig-leverageplot" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-leverageplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../Regression/leverage.gif" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-leverageplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: A point with high leverage and a large residual can cause large changes in the regession coefficients.
+</figcaption>
+</figure>
+</div>
 <p>Outliers in the predictor space are said to have <em>leverage</em> (the ability to influence coefficients). Notice that the red point barely changes the regression line when the predictor is near the mean of the predictor variable (i.e., when it has little leverage). When the red point is at either extreme of the predictor distribution, it has a lot of leverage to change the regression line. If the red point is near the original regression line, there is no harm done. However, if the red point has the combination of high leverage and a large residual (i.e., it is an outlier in terms of the predictors and also in terms of the residuals), the red regression line can become quite misleading.</p>
 </section>
 </section>
@@ -711,9 +720,9 @@ Fixed effects:
 <div class="cell-output cell-output-stdout">
 <pre><code># Indices of model performance
 
-AIC      |     AICc |      BIC | R2 (cond.) | R2 (marg.) |   ICC |   RMSE |  Sigma
-----------------------------------------------------------------------------------
-8084.290 | 8084.317 | 8098.697 |      0.420 |      0.000 | 0.420 | 20.159 | 20.488</code></pre>
+AIC    |   AICc |    BIC | R2 (cond.) | R2 (marg.) |   ICC |   RMSE |  Sigma
+----------------------------------------------------------------------------
+8084.3 | 8084.3 | 8098.7 |      0.420 |          0 | 0.420 | 20.159 | 20.488</code></pre>
 </div>
 </div>
 <p>Here we see the <code>Sigma</code>, the individual-level variance. The root-mean squared error is also a measure of individual-level variance but does not correct for degrees of freedom. The <code>AIC</code> and <code>BIC</code> statistics are useful for comparing models that are non-nested (i.e., models that differ in ways other than merely adding predictors). The R2 (cond.) is the variance explained by all terms, including random effects. The R2 (marg.) is the variance explained by the fixed effect effects. Because there are no fixed effects, this statistic is 0. ICC is the proportion of variance explained by the random effects, which in this case is equal to the R2 (cond.)</p>
@@ -721,7 +730,7 @@ AIC      |     AICc |      BIC | R2 (cond.) | R2 (marg.) |   ICC |   RMSE |  Sig
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(m_0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>We fitted a constant (intercept-only) linear mixed model (estimated using REML
+<pre><code> We fitted a constant (intercept-only) linear mixed model (estimated using REML
 and nloptwrap optimizer) to predict reading_comprehension (formula:
 reading_comprehension ~ 1). The model included classroom_id as random effect
 (formula: ~1 | classroom_id). The model's intercept is at 57.04 (95% CI [50.66,
@@ -909,7 +918,7 @@ Parameter        | Coefficient |   SE |           95% CI
 (Intercept) [2]  |       31.81 | 3.66 | [ 24.64,  38.98]</code></pre>
 </div>
 </div>
-<p>Why would you want the estimated values? Maybe you want to make a plot of the random intercepts like in <a href="#fig-plotgroupcoef" class="quarto-xref">Figure&nbsp;6</a>.</p>
+<p>Why would you want the estimated values? Maybe you want to make a plot of the random intercepts like in <a href="#fig-plotgroupcoef" class="quarto-xref">Figure&nbsp;7</a>.</p>
 <div class="cell page-columns page-full">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameters</span>(m_0, <span class="at">effects =</span> <span class="st">"random"</span>, <span class="at">group_level =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Level =</span> <span class="fu">fct_inorder</span>(Level)) <span class="sc">%&gt;%</span>  <span class="co"># Reorder classroom id</span></span>
@@ -925,7 +934,7 @@ Parameter        | Coefficient |   SE |           95% CI
 <img src="random_intercepts_files/figure-html/fig-plotgroupcoef-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-plotgroupcoef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Group coefficients
+Figure&nbsp;7: Group coefficients
 </figcaption>
 </figure>
 </div>
@@ -1013,7 +1022,7 @@ Figure&nbsp;6: Group coefficients
 <img src="random_intercepts_files/figure-html/fig-model0-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-model0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Model 0 Group intercepts
+Figure&nbsp;8: Model 0 Group intercepts
 </figcaption>
 </figure>
 </div>
@@ -1088,22 +1097,22 @@ e_{ij} &amp;\sim N(0,\sigma_e^2)
 Formula: reading_comprehension ~ (1 | classroom_id) + treatment
    Data: d
 
-REML criterion at convergence: 8053.1
+REML criterion at convergence: 8053
 
 Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--3.5797 -0.6787  0.0420  0.6488  3.0029 
+   Min     1Q Median     3Q    Max 
+-3.580 -0.679  0.042  0.649  3.003 
 
 Random effects:
  Groups       Name        Variance Std.Dev.
- classroom_id (Intercept) 149.4    12.22   
- Residual                 419.8    20.49   
+ classroom_id (Intercept) 149      12.2    
+ Residual                 420      20.5    
 Number of obs: 900, groups:  classroom_id, 30
 
 Fixed effects:
                    Estimate Std. Error t value
-(Intercept)          45.416      3.196  14.212
-treatmentTreatment   24.908      4.678   5.325
+(Intercept)           45.42       3.20   14.21
+treatmentTreatment    24.91       4.68    5.32
 
 Correlation of Fixed Effects:
             (Intr)
@@ -1137,7 +1146,7 @@ computed using a Wald t-distribution approximation.</code></pre>
 </section>
 <section id="plot-model" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="plot-model">Plot Model</h2>
-<p>From <a href="#fig-plot2" class="quarto-xref">Figure&nbsp;8</a>, it is easy to see that the treatment group has higher reading comprehension, on average, than the control group.</p>
+<p>From <a href="#fig-plot2" class="quarto-xref">Figure&nbsp;9</a>, it is easy to see that the treatment group has higher reading comprehension, on average, than the control group.</p>
 <div class="cell page-columns page-full">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_relation</span>(m_1) <span class="sc">%&gt;%</span> </span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>() <span class="sc">+</span> </span>
@@ -1149,7 +1158,7 @@ computed using a Wald t-distribution approximation.</code></pre>
 <img src="random_intercepts_files/figure-html/fig-plot2-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-plot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Model-based estimate of the relationship between treatment and reading comprehension
+Figure&nbsp;9: Model-based estimate of the relationship between treatment and reading comprehension
 </figcaption>
 </figure>
 </div>
@@ -1183,12 +1192,14 @@ SD (Residual)                |       20.49</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Estimated Marginal Means
 
-treatment |  Mean |   SE |         95% CI
------------------------------------------
-Control   | 45.42 | 3.20 | [38.87, 51.96]
-Treatment | 70.32 | 3.42 | [63.33, 77.32]
+treatment |  Mean |   SE |         95% CI | t(896)
+--------------------------------------------------
+Control   | 45.42 | 3.20 | [39.14, 51.69] |  14.21
+Treatment | 70.32 | 3.42 | [63.62, 77.03] |  20.58
 
-Marginal means estimated at treatment</code></pre>
+Variable predicted: reading_comprehension
+Predictors modulated: treatment
+Predictors averaged: classroom_id</code></pre>
 </div>
 </div>
 </section>
@@ -1279,9 +1290,9 @@ SD (Residual)                | 20.49 | 20.49</code></pre>
 Models:
 m_0: reading_comprehension ~ 1 + (1 | classroom_id)
 m_1: reading_comprehension ~ (1 | classroom_id) + treatment
-    npar  AIC  BIC logLik deviance Chisq Df Pr(&gt;Chisq)    
-m_0    3 8088 8103  -4041     8082                        
-m_1    4 8069 8089  -4031     8061    21  1    4.6e-06 ***
+    npar  AIC  BIC logLik -2*log(L) Chisq Df Pr(&gt;Chisq)    
+m_0    3 8088 8103  -4041      8082                        
+m_1    4 8069 8089  -4031      8061    21  1    4.6e-06 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -1308,10 +1319,10 @@ m_1  |      0.214 | 0.262 | 20.172 | 20.488</code></pre>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_performance</span>(m_0, m_1) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Name |   Model |     BF
------------------------
-m_0  | lmerMod |       
-m_1  | lmerMod | &gt; 1000
+<pre><code>Name |   Model |     BF | df | df_diff |  Chi2 |      p
+-------------------------------------------------------
+m_0  | lmerMod |        |  3 |         |       |       
+m_1  | lmerMod | &gt; 1000 |  4 |       1 | 20.93 | &lt; .001
 Models were detected as nested (in terms of fixed parameters) and are compared in sequential order.</code></pre>
 </div>
 </div>
@@ -1373,7 +1384,7 @@ classroom_id) model (the least supported model).</code></pre>
 </section>
 <section id="not-so-basic-plot" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="not-so-basic-plot">Not-So Basic Plot</h2>
-<p><a href="#fig-notbasic" class="quarto-xref">Figure&nbsp;9</a> makes it quite clear that the treatment is associated with higher overall scores.</p>
+<p><a href="#fig-notbasic" class="quarto-xref">Figure&nbsp;10</a> makes it quite clear that the treatment is associated with higher overall scores.</p>
 <div class="cell page-columns page-full">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1413,7 +1424,7 @@ classroom_id) model (the least supported model).</code></pre>
 <img src="random_intercepts_files/figure-html/fig-notbasic-1.png" style="width:100.0%;height:100.0%" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-notbasic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Treatment effects for Model 1
+Figure&nbsp;10: Treatment effects for Model 1
 </figcaption>
 </figure>
 </div>

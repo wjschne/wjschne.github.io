@@ -5,9 +5,6 @@ subtitle: "Advanced Data Analysis (EDUC 8825)"
 description: Regression in which each group has its own intercept
 date: 2025-01-27
 engine: knitr
-execute: 
-  freeze: true
-  cache: true
 knitr: 
   opts_chunk: 
     warning: false
@@ -484,7 +481,7 @@ im.convert("Plot/R*.png", convert = "convert", output = "temp.gif", clean = TRUE
 ```
 
 
-![A point with high leverage and a large residual can cause large changes in the regession coefficients.](leverage.gif){fig-leverageplot}
+![A point with high leverage and a large residual can cause large changes in the regession coefficients.](../Regression/leverage.gif){#fig-leverageplot}
 
 Outliers in the predictor space are said to have *leverage* (the ability to influence coefficients). Notice that the red point barely changes the regression line when the predictor is near the mean of the predictor variable (i.e., when it has little leverage). When the red point is at either extreme of the predictor distribution, it has a lot of leverage to change the regression line. If the red point is near the original regression line, there is no harm done. However, if the red point has the combination of high leverage and a large residual (i.e., it is an outlier in terms of the predictors and also in terms of the residuals), the red regression line can become quite misleading.
 
