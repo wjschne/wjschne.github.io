@@ -453,5 +453,82 @@
     "title": "Random Intercept Models in R",
     "section": "Not-So Basic Plot",
     "text": "Not-So Basic Plot\nFigure 10 makes it quite clear that the treatment is associated with higher overall scores.\n\n\nCode\nd_augmented_1 &lt;- augment(m_1, conf.int = TRUE)\n\n# Get unique values of the fitted responses\nd_classroom_1 &lt;- d_augmented_1 %&gt;% \n  select(classroom_id, .fitted, treatment) %&gt;%\n  unique() %&gt;% \n  ungroup()\n\n# Get the mean values (.fixed) for each treatment condition\nd_treatment_1 &lt;- d_augmented_1 %&gt;% \n  select(.fixed, treatment) %&gt;% \n  unique()\n\n# plot distributions and predicted values\naugment(m_1) %&gt;%\n  mutate(treatment = fct_rev(treatment)) %&gt;% \n  ggplot(aes(x = classroom_id,\n             y = reading_comprehension)) +\n  geom_violin(color = NA, \n              aes(fill = treatment), \n              alpha = 0.5) +\n  geom_point(data = d_classroom_1,\n             aes(y = .fitted)) +\n  geom_hline(data = d_treatment_1, \n             aes(yintercept = .fixed)) +\n  facet_grid(cols = vars(treatment), \n             scales = \"free\") + \n  theme(legend.position = \"none\")\n\n\n\n\n\n\n\n\nFigure 10: Treatment effects for Model 1"
+  },
+  {
+    "objectID": "software.html",
+    "href": "software.html",
+    "title": "Software",
+    "section": "",
+    "text": "Facilitate writing documents in APA Style\n\n\n\n\n\n\n\n\n\nAn object-oriented approach to making diagrams via ggplot2\n\n\n\n\nComplex diagrams can take a long time to get right. The ggdiagram package can take away much of the burden of tedious calculation.\n\n\n\nA regression path model\n\n\n\n\n\nLatent variable path diagram with all variables scaled to their variance sizes.\n\n\n\n\n\nA hierarchical model of abilities\n\n\n\n\n\n\n\nR package for simulating data using standardized coefficients\nTutorial\n\n\n\n\nIn the model below, the path coefficients are standardized. You would like to simulate the variables in the model, but you do not know the disturbance and residual variances. The simstandard package can help.\n\n\n\nA standardized latent variable model\n\n\n\n\n\n\n\nAn R package for detecting unusual scores in a test profile\nTutorial\n\n\n\n\nThis package estimates how unusual a multivariate normal profile is.\n\n\n\n\n\n\nA ggplot2 extension package for creating normal violin plots\n\n\n\n\nI needed to show confidence intervals and conditional normal distributions with specific means and standard deviations. I wrote the ggnormalviolin package to make this happen.\nIt makes plots like this:\n\n\n\nExample plot made with ggnormalviolin\n\n\n\n\n\n\n\nFunctions useful for psychological evaluations\nThis package is still in a preliminary state, just like Individual Psychometrics, the book it accompanies.\n\n\n\n\n\n\n\nMulivariate Confindence Intervals\n\n\n\n\n\n\n\nA set of functions I find convenient to have readily available to me\n\n\n\n\n\n\n\nWhoa! How did you place those labels so perfectly?\n\n\n\n\n\n\n\nAn R package for making digital spirographs\nTutorial\nMy Gallery\n\n\n\n\nMaking digital spirographs is fun! I made an R package called spiro that can make animated spirographs like this one:\n\n\n\n\n\n\nR package for making a custom arrowheads for ggplot2 using ggarrow\nTutorial\n\n\n\n\nThe arrowheadr package allows one to create custom arrowheads that can be used with the ggarrow package."
+  },
+  {
+    "objectID": "software.html#apa7",
+    "href": "software.html#apa7",
+    "title": "Software",
+    "section": "",
+    "text": "Facilitate writing documents in APA Style"
+  },
+  {
+    "objectID": "software.html#ggdiagram",
+    "href": "software.html#ggdiagram",
+    "title": "Software",
+    "section": "",
+    "text": "An object-oriented approach to making diagrams via ggplot2\n\n\n\n\nComplex diagrams can take a long time to get right. The ggdiagram package can take away much of the burden of tedious calculation.\n\n\n\nA regression path model\n\n\n\n\n\nLatent variable path diagram with all variables scaled to their variance sizes.\n\n\n\n\n\nA hierarchical model of abilities"
+  },
+  {
+    "objectID": "software.html#simstandard",
+    "href": "software.html#simstandard",
+    "title": "Software",
+    "section": "",
+    "text": "R package for simulating data using standardized coefficients\nTutorial\n\n\n\n\nIn the model below, the path coefficients are standardized. You would like to simulate the variables in the model, but you do not know the disturbance and residual variances. The simstandard package can help.\n\n\n\nA standardized latent variable model"
+  },
+  {
+    "objectID": "software.html#unusualprofile",
+    "href": "software.html#unusualprofile",
+    "title": "Software",
+    "section": "",
+    "text": "An R package for detecting unusual scores in a test profile\nTutorial\n\n\n\n\nThis package estimates how unusual a multivariate normal profile is."
+  },
+  {
+    "objectID": "software.html#ggnormalviolin",
+    "href": "software.html#ggnormalviolin",
+    "title": "Software",
+    "section": "",
+    "text": "A ggplot2 extension package for creating normal violin plots\n\n\n\n\nI needed to show confidence intervals and conditional normal distributions with specific means and standard deviations. I wrote the ggnormalviolin package to make this happen.\nIt makes plots like this:\n\n\n\nExample plot made with ggnormalviolin"
+  },
+  {
+    "objectID": "software.html#psycheval",
+    "href": "software.html#psycheval",
+    "title": "Software",
+    "section": "",
+    "text": "Functions useful for psychological evaluations\nThis package is still in a preliminary state, just like Individual Psychometrics, the book it accompanies.\n\n\n\n\n\n\n\nMulivariate Confindence Intervals"
+  },
+  {
+    "objectID": "software.html#wjsmisc",
+    "href": "software.html#wjsmisc",
+    "title": "Software",
+    "section": "",
+    "text": "A set of functions I find convenient to have readily available to me\n\n\n\n\n\n\n\nWhoa! How did you place those labels so perfectly?"
+  },
+  {
+    "objectID": "software.html#spiro",
+    "href": "software.html#spiro",
+    "title": "Software",
+    "section": "",
+    "text": "An R package for making digital spirographs\nTutorial\nMy Gallery\n\n\n\n\nMaking digital spirographs is fun! I made an R package called spiro that can make animated spirographs like this one:"
+  },
+  {
+    "objectID": "software.html#arrowheadr",
+    "href": "software.html#arrowheadr",
+    "title": "Software",
+    "section": "",
+    "text": "R package for making a custom arrowheads for ggplot2 using ggarrow\nTutorial\n\n\n\n\nThe arrowheadr package allows one to create custom arrowheads that can be used with the ggarrow package."
+  },
+  {
+    "objectID": "software.html#apaquarto",
+    "href": "software.html#apaquarto",
+    "title": "Software",
+    "section": "apaquarto",
+    "text": "apaquarto\nA Quarto Extension for Creating APA 7 Style Documents\nThis is a quarto article template that creates APA Style 7th Edition documents in .docx, .html. and .pdf. I made this extension for my own workflow. If it helps you, too, I am happy. The output of the template is displayed below:\n\n\nUnable to display PDF file. Download instead."
   }
 ]
