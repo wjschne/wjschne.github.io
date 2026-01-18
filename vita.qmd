@@ -347,8 +347,10 @@ ct <- get_citation_history(id) %>%
 * i10-index: `r l$i10_index`
 
 ```{r scholarplot, dev="svg", fig.height=8, fig.width=8, fig.cap="Google Scholar Citations of My Work", out.width="800px"}
-## Plot citation trend
 
+current_year <- as.integer(format(Sys.Date(), "%Y"))
+
+## Plot citation trend
 ggplot(ct, aes(year, cumulative_citations)) +
   geom_step(linetype = 1, color = "gray50") +
   geom_point(color = "gray20") +
@@ -364,7 +366,7 @@ ggplot(ct, aes(year, cumulative_citations)) +
     color = "gray30",
     fill = "white"
   ) +
-  scale_x_continuous("Publication Year", minor_breaks = 2000:2026) +
+  scale_x_continuous("Publication Year", minor_breaks = seq(2000, current_year)) +
   scale_y_continuous(
     "Cumulative Citation Count",
     expand = expansion(mult = c(0.02, 0.052))
