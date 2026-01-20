@@ -590,7 +590,7 @@ Predicted Distribution of Response
 <div class="cell page-columns page-full">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_distribution</span>(m_0))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display page-columns page-full">
-<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" height="100%" width="100%">
+<div id="fig-checkdistribution" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-checkdistribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="random_intercepts_files/figure-html/fig-checkdistribution-1.png" id="fig-checkdistribution" style="width:100.0%;height:100.0%" class="figure-img">
@@ -610,7 +610,7 @@ Figure&nbsp;3
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_autocorrelation</span>(m_0) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.240).</code></pre>
+<pre><code>OK: Residuals appear to be independent and not autocorrelated (p = 0.262).</code></pre>
 </div>
 </div>
 <p>Fortunately, there is no evidence of autocorrelation here.</p>
@@ -656,7 +656,7 @@ Figure&nbsp;4: Checking the homoscedasticity assumption
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for outliers</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(m_0))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display page-columns page-full">
-<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" height="100%" width="100%">
+<div id="fig-checkoutlier" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-checkoutlier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="random_intercepts_files/figure-html/fig-checkoutlier-1.png" id="fig-checkoutlier" style="width:100.0%;height:100.0%" class="figure-img">
@@ -847,10 +847,10 @@ Parameter   | Coefficient |   SE |         95% CI | t(897) |      p
 
 # Random Effects
 
-Parameter                    | Coefficient
-------------------------------------------
-SD (Intercept: classroom_id) |       17.42
-SD (Residual)                |       20.49</code></pre>
+Parameter                    | Coefficient |   SE |         95% CI
+------------------------------------------------------------------
+SD (Intercept: classroom_id) |       17.42 | 2.39 | [13.31, 22.80]
+SD (Residual)                |       20.49 | 0.49 | [19.55, 21.47]</code></pre>
 </div>
 </div>
 <p>The only fixed coefficient is the overall intercept, which is not usually of theoretical interest.</p>
@@ -871,10 +871,10 @@ Parameter   | Coefficient |   SE |         95% CI | t(897) |      p
 <div class="cell-output cell-output-stdout">
 <pre><code># Random Effects
 
-Parameter                    | Coefficient | 95% CI
----------------------------------------------------
-SD (Intercept: classroom_id) |       17.42 |       
-SD (Residual)                |       20.49 |       </code></pre>
+Parameter                    | Coefficient |   SE |         95% CI
+------------------------------------------------------------------
+SD (Intercept: classroom_id) |       17.42 | 2.39 | [13.31, 22.80]
+SD (Residual)                |       20.49 | 0.49 | [19.55, 21.47]</code></pre>
 </div>
 </div>
 <p>The random parameters are standard deviations. Squaring the estimate for <code>sd__(Intercept)</code> will give <span class="math inline">\tau_{00}</span>. Squaring the estimate for <code>sd__Observation</code> will give <span class="math inline">\sigma^2</span>.</p>
@@ -1179,10 +1179,10 @@ treatment [Treatment] |       24.91 | 4.68 | [15.73, 34.09] |   5.32 | &lt; .001
 
 # Random Effects
 
-Parameter                    | Coefficient
-------------------------------------------
-SD (Intercept: classroom_id) |       12.22
-SD (Residual)                |       20.49</code></pre>
+Parameter                    | Coefficient |   SE |         95% CI
+------------------------------------------------------------------
+SD (Intercept: classroom_id) |       12.22 | 1.79 | [ 9.18, 16.28]
+SD (Residual)                |       20.49 | 0.49 | [19.55, 21.47]</code></pre>
 </div>
 </div>
 <p>Here we see that the <code>treatment</code> variable’s estimate is statistically significant.</p>
@@ -1276,10 +1276,10 @@ treatment [Treatment] |                      | 24.91 (15.73, 34.09)
 
 # Random Effects
 
-Parameter                    |   m_0 |   m_1
---------------------------------------------
-SD (Intercept: classroom_id) | 17.42 | 12.22
-SD (Residual)                | 20.49 | 20.49</code></pre>
+Parameter                    |                  m_0 |                  m_1
+--------------------------------------------------------------------------
+SD (Intercept: classroom_id) | 17.42 (13.31, 22.80) | 12.22 ( 9.18, 16.28)
+SD (Residual)                | 20.49 (19.55, 21.47) | 20.49 (19.55, 21.47)</code></pre>
 </div>
 </div>
 <p>To test the whether one variable explains more variance than a different nested variable, use the <code>anova</code> function.</p>
@@ -1319,10 +1319,10 @@ m_1  |      0.214 | 0.262 | 20.172 | 20.488</code></pre>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_performance</span>(m_0, m_1) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Name |   Model |     BF | df | df_diff |  Chi2 |      p
--------------------------------------------------------
-m_0  | lmerMod |        |  3 |         |       |       
-m_1  | lmerMod | &gt; 1000 |  4 |       1 | 20.93 | &lt; .001
+<pre><code>Name |   Model |     BF
+-----------------------
+m_0  | lmerMod |       
+m_1  | lmerMod | &gt; 1000
 Models were detected as nested (in terms of fixed parameters) and are compared in sequential order.</code></pre>
 </div>
 </div>
