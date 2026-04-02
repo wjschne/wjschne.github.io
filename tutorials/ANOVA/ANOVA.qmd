@@ -1,0 +1,336 @@
+---
+title: "ANOVA in R"
+author: "W. Joel Schneider"
+date: 2024-03-05
+description: "Plot group means and test to see if their differences are statistically significant."
+engine: knitr
+knitr: 
+  opts_chunk: 
+    dev: "ragg_png"
+    out-width: "100%"
+execute:
+  echo: true
+  cache: true
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(easystats)
+library(haven)
+library(sjstats)
+library(skimr)
+options(digits = 2)
+```
+
+# Load Packages
+
+```{r load}
+library(tidyverse)
+library(easystats)
+```
+
+# Import Data and Create Labelled Factors
+
+:::{.column-margin}
+The haven package will import data as a "tibble." A tibble is a container for tabular data. It is an enhancement of the base R's data.frame.
+
+Hadley Wickham, the programmer who started the tidyverse, enjoys naming things precisely but with a touch of humor.  "Tibble" is what people in the U.S. sometimes hear when New Zealanders like Hadley say the word "table." 
+:::
+
+
+```{r import}
+# File location
+file <- "https://github.com/wjschne/EDUC5325/raw/master/Attachment.sav"
+
+
+# Import SPSS data file using haven
+# Also, change the Attachment variable to a factor
+d <- haven::read_spss(file) %>%
+  mutate(Attachment = as_factor(Attachment))
+```
+
+# Descriptives
+
+The variables in `d` are:
+
+* `Attachment`: Classifies each person's attachment type: `r knitr::combine_words(levels(d$Attachment), and = "or ")`
+* `Anxiety_Questionnaire`: A summary score from a questionnaire measure of anxiety
+* `Anxiety_Physiological`: A summary score from various physiological measures of anxiety
+
+
+There are `r nrow(d)` rows (cases) and `r ncol(d)` columns (variables).
+
+Let's get a sense of what is in the data frame.
+
+We can look at the first 6 rows of the data using the `head` function:
+
+```{r head}
+head(d)
+```
+
+A nice summary of what the variables are:
+
+```{r codebook}
+data_codebook(d)
+```
+
+# Selecting specific variables
+
+Data sets in tutorials like this one are often unrealistically small. If there are only three variables, we are happy to describe all the variables in a single table. 
+
+Real data sets can have dozens, hundreds, or even thousands of variables. Describing hundreds of variables in a single table is usually impractical. We need a way to select from the data just the variables we want.
+
+
+There are many ways to select variables in R, but I am going to keep things simple and consistent. I will use the `select` function from the tidyverse any time I select a variable. The `select` function is rarely used by itself. We use it as a preliminary step before doing something else (i.e., to specify which variables to describe, analyze, or plot). For this reason, it is often used in the middle sequence of commands linked with the "pipe" operator: `%>%` 
+
+```{r correlations}
+d %>% 
+  select(Anxiety_Questionnaire, Anxiety_Physiological) %>% 
+  cor()
+  
+```
+
+The pipe operator inserts the output of the previous command into the next function. You can think of it as meaning "and then..." 
+
+The code above can be interpreted as a series of steps:
+1. Start with the data in `d`AND THEN
+2. Select the variables `Anxiety_Questionnaire` and `Anxiety_Physiological` AND THEN 
+3. Create a correlation matrix.
+
+It makes it convenient to link a series of commands in a readable format.
+
+You can select as many variables as you wish, separated by commas. You do not need to put variable names in quotes.
+
+The `select` function allows for selecting as many variables from the data as you wish:
+
+```{r selectingvariables}
+d %>% 
+  select(Attachment, Anxiety_Physiological)
+```
+
+Use the `-` sign to exclude a variable:
+
+```{r exclude}
+d %>% 
+  select(-Attachment)
+```
+
+Select variables that contain "Anxiety"
+
+```{r selectcontains}
+d %>% 
+  select(contains("Anxiety"))
+```
+
+
+:::{.callout-note collapse=true}
+
+# Alternative Selection Methods
+
+R's delightful flexibility makes for a bewildering array of options! Here just a few of the many ways we could select the `Attachment` variable from data.frame `d`:
+
+```{r selecting}
+# By name
+d[, "Attachment"] 
+
+# By position
+d[, 1] 
+
+# Selecting always returns a data.frame or tibble
+select(d, Attachment)
+
+# Extracting a vector from the data
+d$Attachment
+
+# Pulling a vector frome the data (a pipe-friendly version of `$`)
+d %>% 
+  pull(Attachment)
+```
+
+In this case, there is no strong reason to prefer one method over the other. As you gain experience with R, you might find reasons to use different methods of selection. For now, we will stick to `select`
+
+:::
+
+
+## Basic descriptives
+
+Numeric variables can be described in terms of means, standard deviations (SD), interquartile ranges (IQR), skewness, and kurtosis:
+
+```{r describedistribution}
+describe_distribution(d)
+```
+
+
+Categorical variables are often described in terms of frequencies tables.
+
+```{r datatabulate}
+d %>% 
+  select(Attachment) %>% 
+  data_tabulate()
+```
+
+We can get descriptives statistics of our numeric variables separated by group. There are many ways to do this, but the simplest is the `describeBy` function from the psych package
+
+```{r describeby}
+psych::describeBy(d, group = "Attachment")
+```
+
+The datawizard package has some really nice functions for descriptives:
+
+```{r datawizardgroupmeans}
+d %>% 
+  datawizard::means_by_group(
+    select = contains("Anxiety") , 
+    by = "Attachment")
+```
+
+
+The skimr package is also quite nice:
+
+```{r}
+library(skimr)
+# Overall summary
+d %>% 
+  skim()
+
+# Grouped summaries
+d %>% 
+  group_by(Attachment) %>% 
+  skim()
+```
+
+
+These are convenience functions. If they do exactly what you want, great! However, I often need statistics in a data frame in a format optimal for further processing (e.g., for publication-worthy tables or plots).
+
+
+```{r dlonger}
+d_descriptives <- d %>% 
+  pivot_longer(contains("Anxiety"), 
+               names_to = "Measure") %>% 
+  summarise(Mean = mean(value),
+            SD = sd(value),
+            n = n(),
+            .by = c(Attachment, Measure)) %>% 
+  mutate(Measure = snakecase::to_title_case(Measure))
+
+d_descriptives
+```
+
+This output is not pretty, but it was not intended to be. It is in a format that is easy to adapt for other things. For example, I can use the gt ("Great Tables") package to get exactly what I want to display:
+
+```{r gttable}
+#| code-fold: true
+library(gt)
+d_descriptives %>% 
+  gt(groupname_col = "Measure", 
+     rowname_col = "Attachment") %>%
+  tab_stub_indent(everything(), indent = 5)
+
+
+```
+
+Or I can use ggplot2 to display means and standard deviations graphically:
+
+```{r ggplotmeans}
+#| code-fold: true
+d_descriptives %>%
+  mutate(mean_label = scales::number(Mean, .1)) %>% 
+  ggplot(aes(Attachment, Mean)) +
+  facet_grid(cols = vars(Measure)) +
+  geom_pointrange(aes(ymin = Mean - SD,
+                      ymax = Mean + SD)) +
+  geom_label(
+    aes(label = mean_label), 
+    hjust = -.3)
+```
+
+# Plot
+
+
+
+```{r plot, message=FALSE}
+d |> 
+  ggplot(aes(x = Attachment,
+             y = Anxiety_Questionnaire)) +
+  geom_violin() +
+  stat_summary() 
+```
+
+Just looking at the plot, we can see that the Ambivalent group has a higher mean anxiety than the other two groups. However, let's conduct a formal test of the difference of the group means.
+
+# Create One-Way ANOVA
+
+The `aov` (Analysis of Variance) function is what you want to use. The `anova` function is better used for comparing models. The dependent variable goes on the left, and any predictor variables are on the right hand side of the ~.
+
+```{r fit}
+fit <- aov(Anxiety_Questionnaire ~ Attachment, data = d)
+```
+
+## Diagnostic Plots
+
+```{r assumptions}
+#| fig-height: 9
+check_model(fit)
+```
+
+None of the diagnostic checks raise any alarms. Specifically, the residuals are reasonably normal and have consistent variance acrross groups (i.e., the homogeneeity of variance assumption is reasonable).
+
+## Summary
+
+The base R function `summary` gives us most of what we might want to know.
+
+```{r summary}
+summary(fit)
+```
+
+We can see that overall model is significant, meaning that at least two groups have reliably different means. At this point we do not know which means differ, but from the plot we have a good guess that the Ambivalent group scores higher on the Anxiety Questionnaire than the other two groups.
+
+A similar, but tidier display can be found with the `parameters` function:
+
+```{r parametersfit}
+parameters(fit)
+```
+
+
+## Other Summary Functions
+
+The overall "fit" or "performance" of the model:
+
+```{r performancefit}
+performance(fit)
+```
+
+* `AIC`: [Akaike's Information Criterion](https://en.wikipedia.org/wiki/Akaike_information_criterion)
+* `AICc`: AIC with a correction for small sample sizes
+* `BIC`: [Bayesian Information Criterion](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
+* `R2`: R-squared: [Coefficient of Determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)
+* `R2_adj`: [Adjusted r-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2)
+* `RMSE`: Root mean squared error $=\sqrt{\frac{\sum_{i = 1}^{n}{e_i}}{n}}$
+* `SIGMA`: Residual standard deviation (The SD of the residuals $=\sqrt{\frac{\sum_{i = 1}^{n}{e_i}}{n-k-1}}$) 
+
+
+## Automated Interpretation
+
+```{r reportfit}
+report(fit)
+
+```
+
+
+## Post-hoc Tests
+
+We would like to compare all means but control for family-wise error.
+
+```{r contrasts, fig.height=8}
+fit_contrast <- estimate_contrasts(fit, 
+                   contrast = "Attachment", 
+                   backend = "emmeans")
+fit_contrast 
+report(fit_contrast)
+```
+
+
+
+
+
+

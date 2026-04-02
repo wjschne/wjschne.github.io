@@ -1,0 +1,166 @@
+---
+title: Recreating APA Manual Table 7.12 in R with apa7
+date: '2025-09-22'
+engine: knitr
+categories: 
+  - R
+  - APA Style
+description: "Demonstration of the apa7 package, a flextable extension package"
+tags:
+  - APA Style
+  - flextable
+  - apa7
+csl: _extensions/wjschne/apaquarto/apa.csl
+format:
+  html: 
+    theme: [minty, "../../style/schneider.scss", "../../style/apablog.scss"]
+    fig-cap-location: top
+    citeproc: false
+    link-external-icon: false
+    link-external-newwindow: false
+    toc: true
+    toc-location: left
+    anchor-sections: false
+    html-math-method: katex
+    knitr: 
+      opts_chunk: 
+        dev: svglite
+    # code-annotations: hover
+    filters:  
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/crossrefprefix.lua
+      - at: pre-ast
+        path: _extensions/wjschne/apaquarto/apafigtblappendix.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apacaption.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaextractfigure.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apanote.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apafloat.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/citeprocr.lua
+      - at: post-render
+        path: _extensions/wjschne/apaquarto/apaandcite.lua
+---
+
+# Making tables in APA style (Part 12 of 24)
+
+In this 24-part series, each of the tables in Chapter 7 of the *Publication Manual of the American Psychological Association* (7th Edition) is recreated with [apa7](https://wjschne.github.io/apa7/), [flextable](https://ardata-fr.github.io/flextable-book/), [easystats](https://easystats.github.io/easystats/), and [tidyverse](https://www.tidyverse.org/packages/) functions.
+
+:::{.callout-note}
+# Highlights
+
+* Selective indentation with `flextable::padding` 
+* Aligned significance stars with `add_star_column`
+:::
+
+```{r}
+#| label: setup
+#| include: false
+library(apa7)
+library(flextable)
+library(ftExtra)
+library(tidyverse)
+set_flextable_defaults(theme_fun = theme_apa, 
+                       font.family = "Times New Roman")
+
+```
+
+```{r postsetup, eval=FALSE}
+<<setup>>
+```
+
+
+![Screenshot of the *APA Manual*'s Table 7.12](table712.png){#fig-712 width="100%"}
+
+To make the process more realistic, I simulated data using the means and standard deviations from @fig-712, calculated descriptive statistics, conducted one-way ANOVAs, and extracted significance tests and effect sizes.
+
+Note that the `F` column's stars were added using the `add_star_column` function, which looks for a column called `p`, and converts p-values to stars.
+
+```{r}
+#| label: tbl-712
+#| tbl-cap: Means, Standard Deviations, and One-Way Analyses of Variance in Psychological and Social Resources and Cognitive Appraisals
+#| apa-note: NoNote \\* *p* < .05; \\*\\* *p* < .01 \\*\\*\\* *p* < .001
+set.seed(123)
+
+# Make data
+d_descriptives <- "
+Measure             	Urban_M	Urban_SD    	Rural_M 	Rural_SD
+Self-esteem         	2.91     	0.49      	3.35     	0.35
+Social support      	4.22     	1.50      	5.56     	1.20
+Threat              	2.78     	0.87      	1.99     	0.88
+Challenge           	2.48     	0.88      	2.83     	1.20
+Self-efficacy       	2.65     	0.79      	3.53     	0.92" |>
+  readr::read_tsv() |>
+  suppressMessages() |> 
+  pivot_longer(-Measure) |> 
+  separate(name, c("type", "name")) |> 
+  pivot_wider() |> 
+  mutate(data = map2(M, SD, \(m,sd) rnorm(148, m, sd))) |> 
+  select(Measure, type, data) |> 
+  unnest(data) |> 
+  rename(y = data) |> 
+  nest(.by = Measure)
+
+# Analysis
+d_analysis <- d_descriptives |> 
+  mutate(
+    msd = map(data, \(d) {
+      d |> 
+        summarise(M = mean(y),
+                  SD = sd(y), 
+                  .by = type) 
+    }),
+    fit = map(data, \(d) aov(y ~ type, data = d)),
+    mp = map(fit, \(fit) {
+      parameters::model_parameters(fit) |>
+        as_tibble() |>
+        slice(1)
+      }
+      ),
+    `F` = map_dbl(mp, "F"),
+    p = map_dbl(mp, "p"),
+    eta2 = map_dbl(fit, \(fit) {
+      eta2 <- suppressMessages(
+        effectsize::effectsize(fit, type = "eta2" ))
+      
+      as_tibble(eta2)$Eta2
+        
+        }))
+
+# Get residual degrees of freedom
+df_residual <- d_analysis$fit[[1]]$df.residual
+
+# Format data
+d_formatted <- d_analysis |> 
+  unnest(msd) |> 
+  pivot_wider_name_first(names_from = type, 
+                         values_from = c(M, SD)) |> 
+  select(Measure, contains("_"), `F`, p, eta2)  |> 
+  mutate(`F` = align_chr(`F`)) |> 
+  add_star_column(`F`, merge = TRUE) |> 
+  select(-p) |> 
+  rename_with(\(x) ifelse(x == "F", 
+                          paste0("*F*(1,", df_residual, ")"), 
+                          x)) |> 
+  dplyr::add_row(Measure = "Cognitive appraisals", .after = 2) 
+
+# Make table
+d_formatted |> 
+  apa_flextable() |> 
+  padding(i = 4:6, j = 1, padding.left = 20) |> 
+  width(width = c(1.65, .8, .8, .05, .8, .8, .9, .7))
+```
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-end">
+    <li class="page-item"><a class="page-link" href="apa701.html">First</a></li>
+    <li class="page-item"><a class="page-link" href="apa711.html">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="apa713.html">Next</a></li>
+    <li class="page-item"><a class="page-link" href="apa724.html">Last</a></li>
+  </ul>
+</nav>

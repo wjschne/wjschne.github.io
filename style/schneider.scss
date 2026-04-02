@@ -1,0 +1,68 @@
+/*-- scss:defaults --*/
+
+$theme: "wjs" !default;
+
+$font-family-sans-serif: "Rubik" !default;
+
+$headings-font-family: "Rubik" !default;
+$headings-font-weight: 600 !default;
+
+$navbar-font-family: "Rubik" !default;
+$toc-font-family: "Rubik" !default;
+$footer-font-family: "Rubik" !default;
+$bs-table-striped-bg: "white" !default;
+
+$primary: #0d6ea6;
+
+$callout-color-note: $primary;
+
+/*-- scss:rules --*/
+
+
+$web-font-path: "https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap";
+
+@if $web-font-path {
+    @import url($web-font-path);
+}
+
+
+body {
+    -webkit-font-smoothing: antialiased;
+    font-weight: 300;
+}
+
+.table {
+  --bs-table-color-type: initial;
+  --bs-table-bg-type: initial;
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  --bs-table-color: var(--bs-body-color);
+  --bs-table-bg: var(--bs-body-bg);
+  --bs-table-border-color: rgba(0, 0, 0, 0);
+  --bs-table-accent-bg: transparent;
+  --bs-table-striped-color: --bs-body-bg;
+  --bs-table-striped-bg: rgba(0, 0, 0, 0);
+  --bs-table-active-color: var(--bs-body-color);
+  --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+  --bs-table-hover-color: var(--bs-body-color);
+  --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
+  width: 100%;
+  margin-bottom: 1rem;
+  vertical-align: top;
+  border-color: var(--bs-table-border-color);
+}
+
+
+.katex {font-size: 1.2em;}
+.katex-display {font-size: 1.2em;}
+
+h1.title {
+  color: #fdfefe;
+}
+
+.list-unstyled ul {
+  list-style: none;
+}
+
+.list-unstyled ul li {padding-left: 0; text-indent: -2em;}
+

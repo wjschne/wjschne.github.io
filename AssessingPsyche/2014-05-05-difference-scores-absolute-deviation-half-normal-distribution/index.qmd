@@ -1,0 +1,517 @@
+---
+title: "Difference scores, the absolute deviation, and the half-normal distribution"
+date: "2014-05-05"
+reference-location: margin
+fig-cap-location: margin
+execute: 
+  echo: false
+  cache: false
+  engine: knitr
+knitr:
+    opts_chunk: 
+      dev: "ragg_png"
+---
+
+In psychological assessment, sometimes we want to contrast two scores. For example, suppose we give two tests of visual-spatial ability to an individual. On Test A the score was 95, and on Test B the score was 75.
+
+```{r}
+#| label: setup
+#| include: false
+options(tidyverse.quiet = TRUE)
+library(conflicted)
+library(tidyverse)
+conflicts_prefer(dplyr::filter, .quiet = TRUE)
+library(WJSmisc)
+library(psych)
+library(lavaan)
+library(simstandard)
+library(ggtext)
+library(ggforce)
+library(ggarrow)
+library(ggdiagram)
+library(showtext)
+library(ragg)
+library(mvtnorm)
+
+
+font_add_google("Dosis", "Dosis")
+showtext_auto()
+```
+
+
+```{r}
+#| label: fig-gv
+#| fig-cap: Two tests of visual-spatial ability differ by 20 points.
+#| fig-width: 4.118057
+#| fig-height: 6
+#| eval: false
+
+tau <- 2 * pi
+gv_0 <- ob_polar(r = 2.2, theta = radian(1/4))
+t1_0 <- ob_polar(r = 2, theta = radian(3 / 4) - radian(.6))
+t2_0 <- ob_polar(r = 2, , theta = radian(3 / 4) + radian(6))
+gv_r <- 1.2 * 2 / sqrt(pi)
+t1_r <- 1
+t2_r <- 1
+
+
+
+gv <- ob_circle(gv_0, gv_r)
+t1_north <- t1_0 + ob_point(0, t1_r)
+t2_north <- t2_0 + ob_point(0, t2_r)
+gv2t1 <- ob_segment(p1 = gv@center, p2 = t1_north)
+gv2t2 <- ob_segment(p1 = gv@center, p2 = t2_north)
+igv2t1 <- intersection(gv2t1@line, gv)[1]
+igv2t2 <- intersection(gv2t2@line, gv)[1]
+
+path_gv2t1 <- ob_segment(p1 = igv2t1, p2 = t1_north)
+path_gv2t2 <- ob_segment(p1 = igv2t2, p2 = t2_north)
+
+d_label <- rbind(midpoint(path_gv2t1, position = .49)@xy, 
+                 midpoint(path_gv2t2, position = .49)@xy) %>%
+  as_tibble() %>%
+  mutate(i = here::here(
+    "AssessingPsyche/2014-05-05-difference-scores-absolute-deviation-half-normal-distribution/myloading.pdf"))
+  
+pp <- rbind(gv@center@xy,
+      t1_0@xy,
+      t2_0@xy) %>% 
+  as_tibble() %>% 
+  mutate(l = c("Visual-\nSpatial\nAbility", "Test A = 95", "Test B = 75"),
+         m1 = c(2, 10, 10),
+         r = c(gv_r, t1_r, t2_r)) %>%
+  ggplot(aes(x, y)) +
+  geom_ellipse(aes(
+    x0 = x,
+    y0 = y,
+    a = r,
+    b = r,
+    angle = 0,
+    m1 = m1,
+    fill = l
+  ),
+  colour = NA) +
+  geom_text(aes(label = l,
+                size = c(12,8,8)), 
+            family = "Dosis", 
+            color = "gray96", 
+            lineheight = .85) +
+  theme_void() +
+  coord_equal() +
+  connect(gv, t1_0) +
+  connect(gv, t2_0) +
+  geom_circle(data = d_label, 
+              fill = "white", 
+              color = NA, 
+              aes(x0 = x, 
+                  y0 = y, 
+                  r = .25)) +
+  geom_text(data = d_label %>% mutate(l = ".8"),
+            aes(label = l), family = "Dosis", size = 8, color = "gray40") +
+  scale_size_identity() +
+  # ggimage::geom_image(data = d_label, aes(image = i), size = .06) +
+  scale_fill_manual(values = tinter::tinter("#658ca8", steps = 5, direction = "tints")[3:5] ) + 
+  theme(legend.position = "none")
+
+
+# DeLuciatoR::get_dims(pp, maxheight = 6, maxwidth = 8)
+  pp
+  
+  
+ggdiagram()
+```
+
+Both tests are measured with the standard score metric (mean = 100, SD = 15). Because these tests are intended to measure the same ability, we are surprised to see that they differ by 20 points (20 standard score points = 1⅓ standard deviations). How common is it for tests that allegedly measure the same thing to differ by 20 points or more?
+
+The answer, of course, depends on the distributions of both variables and the form of the relationship between the two variables. In this case, let’s assume that the tests are multivariate normal, meaning that both variables have normal distributions and any linear combination of the two scores (including subtracting the scores) is also normal.
+
+```{r bvnormal}
+#| eval: false
+library(rgl)
+rho <- 0.64
+Xmu <- 0
+Xsigma <- 1
+Ymu <- 0
+Ysigma <- 1
+SampleSize <- 100
+XYmu <- c(Xmu, Ymu)
+XYcov <- matrix(c(1, rho, rho, 1), nrow = 2)
+pXY <- rmvnorm(SampleSize, mean = XYmu, sigma = XYcov)
+pZ <- dmvnorm(pXY, mean = XYmu, sigma = XYcov) * runif(SampleSize)
+points3d(cbind(pXY, pZ), color = "firebrick2", alpha = 0)
+
+mvX <- seq(Xmu - 4 * Xsigma, Xmu + 4 * Xsigma, Xsigma / 60)
+mvY <- seq(Ymu - 4 * Ysigma, Xmu + 4 * Ysigma, Ysigma / 60)
+mvXY <- expand.grid(mvX, mvY)
+mvZ <- matrix(apply(mvXY, 1, dmvnorm, mean = XYmu, sigma = XYcov), nrow =
+                length(mvX))
+persp3d(
+  mvX,
+  mvY,
+  mvZ,
+  color = "#658ca8",
+  ylab = "",
+  xlab = "",
+  axes = F,
+  zlab = "",
+  add = T
+)
+
+mvX <- seq(Xmu + 2 * Xsigma, Xmu + 4 * Xsigma, Xsigma / 30)
+mvY <- seq(Ymu - 4 * Ysigma, Xmu + 4 * Ysigma, Ysigma / 30)
+mvXY <- expand.grid(mvX, mvY)
+mvZ <- matrix(apply(mvXY, 1, dmvnorm, mean = XYmu, sigma = XYcov), nrow =
+                length(mvX))
+# persp3d(
+#   mvX,
+#   mvY,
+#   mvZ,
+#   color = "firebrick",
+#   ylab = "",
+#   xlab = "",
+#   axes = F,
+#   zlab = "",
+#   add = T
+# )
+
+aspect3d(1, 1, 0.5)
+axes3d(
+  c('x'),
+  labels = seq(40, 160, 15),
+  at = seq(Xmu - 4 * Xsigma, Xmu + 4 * Xsigma, Xsigma)
+)
+axes3d(
+  c('y'),
+  labels = seq(40, 160, 15),
+  at = seq(Ymu - 4 * Ysigma, Xmu + 4 * Ysigma, Ysigma)
+)
+axes3d(
+  c('x+-', 'y+-'),
+  labels = seq(40, 160, 15),
+  at = seq(Xmu - 4 * Xsigma, Xmu + 4 * Xsigma, Xsigma)
+)
+axes3d(
+  c('x--', 'y--'),
+  labels = seq(40, 160, 15),
+  at = seq(Xmu - 4 * Xsigma, Xmu + 4 * Xsigma, Xsigma)
+)
+mtext3d("Test A", edge = "x--", line = 2, level = 0, floating = NA)
+mtext3d("Test B", edge = "y--", line = 2, level = 0, floating = NA)
+mtext3d("Test A", edge = "x+-", line = 2, level = 0, floating = NA)
+mtext3d("Test B", edge = "y+-", line = 2, level = 0, floating = NA)
+
+# M <- par3d(c("userMatrix", "zoom"))
+# rgl.bg(sphere=TRUE, color=c("gray90","gray40"), lit=TRUE, back="filled" )
+
+# 
+M <- par3d("userMatrix")
+# play3d(spin3d(rpm = 2))
+
+s <- movie3d(spin3d(rpm = 3), duration = 20, webshot = F, fps = 25)
+
+
+s1 <- magick::image_crop(s, geometry = magick::geometry_area(x = 420, y = 330, width = 1060, height = 650))
+
+magick::image_write_gif(s1, "bvnormal.gif", delay = 1 / 25 )
+# file.show("asdf.gif")
+# ?magick::image_write_gif
+
+
+
+```
+
+
+
+![A Bivariate Normal Distribution with a correlation of .64](bvnormal.gif){#fig-bivariatenormal}
+
+The relationship between the two variables is linear. Linear relationships are fully described by correlation coefficients. In this case, suppose that the correlation coefficient is 0.64.
+
+
+Few variables found in nature have a true multivariate normal distribution. However, multivariate normal distributions describe cognitive ability data reasonably well.
+
+## The mean of a difference score
+
+The mean of the sum of two variables is the sum of the two means. That is,
+
+$$
+\mu_{A + B} = \mu_A + \mu_B=100+100=200
+$$
+
+It works the same way with subtraction:
+
+$$
+\mu_{A - B} = \mu_A - \mu_B=100-100=0
+$$
+
+## The standard deviation of a difference score
+
+The standard deviation of the sum of two variables is the square root of the sum of the two variables' covariance matrix. The covariance matrix is:
+
+$$
+\Sigma_{AB}=\begin{bmatrix}
+\sigma_A^2 & \sigma_{AB} \\
+\sigma_{AB} & \sigma_B^2
+\end{bmatrix}
+$$
+
+The sum of the covariance matrix is:
+
+$$
+\sigma_{A+B}=\sqrt{ \sigma_{A}^2 + 2\sigma_{AB} + \sigma_{B}^2}
+$$
+
+The covariance is the product of the two standard deviations and the correlation $(\rho)$:
+
+$$
+\sigma_{AB}=\sigma_A \sigma_B \rho_{AB}
+$$
+
+Thus,
+
+$$
+\begin{aligned}
+\sigma_{A+B}&=\sqrt{ \sigma_{A}^2 + 2\sigma_{AB} + \sigma_{B}^2}\\
+&=\sqrt{ \sigma_{A}^2 + 2\sigma_A \sigma_B \rho_{AB} + \sigma_{B}^2}\\
+&=\sqrt{15^2+2*15*15*0.64+15^2}\\
+&\approx 27.1662
+\end{aligned}
+$$
+
+The standard deviation of the difference of two variables is the same except that the covariance is negative.
+
+$$
+\begin{aligned}
+\sigma_{A-B}&=\sqrt{ \sigma_{A}^2 - 2\sigma_{AB} + \sigma_{B}^2}\\
+&=\sqrt{ \sigma_{A}^2 - 2\sigma_A \sigma_B \rho_{AB} + \sigma_{B}^2}\\
+&=\sqrt{15^2-2*15*15*0.64+15^2}\\
+&\approx12.7279
+\end{aligned}
+$$
+
+If $\sigma_A=\sigma_B$ then this formula reduces to 
+
+
+$$
+\begin{aligned}
+\sigma_{A-B}&=\sigma_A\sqrt{2-2r_{AB}}\\
+&=15\sqrt{2-2\times.64}\\
+&\approx12.7279
+\end{aligned}
+$$
+
+
+## The prevalence of a difference score
+
+If the two variables are multivariate normal, then the difference score is also normally distributed. The difference of A and B in this example is:
+
+$$\begin{aligned}A-B&=95-75\\&=20\end{aligned}$$
+
+The population mean of the difference scores is 0 and the standard deviation is 13.24.
+
+Using the z-score formula,
+
+$$
+\begin{aligned}
+z&=\dfrac{X-\mu}{\sigma}\\
+&=\dfrac{20-0}{12.7279}\\
+&\approx 1.5713
+\end{aligned}
+$$
+
+The cumulative distribution function of the standard normal distribution (Φ) is the proportion of scores to the left of a particular z-score. 
+
+:::{.panel-tabset}
+
+## R 
+
+In R the Φ function is the `pnorm` function.
+
+```{r}
+#| echo: true
+pnorm(1.5713)
+```
+
+## Python
+
+```{python}
+#| echo: true
+from scipy.stats import norm
+norm.cdf(1.5713)
+```
+
+## Excel
+
+In Excel, the Φ function is the `NORM.S.DIST` function.
+
+$$
+\begin{aligned}
+\Phi(1.5713)&=\texttt{NORM.S.DIST}(1.5713)\\&\approx 0.9419
+\end{aligned}$$
+
+:::
+
+Thus about 5.8% (1 − .9419 = .0581) of people have a difference score of 20 or more in this particular direction and about 11.6% have a difference score of 20 or more in either direction. Thus, in this case, a difference of 20 points or more is only somewhat unusual.
+
+## The absolute deviation
+
+The standard deviation is a sort of average deviation but it is not the arithmetic mean of the deviations. If you really want to know the average (unsigned) deviation, then you want the absolute deviation. Technically, the absolute deviation is the expected value of the absolute value of the deviation:
+
+$$\text{Absolute Deviation}=E(|X-\mu|)$$
+
+Sometimes the absolute deviation is calculated as the average deviation from the median instead of from the mean. In the case of the normal distribution, this difference does not matter because the mean and median are the same.
+
+In the normal distribution, the absolute deviation is about 80% as large as the standard deviation. Specifically,
+
+$$\text{Absolute Deviation}=\sqrt{\dfrac{2}{\pi}}\sigma$$
+
+## The absolute deviation of a difference score
+
+If the two variables are multivariate normal, the difference score is also normal. We calculate the standard deviation of the difference score and multiply it by the square root of 2 over pi. In this case, the standard deviation of the difference score was about 13.42. Thus, the average difference score is:
+
+$$\sqrt{\dfrac{2}{\pi}}12.7279\approx 10.1554$$
+
+## Why use the absolute deviation?
+
+The standard deviation is the standard way of describing variability. Why would we use this obscure type of deviation then? Well, most people have not heard of either kind of deviation. For people who have never taken a statistics course, it is very easy to talk about the average difference score (i.e., the absolute deviation). For example, "On average, these two scores differ by 11 points." See how easy that was?
+
+By contrast, imagine saying to statistically untrained people, "We can measure variability with a statistic called the *standard deviation*. To calculate it, we take the square root of the average squared difference of every score in the population from the population mean. In this case, the standard deviation is 13 points." Sure, this explanation can be made simpler...but at the expense of accuracy.
+
+The absolute deviation can be explained easily AND accurately.
+
+## The half-normal distribution
+
+Related to the idea of the absolute deviation is the half-normal distribution. The half-normal distribution occurs when we take a normally distributed variable and take the absolute value of all the deviations.
+
+$$Y=|X-\mu_X|$$
+
+To visualize the half-normal distribution, we divide the normal distribution in half at the mean and then stack the left side of the distribution on top of the right side (see @fig-half).
+
+```{r}
+#| label: fig-half
+#| fig-cap: The half-normal disribution is both halves of the standard normal distribution stacked on the right side of the distribution
+#| fig-width: 6
+#| fig-height: 6
+#| out-width: 100%
+
+crossing(
+  x = seq(0, 4, .01),
+  half = fct_inorder(c("below", "above")),
+  distribution = fct_inorder(c(
+    "Normal\nDistribution", "Half-Normal\nDistribution"
+  ))
+) %>%
+  mutate(
+    x = ifelse(distribution == "Normal\nDistribution" &
+                 half == "below", -1 * x, x),
+    y = dnorm(x) * ifelse(
+      distribution == "Half-Normal\nDistribution" &
+        half == "below",
+      2,
+      1
+    )
+  ) %>%
+  arrange(x, half, distribution) %>%
+  ggplot(aes(x, y)) +
+  geom_area(aes(fill = half), position = position_identity()) +
+  facet_grid(
+    vars(distribution),
+    scales = "free_y",
+    space = "free_y",
+    axes = "all_x",
+    switch = "y"
+  ) +
+  scale_x_continuous(NULL, labels = \(x) paste0(
+    signs::signs(x),
+    ifelse(x < 0, "<span style='color: white'>-</span>", "")
+  )) +
+  scale_y_continuous(NULL, expand = expansion(add = c(0, .02)), breaks = NULL) +
+  theme_minimal(base_family = "Dosis", base_size = 20) +
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(NA, colour = NA),
+    plot.background = element_rect(NA, color = NA),
+    strip.text = element_blank(),
+    axis.text.x = element_markdown(),
+    strip.background = element_rect(NA, color = NA),
+    panel.grid = element_blank(),
+    axis.ticks = element_line(colour = "gray80", linewidth = .5)
+  ) +
+  scale_fill_manual(values = tinter::tinter("#658ca8", steps = 5, direction = "tints")[3:5]) +
+  geom_text(
+    data = tibble(
+      x = 2,
+      y = c(.3, .6),
+      distribution = fct_inorder(c(
+        "Normal\nDistribution", "Half-Normal\nDistribution"
+      ))
+    ),
+    aes(label = distribution),
+    family = "Dosis",
+    size = 20,
+    size.unit = "pt",
+    color = "gray30",
+    lineheight = .8
+  )
+
+
+```
+
+
+What is the mean of the half-normal distribution? Yes, you guessed it—the absolute deviation of the normal distribution!
+
+The cumulative distribution function of the half-normal distribution is:
+
+$$
+cdf_{\text{half-normal}}=2\Phi\left(\frac{X}{\sigma}\right)-1
+$$
+
+
+:::{.panel-tabset}
+
+## R 
+
+```{r}
+#| echo: true
+A <- 95
+B <- 75
+sigma <- 15
+r <- .64
+
+AB_difference <- A - B
+sigma_difference <- sigma * sqrt(2 - 2 * r)
+
+2 * pnorm(AB_difference/sigma_difference) - 1
+```
+
+## Python
+
+```{python}
+#| echo: true
+from scipy.stats import norm
+A = 95
+B = 75
+sigma = 15
+r = .64
+
+AB_difference = A - B
+sigma_difference = sigma * (2 - 2 * r) ** .5
+2 * norm.cdf(AB_difference/sigma_difference) - 1
+```
+
+
+
+
+
+## Excel
+
+In Excel, the Φ function is the `NORM.S.DIST` function.
+
+`=2*NORM.S.DIST((95-75)/(15*SQRT(2-2*.64)))-1`
+
+:::
+
+This means that about 88.4% of people have a difference score (in either direction) of 20 or less. About 11.6% have a difference score of 20 or more. Note that this is the same answer we found before using the standard deviation of the difference score.
+
+:::{.callout-note title="Repost from AssessingPsyche"}
+This post was originally posted on 2014-05-05  [here](https://assessingpsyche.wordpress.com/2014/05/05/difference-scores-the-absolute-deviation-and-the-half-normal-distribution/). The figures and computations have been updated.
+:::
