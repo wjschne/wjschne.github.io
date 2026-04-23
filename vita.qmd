@@ -535,13 +535,13 @@ jsonlite::read_json("data/My Reports.json", simplifyVector = T) %>%
   mutate(
     citations = make_citation_button(cites, cid, year),
     citation = glue::glue(
-      '<div class="csl-entry">{author} ({year}). <em>{title}</em> {publisher}. {citations}</div>'
+      '<div class="csl-entry">{author} ({year}). <em>{title}</em> {publisher}{ifelse(publisher=="", "", ". ")}{citations}</div>'
     )
   ) %>%
   arrange(-year, author) %>%
   pull(citation) %>%
   paste0(collapse = "\n") %>%
-  cat
+  cat()
 ```
 
 ## Software
@@ -620,7 +620,7 @@ jsonlite::read_json("data/My Talks.json", simplifyVector = T) %>%
   ) %>%
   mutate(
     citation = glue::glue(
-      '<div class="csl-entry">{author} ({date}). {title} [{genre}]. {`event-title`} {na2empty(`event-place`, paste0(", ", `event-place`))}. {na2empty(URL, paste0("<a href=",URL,">",URL,"</a>"))}</div>'
+      '<div class="csl-entry">{author} ({date}). {title} [{genre}]. {`event-title`} {na2empty(`event-place`, paste0(", ", `event-place`))}{ifelse(`event-place`=="", "", ". ")}{na2empty(URL, paste0("<a href=",URL,">",URL,"</a>"))}</div>'
     )
   ) %>%
   arrange(-year, -month, -day, author) %>%
