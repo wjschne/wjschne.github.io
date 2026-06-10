@@ -19,16 +19,13 @@ Suppose I have a Likert questionnaire item with responses ranging from *Strongly
 First I will create fake data for 26 groups, A--Z.
 
 ```{r setup, include=FALSE}
-library(extrafont)
-loadfonts("pdf")
 library(tidyverse)
 set.seed(10)
-knitr::opts_chunk$set(dev = "svg", fig.height = 8)
+knitr::opts_chunk$set(dev = "ragg_png", fig.height = 8)
 ```
 
 
 ```{r datacreation}
-library(extrafont)
 library(tidyverse)
 myfont <- "Roboto Condensed"
 
@@ -227,9 +224,9 @@ d <- tibble(Group = LETTERS[1:26],
                # Reverse order of legend
                label.position = "top",
                # Put text atop keys
-               keyheight = unit(15, "mm"),
+               keyheight = unit(18, "mm"),
                # Size of legend rectangles
-               keywidth = unit(22.56, "mm")
+               keywidth = unit(20.7, "mm")
              )
            ) 
 
