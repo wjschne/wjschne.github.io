@@ -10,7 +10,7 @@
 <atom:link href="https://wjschne.github.io/assessingpsyche.xml" rel="self" type="application/rss+xml"/>
 <description>{{&lt; meta description-meta &gt;}}</description>
 <generator>quarto-1.9.36</generator>
-<lastBuildDate>Thu, 02 Jul 2026 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 05 Jul 2026 04:00:00 GMT</lastBuildDate>
 <item>
   <title>Composite IQ Calculator: A Free Web App</title>
   <dc:creator>W. Joel Schneider</dc:creator>
@@ -23,8 +23,8 @@
 
 <p>Announcing the arrival of the <a href="https://wjschne.github.io/compositeiq">Composite IQ Calculator</a>, a free, web app that calculates a composite IQ from multiple test administrations and evaluates whether any of the individual IQ results are outliers. Be patient! The app can take 10–30 seconds to load.<sup>1</sup></p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;The app does not load instantly because it is deployed with <a href="https://posit-dev.github.io/r-shinylive/">shinylive</a>, which allows for all computations and data entry to stay local on the user’s machine. This feature makes the cost effectively zero and assures data privacy. The downside is that downloading and setting up a rich interface takes a little longer than we are used to for web apps.</p></div></div><p>Cecil Reynolds, Kevin McGrew, Karen Salekin, and I recently published an article in which we explained why, how, and when to create a composite IQ from multiple IQ test administrations <span class="citation" data-cites="schneiderLifeanddeathPsychometricsGeneralizable2026">(Schneider et al., 2026)</span>. In brief, when a person has been given more than one intelligence test, it is preferable to combine all valid and comparable scores into a single score with a single (and narrower) confidence interval. We argue that the best method of combining information is to create scores the same way we create an individual IQ (and almost every other psychological test score): A composite score. Other methods, such as taking the mean, median, or highest score, have known biases.</p>
-<p>This procedure has a variety of applications, but is particularly important for determining if a defendant meets criteria for intellectual disability and is therefore ineligible for capital punishment. As discussed in several U.S. Supreme Court cases (e.g., <a href="https://supreme.justia.com/cases/federal/us/572/12-10882/case.pdf"><em>Hall v. Florida</em>, 572 U.S. 701 (2014)</a> and <a href="https://supreme.justia.com/cases/federal/us/608/24-872/case.pdf"><em>Hamm v. Smith</em>, 608 U.S. _ (2026)</a>, aggregating IQ results can be complicated matter and therefore must be conducted with care and rigor.</p>
-<p>Composite scores have a number of interesting and sometimes counterintuitive features. The <em>composite score extremity effect</em> <span class="citation" data-cites="schneiderWhyAreWJ2016">(Schneider, 2016)</span> refers to the fact that composite scores are more extreme (i.e., further from the population mean) than the average of the scores summarized by the composite, as illustrated in Figure&nbsp;1. The size of this effect increases when the number of scores is higher, the correlations among the scores is lower, and the average of the scores is more extreme.</p>
+<p>This procedure has a variety of applications but is particularly important for determining if a defendant meets criteria for intellectual disability and is therefore ineligible for capital punishment. As discussed in several U.S. Supreme Court cases (e.g., <a href="https://supreme.justia.com/cases/federal/us/572/12-10882/case.pdf"><em>Hall v. Florida</em>, 572 U.S. 701 (2014)</a> and <a href="https://supreme.justia.com/cases/federal/us/608/24-872/case.pdf"><em>Hamm v. Smith</em>, 608 U.S. _ (2026)</a>, aggregating IQ results can be complicated matter and therefore must be conducted with care and rigor.</p>
+<p>Composite scores have a number of interesting and sometimes counterintuitive features. The <em>composite score extremity effect</em> <span class="citation" data-cites="schneiderWhyAreWJ2016">(Schneider, 2016)</span> refers to the fact that composite scores are more extreme (i.e., further from the population mean) than the average of the scores summarized by the composite, as illustrated in Figure&nbsp;1. The size of this effect increases when the number of scores is higher, the average correlation among the scores is lower, and the average of the scores is more extreme.</p>
 <div class="no-row-height column-margin column-container"><div id="ref-schneiderWhyAreWJ2016" class="csl-entry">
 Schneider, W. J. (2016). <em>Why are WJ IV cluster scores more extreme than the average of their parts? A gentle explanation of the composite score extremity effect</em> (No. 7; Woodcock-Johnson IV Assessment Service Bulletin). Riverside Assessments, LLC. <a href="https://info.riversideinsights.com/hubfs/ASBs/WJIV_ASB_7_FINAL.pdf">https://info.riversideinsights.com/hubfs/ASBs/WJIV_ASB_7_FINAL.pdf</a>
 </div></div><div id="fig-ciq" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -58,7 +58,7 @@ Schneider, W. J., &amp; Ji, F. (2023). Detecting unusual score patterns in the c
 </div></div></section>
 <section id="previous-solutions" class="level1 page-columns page-full">
 <h1>Previous Solutions</h1>
-<p><span class="citation" data-cites="schneiderLifeanddeathPsychometricsGeneralizable2026">Schneider et al. (2026)</span> refers to a <a href="https://github.com/wjschne/assessingpsyche_resources/raw/refs/heads/main/CompositeIQFlynn.xlsx">free Composite IQ spreadsheet calculator</a>, which works well and is still available. Unfortunately, this spreadsheet was hard to maintain and the limitations of Excel put constraints on how it could be extended. The new <a href="https://wjschne.github.io/compositeiq">web app</a> effectively replaces the spreadsheet. Built with R and shiny, the app is much easier to maintain and extend.</p>
+<p><span class="citation" data-cites="schneiderLifeanddeathPsychometricsGeneralizable2026">Schneider et al. (2026)</span> refers to a <a href="https://github.com/wjschne/assessingpsyche_resources/raw/refs/heads/main/CompositeIQFlynn.xlsx">free Composite IQ spreadsheet calculator</a>, which works well and is still available. Unfortunately, this spreadsheet was hard to maintain, and the limitations of Excel put constraints on how it could be extended. The new <a href="https://wjschne.github.io/compositeiq">web app</a> effectively replaces the spreadsheet. Built with R and shiny, the app is much easier to maintain and extend.</p>
 
 
 <div class="no-row-height column-margin column-container"><div id="ref-schneiderLifeanddeathPsychometricsGeneralizable2026" class="csl-entry">
@@ -70,12 +70,12 @@ Schneider, W. J., Reynolds, C. R., McGrew, K. S., &amp; Salekin, K. L. (2026). L
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{schneider2026,
   author = {Schneider, W. Joel and Joel Schneider, W.},
   title = {Composite {IQ} {Calculator:} {A} {Free} {Web} {App}},
-  date = {2026-07-02},
+  date = {2026-07-05},
   url = {https://wjschne.github.io/AssessingPsyche/2026-07-05-composite-iq-calculator-a-free-web-app/},
   langid = {en}
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-schneider2026" class="csl-entry quarto-appendix-citeas">
-Schneider, W. J., &amp; Joel Schneider, W. (2026, July 2). Composite IQ
+Schneider, W. J., &amp; Joel Schneider, W. (2026, July 5). Composite IQ
 Calculator: A Free Web App. <em>AssessingPsyche</em>. <a href="https://wjschne.github.io/AssessingPsyche/2026-07-05-composite-iq-calculator-a-free-web-app/">https://wjschne.github.io/AssessingPsyche/2026-07-05-composite-iq-calculator-a-free-web-app/</a>
 </div></div></section></div> ]]></description>
   <category>Assessment</category>
@@ -84,7 +84,7 @@ Calculator: A Free Web App. <em>AssessingPsyche</em>. <a href="https://wjschne.g
   <category>IQ</category>
   <category>Intelligence Testing</category>
   <guid>https://wjschne.github.io/AssessingPsyche/2026-07-05-composite-iq-calculator-a-free-web-app/</guid>
-  <pubDate>Thu, 02 Jul 2026 04:00:00 GMT</pubDate>
+  <pubDate>Sun, 05 Jul 2026 04:00:00 GMT</pubDate>
   <media:content url="https://wjschne.github.io/AssessingPsyche/2026-07-05-composite-iq-calculator-a-free-web-app" medium="image"/>
 </item>
 <item>
@@ -294,7 +294,7 @@ Schneider, W. J., &amp; McGrew, K. S. (2012). The <span>C</span>attell-<span>H</
 <p>Because a complete description of CHC theory can be found in <a href="http://www.iapsych.com/articles/schneider2012.pdf">Schneider and McGrew (2012)</a>, no space will be wasted on a summary here. Figure&nbsp;1 displays the broad abilities arranged conceptually.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-chc" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" alt="A graphical depiction of CHC Theory" data-cap-location="bottom">
+<div id="fig-chc" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="bottom" alt="A graphical depiction of CHC Theory">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-chc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="https://wjschne.github.io/AssessingPsyche/2016-10-26-rescae/CHC.svg" class="img-fluid figure-img column-page-right" style="width:100.0%" alt="A graphical depiction of CHC Theory">
