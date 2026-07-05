@@ -4,8 +4,15 @@ description: "Announcing a new web app that calculates composite IQ from multipl
 author: "W. Joel Schneider"
 date: "2026-07-05"
 categories: ["Assessment", "Capital Cases", "Death Penalty", "IQ", "Intelligence Testing"]
-image: ""
-image-alt: ""
+image: "ciq.png"
+image-alt: "A normal population curve with a composite IQ of 66 and three individual IQ results of 69, 71, and 73"
+execute: 
+  echo: false
+  cache: false
+  engine: knitr
+knitr:
+    opts_chunk: 
+      dev: "ragg_png"
 ---
 
 Announcing the arrival of the [Composite IQ Calculator](https://wjschne.github.io/compositeiq), a free, web app that calculates a composite IQ from multiple test administrations and evaluates whether any of the individual IQ results are outliers. Be patient! The app can take 10--30 seconds to load.^[The app does not load instantly because it is deployed with [shinylive](https://posit-dev.github.io/r-shinylive/), which allows for all computations and data entry to stay local on the user's machine. This feature makes the cost effectively zero and assures data privacy. The downside is that downloading and setting up a rich interface takes a little longer than we are used to for web apps.]
@@ -16,7 +23,7 @@ This procedure has a variety of applications but is particularly important for d
 
 Composite scores have a number of interesting and sometimes counterintuitive features. The *composite score extremity effect* [@schneiderWhyAreWJ2016] refers to the fact that composite scores are more extreme (i.e., further from the population mean) than the average of the scores summarized by the composite, as illustrated in @fig-ciq. The size of this effect increases when the number of scores is higher, the average correlation among the scores is lower, and the average of the scores is more extreme.
 
-![A composite IQ is more extreme than the average of its parts](ciq.png){#fig-ciq}
+![A composite IQ is more extreme than the average of its parts](ciq.png){#fig-ciq .preview-image}
 
 
 To calculate a composite IQ and its confidence interval, one needs to know the means, standard deviations, reliability coefficients for each test and the intercorrelations among all tests. When direct evidence of any two tests' intercorrelation is unavailable, it can be approximated from an equation adapted from @breitStabilityCognitiveAbilities2024, which estimates stability coefficients based on the age of the first test, the length of the retest-interval, and whether the tests are the same or from different battery families.
