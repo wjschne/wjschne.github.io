@@ -1,6 +1,8 @@
 ---
 title: "Curriculum Vitae"
 toc-title: "[{{< fa download >}} Curriculum Vitae (.pdf) ](files/schneider-vita.pdf){target=\"_blank\"}"
+filters: 
+  - _extensions/schochastics/academicons/academicons.lua
 ---
 
 
@@ -102,6 +104,7 @@ paste_and <- function(words, sep = ", ", and = ", & ", and2 = and) {
 
 make_authors <- function(authors) {
   map_chr(authors, function(d) {
+    if (!is.null(d$literal)) {d$literal} else {
     mutate(
       d,
       given = str_extract_all(
@@ -113,7 +116,9 @@ make_authors <- function(authors) {
     ) %>%
       pull(author) %>%
       paste_and()
+    }
   })
+  
 }
 
 make_editors <- function(editors) {
@@ -432,7 +437,7 @@ jsonlite::read_json("data/My Articles.json", simplifyVector = T) %>%
     year = flatten(year) %>% map(`[[`, 1) %>% as.integer(),
     author = make_authors(author),
     title = na2link(title, href = URL, suffix = title_suffix(title)),
-    pubid = str_remove(note, "pubid:"),
+    pubid = str_remove(note, "pubid\\:"),
     issue = na2empty(issue, paste0("(", issue, ")")),
     page = ifelse(
       is.na(page),
@@ -467,7 +472,7 @@ jsonlite::read_json("data/My Chapters.json", simplifyVector = T) %>%
     year = flatten(year) %>% as.integer(),
     author = make_authors(author),
     editor = make_editors(editor),
-    pubid = str_remove(note, "pubid:"),
+    pubid = str_remove(note, "pubid\\:"),
     page = str_replace(page, "-", "&ndash;"),
     edition = na2empty(
       edition,
@@ -519,11 +524,24 @@ jsonlite::read_json("data/My Testreviews.json", simplifyVector = T) %>%
 
 jsonlite::read_json("data/My Reports.json", simplifyVector = T) %>%
   as_tibble() %>%
+  mutate(note = map(note, \(nt) {
+      if (is.na(nt)) {
+        NULL
+      } else {
+        tibble(l = str_split(nt, ";")) |> 
+          unnest(l) |> 
+          separate(l, c("name", "value"), sep = ":") |> 
+          mutate(value = str_trim(value)) |> 
+          pivot_wider()
+          
+      }
+      
+  })) |> 
+  unnest(note) |> 
   rename(year = issued) %>%
   mutate(
     year = flatten(year) %>% as.integer(),
     author = make_authors(author),
-    pubid = str_remove(note, "pubid:"),
     publisher = paste0(
       na2empty(publisher),
       na2empty(`collection-title`),
@@ -531,7 +549,7 @@ jsonlite::read_json("data/My Reports.json", simplifyVector = T) %>%
     ),
     title = map2(title, URL, na2link)
   ) %>%
-  left_join(d_pubs %>% select(pubid, cites, cid), by = "pubid") %>%
+  left_join(as_tibble(d_pubs) %>% select(pubid, cites, cid), by = "pubid") %>%
   mutate(
     citations = make_citation_button(cites, cid, year),
     citation = glue::glue(
@@ -900,4 +918,4 @@ tibble::tribble(
 
 
 
-
+\* {{< ai google-scholar >}} Google Scholar Citations
